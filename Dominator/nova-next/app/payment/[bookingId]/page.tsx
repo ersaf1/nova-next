@@ -1,24 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
-
-declare global {
-  interface Window {
-    snap: {
-      pay: (
-        token: string,
-        options: {
-          onSuccess?: (result: unknown) => void
-          onPending?: (result: unknown) => void
-          onError?: (result: unknown) => void
-          onClose?: () => void
-        }
-      ) => void
-    }
-  }
-}
 
 interface Booking {
   id: number
@@ -36,37 +20,12 @@ interface Booking {
 export default function PaymentPage() {
   const params = useParams()
   const router = useRouter()
-  const searchParams = useSearchParams()
   const bookingId = params.bookingId as string
-  const isMock = searchParams.get('mock') === 'true'
 
   const [booking, setBooking] = useState<Booking | null>(null)
   const [loading, setLoading] = useState(true)
   const [paying, setPaying] = useState(false)
-  const [error, setError] = useState('')
-  const [snapLoaded, setSnapLoaded] = useState(false)
 
-  // Load Snap.js script
-  useEffect(() => {
-    const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || ''
-    const existing = document.getElementById('midtrans-snap')
-    if (!existing) {
-      const script = document.createElement('script')
-      script.id = 'midtrans-snap'
-      script.src = 'https://app.sandbox.midtrans.com/snap/snap.js'
-      script.setAttribute('data-client-key', clientKey)
-      script.onload = () => setSnapLoaded(true)
-      script.onerror = () => setSnapLoaded(false)
-      document.body.appendChild(script)
-    } else {
-      setSnapLoaded(true)
-    }
-    return () => {
-      // leave script in DOM to avoid reloading
-    }
-  }, [])
-
-  // Fetch booking details
   useEffect(() => {
     if (!bookingId) return
     fetch('/api/bookings')
@@ -85,69 +44,26 @@ export default function PaymentPage() {
     ? booking.totalAmount ?? (booking.price ?? 0) * (booking.participants ?? 1)
     : 0
 
-  async function handlePayNow() {
+  async function handleConfirmPayment() {
     if (!booking) return
     setPaying(true)
-    setError('')
     try {
-      const res = await fetch('/api/payment/create', {
-        method: 'POST',
+      // Update booking status to paid
+      await fetch(`/api/bookings/${booking.id}/status`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          bookingId: booking.id,
-          amount: totalAmount,
-          customerName: booking.name,
-          customerEmail: booking.email,
-          items: [
-            {
-              id: `PKG-${booking.id}`,
-              price: totalAmount,
-              quantity: 1,
-              name: booking.packageName,
-            },
-          ],
-        }),
+        body: JSON.stringify({ status: 'paid' }),
       })
-      const data = await res.json()
-
-      if (!res.ok || data.error) {
-        setError(data.error ?? 'Failed to create payment')
-        setPaying(false)
-        return
-      }
-
-      // Mock token: go straight to confirmation
-      if (data.token?.startsWith('mock-token-') || !snapLoaded || !window.snap) {
-        router.push(`/payment/confirmation/${bookingId}?mock=true`)
-        return
-      }
-
-      // Real Snap popup
-      window.snap.pay(data.token, {
-        onSuccess: () => router.push(`/payment/confirmation/${bookingId}`),
-        onPending: () => router.push(`/payment/confirmation/${bookingId}?pending=true`),
-        onError: () => {
-          setError('Payment failed. Please try again.')
-          setPaying(false)
-        },
-        onClose: () => setPaying(false),
-      })
+      router.push(`/payment/confirmation/${bookingId}`)
     } catch {
-      setError('Something went wrong. Please try again.')
       setPaying(false)
     }
-  }
-
-  function handleMockConfirm() {
-    router.push(`/payment/confirmation/${bookingId}?mock=true`)
   }
 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <span className="text-sm text-black/40" style={{ letterSpacing: '-0.02em' }}>
-          Loading…
-        </span>
+        <span className="text-sm text-black/40" style={{ letterSpacing: '-0.02em' }}>Loading…</span>
       </div>
     )
   }
@@ -173,14 +89,12 @@ export default function PaymentPage() {
       <Navbar />
       <main className="px-6 py-16 pt-28 max-w-2xl mx-auto">
         <div className="mb-8">
-          <p className="text-xs font-medium text-black/30 uppercase tracking-widest mb-2">
-            Step 4 of 4
-          </p>
+          <p className="text-xs font-medium text-black/30 uppercase tracking-widest mb-2">Step 4 of 4</p>
           <h1 className="text-2xl font-semibold text-black">Complete Payment</h1>
-          <p className="text-sm text-black/40 mt-1">Review your booking and proceed to pay.</p>
+          <p className="text-sm text-black/40 mt-1">Review your booking and confirm payment.</p>
         </div>
 
-        {/* Booking Summary Card */}
+        {/* Booking Summary */}
         <div className="bg-white rounded-2xl border border-black/[0.04] p-6 mb-4">
           <h2 className="text-sm font-semibold text-black mb-4">Booking Summary</h2>
           <div className="space-y-3">
@@ -217,41 +131,48 @@ export default function PaymentPage() {
           </div>
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="bg-red-50 border border-red-100 rounded-2xl px-5 py-4 mb-4">
-            <p className="text-sm text-red-600">{error}</p>
+        {/* Payment method card */}
+        <div className="bg-white rounded-2xl border border-black/[0.04] p-6 mb-6">
+          <h2 className="text-sm font-semibold text-black mb-4">Payment Method</h2>
+          <div className="flex items-center gap-4 p-4 rounded-xl border-2 border-black bg-black/[0.02]">
+            <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-black">Demo Payment</p>
+              <p className="text-xs text-black/40">Click confirm to complete your booking instantly</p>
+            </div>
           </div>
-        )}
+        </div>
 
-        {/* Payment Actions */}
+        {/* Actions */}
         <div className="space-y-3">
-          {isMock ? (
-            <button
-              onClick={handleMockConfirm}
-              className="w-full bg-black text-white rounded-full px-6 py-3 font-medium hover:bg-black/80 transition-colors text-sm"
-            >
-              Confirm Payment (Demo)
-            </button>
-          ) : (
-            <button
-              onClick={handlePayNow}
-              disabled={paying}
-              className="w-full bg-black text-white rounded-full px-6 py-3 font-medium hover:bg-black/80 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {paying ? 'Opening payment…' : 'Pay Now'}
-            </button>
-          )}
+          <button
+            onClick={handleConfirmPayment}
+            disabled={paying}
+            className="w-full bg-black text-white rounded-full px-6 py-3.5 font-medium hover:bg-black/80 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {paying ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Processing…
+              </>
+            ) : (
+              'Confirm Payment'
+            )}
+          </button>
           <button
             onClick={() => router.push('/booking')}
-            className="w-full bg-transparent text-black/40 rounded-full px-6 py-3 font-medium hover:text-black transition-colors text-sm border border-black/10"
+            className="w-full text-black/40 rounded-full px-6 py-3 font-medium hover:text-black transition-colors text-sm border border-black/10"
           >
             Back to Booking
           </button>
         </div>
 
-        <p className="text-xs text-black/30 text-center mt-6">
-          Payments are secured by Midtrans. Your data is protected.
+        <p className="text-xs text-black/20 text-center mt-6">
+          This is a demo payment for academic purposes only.
         </p>
       </main>
     </div>
