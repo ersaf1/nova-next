@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const { data, error } = await supabase.from('Booking').select('*').order('createdAt', { ascending: false })
+    const { searchParams } = new URL(request.url)
+    const email = searchParams.get('email')
+    let query = supabase.from('Booking').select('*').order('createdAt', { ascending: false })
+    if (email) query = query.eq('email', email)
+    const { data, error } = await query
     if (error) throw error
     return NextResponse.json(data ?? [])
   } catch {

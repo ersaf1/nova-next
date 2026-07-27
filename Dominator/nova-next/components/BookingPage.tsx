@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, Check, MapPin, Clock, Users, Star, Search } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -33,10 +33,19 @@ interface BookingForm {
   notes: string
 }
 
-const STEPS = ['Negara', 'Paket', 'Detail']
+interface FormErrors {
+  name?: string
+  email?: string
+  phone?: string
+  travelDate?: string
+  participants?: string
+}
 
-const BookingPage: React.FC = () => {
+const STEPS = ['Destination', 'Package', 'Details']
+
+const BookingPageInner: React.FC = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [step, setStep] = useState(0)
   const [packages, setPackages] = useState<Package[]>([])
   const [loading, setLoading] = useState(true)
@@ -46,26 +55,58 @@ const BookingPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState<BookingForm>({ name: '', email: '', phone: '', travelDate: '', participants: 1, notes: '' })
+  const [formErrors, setFormErrors] = useState<FormErrors>({})
 
   useEffect(() => {
     fetch('/api/packages')
       .then(r => r.json())
-      .then((data: unknown) => { if (Array.isArray(data)) setPackages(data as Package[]); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+      .then((data: unknown) => {
+        if (Array.isArray(data)) {
+          setPackages(data as Package[])
+          // Auto-select package from URL param
+          const paramId = searchParams.get('packageId')
+          if (paramId) {
+            const found = (data as Package[]).find(p => String(p.id) === paramId)
+            if (found) {
+              setSelectedPackage(found)
+              setSelectedCountry(found.category)
+              setStep(2)
+            }
+          }
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [searchParams])
 
   const countries = Array.from(new Set(packages.map(p => p.category))).filter(Boolean)
   const filteredCountries = countries.filter(c => c.toLowerCase().includes(search.toLowerCase()))
   const filteredPackages = packages.filter(p => p.category === selectedCountry)
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const val = e.target.name === 'participants' ? parseInt(e.target.value) : e.target.value
+    const val = e.target.name === 'participants' ? (parseInt(e.target.value) || 1) : e.target.value
     setForm(prev => ({ ...prev, [e.target.name]: val }))
+    // Clear error on change
+    if (formErrors[e.target.name as keyof FormErrors]) {
+      setFormErrors(prev => ({ ...prev, [e.target.name]: undefined }))
+    }
+  }
+
+  const validateForm = (): boolean => {
+    const errors: FormErrors = {}
+    if (!form.name.trim()) errors.name = 'Full name is required'
+    if (!form.email.trim()) errors.email = 'Email is required'
+    if (!form.phone.trim()) errors.phone = 'Phone number is required'
+    if (!form.travelDate) errors.travelDate = 'Travel date is required'
+    if (!form.participants || form.participants < 1) errors.participants = 'At least 1 participant required'
+    setFormErrors(errors)
+    return Object.keys(errors).length === 0
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedPackage) return
+    if (!validateForm()) return
     setSubmitting(true)
     try {
       const res = await fetch('/api/bookings', {
@@ -91,17 +132,17 @@ const BookingPage: React.FC = () => {
             <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
               <Check className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold tracking-tight mb-2" style={{ letterSpacing: '-0.02em' }}>Booking Berhasil!</h2>
-            <p className="text-black/50 text-sm mb-2">Terima kasih, <span className="text-black font-medium">{form.name}</span>.</p>
-            <p className="text-black/50 text-sm mb-8">Konfirmasi dikirim ke <span className="text-black font-medium">{form.email}</span>.</p>
+            <h2 className="text-2xl font-bold tracking-tight mb-2" style={{ letterSpacing: '-0.02em' }}>Booking Confirmed!</h2>
+            <p className="text-black/50 text-sm mb-2">Thank you, <span className="text-black font-medium">{form.name}</span>.</p>
+            <p className="text-black/50 text-sm mb-8">Confirmation sent to <span className="text-black font-medium">{form.email}</span>.</p>
             <div className="bg-[#F5F5F5] rounded-2xl p-5 text-left mb-8 space-y-2">
-              <div className="flex justify-between text-sm"><span className="text-black/50">Paket</span><span className="font-medium">{selectedPackage?.title}</span></div>
-              <div className="flex justify-between text-sm"><span className="text-black/50">Destinasi</span><span className="font-medium">{selectedCountry}</span></div>
-              <div className="flex justify-between text-sm"><span className="text-black/50">Tanggal</span><span className="font-medium">{form.travelDate}</span></div>
-              <div className="flex justify-between text-sm"><span className="text-black/50">Peserta</span><span className="font-medium">{form.participants} orang</span></div>
+              <div className="flex justify-between text-sm"><span className="text-black/50">Package</span><span className="font-medium">{selectedPackage?.title}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-black/50">Destination</span><span className="font-medium">{selectedCountry}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-black/50">Date</span><span className="font-medium">{form.travelDate}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-black/50">Participants</span><span className="font-medium">{form.participants} person{form.participants !== 1 ? 's' : ''}</span></div>
               <div className="flex justify-between text-sm pt-2 border-t border-black/5"><span className="text-black/50">Total</span><span className="font-bold">${selectedPackage ? (selectedPackage.price * form.participants).toLocaleString() : 0}</span></div>
             </div>
-            <button onClick={() => router.push('/')} className="w-full bg-black text-white font-medium py-3 rounded-full hover:bg-black/80 transition-colors text-sm">Kembali ke Beranda</button>
+            <button onClick={() => router.push('/')} className="w-full bg-black text-white font-medium py-3 rounded-full hover:bg-black/80 transition-colors text-sm">Back to Home</button>
           </div>
         </div>
         <Footer />
@@ -117,10 +158,10 @@ const BookingPage: React.FC = () => {
           <div className="mb-10">
             <button onClick={() => step === 0 ? router.push('/') : setStep(s => s - 1)} className="flex items-center gap-2 text-sm text-black/40 hover:text-black transition-colors mb-6">
               <ArrowLeft className="w-4 h-4" />
-              {step === 0 ? 'Kembali ke Beranda' : 'Kembali'}
+              {step === 0 ? 'Back to Home' : 'Back'}
             </button>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2" style={{ letterSpacing: '-0.03em' }}>Booking Perjalanan</h1>
-            <p className="text-black/50 text-sm">Pilih destinasi impianmu dan mulai petualangan.</p>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2" style={{ letterSpacing: '-0.03em' }}>Book Your Trip</h1>
+            <p className="text-black/50 text-sm">Choose your dream destination and start your adventure.</p>
           </div>
 
           {/* Step Progress */}
@@ -138,19 +179,19 @@ const BookingPage: React.FC = () => {
             ))}
           </div>
 
-          {/* Step 0: Pilih Negara */}
+          {/* Step 0: Select Destination */}
           {step === 0 && (
             <div>
               <div className="mb-6">
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-black/30" />
-                  <input type="text" placeholder="Cari destinasi..." value={search} onChange={e => setSearch(e.target.value)} className="w-full pl-11 pr-4 py-3.5 bg-white border border-black/[0.06] rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-black/10 placeholder:text-black/30" />
+                  <input type="text" placeholder="Search destinations..." value={search} onChange={e => setSearch(e.target.value)} className="w-full pl-11 pr-4 py-3.5 bg-white border border-black/[0.06] rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-black/10 placeholder:text-black/30" />
                 </div>
               </div>
               {loading ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">{[...Array(6)].map((_, i) => <div key={i} className="bg-white rounded-2xl h-32 animate-pulse" />)}</div>
               ) : filteredCountries.length === 0 ? (
-                <div className="text-center py-16 text-black/30 text-sm">Tidak ada destinasi ditemukan.</div>
+                <div className="text-center py-16 text-black/30 text-sm">No destinations found.</div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {filteredCountries.map(country => {
@@ -163,7 +204,7 @@ const BookingPage: React.FC = () => {
                           <MapPin className="w-5 h-5 text-black/40" />
                           <div>
                             <p className="font-bold text-base tracking-tight" style={{ letterSpacing: '-0.02em' }}>{country}</p>
-                            <p className="text-xs text-black/40 mt-0.5">{count} paket tersedia</p>
+                            <p className="text-xs text-black/40 mt-0.5">{count} package{count !== 1 ? 's' : ''} available</p>
                           </div>
                         </div>
                       </button>
@@ -174,10 +215,10 @@ const BookingPage: React.FC = () => {
             </div>
           )}
 
-          {/* Step 1: Pilih Paket */}
+          {/* Step 1: Select Package */}
           {step === 1 && (
             <div>
-              <p className="text-sm text-black/40 mb-6">Menampilkan paket untuk <span className="text-black font-medium">{selectedCountry}</span></p>
+              <p className="text-sm text-black/40 mb-6">Showing packages for <span className="text-black font-medium">{selectedCountry}</span></p>
               <div className="grid md:grid-cols-2 gap-5">
                 {filteredPackages.map(pkg => (
                   <button key={pkg.id} onClick={() => { setSelectedPackage(pkg); setStep(2) }} className="group bg-white rounded-3xl overflow-hidden border border-black/[0.04] hover:shadow-xl transition-all duration-300 text-left flex flex-col">
@@ -197,8 +238,8 @@ const BookingPage: React.FC = () => {
                         </div>
                       </div>
                       <div className="flex items-center justify-between pt-3 border-t border-black/5">
-                        <div><span className="font-bold text-lg">${pkg.price.toLocaleString()}</span><span className="text-xs text-black/30 ml-1">/orang</span></div>
-                        <span className="flex items-center gap-1 text-xs font-semibold text-black bg-black/5 px-3 py-1.5 rounded-full group-hover:bg-black group-hover:text-white transition-colors">Pilih <ArrowRight className="w-3 h-3" /></span>
+                        <div><span className="font-bold text-lg">${pkg.price.toLocaleString()}</span><span className="text-xs text-black/30 ml-1">/person</span></div>
+                        <span className="flex items-center gap-1 text-xs font-semibold text-black bg-black/5 px-3 py-1.5 rounded-full group-hover:bg-black group-hover:text-white transition-colors">Select <ArrowRight className="w-3 h-3" /></span>
                       </div>
                     </div>
                   </button>
@@ -207,38 +248,43 @@ const BookingPage: React.FC = () => {
             </div>
           )}
 
-          {/* Step 2: Form Detail */}
+          {/* Step 2: Form Details */}
           {step === 2 && selectedPackage && (
             <div className="grid md:grid-cols-5 gap-8">
               <form onSubmit={handleSubmit} className="md:col-span-3 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Nama Lengkap *</label>
-                    <input name="name" value={form.name} onChange={handleFormChange} required placeholder="Nama kamu" className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20" />
+                    <label className="block text-xs font-medium text-black/50 mb-1.5">Full Name *</label>
+                    <input name="name" value={form.name} onChange={handleFormChange} placeholder="Your name" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20 ${formErrors.name ? 'border-red-400' : 'border-black/10'}`} />
+                    {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-black/50 mb-1.5">Email *</label>
-                    <input name="email" type="email" value={form.email} onChange={handleFormChange} required placeholder="email@kamu.com" className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20" />
+                    <input name="email" type="email" value={form.email} onChange={handleFormChange} placeholder="you@example.com" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20 ${formErrors.email ? 'border-red-400' : 'border-black/10'}`} />
+                    {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">No. HP *</label>
-                    <input name="phone" type="tel" value={form.phone} onChange={handleFormChange} required placeholder="+62 ..." className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20" />
+                    <label className="block text-xs font-medium text-black/50 mb-1.5">Phone *</label>
+                    <input name="phone" type="tel" value={form.phone} onChange={handleFormChange} placeholder="+1 ..." className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20 ${formErrors.phone ? 'border-red-400' : 'border-black/10'}`} />
+                    {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Tanggal Keberangkatan *</label>
-                    <input name="travelDate" type="date" value={form.travelDate} onChange={handleFormChange} required min={new Date().toISOString().split('T')[0]} className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white" />
+                    <label className="block text-xs font-medium text-black/50 mb-1.5">Travel Date *</label>
+                    <input name="travelDate" type="date" value={form.travelDate} onChange={handleFormChange} min={new Date().toISOString().split('T')[0]} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white ${formErrors.travelDate ? 'border-red-400' : 'border-black/10'}`} />
+                    {formErrors.travelDate && <p className="text-red-500 text-xs mt-1">{formErrors.travelDate}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Jumlah Peserta *</label>
-                    <input name="participants" type="number" value={form.participants} onChange={handleFormChange} required min={1} max={20} className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white" />
+                    <label className="block text-xs font-medium text-black/50 mb-1.5">Participants *</label>
+                    <input name="participants" type="number" value={form.participants} onChange={handleFormChange} min={1} max={20} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white ${formErrors.participants ? 'border-red-400' : 'border-black/10'}`} />
+                    {formErrors.participants && <p className="text-red-500 text-xs mt-1">{formErrors.participants}</p>}
                   </div>
                   <div className="col-span-2">
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Catatan (opsional)</label>
-                    <textarea name="notes" value={form.notes} onChange={handleFormChange} placeholder="Permintaan khusus..." rows={3} className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white resize-none placeholder:text-black/20" />
+                    <label className="block text-xs font-medium text-black/50 mb-1.5">Notes (optional)</label>
+                    <textarea name="notes" value={form.notes} onChange={handleFormChange} placeholder="Special requests..." rows={3} className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white resize-none placeholder:text-black/20" />
                   </div>
                 </div>
                 <button type="submit" disabled={submitting} className="w-full bg-black text-white font-medium py-4 rounded-full hover:bg-black/80 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-2">
-                  {submitting ? 'Memproses...' : <><span>Konfirmasi Booking</span><ArrowRight className="w-4 h-4" /></>}
+                  {submitting ? 'Processing...' : <><span>Confirm Booking</span><ArrowRight className="w-4 h-4" /></>}
                 </button>
               </form>
               <div className="md:col-span-2">
@@ -254,9 +300,22 @@ const BookingPage: React.FC = () => {
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{selectedPackage.duration}</span>
                       <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{selectedCountry}</span>
                     </div>
+                    {selectedPackage.includes && selectedPackage.includes.length > 0 && (
+                      <div className="pt-3 border-t border-black/5">
+                        <p className="text-xs font-medium text-black/50 mb-2">Includes</p>
+                        <ul className="space-y-1">
+                          {selectedPackage.includes.map((item, i) => (
+                            <li key={i} className="flex items-center gap-1.5 text-xs text-black/60">
+                              <Check className="w-3 h-3 text-black/40 shrink-0" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                     <div className="pt-3 border-t border-black/5 space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-black/40">${selectedPackage.price.toLocaleString()} × {form.participants} orang</span>
+                        <span className="text-black/40">${selectedPackage.price.toLocaleString()} × {form.participants} person{form.participants !== 1 ? 's' : ''}</span>
                         <span className="font-medium">${(selectedPackage.price * form.participants).toLocaleString()}</span>
                       </div>
                     </div>
@@ -273,6 +332,22 @@ const BookingPage: React.FC = () => {
       </div>
       <Footer />
     </div>
+  )
+}
+
+const BookingPage: React.FC = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+        </div>
+        <Footer />
+      </div>
+    }>
+      <BookingPageInner />
+    </Suspense>
   )
 }
 

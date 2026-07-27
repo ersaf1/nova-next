@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { CheckCircle, Clock } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 
@@ -54,9 +54,7 @@ function TicketDivider() {
 export default function ConfirmationPage() {
   const params = useParams()
   const router = useRouter()
-  const searchParams = useSearchParams()
   const bookingId = params.bookingId as string
-  const isPending = searchParams.get('pending') === 'true'
 
   const [booking, setBooking] = useState<Booking | null>(null)
   const [loading, setLoading] = useState(true)
@@ -64,13 +62,11 @@ export default function ConfirmationPage() {
 
   useEffect(() => {
     if (!bookingId) return
-    fetch('/api/bookings')
+    // Fetch single booking directly to avoid leaking all bookings to the client
+    fetch(`/api/bookings/${bookingId}`)
       .then((r) => r.json())
       .then((data: unknown) => {
-        if (Array.isArray(data)) {
-          const found = data.find((b: Booking) => String(b.id) === String(bookingId))
-          setBooking(found ?? null)
-        }
+        setBooking((data as Booking) ?? null)
         setLoading(false)
         // Trigger animation after mount
         setTimeout(() => setAnimateCheck(true), 100)
@@ -81,6 +77,9 @@ export default function ConfirmationPage() {
       })
   }, [bookingId])
 
+  // Derive pending status from actual booking data, not URL param
+  const isPending = booking?.status !== 'paid'
+
   const ticketNumber = `NOVA-${String(bookingId).padStart(8, '0')}`
   const totalAmount = booking
     ? booking.totalAmount ?? (booking.price ?? 0) * (booking.participants ?? 1)
@@ -88,10 +87,39 @@ export default function ConfirmationPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <span className="text-sm text-black/40" style={{ letterSpacing: '-0.02em' }}>
-          Loading…
-        </span>
+      <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.02em' }}>
+        <Navbar />
+        <main className="px-6 py-16 pt-28 max-w-2xl mx-auto">
+          {/* Header skeleton */}
+          <div className="text-center mb-10 space-y-3">
+            <div className="inline-block w-20 h-20 rounded-full bg-black/10 animate-pulse" />
+            <div className="h-6 bg-black/10 rounded-full w-48 mx-auto animate-pulse" />
+            <div className="h-4 bg-black/10 rounded-full w-72 mx-auto animate-pulse" />
+          </div>
+          {/* Ticket card skeleton */}
+          <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm animate-pulse">
+            <div className="bg-black/10 h-20 px-6 py-5" />
+            <div className="px-6 py-5 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="space-y-1.5">
+                    <div className="h-3 bg-black/10 rounded-full w-16" />
+                    <div className="h-4 bg-black/10 rounded-full w-28" />
+                  </div>
+                ))}
+              </div>
+              <div className="pt-3 border-t border-black/5 flex justify-between items-center">
+                <div className="h-3 bg-black/10 rounded-full w-16" />
+                <div className="h-5 bg-black/10 rounded-full w-24" />
+              </div>
+            </div>
+            <div className="border-t-2 border-dashed border-black/10 mx-6" />
+            <div className="px-6 py-6 flex flex-col items-center gap-3">
+              <div className="w-32 h-32 bg-black/10 rounded-xl" />
+              <div className="h-3 bg-black/10 rounded-full w-36" />
+            </div>
+          </div>
+        </main>
       </div>
     )
   }
@@ -229,8 +257,31 @@ export default function ConfirmationPage() {
             onClick={() => window.print()}
             className="w-full bg-black text-white rounded-full px-6 py-3 font-medium hover:bg-black/80 transition-colors text-sm"
           >
-            Download E-Ticket
+            Print E-Ticket
           </button>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => {
+                const destination = encodeURIComponent(booking?.country ?? 'your destination')
+                const date = booking?.travelDate ? booking.travelDate.replace(/-/g, '') : ''
+                const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Trip+to+${destination}&dates=${date}/${date}`
+                window.open(calUrl, '_blank')
+              }}
+              className="bg-white text-black rounded-full px-6 py-3 font-medium hover:bg-black/5 transition-colors text-sm border border-black/10"
+            >
+              Add to Calendar
+            </button>
+            <button
+              onClick={() => {
+                const destination = booking?.country ?? 'my destination'
+                const waUrl = `https://wa.me/?text=${encodeURIComponent(`I just booked a trip to ${destination} with NOVA! 🌍`)}`
+                window.open(waUrl, '_blank')
+              }}
+              className="bg-white text-black rounded-full px-6 py-3 font-medium hover:bg-black/5 transition-colors text-sm border border-black/10"
+            >
+              Share
+            </button>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => router.push('/')}

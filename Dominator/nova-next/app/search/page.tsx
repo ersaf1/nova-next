@@ -3,7 +3,7 @@
 import React, { Suspense, useEffect, useState, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Search, SlidersHorizontal, Star, Clock, Users, X, ChevronDown } from 'lucide-react'
+import { Search, SlidersHorizontal, Star, Clock, Users, X } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 
 interface Package {
@@ -46,17 +46,21 @@ function SkeletonCard() {
 
 function PackageCard({ pkg }: { pkg: Package }) {
   return (
-    <div className="bg-white rounded-2xl border border-black/[0.04] overflow-hidden group hover:shadow-lg transition-shadow duration-300">
+    <Link
+      href={`/booking?packageId=${pkg.id}`}
+      className="block bg-white rounded-2xl border border-black/[0.04] overflow-hidden group hover:shadow-lg transition-shadow duration-300"
+    >
       <div className="relative h-52 overflow-hidden bg-black/5">
         {pkg.image ? (
           <img
             src={pkg.image}
             alt={pkg.title}
+            loading="lazy"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-black/10 to-black/5 flex items-center justify-center">
-            <span className="text-4xl">✈</span>
+            <span className="text-4xl">&#9992;</span>
           </div>
         )}
         <span
@@ -95,15 +99,14 @@ function PackageCard({ pkg }: { pkg: Package }) {
             )}
             <span className="text-xs text-black/40 ml-1">/ person</span>
           </div>
-          <Link
-            href={`/booking?packageId=${pkg.id}`}
+          <span
             className="text-sm font-medium bg-black text-white px-4 py-2 rounded-full hover:bg-black/80 transition-colors duration-200"
           >
             Book Now
-          </Link>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
@@ -125,6 +128,7 @@ function SearchContent() {
   const [priceRange, setPriceRange] = useState([0, 10000])
   const [searchText, setSearchText] = useState(destination)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sortOrder, setSortOrder] = useState('recommended')
 
   useEffect(() => {
     async function fetchPackages() {
@@ -176,6 +180,13 @@ function SearchContent() {
 
   const maxPrice = packages.length > 0 ? Math.max(...packages.map((p) => p.price)) : 10000
 
+  const sortedPackages = [...filtered].sort((a, b) => {
+    if (sortOrder === 'price-asc') return a.price - b.price
+    if (sortOrder === 'price-desc') return b.price - a.price
+    if (sortOrder === 'rating') return b.rating - a.rating
+    return 0 // recommended: preserve API order
+  })
+
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
       <Navbar />
@@ -197,7 +208,7 @@ function SearchContent() {
       <div className="px-6 pb-24">
         <div className="max-w-[88rem] mx-auto flex gap-8">
           {/* Sidebar */}
-          <aside className="hidden lg:block w-64 shrink-0">
+          <aside className={`${sidebarOpen ? 'block' : 'hidden'} lg:block w-64 shrink-0`}>
             <div className="bg-white rounded-2xl border border-black/[0.04] p-6 sticky top-24 space-y-6">
               <h2 className="font-semibold text-black text-sm" style={{ letterSpacing: '-0.02em' }}>
                 Filters
@@ -348,6 +359,25 @@ function SearchContent() {
               ))}
             </div>
 
+            {/* Sort + result count bar */}
+            {!loading && !error && (
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-sm text-black/50">
+                  {filtered.length} package{filtered.length !== 1 ? 's' : ''} found
+                </p>
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                  className="text-sm bg-white border border-black/10 rounded-full px-4 py-1.5 text-black focus:outline-none focus:ring-2 focus:ring-black/10 cursor-pointer"
+                >
+                  <option value="recommended">Recommended</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="rating">Rating</option>
+                </select>
+              </div>
+            )}
+
             {/* Results grid */}
             {loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -382,7 +412,7 @@ function SearchContent() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {filtered.map((pkg) => (
+                {sortedPackages.map((pkg) => (
                   <PackageCard key={pkg.id} pkg={pkg} />
                 ))}
               </div>

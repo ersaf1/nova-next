@@ -2,38 +2,98 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
-import { Luggage, CalendarCheck, Heart, LogOut } from 'lucide-react'
+import { Luggage, CalendarCheck, CheckCircle2, Search, MapIcon, Ticket } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
+import Navbar from '@/components/Navbar'
 
-const stats = [
-  { label: 'Total Bookings', value: 0, icon: Luggage },
-  { label: 'Upcoming Trips', value: 0, icon: CalendarCheck },
-  { label: 'Wishlist', value: 0, icon: Heart },
+type Booking = {
+  id: number
+  packageName: string
+  country: string
+  travelDate: string
+  participants: number
+  status: 'paid' | 'pending' | 'cancelled'
+  email: string
+}
+
+function SkeletonCard() {
+  return (
+    <div className="bg-white rounded-2xl p-6 border border-black/[0.04] animate-pulse">
+      <div className="h-4 bg-neutral-100 rounded w-1/2 mb-3" />
+      <div className="h-8 bg-neutral-100 rounded w-1/4" />
+    </div>
+  )
+}
+
+function SkeletonRow() {
+  return (
+    <tr>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <td key={i} className="px-4 py-3">
+          <div className="h-4 bg-neutral-100 rounded animate-pulse w-3/4" />
+        </td>
+      ))}
+    </tr>
+  )
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  paid: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+  pending: 'bg-amber-50 text-amber-700 border border-amber-200',
+  cancelled: 'bg-red-50 text-red-600 border border-red-200',
+}
+
+const QUICK_ACTIONS = [
+  { label: 'Search Packages', description: 'Browse all destinations', href: '/search', icon: Search },
+  { label: 'Plan Itinerary', description: 'AI-powered trip planning', href: '/itinerary', icon: MapIcon },
+  { label: 'Book a Trip', description: 'Start a new booking', href: '/booking', icon: Ticket },
 ]
 
 export default function DashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
+  const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
+  const [bookingsLoading, setBookingsLoading] = useState(false)
 
   useEffect(() => {
     supabaseClient.auth.getUser().then(({ data }) => {
       if (!data.user) {
         router.replace('/login?redirect=/dashboard')
-      } else {
-        setUser(data.user)
+        return
       }
+      setUser(data.user)
       setLoading(false)
+      // Fetch bookings filtered by this user's email
+      if (data.user.email) {
+        setBookingsLoading(true)
+        fetch(`/api/bookings?email=${encodeURIComponent(data.user.email)}`)
+          .then((r) => r.json())
+          .then((data) => {
+            if (Array.isArray(data)) setBookings(data)
+          })
+          .catch(() => {})
+          .finally(() => setBookingsLoading(false))
+      } else {
+        setLoading(false)
+      }
     })
   }, [router])
 
-  async function handleSignOut() {
-    await supabaseClient.auth.signOut()
-    // Clear session cookie
-    document.cookie = 'sb-access-token=; path=/; max-age=0'
-    router.push('/')
-  }
+  const now = new Date()
+  const totalBookings = bookings.length
+  const upcomingTrips = bookings.filter((b) => new Date(b.travelDate) > now).length
+  const completed = bookings.filter((b) => b.status === 'paid').length
+
+  const stats = [
+    { label: 'Total Bookings', value: totalBookings, icon: Luggage },
+    { label: 'Upcoming Trips', value: upcomingTrips, icon: CalendarCheck },
+    { label: 'Completed', value: completed, icon: CheckCircle2 },
+  ]
+
+  const displayName = user?.email ? user.email.split('@')[0] : 'there'
 
   if (loading) {
     return (
@@ -47,68 +107,160 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.02em' }}>
-      {/* Top bar */}
-      <header className="bg-white border-b border-neutral-100 px-6 py-4 flex items-center justify-between">
-        <span className="text-lg font-semibold tracking-tight text-black">NOVA</span>
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-2 text-sm text-neutral-500 hover:text-black transition"
-        >
-          <LogOut size={15} />
-          Sign out
-        </button>
-      </header>
+      <Navbar />
 
-      <main className="max-w-4xl mx-auto px-6 py-12">
+      <main className="max-w-5xl mx-auto px-6 py-8 pt-24">
         {/* Welcome */}
-        <div className="mb-10">
-          <h1 className="text-2xl font-semibold text-black">Welcome back</h1>
+        <div className="mb-8">
+          <h1
+            className="text-2xl font-semibold text-black"
+            style={{ letterSpacing: '-0.02em' }}
+          >
+            Welcome back, {displayName}
+          </h1>
           <p className="mt-1 text-sm text-neutral-500">{user?.email}</p>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-          {stats.map(({ label, value, icon: Icon }) => (
-            <div key={label} className="bg-white rounded-2xl p-6 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center shrink-0">
-                <Icon size={18} className="text-black" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold text-black">{value}</p>
-                <p className="text-xs text-neutral-500 mt-0.5">{label}</p>
-              </div>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          {bookingsLoading
+            ? [1, 2, 3].map((i) => <SkeletonCard key={i} />)
+            : stats.map(({ label, value, icon: Icon }) => (
+                <div
+                  key={label}
+                  className="bg-white rounded-2xl px-6 py-5 flex items-center gap-4 border border-black/[0.04]"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-neutral-50 flex items-center justify-center shrink-0">
+                    <Icon size={18} className="text-neutral-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500">{label}</p>
+                    <p className="text-2xl font-semibold text-black mt-0.5">{value}</p>
+                  </div>
+                </div>
+              ))}
         </div>
 
-        {/* Recent bookings */}
-        <div className="bg-white rounded-2xl p-6">
-          <h2 className="text-sm font-semibold text-black mb-4">Recent Bookings</h2>
-          <div className="rounded-xl border border-neutral-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-[#F5F5F5]">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-neutral-500">Destination</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-neutral-500">Date</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-neutral-500">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colSpan={3} className="px-4 py-10 text-center text-xs text-neutral-400">
-                    No bookings yet. Start planning your next trip.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        {/* Bookings table */}
+        <div className="bg-white rounded-2xl border border-black/[0.04] mb-8 overflow-hidden">
+          <div className="px-6 py-5 border-b border-neutral-50 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-black" style={{ letterSpacing: '-0.02em' }}>
+              My Bookings
+            </h2>
+            <Link
+              href="/booking"
+              className="text-xs font-medium text-neutral-500 hover:text-black transition-colors"
+            >
+              + New booking
+            </Link>
           </div>
 
-          <button
-            onClick={() => router.push('/booking')}
-            className="mt-4 bg-black text-white rounded-full px-5 py-2.5 text-sm font-medium hover:bg-neutral-800 transition"
+          {bookingsLoading ? (
+            <table className="w-full">
+              <tbody>
+                {[1, 2, 3].map((i) => <SkeletonRow key={i} />)}
+              </tbody>
+            </table>
+          ) : bookings.length === 0 ? (
+            /* Empty state */
+            <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+              <span className="text-5xl mb-4" role="img" aria-label="plane">✈️</span>
+              <h3
+                className="text-base font-semibold text-black mb-1"
+                style={{ letterSpacing: '-0.02em' }}
+              >
+                No trips yet
+              </h3>
+              <p className="text-sm text-neutral-400 mb-6 max-w-xs">
+                You haven't booked any trips. Explore packages and start planning your next adventure.
+              </p>
+              <Link
+                href="/search"
+                className="bg-black text-white text-sm font-medium rounded-full px-5 py-2.5 hover:bg-neutral-800 transition-colors"
+              >
+                Start Planning
+              </Link>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-neutral-50">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-neutral-400">Package</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-neutral-400">Destination</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-neutral-400">Travel Date</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-neutral-400">Participants</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-neutral-400">Status</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-neutral-400">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bookings.map((b) => (
+                    <tr key={b.id} className="border-b border-neutral-50 last:border-0 hover:bg-neutral-50/60 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-black">{b.packageName}</td>
+                      <td className="px-6 py-4 text-sm text-neutral-600">{b.country}</td>
+                      <td className="px-6 py-4 text-sm text-neutral-600">
+                        {new Date(b.travelDate).toLocaleDateString('en-US', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-neutral-600">{b.participants}</td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full capitalize ${
+                            STATUS_STYLES[b.status] ?? 'bg-neutral-100 text-neutral-600'
+                          }`}
+                        >
+                          {b.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        {b.status === 'paid' ? (
+                          <Link
+                            href={`/payment/confirmation/${b.id}`}
+                            className="text-xs font-medium text-black underline underline-offset-2 hover:text-neutral-600 transition-colors"
+                          >
+                            View E-ticket
+                          </Link>
+                        ) : (
+                          <span className="text-xs text-neutral-300">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Quick actions */}
+        <div className="mb-2">
+          <h2
+            className="text-sm font-semibold text-black mb-4"
+            style={{ letterSpacing: '-0.02em' }}
           >
-            Book a trip
-          </button>
+            Quick Actions
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {QUICK_ACTIONS.map(({ label, description, href, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="bg-white rounded-2xl px-6 py-5 border border-black/[0.04] flex items-start gap-4 hover:border-black/10 hover:shadow-sm transition-all group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-neutral-50 flex items-center justify-center shrink-0 group-hover:bg-neutral-100 transition-colors">
+                  <Icon size={18} className="text-neutral-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-black">{label}</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">{description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </main>
     </div>
