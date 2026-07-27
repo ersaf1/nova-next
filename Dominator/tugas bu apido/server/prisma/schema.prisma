@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Hero {
+  id          Int    @id @default(autoincrement())
+  headline    String
+  subheadline String
+  badgeText   String
+  videoUrl    String
+  posterUrl   String
+}
+
+model Destination {
+  id       Int     @id @default(autoincrement())
+  city     String
+  country  String
+  tagline  String
+  price    String
+  image    String
+  tag      String?
+  rating   Float
+  duration String
+}
+
+model Package {
+  id            Int    @id @default(autoincrement())
+  tag           String
+  tagColor      String
+  title         String
+  subtitle      String
+  image         String
+  price         Int
+  originalPrice Int
+  duration      String
+  groupSize     String
+  rating        Float
+  reviews       Int
+  includes      String
+  highlight     String
+  category      String
+}
+
+model Testimonial {
+  id       Int    @id @default(autoincrement())
+  name     String
+  location String
+  avatar   String
+  rating   Int
+  text     String
+  trip     String
+}
+
+model FAQ {
+  id Int    @id @default(autoincrement())
+  q  String
+  a  String
+}
+
+model Booking {
+  id           Int      @id @default(autoincrement())
+  packageId    Int
+  packageName  String
+  country      String
+  name         String
+  email        String
+  phone        String
+  travelDate   String
+  participants Int
+  notes        String?
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+}
