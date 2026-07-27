@@ -7,12 +7,12 @@ import { Menu, X, Sparkles } from 'lucide-react'
 import LogoIcon from './LogoIcon'
 
 const NAV_LINKS = [
-  { label: 'Destinations', href: '/#destinations' },
-  { label: 'Packages', href: '/#packages' },
-  { label: 'How It Works', href: '/#how-it-works' },
+  { label: 'Destinations', href: '/destinations' },
+  { label: 'Packages', href: '/packages' },
+  { label: 'How It Works', href: '/how-it-works' },
   { label: 'AI Planner', href: '/itinerary', highlight: true },
   { label: 'Search', href: '/search' },
-  { label: 'FAQ', href: '/#help' },
+  { label: 'FAQ', href: '/faq' },
 ]
 
 const Navbar: React.FC = () => {
