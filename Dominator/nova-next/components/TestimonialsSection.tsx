@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Star, MapPin } from 'lucide-react'
+import { useGSAPStagger } from '@/hooks/useGSAP'
 
 interface Testimonial {
   id: number
@@ -15,6 +16,7 @@ interface Testimonial {
 
 const TestimonialsSection: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const ref = useGSAPStagger()
 
   useEffect(() => {
     fetch('/api/testimonials')
@@ -24,7 +26,7 @@ const TestimonialsSection: React.FC = () => {
   }, [])
 
   return (
-    <section className="bg-[#F5F5F5] px-6 py-24">
+    <section ref={ref as React.RefObject<HTMLElement>} className="bg-[#F5F5F5] px-6 py-24">
       <div className="max-w-[88rem] mx-auto">
         <div className="mb-12">
           <p className="text-black/50 text-sm font-medium tracking-widest uppercase mb-3">Real travelers, real stories</p>
@@ -32,7 +34,7 @@ const TestimonialsSection: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t) => (
-            <div key={t.id} className="bg-white rounded-2xl p-7 flex flex-col justify-between min-h-64">
+            <div key={t.id} data-gsap="stagger" className="bg-white rounded-2xl p-7 flex flex-col justify-between min-h-64">
               <div>
                 <div className="flex gap-1 mb-5">
                   {Array.from({ length: t.rating }).map((_, i) => (<Star key={i} className="w-4 h-4 fill-black text-black" />))}

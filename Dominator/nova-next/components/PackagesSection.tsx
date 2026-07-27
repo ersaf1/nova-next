@@ -2,8 +2,10 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { MapPin, Clock, Users, Star, ArrowRight, Zap, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useScrollAnimation, use3DTilt } from '@/hooks/useScrollAnimation'
+import { useGSAPStagger } from '@/hooks/useGSAP'
 
 interface Package {
   id: number; tag: string; tagColor: string; title: string; subtitle: string
@@ -13,6 +15,18 @@ interface Package {
 }
 
 interface PackageCardProps { pkg: Package; delay: number; isVisible: boolean }
+
+const ClaimOfferButton: React.FC = () => {
+  const router = useRouter()
+  return (
+    <button
+      onClick={() => router.push('/booking')}
+      className="shrink-0 flex items-center gap-2 bg-white text-black text-sm font-bold px-6 py-3.5 rounded-full hover:bg-neutral-100 transition-colors duration-300"
+    >
+      Claim offer<ArrowRight className="w-4 h-4" />
+    </button>
+  )
+}
 
 const PackageCard: React.FC<PackageCardProps> = ({ pkg, delay, isVisible }) => {
   const { ref, tilt } = use3DTilt()
@@ -83,6 +97,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg, delay, isVisible }) => {
 
 const PackagesSection: React.FC = () => {
   const { ref, isVisible } = useScrollAnimation<HTMLElement>()
+  const gsapRef = useGSAPStagger()
   const [activeFilter, setActiveFilter] = useState('All')
   const scrollRef = useRef<HTMLDivElement>(null)
   const [packages, setPackages] = useState<Package[]>([])
@@ -125,10 +140,14 @@ const PackagesSection: React.FC = () => {
               <button onClick={() => scroll('right')} className="w-11 h-11 rounded-full border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition-all duration-300" aria-label="Next trip"><ChevronRight className="w-5 h-5" /></button>
             </div>
           </div>
-          <div className="lg:col-span-8 w-full overflow-hidden relative">
+          <div ref={gsapRef as React.RefObject<HTMLDivElement>} className="lg:col-span-8 w-full overflow-hidden relative">
             <div ref={scrollRef} className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none pb-8 w-full">
               {filteredPackages.length > 0 ? (
-                filteredPackages.map((pkg, i) => <PackageCard key={pkg.id} pkg={pkg} delay={i * 100} isVisible={isVisible} />)
+                filteredPackages.map((pkg, i) => (
+                  <div key={pkg.id} data-gsap="stagger">
+                    <PackageCard pkg={pkg} delay={i * 100} isVisible={isVisible} />
+                  </div>
+                ))
               ) : (
                 <div className="min-h-80 w-full flex flex-col items-center justify-center bg-neutral-50 border border-black/[0.03] rounded-3xl p-8">
                   <p className="text-black/45 text-sm font-semibold">No packages found for this category</p>
@@ -143,7 +162,7 @@ const PackagesSection: React.FC = () => {
             <h3 className="text-white text-2xl font-bold tracking-tight mt-4 mb-1" style={{ letterSpacing: '-0.02em' }}>First booking? Get 15% off any package.</h3>
             <p className="text-white/60 text-xs font-light">Use code <span className="text-white font-bold bg-white/10 px-2 py-0.5 rounded">NOVA15</span> at checkout. Valid for 48 hours.</p>
           </div>
-          <button className="shrink-0 flex items-center gap-2 bg-white text-black text-sm font-bold px-6 py-3.5 rounded-full hover:bg-neutral-100 transition-colors duration-300">Claim offer<ArrowRight className="w-4 h-4" /></button>
+          <ClaimOfferButton />
         </div>
       </div>
     </section>

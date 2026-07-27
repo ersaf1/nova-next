@@ -73,7 +73,10 @@ const BookingPage: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ packageId: selectedPackage.id, packageName: selectedPackage.title, country: selectedCountry, ...form }),
       })
-      if (res.ok) setSubmitted(true)
+      if (res.ok) {
+        const data = await res.json()
+        router.push('/payment/' + data.id)
+      }
     } finally {
       setSubmitting(false)
     }
