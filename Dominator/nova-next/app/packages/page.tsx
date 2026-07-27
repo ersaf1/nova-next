@@ -23,10 +23,28 @@ interface Package {
   category: string
 }
 
+const STATIC_PACKAGES: Package[] = [
+  { id: 1, tag: 'Best Seller', tagColor: 'bg-amber-400 text-black', title: 'Bali Paradise Escape', subtitle: 'Ubud • Seminyak • Uluwatu', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=85', price: 1299, originalPrice: 1599, duration: '8 days', groupSize: '2-12', rating: 4.9, reviews: 248, includes: ['Flights', 'Hotel', 'Tours', 'Breakfast'], highlight: 'Temple & rice terrace tour included', category: 'Beach' },
+  { id: 2, tag: 'New', tagColor: 'bg-emerald-400 text-black', title: 'Japan Cherry Blossom', subtitle: 'Tokyo • Kyoto • Osaka', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=85', price: 2199, originalPrice: 2599, duration: '12 days', groupSize: '2-8', rating: 4.8, reviews: 184, includes: ['Flights', 'Hotel', 'JR Pass', 'Guide'], highlight: 'Sakura season experience', category: 'City' },
+  { id: 3, tag: 'Luxury', tagColor: 'bg-violet-400 text-white', title: 'Santorini Sunsets', subtitle: 'Oia • Fira • Akrotiri', image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=85', price: 2899, originalPrice: 3299, duration: '7 days', groupSize: '2-6', rating: 4.9, reviews: 132, includes: ['Flights', 'Villa', 'Wine tour', 'Yacht'], highlight: 'Private villa with caldera view', category: 'Beach' },
+  { id: 4, tag: 'Adventure', tagColor: 'bg-orange-400 text-black', title: 'Patagonia Trekking', subtitle: 'Torres del Paine • El Calafate', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=85', price: 3199, originalPrice: 3699, duration: '14 days', groupSize: '4-12', rating: 4.8, reviews: 96, includes: ['Flights', 'Camping', 'Guide', 'Gear'], highlight: 'W Circuit full trek', category: 'Mountain' },
+  { id: 5, tag: 'Popular', tagColor: 'bg-sky-400 text-black', title: 'Maldives Overwater', subtitle: 'North Malé • Baa Atoll', image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=85', price: 3999, originalPrice: 4599, duration: '6 days', groupSize: '2', rating: 5.0, reviews: 211, includes: ['Flights', 'Overwater villa', 'All meals', 'Diving'], highlight: 'UNESCO Biosphere Reserve diving', category: 'Beach' },
+  { id: 6, tag: 'Cultural', tagColor: 'bg-rose-400 text-white', title: 'Morocco Desert Dream', subtitle: 'Marrakech • Fez • Sahara', image: 'https://images.unsplash.com/photo-1489493887464-892be6d1daae?w=800&q=85', price: 1499, originalPrice: 1799, duration: '9 days', groupSize: '2-10', rating: 4.7, reviews: 167, includes: ['Flights', 'Riad', 'Camel trek', 'Guide'], highlight: 'Sahara desert overnight camp', category: 'City' },
+]
+
 export default function PackagesPage() {
-  const [packages, setPackages] = useState<Package[]>([])
-  const [loading, setLoading] = useState(true)
+  const [packages, setPackages] = useState<Package[]>(STATIC_PACKAGES)
+  const [loading, setLoading] = useState(false)
   const [activeFilter, setActiveFilter] = useState('All')
+
+  useEffect(() => {
+    fetch('/api/packages')
+      .then((r) => r.json())
+      .then((data: unknown) => {
+        if (Array.isArray(data) && data.length > 0) setPackages(data)
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     fetch('/api/packages')

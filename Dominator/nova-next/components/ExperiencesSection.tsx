@@ -17,7 +17,7 @@ const ExperiencesSection: React.FC = () => {
       <div className="max-w-[88rem] mx-auto">
         <div className="mb-10 flex items-end justify-between">
           <h2 className="text-black text-4xl md:text-5xl font-medium leading-none" style={{ letterSpacing: '-0.04em' }}>Travel modes</h2>
-          <a href="#" className="hidden sm:inline-flex items-center gap-2 text-black/50 text-sm font-medium hover:text-black transition-colors group">
+          <a href="/search" className="hidden sm:inline-flex items-center gap-2 text-black/50 text-sm font-medium hover:text-black transition-colors group">
             Explore all <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -51,7 +51,7 @@ const ExperiencesSection: React.FC = () => {
                   <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Travel mode</p>
                   <h3 className="text-white text-4xl font-bold mb-2" style={{ letterSpacing: '-0.03em' }}>{mode.label}</h3>
                   <p className="text-white/70 text-base mb-6">{mode.short}</p>
-                  <a href="#" className="inline-flex items-center gap-3">
+                  <a href="/search" className="inline-flex items-center gap-3">
                     <span className="w-10 h-10 rounded-full bg-white/20 backdrop-blur border border-white/30 flex items-center justify-center hover:bg-white/30 transition-colors"><ArrowRight className="w-4 h-4 text-white" /></span>
                     <span className="text-white font-medium">Explore {mode.label}</span>
                   </a>

@@ -46,7 +46,7 @@ const FeaturesHighlightSection: React.FC = () => {
                 )
               })}
             </div>
-            <a href="#" className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-6 py-3 rounded-full hover:bg-neutral-800 transition-colors duration-200">Explore features</a>
+            <a href="/how-it-works" className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-6 py-3 rounded-full hover:bg-neutral-800 transition-colors duration-200">Explore features</a>
           </div>
         </div>
       </div>

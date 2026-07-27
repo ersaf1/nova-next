@@ -132,7 +132,7 @@ const DestinationsSection: React.FC = () => {
               <p className="text-black/40 text-xs font-medium tracking-widest uppercase mb-2">Where to next</p>
               <h2 className="text-black text-3xl sm:text-4xl md:text-5xl font-medium leading-tight" style={{ letterSpacing: '-0.03em' }}>Top Destinations</h2>
             </div>
-            <a href="#" className="inline-flex items-center gap-2 text-black/60 font-medium text-sm hover:text-black transition-colors duration-200 group shrink-0">View all<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" /></a>
+            <a href="/destinations" className="inline-flex items-center gap-2 text-black/60 font-medium text-sm hover:text-black transition-colors duration-200 group shrink-0">View all<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" /></a>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 auto-rows-[200px]">
             {destinations.map((dest, i) => {
@@ -162,7 +162,7 @@ const DestinationsSection: React.FC = () => {
             })}
           </div>
           <div className="mt-10 flex justify-center">
-            <a href="#" className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-7 py-3.5 rounded-full hover:bg-neutral-800 transition-colors duration-200">All destinations<ArrowRight className="w-4 h-4" /></a>
+            <a href="/destinations" className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-7 py-3.5 rounded-full hover:bg-neutral-800 transition-colors duration-200">All destinations<ArrowRight className="w-4 h-4" /></a>
           </div>
         </div>
       </section>

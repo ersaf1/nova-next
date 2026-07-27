@@ -17,19 +17,33 @@ interface Destination {
   category: string
 }
 
+const STATIC_DESTINATIONS: Destination[] = [
+  { id: 1, city: 'Bali', country: 'Indonesia', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=85', description: 'Tropical paradise with stunning temples, rice terraces, and world-class surf beaches.', rating: 4.9, duration: '5-14 days', price: 'From $899', category: 'Beach' },
+  { id: 2, city: 'Tokyo', country: 'Japan', image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=85', description: 'A dazzling blend of ultramodern and traditional, neon lights and ancient temples.', rating: 4.8, duration: '7-14 days', price: 'From $1,299', category: 'City' },
+  { id: 3, city: 'Santorini', country: 'Greece', image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=85', description: 'Iconic white-washed villages perched on volcanic cliffs above the Aegean Sea.', rating: 4.9, duration: '5-10 days', price: 'From $1,199', category: 'Beach' },
+  { id: 4, city: 'Paris', country: 'France', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=85', description: 'The city of light — art, cuisine, fashion, and the iconic Eiffel Tower.', rating: 4.7, duration: '4-10 days', price: 'From $1,099', category: 'City' },
+  { id: 5, city: 'Queenstown', country: 'New Zealand', image: 'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=800&q=85', description: 'The adventure capital of the world, surrounded by dramatic alpine scenery.', rating: 4.8, duration: '7-14 days', price: 'From $1,499', category: 'Adventure' },
+  { id: 6, city: 'Kyoto', country: 'Japan', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=85', description: 'Ancient capital with thousands of classical Buddhist temples and stunning gardens.', rating: 4.9, duration: '4-8 days', price: 'From $999', category: 'Cultural' },
+  { id: 7, city: 'Maldives', country: 'Maldives', image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=85', description: 'Overwater bungalows, crystal-clear lagoons, and the world\'s finest coral reefs.', rating: 5.0, duration: '5-10 days', price: 'From $2,499', category: 'Beach' },
+  { id: 8, city: 'Machu Picchu', country: 'Peru', image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800&q=85', description: 'The lost city of the Incas, hidden high in the Andes mountains of Peru.', rating: 4.9, duration: '7-12 days', price: 'From $1,399', category: 'Mountain' },
+  { id: 9, city: 'Dubai', country: 'UAE', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=85', description: 'Futuristic skyline, luxury shopping, and desert adventures in one glittering city.', rating: 4.7, duration: '4-8 days', price: 'From $1,099', category: 'City' },
+  { id: 10, city: 'Cape Town', country: 'South Africa', image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=85', description: 'Where mountains meet the ocean — vineyards, safaris, and stunning coastal drives.', rating: 4.8, duration: '7-14 days', price: 'From $1,199', category: 'Adventure' },
+  { id: 11, city: 'Barcelona', country: 'Spain', image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=85', description: 'Gaudí\'s architecture, vibrant nightlife, and Mediterranean beaches all in one city.', rating: 4.8, duration: '4-8 days', price: 'From $999', category: 'Cultural' },
+  { id: 12, city: 'Swiss Alps', country: 'Switzerland', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=85', description: 'Pristine ski slopes, charming villages, and breathtaking alpine panoramas.', rating: 4.9, duration: '5-10 days', price: 'From $1,799', category: 'Mountain' },
+]
+
 export default function DestinationsPage() {
-  const [destinations, setDestinations] = useState<Destination[]>([])
-  const [loading, setLoading] = useState(true)
+  const [destinations, setDestinations] = useState<Destination[]>(STATIC_DESTINATIONS)
+  const [loading, setLoading] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('All')
 
   useEffect(() => {
     fetch('/api/destinations')
       .then((r) => r.json())
       .then((data: unknown) => {
-        if (Array.isArray(data)) setDestinations(data)
-        setLoading(false)
+        if (Array.isArray(data) && data.length > 0) setDestinations(data)
       })
-      .catch(() => setLoading(false))
+      .catch(() => {})
   }, [])
 
   const categories = ['All', 'Beach', 'Mountain', 'City', 'Cultural', 'Adventure']
