@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { getAttractionsForDestination } from '@/lib/attractions'
 
 function generateMockItinerary(destination: string, duration: number) {
   return {
@@ -19,6 +20,7 @@ function generateMockItinerary(destination: string, duration: number) {
       accommodation: `${destination} Central Hotel`,
       estimatedDailyCost: '$150',
     })),
+    attractions: getAttractionsForDestination(destination),
     travelTips: ['Book accommodation early', 'Carry local currency', 'Learn basic local phrases'],
     bestTimeToVisit: 'April to October',
     localPhrases: [{ phrase: 'Hello', meaning: 'Greeting' }],
@@ -26,12 +28,17 @@ function generateMockItinerary(destination: string, duration: number) {
 }
 
 export async function POST(request: Request) {
+  let destination = 'Bali'
+  let duration = 3
   try {
-    const { destination, duration, travelers, budget, preferences } = await request.json()
+    const body = await request.json()
+    destination = body.destination || 'Bali'
+    duration = Number(body.duration) || 3
+    const { travelers, budget, preferences } = body
 
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey || apiKey === 'placeholder') {
-      return NextResponse.json(generateMockItinerary(destination || 'Bali', Number(duration) || 3))
+      return NextResponse.json(generateMockItinerary(destination, duration))
     }
 
     const genAI = new GoogleGenerativeAI(apiKey)
@@ -64,6 +71,12 @@ Return a JSON object with this exact structure:
       "estimatedDailyCost": "string"
     }
   ],
+  "attractions": [
+    {
+      "name": "string (name of a famous must-visit place in ${destination})",
+      "description": "string (1-2 sentences about what makes it special)"
+    }
+  ],
   "travelTips": ["string"],
   "bestTimeToVisit": "string",
   "localPhrases": [{"phrase": "string", "meaning": "string"}]
@@ -74,9 +87,13 @@ Return a JSON object with this exact structure:
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     if (!jsonMatch) throw new Error('Invalid AI response')
     const itinerary = JSON.parse(jsonMatch[0])
+    
+    // Inject images for generated attractions using our mapping helper
+    itinerary.attractions = getAttractionsForDestination(destination, itinerary.attractions)
+    
     return NextResponse.json(itinerary)
   } catch (error) {
     console.error('AI itinerary error:', error)
-    return NextResponse.json(generateMockItinerary('Bali', 3), { status: 200 })
+    return NextResponse.json(generateMockItinerary(destination || 'Bali', Number(duration) || 3), { status: 200 })
   }
 }

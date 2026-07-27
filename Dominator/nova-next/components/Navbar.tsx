@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { Menu, X, Sparkles } from 'lucide-react'
 import LogoIcon from './LogoIcon'
+import gsap from 'gsap'
 
 const NAV_LINKS = [
   { label: 'Destinations', href: '/destinations' },
@@ -18,8 +19,18 @@ const NAV_LINKS = [
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const navRef = useRef<HTMLElement>(null)
   const router = useRouter()
   const pathname = usePathname()
+
+  useEffect(() => {
+    if (!navRef.current) return
+    gsap.fromTo(
+      navRef.current,
+      { y: -30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out', delay: 0.1 }
+    )
+  }, [])
 
   // Determine if we're on a non-home page (should always show dark navbar)
   const isHomePage = pathname === '/'
@@ -41,7 +52,8 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 ${
+      ref={navRef}
+      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 opacity-0 ${
         isDark
           ? 'bg-transparent py-6'
           : 'bg-white/90 backdrop-blur-xl border-b border-black/[0.06] py-4 shadow-[0_1px_0_rgba(0,0,0,0.04)]'

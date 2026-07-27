@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { ArrowRight, MapPin, Star, Heart, X, Clock } from 'lucide-react'
-import { useScrollAnimation } from '@/hooks/useScrollAnimation'
+import ScrollReveal from './ScrollReveal'
 
 interface Destination {
   id: number
@@ -99,7 +99,6 @@ const Lightbox: React.FC<LightboxProps> = ({ dest, onClose, onPrev, onNext, save
 }
 
 const DestinationsSection: React.FC = () => {
-  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.05 })
   const [saved, setSaved] = useState<Set<string>>(new Set())
   const [destinations, setDestinations] = useState<Destination[]>([])
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
@@ -125,42 +124,48 @@ const DestinationsSection: React.FC = () => {
 
   return (
     <>
-      <section ref={ref} id="destinations" className="bg-[#F5F5F5] px-4 sm:px-6 py-16 md:py-24">
+      <section id="destinations" className="bg-[#F5F5F5] px-4 sm:px-6 py-16 md:py-24">
         <div className="max-w-[88rem] mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 md:mb-12 gap-4" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 0.7s ease, transform 0.7s ease' }}>
-            <div>
-              <p className="text-black/40 text-xs font-medium tracking-widest uppercase mb-2">Where to next</p>
-              <h2 className="text-black text-3xl sm:text-4xl md:text-5xl font-medium leading-tight" style={{ letterSpacing: '-0.03em' }}>Top Destinations</h2>
+          <ScrollReveal animation="slide-up">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 md:mb-12 gap-4">
+              <div>
+                <p className="text-black/40 text-xs font-medium tracking-widest uppercase mb-2">Where to next</p>
+                <h2 className="text-black text-3xl sm:text-4xl md:text-5xl font-medium leading-tight" style={{ letterSpacing: '-0.03em' }}>Top Destinations</h2>
+              </div>
+              <a href="/destinations" className="inline-flex items-center gap-2 text-black/60 font-medium text-sm hover:text-black transition-colors duration-200 group shrink-0">View all<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" /></a>
             </div>
-            <a href="/destinations" className="inline-flex items-center gap-2 text-black/60 font-medium text-sm hover:text-black transition-colors duration-200 group shrink-0">View all<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" /></a>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 auto-rows-[200px]">
-            {destinations.map((dest, i) => {
-              const isTall = i === 0 || i === 5 || i === 10
-              const isWide = i === 3 || i === 8
-              return (
-                <div key={dest.city} className={`group relative overflow-hidden rounded-2xl cursor-pointer ${isTall ? 'row-span-2' : ''} ${isWide ? 'col-span-2' : ''}`} style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.98)', transition: `opacity 0.55s ease ${i * 50}ms, transform 0.55s ease ${i * 50}ms` }} onClick={() => setLightboxIndex(i)}>
-                  <img src={dest.image} alt={`${dest.city}, ${dest.country}`} loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-700 ease-out" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  {dest.tag && <span className={`absolute top-3 left-3 text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${tagColors[dest.tag]}`}>{dest.tag}</span>}
-                  <button onClick={(e) => toggleSave(dest.city, e)} className="absolute top-3 right-3 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/50" aria-label={`Save ${dest.city}`}>
-                    <Heart className={`w-3.5 h-3.5 ${saved.has(dest.city) ? 'fill-rose-400 text-rose-400' : 'text-white'}`} />
-                  </button>
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <div className="flex items-center gap-1 mb-0.5"><MapPin className="w-2.5 h-2.5 text-white/60" /><span className="text-white/60 text-[9px] font-bold uppercase tracking-wider">{dest.country}</span></div>
-                    <h3 className="text-white font-bold leading-tight" style={{ fontSize: isTall ? '1.25rem' : '1rem', letterSpacing: '-0.02em' }}>{dest.city}</h3>
-                    <div className="flex items-center justify-between mt-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                      <span className="text-white/80 text-xs font-semibold">{dest.price}</span>
-                      <div className="flex items-center gap-1"><Star className="w-3 h-3 fill-amber-400 text-amber-400" /><span className="text-white text-xs font-bold">{dest.rating}</span></div>
+          </ScrollReveal>
+
+          <ScrollReveal staggerChildren={true} animation="slide-up" delay={0.1}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 auto-rows-[200px]">
+              {destinations.slice(0, 8).map((dest, i) => {
+                const isTall = i === 0 || i === 5 || i === 10
+                const isWide = i === 3 || i === 8
+                return (
+                  <div key={dest.id} className={`group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 ${isTall ? 'row-span-2' : ''} ${isWide ? 'col-span-2' : ''}`} onClick={() => setLightboxIndex(i)}>
+                    <img src={dest.image} alt={`${dest.city}, ${dest.country}`} loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-700 ease-out" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                    {dest.tag && <span className={`absolute top-3 left-3 text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${tagColors[dest.tag]}`}>{dest.tag}</span>}
+                    <button onClick={(e) => toggleSave(dest.city, e)} className="absolute top-3 right-3 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/50" aria-label={`Save ${dest.city}`}>
+                      <Heart className={`w-3.5 h-3.5 ${saved.has(dest.city) ? 'fill-rose-400 text-rose-400' : 'text-white'}`} />
+                    </button>
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <div className="flex items-center gap-1 mb-0.5"><MapPin className="w-2.5 h-2.5 text-white/60" /><span className="text-white/60 text-[9px] font-bold uppercase tracking-wider">{dest.country}</span></div>
+                      <h3 className="text-white font-bold leading-tight" style={{ fontSize: isTall ? '1.25rem' : '1rem', letterSpacing: '-0.02em' }}>{dest.city}</h3>
+                      <div className="flex items-center justify-between mt-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        <span className="text-white/80 text-xs font-semibold">{dest.price}</span>
+                        <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /><span className="text-white text-xs font-bold">{dest.rating}</span></div>
+                      </div>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-12 h-12 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 flex items-center justify-center"><ArrowRight className="w-5 h-5 text-white" /></div>
                     </div>
                   </div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-12 h-12 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 flex items-center justify-center"><ArrowRight className="w-5 h-5 text-white" /></div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
+          </ScrollReveal>
+
           <div className="mt-10 flex justify-center">
             <a href="/destinations" className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-7 py-3.5 rounded-full hover:bg-neutral-800 transition-colors duration-200">All destinations<ArrowRight className="w-4 h-4" /></a>
           </div>

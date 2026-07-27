@@ -34,7 +34,7 @@ const TestimonialsSection: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t) => (
-            <div key={t.id} data-gsap="stagger" className="bg-white rounded-2xl p-7 flex flex-col justify-between min-h-64">
+            <div key={t.id} data-gsap="stagger" className="bg-white rounded-2xl p-7 flex flex-col justify-between min-h-64 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
               <div>
                 <div className="flex gap-1 mb-5">
                   {Array.from({ length: t.rating }).map((_, i) => (<Star key={i} className="w-4 h-4 fill-black text-black" />))}

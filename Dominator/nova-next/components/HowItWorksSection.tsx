@@ -22,7 +22,7 @@ const HowItWorksSection: React.FC = () => {
           {steps.map((step, index) => {
             const Icon = step.icon
             return (
-              <div key={step.number} data-gsap="fade-up" className="group relative rounded-3xl overflow-hidden cursor-default" style={{ height: '420px' }}>
+              <div key={step.number} data-gsap="fade-up" className="group relative rounded-3xl overflow-hidden cursor-default transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5" style={{ height: '420px' }}>
                 <img src={step.image} alt={step.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-700 ease-out" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
                 <span className="absolute top-5 right-5 text-white/10 font-extrabold select-none" style={{ fontSize: '7rem', lineHeight: 1, letterSpacing: '-0.06em' }}>{step.number}</span>

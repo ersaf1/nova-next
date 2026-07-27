@@ -16,9 +16,6 @@ export default function PageTransition({ children }: { children: React.ReactNode
   useEffect(() => {
     if (!ref.current) return
 
-    // Kill existing ScrollTriggers on route change
-    ScrollTrigger.getAll().forEach(t => t.kill())
-
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ref.current,
@@ -33,7 +30,10 @@ export default function PageTransition({ children }: { children: React.ReactNode
       )
     }, ref)
 
-    return () => ctx.revert()
+    return () => {
+      ctx.revert()
+      ScrollTrigger.getAll().forEach(t => t.kill())
+    }
   }, [pathname])
 
   return (

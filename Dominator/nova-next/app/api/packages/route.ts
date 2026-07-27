@@ -10,7 +10,8 @@ export async function GET() {
       includes: typeof p.includes === 'string' ? JSON.parse(p.includes) : p.includes,
     }))
     return NextResponse.json(parsed)
-  } catch {
+  } catch (err) {
+    console.error('packages error:', err)
     return NextResponse.json({ error: 'Failed to fetch packages' }, { status: 500 })
   }
 }

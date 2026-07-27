@@ -6,7 +6,8 @@ export async function GET() {
     const { data, error } = await supabase.from('Destination').select('*')
     if (error) throw error
     return NextResponse.json(data ?? [])
-  } catch {
+  } catch (err) {
+    console.error('destinations error:', err)
     return NextResponse.json({ error: 'Failed to fetch destinations' }, { status: 500 })
   }
 }

@@ -13,24 +13,37 @@ import BackedBySection from '@/components/BackedBySection'
 import FAQSection from '@/components/FAQSection'
 import AppCtaSection from '@/components/AppCtaSection'
 import Footer from '@/components/Footer'
+import ScrollReveal from '@/components/ScrollReveal'
 
 export default function HomePage() {
   return (
     <div className="flex flex-col bg-[#F5F5F5]">
       <Navbar />
       <HeroSection />
-      <StatsBar />
+      <ScrollReveal animation="fade" duration={1} delay={0.1}>
+        <StatsBar />
+      </ScrollReveal>
       <MeetNovaSection />
       <DestinationsSection />
       <PackagesSection />
       <HowItWorksSection />
       <WhyNovaSection />
-      <FeaturesHighlightSection />
-      <ExperiencesSection />
+      <ScrollReveal animation="slide-up">
+        <FeaturesHighlightSection />
+      </ScrollReveal>
+      <ScrollReveal animation="slide-up">
+        <ExperiencesSection />
+      </ScrollReveal>
       <TestimonialsSection />
-      <BackedBySection />
-      <FAQSection />
-      <AppCtaSection />
+      <ScrollReveal animation="slide-up">
+        <BackedBySection />
+      </ScrollReveal>
+      <ScrollReveal animation="slide-up">
+        <FAQSection />
+      </ScrollReveal>
+      <ScrollReveal animation="slide-up">
+        <AppCtaSection />
+      </ScrollReveal>
       <Footer />
     </div>
   )
