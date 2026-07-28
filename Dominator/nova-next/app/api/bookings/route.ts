@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 import { supabase } from '@/lib/supabase'
 
 function generateBookingCode(): string {
@@ -8,13 +10,28 @@ function generateBookingCode(): string {
   return `${prefix}-${timestamp}-${random}`
 }
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const email = searchParams.get('email')
-    let query = supabase.from('Booking').select('*').order('createdAt', { ascending: false })
-    if (email) query = query.eq('contactEmail', email)
-    const { data, error } = await query
+    // Build a session-aware Supabase client from the incoming cookies
+    const cookieStore = await cookies()
+    const supabaseAuth = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll: () => cookieStore.getAll() } }
+    )
+
+    const { data: { user } } = await supabaseAuth.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Fetch bookings scoped to this user — check userId first, fall back to email
+    const { data, error } = await supabase
+      .from('Booking')
+      .select('*')
+      .or(`userId.eq.${user.id},contactEmail.eq.${user.email}`)
+      .order('createdAt', { ascending: false })
+
     if (error) throw error
     return NextResponse.json(data ?? [])
   } catch {
@@ -22,8 +39,20 @@ export async function GET(request: Request) {
   }
 }
 
+const SERVICE_FEE = 250000 // IDR, fixed per booking
+
 export async function POST(request: Request) {
   try {
+    // Auth: get session user from cookies
+    const cookieStore = await cookies()
+    const supabaseAuth = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll: () => cookieStore.getAll() } }
+    )
+    const { data: { user } } = await supabaseAuth.auth.getUser()
+    const userId = user?.id ?? null
+
     const body = await request.json()
     const {
       packageId,
@@ -119,7 +148,7 @@ export async function POST(request: Request) {
       }
     }
 
-    const totalAmount = Math.max(0, subtotal - discountAmount)
+    const totalAmount = Math.max(0, subtotal - discountAmount) + SERVICE_FEE
     const bookingCode = generateBookingCode()
 
     const bookingData = {
@@ -136,11 +165,13 @@ export async function POST(request: Request) {
       unitPrice,
       subtotal,
       discountAmount,
+      serviceFee: SERVICE_FEE,
       totalAmount,
       voucherCode: voucherCode || null,
       notes: notes || null,
       bookingStatus: 'pending',
       paymentStatus: 'unpaid',
+      userId: userId || null,
       // legacy fallback fields
       country: country || null,
       travelDate: travelDate || departureStartDate || null,
