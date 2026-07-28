@@ -15,7 +15,6 @@ interface HeroData {
   subheadline: string
   badgeText: string
   videoUrl: string
-  posterUrl: string
 }
 
 interface Partner {
@@ -53,14 +52,17 @@ const HeroSection: React.FC = () => {
     subheadline: 'Plan, book, and experience extraordinary journeys across 150+ countries — all in one place.',
     badgeText: 'Live availability · 150+ countries',
     videoUrl: 'https://videos.pexels.com/video-files/2169880/2169880-hd_1920_1080_30fps.mp4',
-    posterUrl: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1920&q=85',
   })
   const [brands, setBrands] = useState<Partner[]>(DEFAULT_BRANDS)
 
   useEffect(() => {
     fetch('/api/hero')
       .then(r => r.json())
-      .then((data: HeroData) => setHero(data))
+      .then((data: HeroData) => {
+        if (data && data.videoUrl) {
+          setHero(data)
+        }
+      })
       .catch(() => {})
     fetch('/api/partners')
       .then(r => r.json())
@@ -129,7 +131,6 @@ const HeroSection: React.FC = () => {
           muted
           loop
           playsInline
-          poster={hero.posterUrl}
           className="w-full h-full object-cover"
         >
           <source src={hero.videoUrl} type="video/mp4" />
