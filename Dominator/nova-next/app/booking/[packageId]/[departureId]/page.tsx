@@ -91,7 +91,7 @@ export default function BookingFlowPage({
 
   const handleTravelersNext = () => setStep(3)
 
-  const handleReviewNext = async () => {
+  const handleReviewNext = async (promoCode?: string, discountAmount?: number) => {
     if (submitting) return
     setSubmitting(true)
     try {
@@ -106,6 +106,7 @@ export default function BookingFlowPage({
           contactPhone: contact.contactPhone,
           participants: contact.participants,
           travelers,
+          ...(promoCode ? { voucherCode: promoCode, discountAmount } : {}),
         }),
       })
       const data = await res.json()

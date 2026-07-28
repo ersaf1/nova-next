@@ -54,16 +54,18 @@ const HeroSection: React.FC = () => {
     videoUrl: 'https://videos.pexels.com/video-files/2169880/2169880-hd_1920_1080_30fps.mp4',
   })
   const [brands, setBrands] = useState<Partner[]>(DEFAULT_BRANDS)
+  const [heroReady, setHeroReady] = useState(false)
 
   useEffect(() => {
     fetch('/api/hero')
       .then(r => r.json())
       .then((data: HeroData) => {
-        if (data && data.videoUrl) {
-          setHero(data)
+        if (data && (data.headline || data.subheadline || data.badgeText || data.videoUrl)) {
+          setHero(prev => ({ ...prev, ...data }))
         }
+        setHeroReady(true)
       })
-      .catch(() => {})
+      .catch(() => { setHeroReady(true) })
     fetch('/api/partners')
       .then(r => r.json())
       .then((data: Partner[]) => { if (Array.isArray(data) && data.length > 0) setBrands(data) })
@@ -119,7 +121,8 @@ const HeroSection: React.FC = () => {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [hero])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [heroReady])
 
   return (
     <section ref={sectionRef} className="relative w-full h-screen min-h-[820px] overflow-hidden bg-black flex flex-col justify-between">
@@ -131,12 +134,12 @@ const HeroSection: React.FC = () => {
           muted
           loop
           playsInline
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-125 origin-center"
         >
           <source src={hero.videoUrl} type="video/mp4" />
         </video>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/88 z-[1] backdrop-blur-[1.5px]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/88 z-[1]" />
       <div className="relative z-10 max-w-[88rem] w-full mx-auto px-6 md:px-12 flex flex-col justify-between h-full pt-32 pb-12">
         <div className="max-w-3xl mt-8 md:mt-16">
           {/* Badge — floats gently after reveal */}
@@ -151,8 +154,11 @@ const HeroSection: React.FC = () => {
           {/* Headline — word-by-word curtain reveal */}
           <h1
             ref={titleRef}
-            className="text-white text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight mb-5"
-            style={{ letterSpacing: '-0.04em' }}
+            className="text-white font-medium leading-[0.9] mb-6"
+            style={{
+              fontSize: 'clamp(3.5rem, 9vw, 9rem)',
+              letterSpacing: '-0.06em',
+            }}
           >
             {hero.headline.split(/[\n\r]+/).map((line, li) => (
               <span key={li} className="block">
@@ -165,7 +171,7 @@ const HeroSection: React.FC = () => {
                       className="inline-block overflow-hidden mr-[0.25em] last:mr-0"
                       style={{ verticalAlign: 'bottom' }}
                     >
-                      <span className="word-reveal inline-block" style={{ transform: 'translateY(110%)' }}>
+                      <span className="word-reveal inline-block">
                         {isUnlocked ? (
                           <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-indigo-300">
                             {word}
@@ -187,19 +193,19 @@ const HeroSection: React.FC = () => {
         </div>
 
         <div className="w-full space-y-10">
-          <div ref={searchRef} className="flex flex-wrap items-center gap-4">
+          <div ref={searchRef} className="flex flex-wrap items-center gap-3">
             <Link
-              href="/search?type=destinations"
-              className="inline-flex items-center gap-2 bg-white text-black text-sm font-bold px-7 py-3.5 rounded-full hover:bg-neutral-100 transition-all duration-200 shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
+              href="/search"
+              className="inline-flex items-center gap-2 bg-[#175cff] hover:bg-[#0f47cc] text-white text-sm font-semibold px-7 py-3.5 rounded-full transition-all duration-200"
             >
-              Explore Destinations
+              Explore Packages
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/itinerary"
               className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-semibold px-7 py-3.5 rounded-full hover:bg-white/20 transition-all duration-200"
             >
-              <Sparkles className="w-4 h-4 text-indigo-300" />
+              <Sparkles className="w-4 h-4 text-white/70" />
               Plan with AI
             </Link>
           </div>
