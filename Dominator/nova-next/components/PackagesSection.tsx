@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { MapPin, Clock, Users, Star, ArrowRight, Zap, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, Clock, Users, Star, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { use3DTilt } from '@/hooks/useScrollAnimation'
 import ScrollReveal from './ScrollReveal'
 
@@ -34,13 +34,28 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
   return (
     <div
       ref={ref}
-      className="group relative bg-white rounded-3xl overflow-hidden cursor-pointer w-[310px] md:w-[350px] shrink-0 snap-start border border-black/[0.03] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl"
+      className="group relative rounded-3xl overflow-hidden cursor-pointer w-[310px] md:w-[350px] shrink-0 snap-start flex flex-col justify-between transition-all duration-300"
       style={{
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-        transformStyle: 'preserve-3d', willChange: 'transform',
-        boxShadow: (tilt.x !== 0 || tilt.y !== 0) ? '0 20px 50px rgba(0,0,0,0.12)' : '0 4px 20px rgba(0,0,0,0.03)',
+        transformStyle: 'preserve-3d',
+        willChange: 'transform',
+        background: 'rgba(255,255,255,0.55)',
+        backdropFilter: 'blur(20px) saturate(160%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+        border: '1px solid rgba(255,255,255,0.85)',
+        boxShadow: (tilt.x !== 0 || tilt.y !== 0)
+          ? '0 20px 50px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9), 0 0 0 1px rgba(255,255,255,0.6)'
+          : '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9), 0 0 0 1px rgba(255,255,255,0.6)',
       }}
     >
+      {/* Specular highlight — top-left glass reflection */}
+      <div
+        className="absolute top-0 left-0 w-full h-32 pointer-events-none z-10"
+        style={{
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 30%, transparent 60%)',
+          borderRadius: '24px 24px 0 0',
+        }}
+      />
       <div>
         <div className="relative h-48 overflow-hidden">
           <img src={pkg.image} alt={pkg.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s]" />
@@ -60,12 +75,26 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
           </div>
         </div>
       </div>
-      <div className="p-6 pt-0 border-t border-black/[0.03] flex items-center justify-between gap-4 mt-auto">
+      <div className="p-6 pt-0 border-t border-black/[0.06] flex items-center justify-between gap-4 mt-auto">
         <div>
-          <span className="text-black/40 text-[9px] font-bold uppercase tracking-wider block mb-0.5">From / Person</span>
-          <div className="flex items-baseline gap-1.5"><span className="text-black text-2xl font-bold" style={{ letterSpacing: '-0.03em' }}>${pkg.price}</span>{pkg.originalPrice > pkg.price && <span className="text-black/35 text-xs line-through">${pkg.originalPrice}</span>}</div>
+          <span className="text-black/40 text-[9px] font-bold uppercase tracking-wider block mb-0.5">Mulai dari / Orang</span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-black text-2xl font-bold" style={{ letterSpacing: '-0.03em' }}>
+              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(pkg.price)}
+            </span>
+            {(pkg.originalPrice ?? 0) > pkg.price && (
+              <span className="text-black/35 text-xs line-through">
+                {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(pkg.originalPrice ?? 0)}
+              </span>
+            )}
+          </div>
         </div>
-        <button className="bg-neutral-50 hover:bg-black hover:text-white text-black text-xs font-bold px-4 py-2.5 rounded-full transition-colors duration-300 flex items-center gap-1.5 border border-black/[0.04] shrink-0">Book now<ArrowRight className="w-3.5 h-3.5" /></button>
+        <Link
+          href={`/packages/${(pkg as { slug?: string }).slug ?? pkg.id}`}
+          className="bg-neutral-50 hover:bg-black hover:text-white text-black text-xs font-bold px-4 py-2.5 rounded-full transition-colors duration-300 flex items-center gap-1.5 border border-black/[0.04] shrink-0"
+        >
+          Lihat detail<ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
     </div>
   )
@@ -75,6 +104,18 @@ const PackagesSection: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('All')
   const scrollRef = useRef<HTMLDivElement>(null)
   const [packages, setPackages] = useState<Package[]>([])
+  const headingRef = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    const el = headingRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add('in-view'); observer.disconnect() } },
+      { threshold: 0.2 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     fetch('/api/packages').then(r => r.json()).then((data: unknown) => { if (Array.isArray(data)) setPackages(data as Package[]) }).catch(() => {})
@@ -92,14 +133,14 @@ const PackagesSection: React.FC = () => {
   }
 
   return (
-    <section id="packages" className="bg-white px-6 py-28 border-b border-black/[0.04]">
+    <section id="packages" className="px-6 py-28 border-b border-black/[0.04]" style={{ background: 'radial-gradient(ellipse at 60% 0%, #f0f0ff 0%, #ffffff 50%, #fff8f0 100%)' }}>
       <div className="max-w-[88rem] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4 space-y-8 lg:sticky lg:top-24">
             <ScrollReveal animation="slide-up">
               <div>
                 <p className="text-black/45 text-xs font-bold tracking-widest uppercase mb-3">Curated trips</p>
-                <h2 className="text-black text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-4" style={{ letterSpacing: '-0.04em' }}>Packages & Offers</h2>
+                <h2 ref={headingRef} className="heading-animate text-black text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-4" style={{ letterSpacing: '-0.04em' }}>Packages & Offers</h2>
                 <p className="text-black/60 text-sm leading-relaxed max-w-sm font-light">Explore handpicked vacation experiences designed, priced, and scheduled to absolute perfection.</p>
               </div>
             </ScrollReveal>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { MapPin, Clock, Users, Star, ArrowRight } from 'lucide-react'
+import { Clock, Users, Star } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 
 interface Package {
@@ -122,7 +122,7 @@ export default function PackagesPage() {
                   return (
                     <Link
                       key={pkg.id}
-                      href={`/booking?packageId=${pkg.id}`}
+                      href={`/packages/${(pkg as { slug?: string }).slug ?? pkg.id}`}
                       className="group bg-white rounded-2xl border border-black/[0.04] overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col"
                     >
                       <div className="relative h-48">
@@ -131,7 +131,7 @@ export default function PackagesPage() {
                         <span className={`absolute top-4 left-4 text-[9px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ${pkg.tagColor}`}>{pkg.tag}</span>
                         {savings > 0 && (
                           <span className="absolute top-4 right-4 bg-white text-black text-[9px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
-                            Save ${savings}
+                            Hemat {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(savings)}
                           </span>
                         )}
                       </div>
@@ -144,8 +144,8 @@ export default function PackagesPage() {
                           <span className="flex items-center gap-1"><Star size={10} className="fill-black/40" /> {pkg.rating}</span>
                         </div>
                         <div className="mt-auto flex items-baseline gap-2">
-                          <span className="text-black text-2xl font-bold">${pkg.price.toLocaleString()}</span>
-                          <span className="text-black/30 text-xs">/ person</span>
+                          <span className="text-black text-2xl font-bold">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(pkg.price)}</span>
+                          <span className="text-black/30 text-xs">/ orang</span>
                         </div>
                       </div>
                     </Link>
