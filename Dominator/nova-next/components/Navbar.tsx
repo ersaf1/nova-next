@@ -10,10 +10,8 @@ import gsap from 'gsap'
 const NAV_LINKS = [
   { label: 'Destinations', href: '/destinations' },
   { label: 'Packages', href: '/packages' },
-  { label: 'How It Works', href: '/how-it-works' },
   { label: 'AI Planner', href: '/itinerary', highlight: true },
-  { label: 'Search', href: '/search' },
-  { label: 'FAQ', href: '/faq' },
+  { label: 'How It Works', href: '/how-it-works' },
 ]
 
 const Navbar: React.FC = () => {
@@ -105,21 +103,17 @@ const Navbar: React.FC = () => {
           </button>
           <button
             onClick={() => router.push('/login')}
-            className={`text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-200 ${
-              isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black/[0.06] text-black hover:bg-black/10'
+            className={`text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 ${
+              isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-black/50 hover:text-black hover:bg-black/[0.04]'
             }`}
           >
-            Sign In
+            Masuk
           </button>
           <button
-            onClick={() => router.push('/booking')}
-            className={`text-sm font-semibold px-5 py-2.5 rounded-full transition-all duration-200 ${
-              isDark
-                ? 'bg-white text-black hover:bg-white/90'
-                : 'bg-black text-white hover:bg-black/80'
-            }`}
+            onClick={() => router.push('/search')}
+            className="text-sm font-semibold px-5 py-2.5 rounded-full bg-[#175cff] hover:bg-[#0f47cc] text-white transition-all duration-200"
           >
-            Book Now
+            Cari Paket
           </button>
         </div>
 
@@ -163,6 +157,12 @@ const Navbar: React.FC = () => {
               className="w-full text-sm font-medium px-5 py-2.5 rounded-full text-black/60 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
             >
               Dashboard
+            </button>
+            <button
+              onClick={() => { router.push('/profile'); setMenuOpen(false) }}
+              className="w-full text-sm font-medium px-5 py-2.5 rounded-full text-black/60 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
+            >
+              Profil
             </button>
             <button
               onClick={() => { router.push('/login'); setMenuOpen(false) }}
