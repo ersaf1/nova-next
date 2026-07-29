@@ -312,13 +312,13 @@ export default function PackagesPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filtered.map((pkg) => {
+                  {filtered.map((pkg, idx) => {
                     const savings = (pkg.originalPrice || 0) - (pkg.price || 0)
                     const includesList = Array.isArray(pkg.includes) ? pkg.includes : []
 
                     return (
                       <Link
-                        key={pkg.id}
+                        key={`${pkg.id}-${pkg.slug || idx}`}
                         href={`/packages/${(pkg as { slug?: string }).slug ?? pkg.id}`}
                         className="group bg-white rounded-3xl border border-neutral-200/80 overflow-hidden hover:shadow-xl transition-all duration-500 flex flex-col justify-between hover:-translate-y-1"
                       >
