@@ -306,9 +306,58 @@ export default function ItineraryPage() {
         <div className="max-w-[88rem] mx-auto space-y-10">
 
           {!itinerary ? (
-            /* Clean Minimalist Light Theme Form State with Floating Media Card */
-            <div className="pt-8 max-w-5xl mx-auto space-y-8">
+            /* Clean Minimalist Light Theme Form State with Scattered Aesthetic Background Cards */
+            <div className="pt-8 max-w-5xl mx-auto space-y-8 relative">
               
+              {/* Scattered Floating Aesthetic Background Cards (Pure Aesthetic Canvas) */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 hidden md:block">
+                {/* Floating Card 1: Top-Left Tilted Photo Card (Japan) */}
+                <div className="absolute -top-6 -left-12 w-48 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl -rotate-6 animate-float opacity-80">
+                  <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80" alt="Tokyo Japan" className="w-full h-full object-cover img-smooth-zoom" />
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-bold text-neutral-900">
+                    <span>Tokyo, Japan 🇯🇵</span>
+                    <span className="text-amber-500">4.9 ★</span>
+                  </div>
+                </div>
+
+                {/* Floating Card 2: Top-Right Tilted Video Card (Beach / Santorini) */}
+                <div className="absolute -top-4 -right-12 w-52 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl rotate-12 animate-float-delayed opacity-80">
+                  <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900 relative">
+                    <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                    <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-full text-[9px] font-bold text-white uppercase">LIVE VIDEO</div>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-bold text-neutral-900">
+                    <span>Santorini, Greece 🇬🇷</span>
+                    <span className="text-amber-500">5.0 ★</span>
+                  </div>
+                </div>
+
+                {/* Floating Card 3: Bottom-Left Tilted Photo Card (Argentina) */}
+                <div className="absolute -bottom-10 -left-10 w-52 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl rotate-6 animate-float opacity-80">
+                  <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&q=80" alt="Patagonia Argentina" className="w-full h-full object-cover img-smooth-zoom" />
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-bold text-neutral-900">
+                    <span>Patagonia, Argentina 🇦🇷</span>
+                    <span className="text-amber-500">4.9 ★</span>
+                  </div>
+                </div>
+
+                {/* Floating Card 4: Bottom-Right Tilted Video Card (Bali Paradise) */}
+                <div className="absolute -bottom-8 -right-10 w-48 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl -rotate-12 animate-float-delayed opacity-80">
+                  <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900 relative">
+                    <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" alt="Bali Paradise" className="w-full h-full object-cover img-smooth-zoom" />
+                    <div className="absolute bottom-2 left-2 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-md text-[9px] font-bold text-white">Ubud & Uluwatu</div>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-bold text-neutral-900">
+                    <span>Bali, Indonesia 🇮🇩</span>
+                    <span className="text-amber-500">4.9 ★</span>
+                  </div>
+                </div>
+              </div>
+
               {/* Minimalist Editorial Header */}
               <div className="text-center space-y-3">
                 <div className="inline-flex items-center gap-1.5 bg-white border border-neutral-200 text-neutral-900 text-[10px] font-bold uppercase tracking-widest px-3.5 py-1 rounded-full shadow-2xs">
