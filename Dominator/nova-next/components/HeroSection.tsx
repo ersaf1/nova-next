@@ -3,7 +3,7 @@
 import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Upload, Sparkles, MapPin, Play, Star, ChevronRight } from 'lucide-react'
+import { Upload, Sparkles, MapPin, Play, Star, ChevronRight, Video, Camera } from 'lucide-react'
 
 interface NavButtonProps {
   label: string
@@ -55,6 +55,7 @@ export default function HeroSection() {
   const [activeDestIdx, setActiveDestIdx] = useState(0)
   const [customPrompt, setCustomPrompt] = useState(DESTINATION_PREVIEWS[0].prompt)
   const [uploadedFile, setUploadedFile] = useState<string | null>(null)
+  const [showVideoModal, setShowVideoModal] = useState(true)
 
   const currentDest = DESTINATION_PREVIEWS[activeDestIdx]
 
@@ -139,7 +140,8 @@ export default function HeroSection() {
         </nav>
 
         {/* Hero Body */}
-        <div className="flex flex-col items-center px-6 pt-8 md:pt-16 pb-20 text-center my-auto">
+        <div className="flex flex-col items-center px-6 pt-8 md:pt-12 pb-16 text-center my-auto relative">
+          
           {/* Main Headline */}
           <h1 className="font-sans text-[clamp(38px,6vw,68px)] font-medium text-wandor-text leading-[1.05] tracking-[-0.04em] max-w-[820px] mb-4 md:mb-5">
             Where will you go next?
@@ -159,7 +161,7 @@ export default function HeroSection() {
                 className={`text-xs font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1.5 backdrop-blur-md ${
                   activeDestIdx === idx
                     ? 'bg-black text-white shadow-md scale-105'
-                    : 'bg-white/60 text-neutral-800 hover:bg-white border border-white/80'
+                    : 'bg-white/70 text-neutral-800 hover:bg-white border border-white/80'
                 }`}
               >
                 <MapPin className="w-3 h-3 text-amber-500" />
@@ -168,82 +170,130 @@ export default function HeroSection() {
             ))}
           </div>
 
-          {/* Liquid Glass Frosted Prompt Card */}
-          <div className="relative w-[701px] max-md:w-[calc(100vw-48px)] min-h-[220px] md:min-h-[238px] bg-white/[0.08] border-[3px] border-white rounded-[44px] shadow-[0_0_15px_0_rgba(0,0,0,0.12)] overflow-hidden backdrop-blur-[20px] p-6 text-left flex flex-col justify-between group transition-all hover:shadow-[0_0_25px_0_rgba(0,0,0,0.18)]">
+          {/* Flex Container for Main Liquid Glass Prompt Card & Floating Destination Media Card */}
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-6 max-w-full">
             
-            {/* Top Interactive Destination Photo & Video Banner Badge inside Floating Card */}
-            <div className="flex items-center justify-between gap-4 mb-3 border-b border-white/30 pb-3">
-              <div className="flex items-center gap-3">
-                <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-neutral-900 border border-white/60 shrink-0 shadow-xs">
-                  <img
-                    src={currentDest.photo}
-                    alt={currentDest.name}
-                    className="w-full h-full object-cover img-smooth-zoom"
-                  />
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                    <Play className="w-3.5 h-3.5 text-white fill-white" />
+            {/* Liquid Glass Frosted Prompt Card */}
+            <div className="relative w-[701px] max-md:w-[calc(100vw-48px)] min-h-[220px] md:min-h-[238px] bg-white/[0.08] border-[3px] border-white rounded-[44px] shadow-[0_0_15px_0_rgba(0,0,0,0.12)] overflow-hidden backdrop-blur-[20px] p-6 text-left flex flex-col justify-between group transition-all hover:shadow-[0_0_25px_0_rgba(0,0,0,0.18)]">
+              
+              {/* Top Interactive Destination Photo & Video Banner Badge inside Floating Card */}
+              <div className="flex items-center justify-between gap-4 mb-3 border-b border-white/30 pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-neutral-900 border border-white/60 shrink-0 shadow-xs">
+                    <img
+                      src={currentDest.photo}
+                      alt={currentDest.name}
+                      className="w-full h-full object-cover img-smooth-zoom"
+                    />
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                      <Play className="w-3.5 h-3.5 text-white fill-white" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs font-bold text-black">{currentDest.name}</span>
+                      <span className="flex items-center text-[10px] font-bold text-amber-600 bg-amber-100/80 px-1.5 py-0.5 rounded-md ml-1">
+                        <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500 mr-0.5" />
+                        {currentDest.rating}
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-medium text-neutral-600 block line-clamp-1">{currentDest.tag}</span>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold text-black">{currentDest.name}</span>
-                    <span className="flex items-center text-[10px] font-bold text-amber-600 bg-amber-100/80 px-1.5 py-0.5 rounded-md ml-1">
-                      <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500 mr-0.5" />
-                      {currentDest.rating}
-                    </span>
-                  </div>
-                  <span className="text-[11px] font-medium text-neutral-600 block line-clamp-1">{currentDest.tag}</span>
+
+                {uploadedFile && (
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/90 px-2.5 py-1 rounded-full border border-emerald-200 truncate max-w-[140px]">
+                    📄 {uploadedFile}
+                  </span>
+                )}
+              </div>
+
+              {/* Prompt Text / Interactive Textarea */}
+              <textarea
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                rows={2}
+                className="w-full font-sans text-base md:text-xl font-medium text-wandor-prompt leading-relaxed bg-transparent border-none focus:outline-none resize-none placeholder:text-wandor-prompt/50"
+                placeholder="Describe your dream trip (destination, duration, preferences)..."
+              />
+
+              {/* Bottom Actions inside Glass Card */}
+              <div className="flex items-center justify-between pt-3 mt-2">
+                {/* Upload Button */}
+                <button
+                  type="button"
+                  onClick={handleUploadClick}
+                  className="w-11 h-11 bg-white/40 hover:bg-white/80 border border-white/80 rounded-full cursor-pointer flex items-center justify-center backdrop-blur-[14px] transition-all hover:scale-105 active:scale-95 shadow-2xs"
+                  aria-label="Upload inspiration"
+                  title="Upload itinerary PDF or photo inspiration"
+                >
+                  <Upload className="w-[18px] h-[18px] text-wandor-text flex-shrink-0" />
+                </button>
+
+                {/* Hidden File Input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*,.pdf"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+
+                {/* "Plan My Trip" CTA Button */}
+                <button
+                  onClick={handlePlanTrip}
+                  className="w-[156px] h-13 md:h-14 bg-black border-none rounded-[44px] shadow-[0_0_2px_0_rgba(0,0,0,0.05)] cursor-pointer flex items-center justify-center gap-2 font-sans text-sm md:text-base font-medium text-[#fafafa] uppercase tracking-[0.02em] transition-all hover:bg-[#333] active:scale-95 hover:shadow-lg"
+                >
+                  <span>Plan My Trip</span>
+                  <ChevronRight className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            </div>
+
+            {/* Additional Floating Destination Media Card (Live Video & Photo Showcase) */}
+            <div className="w-[280px] bg-white/90 backdrop-blur-2xl border-[3px] border-white rounded-[32px] shadow-2xl p-4 text-left space-y-3 animate-float shrink-0 hover:scale-105 transition-transform duration-300">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60 flex items-center gap-1">
+                  <Video className="w-3 h-3 text-amber-500" /> Live Stream Preview
+                </span>
+                <span className="text-[10px] font-bold text-neutral-400 flex items-center gap-1">
+                  <Camera className="w-3 h-3 text-neutral-400" /> HD Photo
+                </span>
+              </div>
+
+              {/* Mini Video / Photo Player Frame */}
+              <div className="relative h-36 rounded-2xl overflow-hidden bg-neutral-950 border border-white/60 shadow-inner group/media">
+                <video
+                  src={currentDest.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover group-hover/media:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                  <p className="text-xs font-bold leading-tight drop-shadow-sm">{currentDest.name}</p>
+                  <p className="text-[10px] text-white/80 font-medium">195 UN Countries Collection</p>
                 </div>
               </div>
 
-              {uploadedFile && (
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/90 px-2.5 py-1 rounded-full border border-emerald-200 truncate max-w-[140px]">
-                  📄 {uploadedFile}
-                </span>
-              )}
+              {/* Photo Showcase Pills */}
+              <div className="grid grid-cols-3 gap-1.5">
+                {[
+                  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
+                  'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80',
+                  'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80'
+                ].map((img, idx) => (
+                  <div key={idx} className="h-12 rounded-xl overflow-hidden border border-white/80 bg-neutral-900">
+                    <img src={img} alt="Destination preview" className="w-full h-full object-cover img-smooth-zoom" />
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Prompt Text / Interactive Textarea */}
-            <textarea
-              value={customPrompt}
-              onChange={(e) => setCustomPrompt(e.target.value)}
-              rows={2}
-              className="w-full font-sans text-base md:text-xl font-medium text-wandor-prompt leading-relaxed bg-transparent border-none focus:outline-none resize-none placeholder:text-wandor-prompt/50"
-              placeholder="Describe your dream trip (destination, duration, preferences)..."
-            />
-
-            {/* Bottom Actions inside Glass Card */}
-            <div className="flex items-center justify-between pt-3 mt-2">
-              {/* Upload Button */}
-              <button
-                type="button"
-                onClick={handleUploadClick}
-                className="w-11 h-11 bg-white/40 hover:bg-white/80 border border-white/80 rounded-full cursor-pointer flex items-center justify-center backdrop-blur-[14px] transition-all hover:scale-105 active:scale-95 shadow-2xs"
-                aria-label="Upload inspiration"
-                title="Upload itinerary PDF or photo inspiration"
-              >
-                <Upload className="w-[18px] h-[18px] text-wandor-text flex-shrink-0" />
-              </button>
-
-              {/* Hidden File Input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*,.pdf"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-
-              {/* "Plan My Trip" CTA Button */}
-              <button
-                onClick={handlePlanTrip}
-                className="w-[156px] h-13 md:h-14 bg-black border-none rounded-[44px] shadow-[0_0_2px_0_rgba(0,0,0,0.05)] cursor-pointer flex items-center justify-center gap-2 font-sans text-sm md:text-base font-medium text-[#fafafa] uppercase tracking-[0.02em] transition-all hover:bg-[#333] active:scale-95 hover:shadow-lg"
-              >
-                <span>Plan My Trip</span>
-                <ChevronRight className="w-4 h-4 text-white" />
-              </button>
-            </div>
           </div>
+
         </div>
 
         {/* Footer Sub-bar */}
