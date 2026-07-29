@@ -216,7 +216,7 @@ const DestinationsSection: React.FC = () => {
             </div>
           </ScrollReveal>
 
-            <div ref={destGridRef} className="grid grid-cols-3 grid-rows-2 gap-3 md:gap-4" style={{ gridTemplateRows: '280px 280px' }}>
+            <div ref={destGridRef} className="grid grid-cols-3 grid-rows-2 gap-3 md:gap-4" style={{ gridTemplateRows: '140px 140px' }}>
               {destinations.slice(0, 6).map((dest, i) => {
                 const isWide = i === 0 || i === 5
                 const imageUrl = dest.image || DEFAULT_IMAGES[dest.city] || FALLBACK_IMAGE
