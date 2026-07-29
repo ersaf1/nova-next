@@ -144,7 +144,7 @@ export default function HeroSection() {
           
           {/* Main Headline */}
           <h1 className="font-sans text-[clamp(38px,6vw,68px)] font-medium text-wandor-text leading-[1.05] tracking-[-0.04em] max-w-[820px] mb-4 md:mb-5">
-            Where will you go next?
+            Travel Unlocked.
           </h1>
 
           {/* Subtitle */}
@@ -302,7 +302,6 @@ export default function HeroSection() {
           <p className="flex items-center gap-4">
             <Link href="/destinations" className="hover:text-black">195 UN Countries</Link>
             <Link href="/packages" className="hover:text-black">All-Inclusive Packages</Link>
-            <Link href="/itinerary" className="hover:text-black">AI Planner</Link>
           </p>
         </div>
 
