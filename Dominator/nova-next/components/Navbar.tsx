@@ -30,8 +30,8 @@ const Navbar: React.FC = () => {
     )
   }, [])
 
-  // Determine if we're on a non-home page (should always show dark navbar)
   const isHomePage = pathname === '/'
+  const isItineraryPage = pathname === '/itinerary'
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -39,10 +39,11 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close mobile menu on route change
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
-  const isDark = isHomePage ? !scrolled : false
+  // Dark navbar styling if on home page or itinerary page hero section
+  const isDark = (isHomePage || isItineraryPage) ? !scrolled : false
+
   const isActive = (href: string) => {
     if (href.startsWith('/#')) return false
     return pathname === href || pathname.startsWith(href + '/')
@@ -53,8 +54,8 @@ const Navbar: React.FC = () => {
       ref={navRef}
       className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 opacity-0 ${
         isDark
-          ? 'bg-transparent py-6'
-          : 'bg-white/90 backdrop-blur-xl border-b border-black/[0.06] py-4 shadow-[0_1px_0_rgba(0,0,0,0.04)]'
+          ? 'bg-transparent py-6 text-white'
+          : 'bg-white/90 backdrop-blur-xl border-b border-black/[0.06] py-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] text-neutral-900'
       }`}
     >
       <div className="max-w-[88rem] mx-auto flex items-center justify-between gap-8">
@@ -71,24 +72,27 @@ const Navbar: React.FC = () => {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
-          {NAV_LINKS.map(({ label, href, highlight }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`relative text-sm px-3.5 py-2 rounded-full font-medium transition-all duration-200 flex items-center gap-1.5
-                ${highlight
-                  ? isDark
-                    ? 'text-white bg-white/10 hover:bg-white/20'
-                    : 'text-black bg-black/5 hover:bg-black/10'
-                  : isActive(href)
-                    ? isDark ? 'text-white bg-white/15' : 'text-black bg-black/5'
-                    : isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-black/50 hover:text-black hover:bg-black/[0.04]'
+          {NAV_LINKS.map(({ label, href, highlight }) => {
+            const active = isActive(href)
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`text-sm px-4 py-2 rounded-full font-medium transition-all duration-200 flex items-center gap-1.5 ${
+                  active
+                    ? isDark
+                      ? 'text-white font-bold bg-white/20 shadow-xs'
+                      : 'text-black font-bold bg-black/5 shadow-2xs'
+                    : isDark
+                      ? 'text-white/80 hover:text-white hover:bg-white/10'
+                      : 'text-black/60 hover:text-black hover:bg-black/[0.04]'
                 }`}
-            >
-              {highlight && <Sparkles size={11} />}
-              {label}
-            </Link>
-          ))}
+              >
+                {highlight && <Sparkles size={12} className={active ? 'text-amber-400' : 'text-amber-400/80'} />}
+                {label}
+              </Link>
+            )
+          })}
         </div>
 
         {/* Desktop CTA */}
@@ -96,7 +100,7 @@ const Navbar: React.FC = () => {
           <button
             onClick={() => router.push('/dashboard')}
             className={`text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 ${
-              isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-black/50 hover:text-black hover:bg-black/[0.04]'
+              isDark ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-black/60 hover:text-black hover:bg-black/[0.04]'
             }`}
           >
             Dashboard
@@ -104,14 +108,14 @@ const Navbar: React.FC = () => {
           <button
             onClick={() => router.push('/login')}
             className={`text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 ${
-              isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-black/50 hover:text-black hover:bg-black/[0.04]'
+              isDark ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-black/60 hover:text-black hover:bg-black/[0.04]'
             }`}
           >
             Masuk
           </button>
           <button
             onClick={() => router.push('/search')}
-            className="text-sm font-semibold px-5 py-2.5 rounded-full bg-[#175cff] hover:bg-[#0f47cc] text-white transition-all duration-200"
+            className="text-sm font-semibold px-5 py-2.5 rounded-full bg-[#175cff] hover:bg-[#0f47cc] text-white transition-all duration-200 shadow-xs"
           >
             Cari Paket
           </button>
@@ -131,7 +135,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile menu */}
       <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? 'max-h-[600px] opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
-        <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-5 shadow-xl border border-black/[0.06]">
+        <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-5 shadow-xl border border-black/[0.06] text-black">
           <div className="flex flex-col gap-1 mb-4">
             {NAV_LINKS.map(({ label, href, highlight }) => (
               <Link
@@ -139,14 +143,12 @@ const Navbar: React.FC = () => {
                 href={href}
                 onClick={() => setMenuOpen(false)}
                 className={`text-sm font-medium px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2 ${
-                  highlight
-                    ? 'text-black bg-black/[0.04]'
-                    : isActive(href)
-                      ? 'text-black bg-black/[0.04]'
-                      : 'text-black/60 hover:text-black hover:bg-black/[0.03]'
+                  isActive(href)
+                    ? 'text-black font-bold bg-black/[0.06]'
+                    : 'text-black/70 hover:text-black hover:bg-black/[0.03]'
                 }`}
               >
-                {highlight && <Sparkles size={11} />}
+                {highlight && <Sparkles size={12} className="text-amber-500" />}
                 {label}
               </Link>
             ))}
@@ -154,13 +156,13 @@ const Navbar: React.FC = () => {
           <div className="flex flex-col gap-2 pt-4 border-t border-black/[0.06]">
             <button
               onClick={() => { router.push('/dashboard'); setMenuOpen(false) }}
-              className="w-full text-sm font-medium px-5 py-2.5 rounded-full text-black/60 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
+              className="w-full text-sm font-medium px-5 py-2.5 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
             >
               Dashboard
             </button>
             <button
               onClick={() => { router.push('/profile'); setMenuOpen(false) }}
-              className="w-full text-sm font-medium px-5 py-2.5 rounded-full text-black/60 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
+              className="w-full text-sm font-medium px-5 py-2.5 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
             >
               Profil
             </button>
