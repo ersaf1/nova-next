@@ -49,9 +49,9 @@ const HeroSection: React.FC = () => {
 
   const [hero, setHero] = useState<HeroData>({
     headline: 'The World,\nUnlocked.',
-    subheadline: 'Plan, book, and experience extraordinary journeys across 150+ countries — all in one place.',
-    badgeText: 'Live availability · 150+ countries',
-    videoUrl: 'https://videos.pexels.com/video-files/2169880/2169880-hd_1920_1080_30fps.mp4',
+    subheadline: 'Plan, book, and experience extraordinary journeys across 195+ countries — all in one place.',
+    badgeText: 'Live availability · 195 UN Countries',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4',
   })
   const [brands, setBrands] = useState<Partner[]>(DEFAULT_BRANDS)
   const [heroReady, setHeroReady] = useState(false)
@@ -61,7 +61,11 @@ const HeroSection: React.FC = () => {
       .then(r => r.json())
       .then((data: HeroData) => {
         if (data && (data.headline || data.subheadline || data.badgeText || data.videoUrl)) {
-          setHero(prev => ({ ...prev, ...data }))
+          setHero(prev => ({
+            ...prev,
+            ...data,
+            videoUrl: data.videoUrl || 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4'
+          }))
         }
         setHeroReady(true)
       })
@@ -79,10 +83,9 @@ const HeroSection: React.FC = () => {
       // 1. Scroll-triggered parallax for background video wrapper
       gsap.fromTo(
         videoWrapperRef.current,
-        { yPercent: 0, scale: 1.1 },
+        { yPercent: 0 },
         {
           yPercent: 15,
-          scale: 1.25,
           ease: 'none',
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -126,18 +129,28 @@ const HeroSection: React.FC = () => {
 
   return (
     <section ref={sectionRef} className="relative w-full h-screen min-h-[820px] overflow-hidden bg-black flex flex-col justify-between">
-      <div ref={videoWrapperRef} className="absolute inset-0 w-full h-full will-change-transform">
-        <video
-          key={hero.videoUrl}
-          src={hero.videoUrl}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover scale-125 origin-center"
-        >
-          <source src={hero.videoUrl} type="video/mp4" />
-        </video>
+      <div ref={videoWrapperRef} className="absolute inset-0 w-full h-full will-change-transform bg-neutral-950">
+        {/* Background Fallback Photo */}
+        <img
+          src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=2000&q=95"
+          alt="Hero Background"
+          className="absolute inset-0 w-full h-full object-cover img-smooth-zoom"
+        />
+
+        {/* Video Background Layer */}
+        {hero.videoUrl && (
+          <video
+            key={hero.videoUrl}
+            src={hero.videoUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover z-10"
+          >
+            <source src={hero.videoUrl} type="video/mp4" />
+          </video>
+        )}
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/88 z-[1]" />
       <div className="relative z-10 max-w-[88rem] w-full mx-auto px-6 md:px-12 flex flex-col justify-between h-full pt-32 pb-12">

@@ -9,7 +9,7 @@ const DEFAULT_HERO = {
   headline: 'The World,\nUnlocked.',
   subheadline: 'Plan, book, and experience extraordinary journeys across 150+ countries — all in one place.',
   badgeText: 'Live availability · 150+ countries',
-  videoUrl: 'https://videos.pexels.com/video-files/2169880/2169880-hd_1920_1080_30fps.mp4',
+  videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4',
 }
 
 async function getLocalHero() {
