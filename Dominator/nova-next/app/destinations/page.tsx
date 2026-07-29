@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { MapPin, Star, Clock, ArrowRight, Heart } from 'lucide-react'
+import { MapPin, Star, Clock, ArrowRight, Heart, Search, X } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 
 interface Destination {
@@ -17,25 +17,11 @@ interface Destination {
   category: string
 }
 
-const STATIC_DESTINATIONS: Destination[] = [
-  { id: 1, city: 'Bali', country: 'Indonesia', image: '', description: 'Tropical paradise with stunning temples, rice terraces, and world-class surf beaches.', rating: 4.9, duration: '5-14 days', price: 'From $899', category: 'Beach' },
-  { id: 2, city: 'Tokyo', country: 'Japan', image: '', description: 'A dazzling blend of ultramodern and traditional, neon lights and ancient temples.', rating: 4.8, duration: '7-14 days', price: 'From $1,299', category: 'City' },
-  { id: 3, city: 'Santorini', country: 'Greece', image: '', description: 'Iconic white-washed villages perched on volcanic cliffs above the Aegean Sea.', rating: 4.9, duration: '5-10 days', price: 'From $1,199', category: 'Beach' },
-  { id: 4, city: 'Paris', country: 'France', image: '', description: 'The city of light — art, cuisine, fashion, and the iconic Eiffel Tower.', rating: 4.7, duration: '4-10 days', price: 'From $1,099', category: 'City' },
-  { id: 5, city: 'Queenstown', country: 'New Zealand', image: '', description: 'The adventure capital of the world, surrounded by dramatic alpine scenery.', rating: 4.8, duration: '7-14 days', price: 'From $1,499', category: 'Adventure' },
-  { id: 6, city: 'Kyoto', country: 'Japan', image: '', description: 'Ancient capital with thousands of classical Buddhist temples and stunning gardens.', rating: 4.9, duration: '4-8 days', price: 'From $999', category: 'Cultural' },
-  { id: 7, city: 'Maldives', country: 'Maldives', image: '', description: 'Overwater bungalows, crystal-clear lagoons, and the world\'s finest coral reefs.', rating: 5.0, duration: '5-10 days', price: 'From $2,499', category: 'Beach' },
-  { id: 8, city: 'Machu Picchu', country: 'Peru', image: '', description: 'The lost city of the Incas, hidden high in the Andes mountains of Peru.', rating: 4.9, duration: '7-12 days', price: 'From $1,399', category: 'Mountain' },
-  { id: 9, city: 'Dubai', country: 'UAE', image: '', description: 'Futuristic skyline, luxury shopping, and desert adventures in one glittering city.', rating: 4.7, duration: '4-8 days', price: 'From $1,099', category: 'City' },
-  { id: 10, city: 'Cape Town', country: 'South Africa', image: '', description: 'Where mountains meet the ocean — vineyards, safaris, and stunning coastal drives.', rating: 4.8, duration: '7-14 days', price: 'From $1,199', category: 'Adventure' },
-  { id: 11, city: 'Barcelona', country: 'Spain', image: '', description: 'Gaudí\'s architecture, vibrant nightlife, and Mediterranean beaches all in one city.', rating: 4.8, duration: '4-8 days', price: 'From $999', category: 'Cultural' },
-  { id: 12, city: 'Swiss Alps', country: 'Switzerland', image: '', description: 'Pristine ski slopes, charming villages, and breathtaking alpine panoramas.', rating: 4.9, duration: '5-10 days', price: 'From $1,799', category: 'Mountain' },
-]
-
 export default function DestinationsPage() {
-  const [destinations, setDestinations] = useState<Destination[]>(STATIC_DESTINATIONS)
-  const [loading, setLoading] = useState(false)
+  const [destinations, setDestinations] = useState<Destination[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const [wishlistIds, setWishlistIds] = useState<number[]>([])
   const [userId, setUserId] = useState<string | null>(null)
@@ -43,11 +29,14 @@ export default function DestinationsPage() {
   useEffect(() => {
     fetch('/api/destinations')
       .then((r) => r.json())
-      .then((data: unknown) => {
-        if (Array.isArray(data) && data.length > 0) setDestinations(data)
+      .then((data: Destination[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setDestinations(data)
+        }
+        setLoading(false)
       })
-      .catch(() => {})
-    
+      .catch(() => setLoading(false))
+
     // Check if user is logged in to fetch their wishlist
     const { supabaseClient } = require('@/lib/supabase-client')
     supabaseClient.auth.getUser().then(({ data }: any) => {
@@ -71,7 +60,7 @@ export default function DestinationsPage() {
       return
     }
 
-    const isSaved = wishlistIds.includes(destId)
+    const isSaved = wishlistIds.includes(Number(destId))
     try {
       if (isSaved) {
         const res = await fetch(`/api/wishlist?userId=${userId}&destinationId=${destId}`, {
@@ -95,44 +84,71 @@ export default function DestinationsPage() {
     }
   }
 
-  const categories = ['All', 'Beach', 'Mountain', 'City', 'Cultural', 'Adventure']
-  const filtered = selectedCategory === 'All' 
-    ? destinations 
-    : destinations.filter(d => d.category === selectedCategory)
+  const categories = ['All', 'Beach', 'Mountain', 'City', 'Cultural', 'Adventure', 'Nature']
+
+  const filtered = destinations.filter(d => {
+    const matchesCategory = selectedCategory === 'All' || d.category === selectedCategory
+    const matchesSearch =
+      d.country.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.description.toLowerCase().includes(searchQuery.toLowerCase())
+
+    return matchesCategory && matchesSearch
+  })
 
   return (
     <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.01em' }}>
       <Navbar />
-      
+
       <div className="pt-24 pb-20 px-6">
         <div className="max-w-[88rem] mx-auto">
-          
+
           {/* Header */}
-          <div className="pt-12 pb-10">
-            <p className="text-[10px] font-bold text-black/30 uppercase tracking-widest mb-4">Explore the world</p>
-            <h1 className="text-5xl md:text-6xl font-semibold text-black leading-[1.05] mb-4" style={{ letterSpacing: '-0.03em' }}>
-              Destinations
+          <div className="pt-12 pb-8">
+            <p className="text-[10px] font-bold text-black/40 uppercase tracking-widest mb-3">195 UN Member States & World Destinations</p>
+            <h1 className="text-4xl md:text-6xl font-semibold text-black leading-[1.05] mb-4" style={{ letterSpacing: '-0.03em' }}>
+              All 195 Official World Destinations
             </h1>
-            <p className="text-base text-black/40 max-w-lg leading-relaxed">
-              From tropical beaches to ancient cities, discover your next adventure across 150+ destinations worldwide.
+            <p className="text-base text-black/50 max-w-xl leading-relaxed">
+              Explore travel destinations, beaches, mountain peaks, and cultural heritage across all 195 UN member countries worldwide.
             </p>
           </div>
 
-          {/* Category filter */}
-          <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 text-sm font-medium rounded-full shrink-0 transition-all duration-200 ${
-                  selectedCategory === cat
-                    ? 'bg-black text-white'
-                    : 'bg-white text-black/40 hover:text-black border border-black/[0.06]'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          {/* Search & Category Filter Bar */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            {/* Search Input */}
+            <div className="relative w-full md:w-96">
+              <Search className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Cari negara (misal: Indonesia, Japan, France)..."
+                className="w-full bg-white border border-black/10 rounded-full pl-10 pr-10 py-3 text-xs text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black transition-all shadow-2xs"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery('')} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-black/40 hover:text-black">
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2.5 text-xs font-semibold rounded-full shrink-0 transition-all duration-200 ${
+                    selectedCategory === cat
+                      ? 'bg-black text-white shadow-xs'
+                      : 'bg-white text-black/50 hover:text-black border border-black/[0.08]'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Loading */}
@@ -144,69 +160,82 @@ export default function DestinationsPage() {
                   <div className="p-5 space-y-3">
                     <div className="h-5 bg-black/[0.04] rounded w-2/3" />
                     <div className="h-4 bg-black/[0.04] rounded w-full" />
-                    <div className="flex gap-2">
-                      <div className="h-8 bg-black/[0.04] rounded-full w-20" />
-                      <div className="h-8 bg-black/[0.04] rounded-full w-24" />
-                    </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Grid */}
+          {/* Destination Cards Grid */}
           {!loading && (
             <>
-              <p className="text-xs text-black/30 mb-5">{filtered.length} destinations found</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {filtered.map((dest) => {
-                  const isSaved = wishlistIds.includes(Number(dest.id))
-                  return (
-                    <Link
-                      key={dest.id}
-                      href={`/search?destination=${encodeURIComponent(dest.city)}`}
-                      className="group bg-white rounded-2xl border border-black/[0.04] overflow-hidden hover:shadow-lg transition-all duration-300 relative"
-                    >
-                      <div className="relative h-56 overflow-hidden">
-                        {dest.image ? (
-                          <img 
-                            src={dest.image} 
-                            alt={dest.city} 
-                            loading="lazy"
-                            className="w-full h-full object-cover img-smooth-zoom" 
-                          />
-                        ) : null}
-                        <button
-                          onClick={(e) => toggleWishlist(e, Number(dest.id))}
-                          className="absolute top-4 right-4 bg-white/80 backdrop-blur-md hover:bg-white text-black p-2.5 rounded-full shadow-md z-10 transition-colors"
-                          title={isSaved ? "Remove from Wishlist" : "Add to Wishlist"}
-                        >
-                          <Heart size={16} className={`${isSaved ? 'fill-red-500 text-red-500' : 'text-black'}`} />
-                        </button>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <h3 className="text-white text-xl font-semibold" style={{ letterSpacing: '-0.02em' }}>{dest.city}</h3>
-                          <p className="text-white/80 text-xs">{dest.country}</p>
-                        </div>
-                      </div>
-                      <div className="p-5">
-                        <p className="text-black/50 text-sm leading-relaxed mb-4">{dest.description}</p>
-                        <div className="flex items-center gap-4 text-xs text-black/40">
-                          <span className="flex items-center gap-1">
-                            <Star size={11} className="fill-black/40" />
-                            {dest.rating}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock size={11} />
-                            {dest.duration}
-                          </span>
-                          <span className="font-semibold text-black ml-auto">{dest.price}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  )
-                })}
+              <div className="flex items-center justify-between mb-5">
+                <p className="text-xs text-black/40 font-medium">
+                  Menampilkan {filtered.length} dari {destinations.length} negara destinasi dunia
+                </p>
               </div>
+
+              {filtered.length === 0 ? (
+                <div className="bg-white rounded-2xl p-12 text-center border border-black/5 space-y-2">
+                  <p className="text-sm font-semibold text-black/80">Destinasi tidak ditemukan.</p>
+                  <p className="text-xs text-black/40">Coba ubah kata kunci pencarian negara atau kategori.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {filtered.map((dest) => {
+                    const isSaved = wishlistIds.includes(Number(dest.id))
+                    return (
+                      <Link
+                        key={dest.id}
+                        href={`/search?destination=${encodeURIComponent(dest.city)}`}
+                        className="group bg-white rounded-2xl border border-black/[0.04] overflow-hidden hover:shadow-lg transition-all duration-300 relative flex flex-col justify-between"
+                      >
+                        <div className="relative h-56 overflow-hidden bg-neutral-900">
+                          {dest.image ? (
+                            <img
+                              src={dest.image}
+                              alt={`${dest.city}, ${dest.country}`}
+                              loading="lazy"
+                              className="w-full h-full object-cover img-smooth-zoom"
+                            />
+                          ) : null}
+                          <button
+                            onClick={(e) => toggleWishlist(e, Number(dest.id))}
+                            className="absolute top-4 right-4 bg-white/80 backdrop-blur-md hover:bg-white text-black p-2.5 rounded-full shadow-md z-10 transition-colors"
+                            title={isSaved ? "Remove from Wishlist" : "Add to Wishlist"}
+                          >
+                            <Heart size={16} className={`${isSaved ? 'fill-red-500 text-red-500' : 'text-black'}`} />
+                          </button>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                          <div className="absolute bottom-4 left-4 right-4">
+                            <h3 className="text-white text-xl font-bold" style={{ letterSpacing: '-0.02em' }}>{dest.city}</h3>
+                            <p className="text-white/80 text-xs font-medium flex items-center gap-1">
+                              <MapPin className="w-3 h-3 text-white/60" />
+                              {dest.country}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                          <p className="text-black/60 text-xs leading-relaxed line-clamp-2">{dest.description}</p>
+                          
+                          <div className="flex items-center justify-between pt-3 border-t border-black/5 text-xs text-black/50">
+                            <span className="flex items-center gap-1 font-semibold text-amber-500">
+                              <Star size={12} className="fill-amber-400 text-amber-400" />
+                              {dest.rating}
+                            </span>
+                            <span className="flex items-center gap-1 text-black/40">
+                              <Clock size={12} />
+                              {dest.duration}
+                            </span>
+                            <span className="font-bold text-black text-xs">{dest.price}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              )}
             </>
           )}
 
