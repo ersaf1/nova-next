@@ -40,6 +40,7 @@ interface Itinerary {
   duration: number
   totalEstimatedCost: string
   heroImage?: string
+  aiIntro?: string
   days: Day[]
   attractions?: Attraction[]
   travelTips: string[]
@@ -624,9 +625,29 @@ export default function ItineraryPage() {
             </div>
           ) : (
             /* Results View State */
-            <div className="space-y-8 animate-fade-in text-neutral-950">
+            <div className="space-y-8 text-neutral-950">
+
+              {/* AI Intro Message */}
+              {itinerary.aiIntro && (
+                <div
+                  className="flex items-start gap-3 opacity-0 animate-slide-in-left"
+                  style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}
+                >
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-neutral-950 flex items-center justify-center shadow-sm">
+                    <Sparkles size={14} className="text-amber-400" />
+                  </div>
+                  <div className="bg-white border border-neutral-200 rounded-2xl rounded-tl-sm px-4 py-3 shadow-2xs max-w-2xl">
+                    <p className="text-xs font-jakarta font-semibold text-neutral-500 uppercase tracking-widest mb-1">Nova AI</p>
+                    <p className="text-sm font-jakarta text-neutral-800 leading-relaxed">{itinerary.aiIntro}</p>
+                  </div>
+                </div>
+              )}
+
               {/* Destination Hero Banner */}
-              <div className="relative rounded-3xl overflow-hidden min-h-[320px] flex items-end p-8 sm:p-10 shadow-md bg-neutral-900">
+              <div
+                className="relative rounded-3xl overflow-hidden min-h-[320px] flex items-end p-8 sm:p-10 shadow-md bg-neutral-900 opacity-0 animate-fade-in-up"
+                style={{ animationDelay: '0.35s', animationFillMode: 'forwards' }}
+              >
                 <img
                   src={getHeroPhoto()}
                   alt={itinerary.destination}
@@ -679,7 +700,10 @@ export default function ItineraryPage() {
 
               {/* Photo Gallery Grid */}
               {itinerary.attractions && itinerary.attractions.length > 0 && (
-                <div className="space-y-4">
+                <div
+                  className="space-y-4 opacity-0 animate-fade-in-up"
+                  style={{ animationDelay: '0.55s', animationFillMode: 'forwards' }}
+                >
                   <div className="flex items-center justify-between">
                     <h2 className="text-lg font-bold text-neutral-950 flex items-center gap-2">
                       <Camera size={18} className="text-neutral-700" />
@@ -730,7 +754,10 @@ export default function ItineraryPage() {
               )}
 
               {/* Itinerary Timeline & Tips */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <div
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start opacity-0 animate-fade-in-up"
+                style={{ animationDelay: '0.75s', animationFillMode: 'forwards' }}
+              >
                 <div className="lg:col-span-8 space-y-4">
                   <div className="flex items-center justify-between">
                     <h2 className="text-base font-bold text-neutral-950 flex items-center gap-2">

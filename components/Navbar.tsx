@@ -49,12 +49,12 @@ const Navbar: React.FC = () => {
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 opacity-0 bg-white border-b border-black/[0.06] py-1 text-neutral-900`}
+      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 opacity-0 bg-white border-b border-black/[0.06] py-0 text-neutral-900`}
     >
       <div className="max-w-[88rem] mx-auto flex items-center justify-between gap-8">
         {/* Logo -> Navigasi ke Halaman Utama (/) */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0 group" title="Kembali ke Halaman Utama">
-          <LogoIcon className="w-20 h-20 transition-transform duration-300 group-hover:scale-110" />
+          <LogoIcon className="w-12 h-12 transition-transform duration-300 group-hover:scale-110" />
         </Link>
 
         {/* Desktop Nav Links */}

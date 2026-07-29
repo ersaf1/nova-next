@@ -62,6 +62,7 @@ function generateMockItinerary(destination: string, duration: number, countryDat
       { phrase: 'Terima kasih', meaning: 'Ungkapan rasa terima kasih' },
       { phrase: 'Berapa harganya?', meaning: 'Menanyakan harga' }
     ],
+    aiIntro: `Yang cocok untuk kamu adalah itinerary ${destName} selama ${duration} hari ini. Kami sudah menyiapkan rencana perjalanan terbaik berdasarkan destinasi impianmu — tinggal ikuti saja dan nikmati perjalanannya!`,
   }
 }
 
@@ -118,6 +119,7 @@ Return a JSON object with this exact structure:
       "description": "string (1-2 sentences about what makes it special)"
     }
   ],
+  "aiIntro": "string (1-2 kalimat hangat dalam Bahasa Indonesia yang terasa personal, dimulai dengan 'Yang cocok untuk kamu adalah...' atau 'Berdasarkan preferensi kamu...' atau variasi serupa — sebutkan destinasi, durasi, dan preferensi/budget mereka secara natural)",
   "travelTips": ["string"],
   "bestTimeToVisit": "string",
   "localPhrases": [{"phrase": "string", "meaning": "string"}]
