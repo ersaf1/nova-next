@@ -74,6 +74,21 @@ function LoginForm() {
 
     const { data, error } = await supabaseClient.auth.signUp({ email, password })
     if (error) {
+      // Auto-fallback: If rate limit is hit, try signing in directly!
+      if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many requests')) {
+        const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({ email, password })
+        if (!signInError && signInData?.session) {
+          setSuccess('Akun sudah terdaftar! Masuk ke sistem...')
+          setTimeout(() => {
+            window.location.href = redirect
+          }, 600)
+          return
+        }
+        setError('Akun mungkin sudah terdaftar. Silakan beralih ke tab "Sign in" di atas untuk masuk.')
+        setLoading(false)
+        return
+      }
+
       setError(mapError(error.message))
       setLoading(false)
       return
@@ -83,7 +98,7 @@ function LoginForm() {
       setSuccess('Akun berhasil dibuat! Mengalihkan ke halaman dashboard...')
       setTimeout(() => {
         window.location.href = redirect
-      }, 1000)
+      }, 600)
     } else {
       setSuccess('Akun berhasil dibuat! Silakan cek email Anda untuk konfirmasi sebelum Sign In.')
       setLoading(false)
