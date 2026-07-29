@@ -8,16 +8,20 @@ import { supabaseClient } from '@/lib/supabase-client'
 type Tab = 'signin' | 'signup'
 
 function mapError(message: string): string {
-  if (message.includes('Invalid login credentials')) return 'Incorrect email or password.'
-  if (message.includes('User already registered')) return 'An account with this email already exists.'
-  if (message.includes('Email not confirmed')) return 'Please check your email to confirm your account.'
-  return 'Something went wrong. Please try again.'
+  if (!message) return 'Terjadi kesalahan. Silakan coba lagi.'
+  if (message.includes('Invalid login credentials')) return 'Email atau password salah.'
+  if (message.includes('User already registered') || message.includes('already registered') || message.includes('already exists')) return 'Email ini sudah terdaftar. Silakan pilih menu Sign In.'
+  if (message.includes('Email not confirmed')) return 'Silakan periksa email Anda untuk konfirmasi akun.'
+  if (message.includes('Password should be at least')) return 'Password minimal 6 karakter.'
+  if (message.includes('rate limit') || message.includes('Rate limit')) return 'Terlalu banyak percobaan. Harap tunggu sebentar.'
+  return message
 }
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
+  const isAdminLogin = redirect.startsWith('/admin')
 
   const [tab, setTab] = useState<Tab>('signin')
   const [email, setEmail] = useState('')
@@ -40,26 +44,27 @@ function LoginForm() {
     setLoading(true)
     setError('')
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password })
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password })
     if (error) {
       setError(mapError(error.message))
       setLoading(false)
       return
     }
 
-    const token = data.session?.access_token
-    if (token) {
-      document.cookie = `sb-access-token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
-    }
-
-    router.push(redirect)
+    // Hard navigation so proxy.ts reads the fresh Supabase session cookies
+    window.location.href = redirect
   }
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault()
 
+    if (password.length < 6) {
+      setError('Password minimal 6 karakter.')
+      return
+    }
+
     if (password !== confirmPassword) {
-      setError('Passwords do not match.')
+      setError('Password dan Konfirmasi Password tidak cocok.')
       return
     }
 
@@ -67,15 +72,22 @@ function LoginForm() {
     setError('')
     setSuccess('')
 
-    const { error } = await supabaseClient.auth.signUp({ email, password })
+    const { data, error } = await supabaseClient.auth.signUp({ email, password })
     if (error) {
       setError(mapError(error.message))
       setLoading(false)
       return
     }
 
-    setSuccess('Account created! Check your email to confirm your address before signing in.')
-    setLoading(false)
+    if (data.session) {
+      setSuccess('Akun berhasil dibuat! Mengalihkan ke halaman dashboard...')
+      setTimeout(() => {
+        window.location.href = redirect
+      }, 1000)
+    } else {
+      setSuccess('Akun berhasil dibuat! Silakan cek email Anda untuk konfirmasi sebelum Sign In.')
+      setLoading(false)
+    }
   }
 
   async function handleForgotPassword() {
@@ -109,22 +121,25 @@ function LoginForm() {
 
         {/* Card */}
         <div className="bg-white rounded-2xl p-8 shadow-sm">
-          {/* Tabs */}
-          <div className="flex rounded-full bg-[#F5F5F5] p-1 mb-8">
-            {(['signin', 'signup'] as Tab[]).map((t) => (
-              <button
-                key={t}
-                onClick={() => switchTab(t)}
-                className={`flex-1 py-2 rounded-full text-sm font-medium transition-colors ${
-                  tab === t
-                    ? 'bg-black text-white'
-                    : 'text-neutral-500 hover:text-black'
-                }`}
-              >
-                {t === 'signin' ? 'Sign in' : 'Sign up'}
-              </button>
-            ))}
-          </div>
+          {/* Tabs — hide signup for admin login */}
+          {!isAdminLogin && (
+            <div className="flex rounded-full bg-[#F5F5F5] p-1 mb-8">
+              {(['signin', 'signup'] as Tab[]).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => switchTab(t)}
+                  className={`flex-1 py-2 rounded-full text-sm font-medium transition-colors ${
+                    tab === t
+                      ? 'bg-black text-white'
+                      : 'text-neutral-500 hover:text-black'
+                  }`}
+                >
+                  {t === 'signin' ? 'Sign in' : 'Sign up'}
+                </button>
+              ))}
+            </div>
+          )}
+          {isAdminLogin && <div className="mb-8" />}
 
           {/* Form */}
           <form onSubmit={tab === 'signin' ? handleSignIn : handleSignUp} noValidate>
@@ -247,20 +262,7 @@ function LoginForm() {
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-3">
-            <div className="flex-1 h-px bg-neutral-200" />
-            <span className="text-xs text-neutral-400">or</span>
-            <div className="flex-1 h-px bg-neutral-200" />
-          </div>
-
-          {/* Guest */}
-          <button
-            onClick={() => router.push('/booking')}
-            className="w-full border border-neutral-200 text-black rounded-full py-3 text-sm font-medium hover:bg-[#F5F5F5] transition"
-          >
-            Continue as guest
-          </button>
+          {/* No guest checkout allowed */}
         </div>
 
         <p className="mt-6 text-center text-xs text-neutral-400">
