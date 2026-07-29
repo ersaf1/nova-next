@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
   // Dark navbar styling if on home page or itinerary page hero section
-  const isDark = (isHomePage || isItineraryPage) ? !scrolled : false
+  const isDark = false
 
   const isActive = (href: string) => {
     if (href.startsWith('/#')) return false
