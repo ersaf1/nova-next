@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { rateLimit } from '@/lib/rate-limit'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -32,6 +33,30 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isAdminPage = pathname.startsWith('/admin')
   const isAdminApi = pathname.startsWith('/api/admin')
+
+  // Extract client IP for rate limiting
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    request.headers.get('x-real-ip') ??
+    'unknown'
+  const { method } = request
+
+  // Rate limiting for sensitive routes
+  if (method === 'POST') {
+    if (pathname === '/api/auth/signup') {
+      const limited = await rateLimit('signup', ip)
+      if (limited) return limited
+    } else if (pathname === '/api/bookings') {
+      const limited = await rateLimit('booking', ip)
+      if (limited) return limited
+    } else if (pathname === '/api/reviews') {
+      const limited = await rateLimit('review', ip)
+      if (limited) return limited
+    } else if (pathname === '/api/payment/create') {
+      const limited = await rateLimit('payment', ip)
+      if (limited) return limited
+    }
+  }
 
   // Only act on matched routes (matcher keeps other traffic out, but be explicit)
   if (!isAdminPage && !isAdminApi) {
@@ -92,5 +117,12 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  matcher: [
+    '/admin/:path*',
+    '/api/admin/:path*',
+    '/api/auth/signup',
+    '/api/bookings',
+    '/api/reviews',
+    '/api/payment/create',
+  ],
 }

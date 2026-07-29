@@ -131,6 +131,11 @@ export interface Booking {
   phone?: string          // legacy contactPhone
   status?: string         // legacy bookingStatus
 
+  // Refund fields
+  refund_status?: 'none' | 'requested' | 'approved' | 'rejected'
+  refund_reason?: string
+  refunded_at?: string
+
   createdAt?: string
   updatedAt?: string
 }

@@ -22,6 +22,7 @@ import {
   LogOut,
   ShieldCheck,
   Crown,
+  ReceiptText,
 } from 'lucide-react'
 
 interface MeResponse {
@@ -66,6 +67,7 @@ const navCategories: NavCategory[] = [
     category: 'Operations',
     items: [
       { path: '/admin/bookings', label: 'Bookings', icon: Calendar },
+      { path: '/admin/refunds', label: 'Refunds', icon: ReceiptText },
       { path: '/admin/coupons', label: 'Coupons & Promos', icon: Ticket },
     ],
   },

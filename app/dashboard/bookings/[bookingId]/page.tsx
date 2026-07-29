@@ -3,12 +3,124 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ReceiptText, X } from 'lucide-react'
 import { supabaseClient } from '@/lib/supabase-client'
 import Navbar from '@/components/Navbar'
 import DashboardNav from '@/components/DashboardNav'
 import { formatIDR, getBookingStatusLabel, getBookingStatusColor, getPaymentStatusLabel, getPaymentStatusColor } from '@/lib/types'
 import type { Booking } from '@/lib/types'
+import { useBookingRealtime } from '@/hooks/useBookingRealtime'
+
+const REFUND_STATUS_STYLES: Record<string, string> = {
+  requested: 'bg-amber-50 text-amber-700 border border-amber-200',
+  approved:  'bg-emerald-50 text-emerald-700 border border-emerald-200',
+  rejected:  'bg-rose-50 text-rose-700 border border-rose-200',
+}
+
+const REFUND_STATUS_LABELS: Record<string, string> = {
+  requested: 'Refund Diminta',
+  approved:  'Refund Disetujui',
+  rejected:  'Refund Ditolak',
+}
+
+function RefundModal({
+  bookingId,
+  onClose,
+  onSuccess,
+}: {
+  bookingId: number
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [reason, setReason] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSubmit = async () => {
+    setSubmitting(true)
+    setError(null)
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession()
+      const res = await fetch(`/api/bookings/${bookingId}/refund`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
+        body: JSON.stringify({ reason }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({})) as { error?: string }
+        setError(data.error ?? 'Gagal mengajukan refund')
+        return
+      }
+      onSuccess()
+    } catch {
+      setError('Terjadi kesalahan jaringan')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+      <div className="bg-white rounded-2xl border border-black/[0.08] shadow-xl w-full max-w-md p-6 space-y-5">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="font-bold text-black text-base">Ajukan Refund</p>
+            <p className="text-xs text-neutral-400 mt-0.5">
+              Permintaan akan ditinjau oleh tim kami
+            </p>
+          </div>
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-neutral-100 transition-colors">
+            <X className="w-4 h-4 text-neutral-500" />
+          </button>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+            Alasan Refund <span className="text-neutral-300 font-normal normal-case">(opsional)</span>
+          </label>
+          <textarea
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            rows={3}
+            placeholder="Jelaskan alasan pengajuan refund..."
+            className="w-full text-sm border border-black/10 rounded-xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-black/10 placeholder:text-neutral-300"
+          />
+        </div>
+
+        {error && (
+          <p className="text-xs text-rose-600 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+            {error}
+          </p>
+        )}
+
+        <div className="flex gap-3 pt-1">
+          <button
+            onClick={onClose}
+            disabled={submitting}
+            className="flex-1 border border-black/10 text-black text-sm font-medium py-3 rounded-xl hover:bg-neutral-50 transition-colors disabled:opacity-50"
+          >
+            Batal
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={submitting}
+            className="flex-1 bg-black text-white text-sm font-semibold py-3 rounded-xl hover:bg-neutral-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {submitting ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <ReceiptText className="w-4 h-4" />
+            )}
+            {submitting ? 'Mengajukan...' : 'Ajukan Refund'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function BookingDetailPage() {
   const params = useParams()
@@ -18,6 +130,8 @@ export default function BookingDetailPage() {
   const [booking, setBooking] = useState<Booking | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showRefundModal, setShowRefundModal] = useState(false)
+  const [refundSuccess, setRefundSuccess] = useState(false)
 
   const fetchBooking = async () => {
     try {
@@ -58,11 +172,30 @@ export default function BookingDetailPage() {
     </div>
   )
 
-  const bookingStatus = (booking.bookingStatus ?? booking.status ?? 'pending') as Booking['bookingStatus']
-  const paymentStatus = (booking.paymentStatus ?? 'unpaid') as Booking['paymentStatus']
+  const { status: realtimeStatus, refundStatus: realtimeRefundStatus, lastUpdate } = useBookingRealtime(booking?.id ?? null)
+
+  const bookingStatus = ((realtimeStatus ?? booking.bookingStatus ?? booking.status ?? 'pending')) as Booking['bookingStatus']
+  const paymentStatus = ((realtimeRefundStatus ?? booking.paymentStatus ?? 'unpaid')) as Booking['paymentStatus']
   const needsPayment = ['unpaid', 'pending'].includes(paymentStatus) && bookingStatus !== 'cancelled'
 
+  // Refund state — use local override after successful request, otherwise use booking data
+  const currentRefundStatus = (
+    refundSuccess ? 'requested' : (booking.refund_status ?? 'none')
+  ) as 'none' | 'requested' | 'approved' | 'rejected'
+
+  const canRequestRefund =
+    ['paid', 'confirmed'].includes(bookingStatus ?? '') &&
+    (currentRefundStatus === 'none' || currentRefundStatus === null)
+
+  const handleRefundSuccess = () => {
+    setShowRefundModal(false)
+    setRefundSuccess(true)
+    // Refresh booking data to sync server state
+    fetchBooking()
+  }
+
   return (
+    <>
     <div className="min-h-screen bg-[#F8F9FA]" style={{ letterSpacing: '-0.01em' }}>
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-10">
@@ -79,13 +212,23 @@ export default function BookingDetailPage() {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1">Kode Booking</p>
                 <p className="text-2xl font-bold tracking-wider text-black">{booking.bookingCode ?? `#${booking.id}`}</p>
+                {lastUpdate && (
+                  <p className="text-[10px] text-neutral-400 mt-1">Diperbarui baru saja</p>
+                )}
               </div>
-              <div className="flex gap-2 flex-wrap">
-                <span className={`text-[10px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-full ${getBookingStatusColor(bookingStatus)}`}>
-                  {getBookingStatusLabel(bookingStatus)}
-                </span>
-                <span className={`text-[10px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-full ${getPaymentStatusColor(paymentStatus)}`}>
-                  {getPaymentStatusLabel(paymentStatus)}
+              <div className="flex flex-col items-end gap-2">
+                <div className="flex gap-2 flex-wrap justify-end">
+                  <span className={`text-[10px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-full ${getBookingStatusColor(bookingStatus)}`}>
+                    {getBookingStatusLabel(bookingStatus)}
+                  </span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-full ${getPaymentStatusColor(paymentStatus)}`}>
+                    {getPaymentStatusLabel(paymentStatus)}
+                  </span>
+                </div>
+                {/* Live badge — always shown to indicate realtime is active */}
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Live
                 </span>
               </div>
             </div>
@@ -124,12 +267,29 @@ export default function BookingDetailPage() {
               </div>
             </div>
 
+            {/* Refund status badge */}
+            {currentRefundStatus !== 'none' && currentRefundStatus !== null && (
+              <div className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border ${REFUND_STATUS_STYLES[currentRefundStatus]}`}>
+                <ReceiptText className="w-3.5 h-3.5" />
+                {REFUND_STATUS_LABELS[currentRefundStatus]}
+              </div>
+            )}
+
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
               {needsPayment && (
                 <Link href={`/payment/pending/${booking.id}`} className="bg-black text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-neutral-800 transition-colors">
                   Lanjutkan Pembayaran
                 </Link>
+              )}
+              {canRequestRefund && (
+                <button
+                  onClick={() => setShowRefundModal(true)}
+                  className="flex items-center gap-2 border border-black/10 text-black text-sm font-medium px-6 py-3 rounded-xl hover:bg-neutral-50 transition-colors"
+                >
+                  <ReceiptText className="w-4 h-4" />
+                  Ajukan Refund
+                </button>
               )}
               <a href={`mailto:support@novawisata.com?subject=Booking ${booking.bookingCode ?? booking.id}`} className="border border-black/10 text-black text-sm font-medium px-6 py-3 rounded-xl hover:bg-neutral-50 transition-colors">
                 Hubungi Support
@@ -149,5 +309,14 @@ export default function BookingDetailPage() {
         </div>
       </div>
     </div>
+
+    {showRefundModal && (
+      <RefundModal
+        bookingId={booking.id}
+        onClose={() => setShowRefundModal(false)}
+        onSuccess={handleRefundSuccess}
+      />
+    )}
+    </>
   )
 }

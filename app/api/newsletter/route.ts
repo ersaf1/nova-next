@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { sendNewsletterWelcome } from '@/lib/email'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -31,6 +32,9 @@ export async function POST(request: Request) {
 
     const { error } = await supabase.from('Newsletter').insert({ email: normalizedEmail })
     if (error) throw error
+
+    // Send welcome email (fire-and-forget)
+    sendNewsletterWelcome({ to: normalizedEmail }).catch(() => {})
 
     return NextResponse.json({ success: true, message: 'Terima kasih! Kamu berhasil berlangganan.' })
   } catch {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import crypto from 'crypto'
+import { sendPaymentConfirmed } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
     // 3. Fetch booking from DB
     const { data: booking } = await supabase
       .from('Booking')
-      .select('id, totalAmount, paymentStatus')
+      .select('id, totalAmount, paymentStatus, email, name, packageName')
       .eq('id', bookingId)
       .single()
 
@@ -89,6 +90,17 @@ export async function POST(request: Request) {
         paid_at: paymentStatus === 'paid' ? (transaction_time ?? new Date().toISOString()) : null,
       })
       .eq('id', bookingId)
+
+    // Send payment confirmed email (fire-and-forget)
+    if (paymentStatus === 'paid' && booking.email) {
+      sendPaymentConfirmed({
+        to: booking.email as string,
+        name: (booking.name as string) ?? '',
+        packageName: (booking.packageName as string) ?? '',
+        bookingId: booking.id,
+        amount: Number(gross_amount) || booking.totalAmount || 0,
+      }).catch(() => {})
+    }
 
     return NextResponse.json({ status: 'ok' })
   } catch {
