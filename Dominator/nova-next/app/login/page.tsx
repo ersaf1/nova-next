@@ -9,9 +9,11 @@ type Tab = 'signin' | 'signup'
 
 function mapError(message: string): string {
   if (!message) return 'Terjadi kesalahan. Silakan coba lagi.'
-  if (message.includes('Invalid login credentials')) return 'Email atau password salah.'
-  if (message.includes('User already registered') || message.includes('already registered') || message.includes('already exists')) return 'Email ini sudah terdaftar. Silakan pilih menu Sign In.'
-  if (message.includes('Email not confirmed')) return 'Silakan periksa email Anda untuk konfirmasi akun.'
+  if (message.includes('Invalid login credentials')) {
+    return 'Email atau password salah. Jika Anda baru saja mendaftar, silakan periksa inbox/spam email Anda untuk melakukan konfirmasi akun terlebih dahulu sebelum Sign In.'
+  }
+  if (message.includes('User already registered') || message.includes('already registered') || message.includes('already exists')) return 'Email ini sudah terdaftar. Silakan pilih tab Sign In di atas.'
+  if (message.includes('Email not confirmed')) return 'Email belum dikonfirmasi. Silakan periksa inbox/spam email Anda untuk mengeklik tautan konfirmasi.'
   if (message.includes('Password should be at least')) return 'Password minimal 6 karakter.'
   if (message.includes('rate limit') || message.includes('Rate limit')) return 'Terlalu banyak percobaan. Harap tunggu sebentar.'
   return message
