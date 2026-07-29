@@ -45,3 +45,5 @@ next-env.d.ts
 # cache
 .cache/
 .21st/
+.agents/
+.claude/

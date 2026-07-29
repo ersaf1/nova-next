@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { requireAuth } from '@/lib/auth-server'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -23,10 +24,19 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { user_id, user_email, user_name, entity_type, entity_id, rating, title, body: reviewBody } = body
+    // Authenticate — identity comes from the session, never from the request body
+    const authResult = await requireAuth(request)
+    if (authResult instanceof NextResponse) return authResult
+    const { user } = authResult
 
-    if (!user_id || !user_email || !user_name || !entity_type || !entity_id || !rating || !reviewBody) {
+    const user_id = user.id
+    const user_email = user.email ?? ''
+    const user_name = (user.user_metadata?.full_name as string | undefined) ?? ''
+
+    const body = await request.json()
+    const { entity_type, entity_id, rating, title, body: reviewBody } = body
+
+    if (!entity_type || !entity_id || !rating || !reviewBody) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 

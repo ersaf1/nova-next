@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { requireRole } from '@/lib/auth-server'
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const isAdmin = searchParams.get('admin') === 'true'
+  const authResult = await requireRole(request, ['admin', 'super_admin'])
+  const isAdmin = !(authResult instanceof NextResponse)
 
+  const now = new Date().toISOString()
   let query = supabase.from('Coupon').select('*')
 
   if (!isAdmin) {
-    const now = new Date().toISOString()
     query = query
       .eq('is_active', true)
       .or(`expires_at.is.null,expires_at.gt.${now}`)
@@ -21,6 +22,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const authResult = await requireRole(request, ['admin', 'super_admin'])
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const body = await request.json()
     const { code, discount_type, discount_value, min_amount, max_uses, expires_at } = body

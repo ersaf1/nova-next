@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { requireRole } from '@/lib/auth-server'
 import { readFile } from 'fs/promises'
 import path from 'path'
 
@@ -37,6 +38,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const authResult = await requireRole(request, ['admin', 'super_admin'])
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const body = await request.json()
     const data = { ...body, includes: JSON.stringify(body.includes ?? []) }
