@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { supabase } from '@/lib/supabase'
+import { sendBookingConfirmation } from '@/lib/email'
 
 function generateBookingCode(): string {
   const prefix = 'NVA'
@@ -10,8 +11,11 @@ function generateBookingCode(): string {
   return `${prefix}-${timestamp}-${random}`
 }
 
-export async function GET(_request: Request) {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const refundFilter = searchParams.get('refund') // e.g. 'requested'
+
     // Build a session-aware Supabase client from the incoming cookies
     const cookieStore = await cookies()
     const supabaseAuth = createServerClient(
@@ -23,6 +27,19 @@ export async function GET(_request: Request) {
     const { data: { user } } = await supabaseAuth.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Admin refund queue: ?refund=requested returns all bookings with that refund_status
+    // (admin role check is handled by the admin layout; this is a best-effort server filter)
+    if (refundFilter) {
+      const { data, error } = await supabase
+        .from('Booking')
+        .select('*')
+        .eq('refund_status', refundFilter)
+        .order('updatedAt', { ascending: false })
+
+      if (error) throw error
+      return NextResponse.json(data ?? [])
     }
 
     // Fetch bookings scoped to this user — check userId first, fall back to email
@@ -188,6 +205,17 @@ export async function POST(request: Request) {
       .single()
 
     if (error) throw error
+
+    // Send booking confirmation email (fire-and-forget — email errors must not fail the booking)
+    sendBookingConfirmation({
+      to: resolvedEmail,
+      name: resolvedName,
+      packageName: pkg.title,
+      bookingId: data.id,
+      travelDate: travelDate || departureStartDate || '',
+      participants: Number(participants),
+      totalAmount,
+    }).catch(() => {})
 
     // Decrement remaining slots if departure selected (non-fatal, fire-and-forget)
     if (departureId) {

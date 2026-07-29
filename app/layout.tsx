@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import PageTransition from '@/components/PageTransition'
+import CrispChat from '@/components/CrispChat'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,9 +16,28 @@ const geistMono = Geist_Mono({
   display: 'swap',
 })
 
+const title = 'Nova — Travel Platform'
+const description = 'Your AI-powered travel companion — from first search to safe return across 195 countries.'
+
 export const metadata: Metadata = {
-  title: 'Nova — Travel Platform',
-  description: 'Your AI-powered travel companion — from first search to safe return across 195 countries.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? 'https://nova-travel.vercel.app'),
+  title,
+  description,
+  robots: { index: true, follow: true },
+  openGraph: {
+    title,
+    description,
+    type: 'website',
+    locale: 'id_ID',
+    siteName: 'Nova Travel',
+    images: [{ url: '/nova_official_logo.png', width: 512, height: 512 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+    images: ['/nova_official_logo.png'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -33,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-sans antialiased bg-white text-[#1a1a1a] overflow-x-hidden">
         <PageTransition>{children}</PageTransition>
+        <CrispChat />
       </body>
     </html>
   )

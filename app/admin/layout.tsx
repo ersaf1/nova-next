@@ -21,7 +21,16 @@ import {
   ExternalLink,
   LogOut,
   ShieldCheck,
+  Crown,
+  ReceiptText,
 } from 'lucide-react'
+
+interface MeResponse {
+  id: string
+  email: string
+  name: string
+  role: string
+}
 
 interface NavItem {
   path: string
@@ -58,6 +67,7 @@ const navCategories: NavCategory[] = [
     category: 'Operations',
     items: [
       { path: '/admin/bookings', label: 'Bookings', icon: Calendar },
+      { path: '/admin/refunds', label: 'Refunds', icon: ReceiptText },
       { path: '/admin/coupons', label: 'Coupons & Promos', icon: Ticket },
     ],
   },
@@ -74,23 +84,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const [checking, setChecking] = useState(true)
   const [authorized, setAuthorized] = useState(false)
-  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [user, setUser] = useState<MeResponse | null>(null)
 
   useEffect(() => {
-    supabaseClient.auth.getUser().then(({ data }) => {
-      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? ''
-      if (!data.user) {
-        router.replace(`/login?redirect=${encodeURIComponent(window.location.pathname)}`)
-        return
-      }
-      if (adminEmail && data.user.email !== adminEmail) {
-        router.replace('/')
-        return
-      }
-      setUserEmail(data.user.email ?? null)
-      setAuthorized(true)
-      setChecking(false)
-    })
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then((data: MeResponse & { error?: string }) => {
+        if (!data.role || !['admin', 'super_admin'].includes(data.role)) {
+          router.push('/login?redirect=/admin')
+        } else {
+          setUser(data)
+          setAuthorized(true)
+          setChecking(false)
+        }
+      })
+      .catch(() => router.push('/login'))
   }, [router])
 
   const handleSignOut = async () => {
@@ -189,12 +197,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Footer */}
         <div className="p-4 border-t border-neutral-800/80 space-y-2">
-          {userEmail && (
+          {user && (
             <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-neutral-400 bg-neutral-900/60 border border-neutral-800/60 min-w-0">
               <User className="w-4 h-4 shrink-0 text-neutral-400" />
-              <span className="truncate" title={userEmail}>
-                {userEmail}
+              <span className="truncate flex-1" title={user.email}>
+                {user.email}
               </span>
+              {user.role === 'super_admin' ? (
+                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px] font-semibold shrink-0">
+                  <Crown className="w-2.5 h-2.5" />
+                  super
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold shrink-0">
+                  <ShieldCheck className="w-2.5 h-2.5" />
+                  admin
+                </span>
+              )}
             </div>
           )}
           <Link
@@ -228,10 +247,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="text-neutral-900 font-semibold">{currentPageLabel}</span>
           </div>
 
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-xs font-semibold">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Authenticated Admin</span>
-          </div>
+          {user && (
+            <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold ${
+              user.role === 'super_admin'
+                ? 'bg-amber-50 text-amber-700 border-amber-200/60'
+                : 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
+            }`}>
+              {user.role === 'super_admin'
+                ? <Crown className="w-3.5 h-3.5" />
+                : <ShieldCheck className="w-3.5 h-3.5" />
+              }
+              <span>{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</span>
+            </div>
+          )}
         </header>
 
         {/* Page Content */}
