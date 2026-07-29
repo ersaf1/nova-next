@@ -374,196 +374,121 @@ export default function ItineraryPage() {
                 </p>
               </div>
 
-              {/* Flex Layout: Main Form Card + Floating Destination Media Card */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-                {/* Left Form Card (7 cols) */}
-                <div className="lg:col-span-7 bg-white border border-neutral-200/90 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6 text-neutral-900">
-                  {loading ? (
-                    <div className="py-12 flex flex-col items-center text-center space-y-6">
-                      <div className="w-12 h-12 rounded-full border-2 border-neutral-200 border-t-neutral-950 animate-spin flex items-center justify-center">
-                        <Sparkles size={16} className="text-amber-500" />
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm font-bold text-neutral-950">
-                          {loadingMessages[loadingStep]}
-                        </p>
-                        <p className="text-xs text-neutral-500">Powered by Gemini AI · mohon tunggu sebentar</p>
+              {/* Full Width Centered Search Form Card */}
+              <div className="max-w-3xl mx-auto bg-white border border-neutral-200/90 rounded-3xl p-6 sm:p-8 shadow-md space-y-6 text-neutral-900 z-10 relative">
+                {loading ? (
+                  <div className="py-12 flex flex-col items-center text-center space-y-6">
+                    <div className="w-12 h-12 rounded-full border-2 border-neutral-200 border-t-neutral-950 animate-spin flex items-center justify-center">
+                      <Sparkles size={16} className="text-amber-500" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-neutral-950">
+                        {loadingMessages[loadingStep]}
+                      </p>
+                      <p className="text-xs text-neutral-500">Powered by Gemini AI · mohon tunggu sebentar</p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Destination Input */}
+                    <div>
+                      <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block mb-2">Destinasi Perjalanan</label>
+                      <div className="relative">
+                        <MapPin size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={destination}
+                          onChange={(e) => setDestination(e.target.value)}
+                          placeholder="Ketik destinasi (misal: Argentina, Tokyo, Paris, Bali)..."
+                          className="w-full bg-neutral-50 border border-neutral-200/90 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-neutral-950 placeholder:text-neutral-400 focus:outline-none focus:bg-white focus:border-neutral-950 transition-all font-medium"
+                          onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+                        />
                       </div>
                     </div>
-                  ) : (
-                    <>
-                      {/* Destination Input */}
-                      <div>
-                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block mb-2">Destinasi Perjalanan</label>
+
+                    {/* Settings Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {/* Duration Slider */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Durasi Hari</label>
+                          <span className="text-xs font-bold text-neutral-950">{duration} Hari</span>
+                        </div>
+                        <input
+                          type="range" min={1} max={14} value={duration}
+                          onChange={(e) => setDuration(parseInt(e.target.value))}
+                          className="w-full accent-neutral-950 h-1.5 bg-neutral-200 rounded-full cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Travelers Counter */}
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block">Jumlah Peserta</label>
+                        <div className="flex items-center justify-between bg-neutral-50 border border-neutral-200/90 rounded-2xl px-3 py-1.5">
+                          <button onClick={() => setTravelers(Math.max(1, travelers - 1))}
+                            className="w-7 h-7 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-neutral-900 hover:bg-neutral-100 font-bold text-xs shadow-2xs">−</button>
+                          <span className="text-xs font-bold text-neutral-950">{travelers} Orang</span>
+                          <button onClick={() => setTravelers(Math.min(20, travelers + 1))}
+                            className="w-7 h-7 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-neutral-900 hover:bg-neutral-100 font-bold text-xs shadow-2xs">+</button>
+                        </div>
+                      </div>
+
+                      {/* Budget Selector */}
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block">Tipe Budget</label>
                         <div className="relative">
-                          <MapPin size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
-                          <input
-                            type="text"
-                            value={destination}
-                            onChange={(e) => setDestination(e.target.value)}
-                            placeholder="Ketik destinasi (misal: Argentina, Tokyo, Paris, Bali)..."
-                            className="w-full bg-neutral-50 border border-neutral-200/90 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-neutral-950 placeholder:text-neutral-400 focus:outline-none focus:bg-white focus:border-neutral-950 transition-all font-medium"
-                            onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
-                          />
+                          <select 
+                            value={budget} 
+                            onChange={(e) => setBudget(e.target.value)}
+                            className="w-full bg-neutral-50 border border-neutral-200/90 rounded-2xl px-3 py-2.5 text-xs font-semibold text-neutral-950 appearance-none focus:outline-none focus:bg-white focus:border-neutral-950 cursor-pointer transition-all"
+                          >
+                            {BUDGET_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                          </select>
+                          <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
                         </div>
                       </div>
+                    </div>
 
-                      {/* Settings Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {/* Duration Slider */}
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Durasi Hari</label>
-                            <span className="text-xs font-bold text-neutral-950">{duration} Hari</span>
-                          </div>
-                          <input
-                            type="range" min={1} max={14} value={duration}
-                            onChange={(e) => setDuration(parseInt(e.target.value))}
-                            className="w-full accent-neutral-950 h-1.5 bg-neutral-200 rounded-full cursor-pointer"
-                          />
-                        </div>
-
-                        {/* Travelers Counter */}
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block">Jumlah Peserta</label>
-                          <div className="flex items-center justify-between bg-neutral-50 border border-neutral-200/90 rounded-2xl px-3 py-1.5">
-                            <button onClick={() => setTravelers(Math.max(1, travelers - 1))}
-                              className="w-7 h-7 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-neutral-900 hover:bg-neutral-100 font-bold text-xs shadow-2xs">−</button>
-                            <span className="text-xs font-bold text-neutral-950">{travelers} Orang</span>
-                            <button onClick={() => setTravelers(Math.min(20, travelers + 1))}
-                              className="w-7 h-7 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-neutral-900 hover:bg-neutral-100 font-bold text-xs shadow-2xs">+</button>
-                          </div>
-                        </div>
-
-                        {/* Budget Selector */}
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block">Tipe Budget</label>
-                          <div className="relative">
-                            <select 
-                              value={budget} 
-                              onChange={(e) => setBudget(e.target.value)}
-                              className="w-full bg-neutral-50 border border-neutral-200/90 rounded-2xl px-3 py-2.5 text-xs font-semibold text-neutral-950 appearance-none focus:outline-none focus:bg-white focus:border-neutral-950 cursor-pointer transition-all"
-                            >
-                              {BUDGET_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                            </select>
-                            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
-                          </div>
-                        </div>
+                    {/* Preference Pills */}
+                    <div>
+                      <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block mb-2">Minat & Preferensi</label>
+                      <div className="flex flex-wrap gap-2">
+                        {PREFERENCE_OPTIONS.map(({ label, emoji }) => (
+                          <button
+                            key={label}
+                            onClick={() => togglePreference(label)}
+                            className={`text-xs px-3.5 py-1.5 rounded-full border font-semibold transition-all flex items-center gap-1.5 ${
+                              preferences.includes(label)
+                                ? 'bg-neutral-950 text-white border-neutral-950 shadow-2xs'
+                                : 'bg-neutral-50 text-neutral-700 border-neutral-200/90 hover:bg-neutral-100 hover:text-neutral-950'
+                            }`}
+                          >
+                            <span>{emoji}</span>
+                            <span>{label}</span>
+                          </button>
+                        ))}
                       </div>
-
-                      {/* Preference Pills */}
-                      <div>
-                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest block mb-2">Minat & Preferensi</label>
-                        <div className="flex flex-wrap gap-2">
-                          {PREFERENCE_OPTIONS.map(({ label, emoji }) => (
-                            <button
-                              key={label}
-                              onClick={() => togglePreference(label)}
-                              className={`text-xs px-3.5 py-1.5 rounded-full border font-semibold transition-all flex items-center gap-1.5 ${
-                                preferences.includes(label)
-                                  ? 'bg-neutral-950 text-white border-neutral-950 shadow-2xs'
-                                  : 'bg-neutral-50 text-neutral-700 border-neutral-200/90 hover:bg-neutral-100 hover:text-neutral-950'
-                              }`}
-                            >
-                              <span>{emoji}</span>
-                              <span>{label}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Submit CTA */}
-                      <button
-                        onClick={handleGenerate}
-                        disabled={loading || !destination.trim()}
-                        className="w-full bg-neutral-950 text-white text-xs font-bold py-3.5 rounded-2xl hover:bg-neutral-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xs"
-                      >
-                        <Sparkles size={14} />
-                        <span>Buat AI Itinerary Sekarang</span>
-                      </button>
-                    </>
-                  )}
-
-                  {error && !loading && (
-                    <div className="pt-4 border-t border-neutral-100 text-center">
-                      <p className="text-xs text-rose-600 font-semibold">{error}</p>
-                      <button onClick={handleGenerate} className="mt-2 text-xs font-bold text-neutral-950 hover:underline">Coba lagi</button>
                     </div>
-                  )}
-                </div>
 
-                {/* Right Floating Destination Media Card (Live Video Stream & Photo Showcase) (5 cols) */}
-                <div className="lg:col-span-5 bg-white rounded-3xl border border-neutral-200/90 p-6 shadow-xl space-y-4 animate-float hover:shadow-2xl transition-all">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60 flex items-center gap-1.5">
-                      <Video className="w-3.5 h-3.5 text-amber-500" /> Live Stream Preview
-                    </span>
-                    <span className="text-xs font-bold text-neutral-950 flex items-center gap-1">
-                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                      {currentMedia.rating}
-                    </span>
+                    {/* Submit CTA */}
+                    <button
+                      onClick={handleGenerate}
+                      disabled={loading || !destination.trim()}
+                      className="w-full bg-neutral-950 text-white text-xs font-bold py-3.5 rounded-2xl hover:bg-neutral-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xs"
+                    >
+                      <Sparkles size={14} />
+                      <span>Buat AI Itinerary Sekarang</span>
+                    </button>
+                  </>
+                )}
+
+                {error && !loading && (
+                  <div className="pt-4 border-t border-neutral-100 text-center">
+                    <p className="text-xs text-rose-600 font-semibold">{error}</p>
+                    <button onClick={handleGenerate} className="mt-2 text-xs font-bold text-neutral-950 hover:underline">Coba lagi</button>
                   </div>
-
-                  {/* Live Looping Video Frame */}
-                  <div className="relative h-44 rounded-2xl overflow-hidden bg-neutral-950 border border-neutral-200 shadow-inner group">
-                    <video
-                      key={currentMedia.name}
-                      src={currentMedia.video}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-transparent" />
-                    <div className="absolute bottom-3 left-3 right-3 text-white flex items-end justify-between">
-                      <div>
-                        <p className="text-sm font-extrabold drop-shadow-sm">{currentMedia.name}</p>
-                        <p className="text-[11px] text-white/80 font-medium">{currentMedia.location}</p>
-                      </div>
-                      <span className="p-2 rounded-full bg-white/20 backdrop-blur-md text-white">
-                        <Play size={12} className="fill-white" />
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Quick Select Destination Pills */}
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block">Pilih Destinasi Cepat:</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {FEATURED_DESTINATIONS.map((dest, idx) => (
-                        <button
-                          key={dest.name}
-                          onClick={() => selectFeaturedDestination(dest.name, idx)}
-                          className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all flex items-center gap-1 ${
-                            activeMediaIdx === idx
-                              ? 'bg-neutral-950 text-white border-neutral-950 shadow-2xs scale-105'
-                              : 'bg-neutral-50 text-neutral-700 border-neutral-200 hover:bg-neutral-100'
-                          }`}
-                        >
-                          <MapPin size={10} className={activeMediaIdx === idx ? 'text-amber-400' : 'text-neutral-400'} />
-                          <span>{dest.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* HD Destination Photo Gallery Showcase Pills */}
-                  <div className="pt-2 border-t border-neutral-100 space-y-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block">Galeri Foto Destinasi:</span>
-                    <div className="grid grid-cols-3 gap-2">
-                      {currentMedia.photos.map((img, i) => (
-                        <div key={i} className="h-14 rounded-xl overflow-hidden bg-neutral-900 border border-neutral-200">
-                          <img src={img} alt={`${currentMedia.name} photo`} className="w-full h-full object-cover img-smooth-zoom" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
+                )}
               </div>
-
             </div>
           ) : (
             /* Results View State */
