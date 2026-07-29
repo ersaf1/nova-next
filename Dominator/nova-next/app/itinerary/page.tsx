@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation'
 import {
   MapPin, DollarSign, Users, Calendar,
   ChevronDown, Sparkles, Sun, Utensils,
-  BedDouble, Lightbulb, BookOpen, ArrowRight, Clock
+  BedDouble, Lightbulb, BookOpen, ArrowRight, Clock,
+  Camera, Compass, Image as ImageIcon
 } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import gsap from 'gsap'
+import { supabaseClient } from '@/lib/supabase-client'
 
 interface Activity {
   time: string
@@ -28,11 +30,18 @@ interface Day {
   estimatedDailyCost: string
 }
 
+interface Attraction {
+  name: string
+  description: string
+  image: string
+}
+
 interface Itinerary {
   destination: string
   duration: number
   totalEstimatedCost: string
   days: Day[]
+  attractions?: Attraction[]
   travelTips: string[]
   bestTimeToVisit: string
   localPhrases: { phrase: string; meaning: string }[]
@@ -47,56 +56,68 @@ const PREFERENCE_OPTIONS = [
 ]
 const BUDGET_OPTIONS = ['Budget', 'Mid-range', 'Luxury']
 
+const DESTINATION_HERO_IMAGES: Record<string, string> = {
+  bali: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1600&q=90',
+  tokyo: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1600&q=90',
+  paris: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1600&q=90',
+  santorini: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1600&q=90',
+  rome: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=1600&q=90',
+  newyork: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1600&q=90',
+  kyoto: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1600&q=90',
+}
+
+const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600&q=90'
+
 function DayAccordion({ day, index }: { day: Day; index: number }) {
   const [open, setOpen] = useState(index === 0)
 
   return (
-    <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${open ? 'border-slate-200/60 shadow-sm' : 'border-slate-100/40'} bg-white/90 backdrop-blur-md`}>
+    <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${open ? 'border-neutral-200/80 shadow-xs' : 'border-neutral-200/40'} bg-white`}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-6 py-5 text-left transition-colors hover:bg-slate-50/50"
+        className="w-full flex items-center justify-between px-6 py-5 text-left transition-colors hover:bg-neutral-50/80"
         aria-expanded={open}
       >
         <div className="flex items-center gap-4">
-          <span className={`w-9 h-9 rounded-xl text-sm font-bold flex items-center justify-center shrink-0 transition-all duration-300 ${open ? 'bg-slate-900 text-white shadow-sm' : 'bg-[#E8EFF5] text-slate-700'}`}>
-            {day.day}
+          <span className={`w-9 h-9 rounded-xl text-xs font-bold flex items-center justify-center shrink-0 transition-all duration-300 ${open ? 'bg-neutral-950 text-white shadow-xs' : 'bg-neutral-100 text-neutral-800'}`}>
+            Hari {day.day}
           </span>
           <div>
-            <p className="font-semibold text-sm text-slate-800" style={{ letterSpacing: '-0.02em' }}>{day.title}</p>
-            <p className="text-xs text-slate-400 mt-0.5">{day.estimatedDailyCost} · {day.activities.length} activities</p>
+            <p className="font-bold text-sm text-neutral-900 leading-snug">{day.title}</p>
+            <p className="text-xs text-neutral-400 mt-0.5">{day.estimatedDailyCost} · {day.activities.length} aktivitas</p>
           </div>
         </div>
-        <ChevronDown size={15} className={`text-slate-400 shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown size={16} className={`text-neutral-400 shrink-0 transition-transform duration-300 ${open ? 'rotate-180 text-neutral-900' : ''}`} />
       </button>
 
       <div className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-[2000px]' : 'max-h-0'}`}>
-        <div className="px-6 pb-6 space-y-5 border-t border-slate-100/55">
+        <div className="px-6 pb-6 space-y-5 border-t border-neutral-100">
           {/* Timeline */}
-          <div className="pt-5 space-y-2">
+          <div className="pt-5 space-y-3">
             {day.activities.map((act, i) => (
               <div key={i} className="flex gap-4 group">
                 <div className="flex flex-col items-end shrink-0 pt-3">
-                  <span className="text-[10px] font-semibold text-slate-400 w-12 text-right tabular-nums">{act.time}</span>
+                  <span className="text-[10px] font-bold text-neutral-400 w-12 text-right tabular-nums">{act.time}</span>
                   {i < day.activities.length - 1 && (
-                    <div className="w-px flex-1 bg-slate-100 mt-1 mx-auto" style={{ minHeight: 16 }} />
+                    <div className="w-px flex-1 bg-neutral-200/80 mt-1 mx-auto" style={{ minHeight: 18 }} />
                   )}
                 </div>
-                <div className="flex-1 bg-[#F0F4F8] rounded-xl p-4 hover:bg-[#E8EFF5] transition-colors duration-300">
+                <div className="flex-1 bg-neutral-50 rounded-xl p-4 border border-neutral-200/60 hover:bg-white hover:shadow-xs transition-all duration-200">
                   <div className="flex items-start justify-between gap-3 mb-1.5">
-                    <p className="text-sm font-semibold text-slate-800 leading-snug" style={{ letterSpacing: '-0.01em' }}>{act.activity}</p>
-                    <span className="text-xs font-semibold text-slate-500 shrink-0 bg-white/70 rounded-full px-2 py-0.5">{act.cost}</span>
+                    <p className="text-xs font-bold text-neutral-900 leading-snug">{act.activity}</p>
+                    <span className="text-[11px] font-semibold text-neutral-700 shrink-0 bg-white border border-neutral-200 rounded-full px-2.5 py-0.5 shadow-2xs">{act.cost}</span>
                   </div>
-                  <p className="text-xs text-slate-500 flex items-center gap-1.5">
-                    <MapPin size={9} className="shrink-0 text-slate-400" />
+                  <p className="text-[11px] text-neutral-500 flex items-center gap-1.5">
+                    <MapPin size={10} className="shrink-0 text-neutral-400" />
                     {act.location}
-                    <span className="text-slate-300">·</span>
-                    <Clock size={9} className="shrink-0 text-slate-400" />
+                    <span className="text-neutral-300">·</span>
+                    <Clock size={10} className="shrink-0 text-neutral-400" />
                     {act.duration}
                   </p>
                   {act.tips && (
-                    <p className="text-xs text-slate-550 mt-2 flex items-start gap-1.5 pl-0.5">
-                      <Lightbulb size={9} className="mt-0.5 shrink-0 text-amber-500" />
-                      {act.tips}
+                    <p className="text-[11px] text-neutral-600 mt-2 flex items-start gap-1.5 pl-0.5 bg-amber-50/60 border border-amber-200/50 p-2 rounded-lg">
+                      <Lightbulb size={11} className="mt-0.5 shrink-0 text-amber-600" />
+                      <span>{act.tips}</span>
                     </p>
                   )}
                 </div>
@@ -106,25 +127,25 @@ function DayAccordion({ day, index }: { day: Day; index: number }) {
 
           {/* Meals */}
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
-              <Utensils size={9} /> Meals
+            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
+              <Utensils size={10} /> Meals & Rekomendasi Kuliner
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               {(['breakfast', 'lunch', 'dinner'] as const).map((meal) => (
-                <div key={meal} className="bg-[#F0F4F8] rounded-xl p-3">
-                  <p className="text-[10px] text-slate-400 capitalize font-semibold tracking-wide mb-1">{meal}</p>
-                  <p className="text-xs font-medium text-slate-700 leading-snug">{day.meals[meal]}</p>
+                <div key={meal} className="bg-neutral-50 border border-neutral-200/60 rounded-xl p-3">
+                  <p className="text-[10px] text-neutral-400 capitalize font-bold tracking-wider mb-1">{meal}</p>
+                  <p className="text-xs font-medium text-neutral-800 leading-snug">{day.meals[meal]}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Accommodation */}
-          <div className="flex items-center gap-2.5 bg-[#F0F4F8] rounded-xl px-4 py-3">
-            <BedDouble size={13} className="text-slate-400 shrink-0" />
+          <div className="flex items-center gap-3 bg-neutral-50 border border-neutral-200/60 rounded-xl px-4 py-3">
+            <BedDouble size={14} className="text-neutral-500 shrink-0" />
             <div>
-              <p className="text-[10px] text-slate-400 font-semibold tracking-wide uppercase">Accommodation</p>
-              <p className="text-xs font-medium text-slate-700 mt-0.5">{day.accommodation}</p>
+              <p className="text-[10px] text-neutral-400 font-bold tracking-wider uppercase">Accommodation</p>
+              <p className="text-xs font-semibold text-neutral-900 mt-0.5">{day.accommodation}</p>
             </div>
           </div>
         </div>
@@ -135,6 +156,14 @@ function DayAccordion({ day, index }: { day: Day; index: number }) {
 
 export default function ItineraryPage() {
   const router = useRouter()
+
+  useEffect(() => {
+    supabaseClient.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        router.replace(`/login?redirect=/itinerary`)
+      }
+    })
+  }, [router])
 
   const [destination, setDestination] = useState('')
   const [duration, setDuration] = useState(5)
@@ -156,7 +185,7 @@ export default function ItineraryPage() {
     'Optimizing daily sightseeing routes...',
     'Curating local dining & accommodation...',
     'Calculating costs & converting currency...',
-    'Generating travel tips & local phrases...'
+    'Generating destination photo gallery & travel tips...'
   ]
 
   useEffect(() => {
@@ -170,7 +199,6 @@ export default function ItineraryPage() {
     return () => clearInterval(interval)
   }, [loading])
 
-  // Initial load animation
   useEffect(() => {
     if (!headerRef.current || !formRef.current) return
     const ctx = gsap.context(() => {
@@ -180,14 +208,12 @@ export default function ItineraryPage() {
     return () => ctx.revert()
   }, [])
 
-  // GSAP animation on itinerary results load
   useEffect(() => {
     if (!itinerary || !resultsRef.current) return
+    const resultsEl = resultsRef.current
     const ctx = gsap.context(() => {
-      // Fade in results
-      gsap.fromTo(resultsRef.current, { opacity: 0 }, { opacity: 1, duration: 0.5 })
-      // Stagger columns
-      const panels = resultsRef.current.children
+      gsap.fromTo(resultsEl, { opacity: 0 }, { opacity: 1, duration: 0.5 })
+      const panels = resultsEl.children
       gsap.fromTo(panels, { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out' })
     }, resultsRef)
     return () => ctx.revert()
@@ -219,27 +245,26 @@ export default function ItineraryPage() {
     }
   }
 
+  const getHeroPhoto = () => {
+    if (!itinerary) return DEFAULT_HERO_IMAGE
+    const norm = itinerary.destination.toLowerCase().trim().replace(/[^a-z0-9]/g, '')
+    return DESTINATION_HERO_IMAGES[norm] || DEFAULT_HERO_IMAGE
+  }
+
   return (
     <div ref={pageRef} className="min-h-screen bg-[#F0F4F8] relative overflow-hidden flex flex-col justify-between" style={{ letterSpacing: '-0.01em' }}>
       <Navbar />
 
-      {/* Panoramic Blurred Background for Initial State */}
       {!itinerary && (
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80" 
-            alt="Scenic Background" 
-            className="w-full h-full object-cover blur-[10px] scale-105 opacity-40 transition-opacity duration-1000"
-          />
           <div className="absolute inset-0 bg-gradient-to-b from-[#F0F4F8]/60 via-transparent to-[#F0F4F8]/90" />
         </div>
       )}
 
-      <div className="flex-1 w-full max-w-7xl mx-auto px-6 pt-32 pb-24 relative z-10 flex flex-col justify-center">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-6 pt-28 pb-24 relative z-10 flex flex-col justify-center">
         {!itinerary ? (
-          /* Centered State */
+          /* Initial Form State */
           <div className="max-w-xl w-full mx-auto flex flex-col items-center">
-            {/* Centered Header */}
             <div ref={headerRef} className="text-center mb-8 opacity-0">
               <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-500 bg-slate-900/5 px-3.5 py-1.5 rounded-full mb-5">
                 <Sparkles size={10} className="text-slate-400 animate-pulse" />
@@ -249,14 +274,12 @@ export default function ItineraryPage() {
                 Plan your perfect trip.
               </h1>
               <p className="text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-                Describe where you want to go — our AI builds a detailed, day-by-day itinerary in seconds.
+                Describe where you want to go — our AI builds a detailed, day-by-day itinerary with photos & sights.
               </p>
             </div>
 
-            {/* Glassmorphism Control Panel Form */}
             <div ref={formRef} className="w-full bg-white/70 backdrop-blur-2xl border border-white/40 shadow-2xl rounded-3xl p-7 space-y-6 opacity-0">
               {loading ? (
-                /* Shifting loader component */
                 <div className="py-12 flex flex-col items-center text-center space-y-8">
                   <div className="relative w-16 h-16">
                     <div className="absolute inset-0 rounded-full border-2 border-slate-200" />
@@ -271,9 +294,7 @@ export default function ItineraryPage() {
                   </div>
                 </div>
               ) : (
-                /* Form Inputs */
                 <>
-                  {/* Destination */}
                   <div>
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Where to</label>
                     <div className="relative">
@@ -282,16 +303,14 @@ export default function ItineraryPage() {
                         type="text"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
-                        placeholder="Bali, Tokyo, Paris…"
+                        placeholder="Bali, Tokyo, Paris, Santorini…"
                         className="w-full bg-[#E8EFF5] rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-[#DFE7EE] transition-all duration-300"
                         onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
                       />
                     </div>
                   </div>
 
-                  {/* Settings Grid */}
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Duration */}
                     <div className="col-span-2">
                       <div className="flex items-center justify-between mb-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Duration</label>
@@ -304,7 +323,6 @@ export default function ItineraryPage() {
                       />
                     </div>
 
-                    {/* Travelers */}
                     <div>
                       <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Travelers</label>
                       <div className="flex items-center gap-3.5">
@@ -316,7 +334,6 @@ export default function ItineraryPage() {
                       </div>
                     </div>
 
-                    {/* Budget */}
                     <div>
                       <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Budget</label>
                       <div className="relative">
@@ -332,7 +349,6 @@ export default function ItineraryPage() {
                     </div>
                   </div>
 
-                  {/* Interests */}
                   <div>
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Interests</label>
                     <div className="flex flex-wrap gap-1.5">
@@ -345,7 +361,6 @@ export default function ItineraryPage() {
                     </div>
                   </div>
 
-                  {/* Submit CTA */}
                   <button
                     onClick={handleGenerate}
                     disabled={loading || !destination.trim()}
@@ -356,7 +371,6 @@ export default function ItineraryPage() {
                 </>
               )}
               
-              {/* Error */}
               {error && !loading && (
                 <div className="pt-4 border-t border-slate-150 text-center">
                   <p className="text-xs text-red-500 font-semibold">{error}</p>
@@ -366,78 +380,193 @@ export default function ItineraryPage() {
             </div>
           </div>
         ) : (
-          /* Results Layout (Active State) */
-          <div ref={resultsRef} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start opacity-0">
-            {/* Details panel on the left (4 cols) */}
-            <div className="lg:col-span-4 bg-white/70 backdrop-blur-2xl border border-white/40 shadow-2xl rounded-3xl p-6 space-y-6 lg:sticky lg:top-24">
-              <div>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Destination</span>
-                <h2 className="text-3xl font-bold text-slate-800 leading-tight tracking-tight mb-4" style={{ letterSpacing: '-0.03em' }}>{itinerary.destination}</h2>
-                <div className="grid grid-cols-2 gap-3.5">
-                  {[
-                    { icon: <Calendar size={11} />, label: 'Duration', value: `${itinerary.duration} days` },
-                    { icon: <DollarSign size={11} />, label: 'Est. Cost', value: itinerary.totalEstimatedCost },
-                    { icon: <Sun size={11} />, label: 'Best Time', value: itinerary.bestTimeToVisit },
-                    { icon: <Users size={11} />, label: 'Travelers', value: `${travelers} pax` },
-                  ].map(({ icon, label, value }) => (
-                    <div key={label} className="bg-[#E8EFF5] rounded-2xl p-3">
-                      <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1">{icon}{label}</p>
-                      <p className="text-slate-800 text-xs font-bold leading-snug">{value}</p>
+          /* Redesigned AI Itinerary Results State */
+          <div ref={resultsRef} className="space-y-8 opacity-0">
+            {/* Destination Hero Banner */}
+            <div className="relative rounded-3xl overflow-hidden min-h-[320px] flex items-end p-8 sm:p-10 shadow-2xl">
+              {/* Background Image */}
+              <img
+                src={getHeroPhoto()}
+                alt={itinerary.destination}
+                className="absolute inset-0 w-full h-full object-cover img-smooth-zoom"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/45 to-transparent z-[1]" />
+
+              <div className="relative z-10 w-full flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
+                    <Sparkles className="w-3 h-3 text-indigo-300" />
+                    AI Custom Itinerary
+                  </div>
+                  <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight mb-3" style={{ letterSpacing: '-0.04em' }}>
+                    {itinerary.destination}
+                  </h1>
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-white/80">
+                    <span className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+                      <Calendar className="w-3.5 h-3.5 text-white/70" />
+                      {itinerary.duration} Hari Perjalanan
+                    </span>
+                    <span className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+                      <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+                      Est. Biaya: {itinerary.totalEstimatedCost}
+                    </span>
+                    <span className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+                      <Sun className="w-3.5 h-3.5 text-amber-400" />
+                      Waktu Terbaik: {itinerary.bestTimeToVisit}
+                    </span>
+                    <span className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+                      <Users className="w-3.5 h-3.5 text-sky-400" />
+                      {travelers} Peserta
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    onClick={() => { setItinerary(null); setDestination('') }}
+                    className="bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/20 text-white text-xs font-semibold px-5 py-3 rounded-xl transition-all"
+                  >
+                    Rancang Destinasi Lain
+                  </button>
+                  <button
+                    onClick={() => router.push(`/search?destination=${encodeURIComponent(itinerary.destination)}`)}
+                    className="bg-white text-neutral-950 text-xs font-bold px-6 py-3 rounded-xl hover:bg-neutral-100 transition-all flex items-center gap-2 shadow-lg"
+                  >
+                    <span>Cari Paket & Book</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Destination Photo Gallery & Top Attractions Section */}
+            {itinerary.attractions && itinerary.attractions.length > 0 && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 block mb-1">Visual Highlights</span>
+                    <h2 className="text-xl font-bold text-neutral-900 flex items-center gap-2">
+                      <Camera className="w-5 h-5 text-indigo-500" />
+                      Foto & Objek Wisata Populer di {itinerary.destination}
+                    </h2>
+                  </div>
+                  <span className="text-xs text-neutral-400 font-medium">
+                    {itinerary.attractions.length} Tempat Ikonik
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {itinerary.attractions.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="group bg-white rounded-2xl border border-neutral-200/80 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                    >
+                      <div className="relative h-44 overflow-hidden bg-neutral-900">
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover img-smooth-zoom"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-neutral-800 flex items-center justify-center text-neutral-500">
+                            <ImageIcon className="w-8 h-8" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                        <span className="absolute bottom-3 left-3 right-3 text-white text-xs font-bold leading-tight drop-shadow-sm truncate">
+                          {item.name}
+                        </span>
+                      </div>
+
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <p className="text-neutral-500 text-xs leading-relaxed line-clamp-3 font-normal">
+                          {item.description}
+                        </p>
+                        <div className="mt-3 pt-2.5 border-t border-neutral-100 flex items-center gap-1 text-[11px] font-semibold text-indigo-600">
+                          <MapPin className="w-3 h-3 text-indigo-500" />
+                          <span>Ikon Destinasi #{idx + 1}</span>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
+            )}
 
-              <div className="pt-4 border-t border-slate-100/80 flex flex-col gap-2">
-                <button onClick={() => { setItinerary(null); setDestination('') }} className="w-full text-xs font-semibold text-slate-500 hover:text-slate-800 py-2.5 rounded-full border border-slate-200/50 hover:border-slate-300 active:scale-[0.96] hover:scale-[1.01] hover:shadow-sm transition-all duration-300 text-center">Plan another trip</button>
-                <button onClick={() => router.push('/booking')} className="w-full bg-slate-900 text-white text-xs font-semibold py-3 rounded-full hover:bg-slate-850 active:scale-[0.96] hover:scale-[1.01] hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2">Book trip <ArrowRight size={12} /></button>
-              </div>
-            </div>
+            {/* Itinerary Details & Tips (Day by Day Accordion + Phrases) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* Day Accordion (8 cols) */}
+              <div className="lg:col-span-8 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-bold text-neutral-900 flex items-center gap-2">
+                    <Compass className="w-5 h-5 text-neutral-600" />
+                    Rencana Perjalanan Hari demi Hari
+                  </h2>
+                  <span className="text-xs text-neutral-400">{itinerary.days.length} Hari</span>
+                </div>
 
-            {/* Itinerary result details on the right (8 cols) */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* Day accordion */}
-              <div>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1 mb-4">Day by Day</p>
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   {itinerary.days.map((day, i) => (
                     <DayAccordion key={day.day} day={day} index={i} />
                   ))}
                 </div>
               </div>
 
-              {/* Travel tips + phrases side by side */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Sidebar: Travel Tips + Local Phrases (4 cols) */}
+              <div className="lg:col-span-4 space-y-6">
+                {/* Travel Tips */}
                 {itinerary.travelTips?.length > 0 && (
-                  <div className="bg-white rounded-3xl border border-black/[0.04] p-6 shadow-sm">
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                      <Lightbulb size={11} className="text-amber-500" /> Travel Tips
+                  <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 shadow-xs space-y-4">
+                    <h3 className="text-xs font-bold text-neutral-900 uppercase tracking-wider flex items-center gap-2 border-b border-neutral-100 pb-3">
+                      <Lightbulb size={14} className="text-amber-500" /> Tips Perjalanan Praktis
                     </h3>
                     <ul className="space-y-3">
                       {itinerary.travelTips.map((tip, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm text-slate-650 leading-relaxed">
-                          <span className="w-5 h-5 rounded-full bg-[#F0F4F8] flex items-center justify-center text-[10px] font-bold text-slate-400 shrink-0 mt-0.5">{i + 1}</span>
-                          {tip}
+                        <li key={i} className="flex items-start gap-2.5 text-xs text-neutral-600 leading-relaxed">
+                          <span className="w-5 h-5 rounded-full bg-neutral-100 flex items-center justify-center text-[10px] font-bold text-neutral-700 shrink-0 mt-0.5">
+                            {i + 1}
+                          </span>
+                          <span>{tip}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
+
+                {/* Local Phrases */}
                 {itinerary.localPhrases?.length > 0 && (
-                  <div className="bg-white rounded-3xl border border-black/[0.04] p-6 shadow-sm">
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                      <BookOpen size={11} className="text-slate-500" /> Local Phrases
+                  <div className="bg-white rounded-2xl border border-neutral-200/80 p-6 shadow-xs space-y-4">
+                    <h3 className="text-xs font-bold text-neutral-900 uppercase tracking-wider flex items-center gap-2 border-b border-neutral-100 pb-3">
+                      <BookOpen size={14} className="text-indigo-500" /> Bahasa & Frasa Lokal
                     </h3>
                     <div className="space-y-2">
                       {itinerary.localPhrases.map((p, i) => (
-                        <div key={i} className="flex items-center justify-between gap-3 py-2 border-b border-slate-100 last:border-0">
-                          <p className="text-sm font-semibold text-slate-800">{p.phrase}</p>
-                          <p className="text-xs text-slate-400">{p.meaning}</p>
+                        <div key={i} className="flex items-center justify-between gap-3 py-2 border-b border-neutral-100 last:border-0 text-xs">
+                          <p className="font-bold text-neutral-900">{p.phrase}</p>
+                          <p className="text-neutral-400 font-medium">{p.meaning}</p>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
+
+                {/* Booking Callout */}
+                <div className="bg-neutral-950 text-white rounded-2xl p-6 space-y-4 shadow-md">
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">Siap Berangkat?</span>
+                    <h4 className="text-base font-bold">Pesan Paket Wisata ke {itinerary.destination}</h4>
+                    <p className="text-xs text-neutral-400 leading-relaxed">Dapatkan akomodasi, pemandu lokal, dan Tiket pesawat terbaik.</p>
+                  </div>
+                  <button
+                    onClick={() => router.push(`/search?destination=${encodeURIComponent(itinerary.destination)}`)}
+                    className="w-full bg-white text-neutral-950 font-bold text-xs py-3 rounded-xl hover:bg-neutral-100 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>Cari Paket Sekarang</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
