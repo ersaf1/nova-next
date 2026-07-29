@@ -47,7 +47,7 @@ export default async function PackageSlugPage({
 
   const departures: PackageDeparture[] = (departuresRaw ?? []) as PackageDeparture[]
 
-  const coverImg = pkg.coverImage ?? pkg.image ?? 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1400&q=85'
+  const coverImg = pkg.coverImage || pkg.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=85'
   const displayTitle = pkg.title
   const displayLocation = pkg.subtitle ?? pkg.category ?? ''
   const displayDuration = pkg.durationDays
