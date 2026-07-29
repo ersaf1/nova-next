@@ -309,53 +309,151 @@ export default function ItineraryPage() {
             /* Clean Minimalist Light Theme Form State with Full Width Card Canvas */
             <div className="pt-4 w-full space-y-8 relative">
               
-              {/* Scattered Floating Aesthetic Background Cards (Pure Aesthetic Canvas) */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 hidden lg:block">
-                {/* Floating Card 1: Top-Left Tilted Photo Card (Japan) */}
-                <div className="absolute -top-4 left-4 w-52 bg-white/85 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl -rotate-6 animate-float opacity-85">
+              {/* 14 Scattered Floating Aesthetic Cards (Active Moving Videos & Frosted Glass Blur Canvas) */}
+              <div className="absolute -inset-x-8 -inset-y-12 pointer-events-none overflow-hidden z-0 hidden lg:block">
+                
+                {/* 1. Tokyo, Japan 🇯🇵 (Photo) */}
+                <div className="absolute top-2 left-2 w-48 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl -rotate-8 animate-float opacity-80">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80" alt="Tokyo Japan" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
-                  <div className="flex items-center justify-between text-[11px] font-bold text-neutral-900">
+                  <div className="flex items-center justify-between text-[11px] font-jakarta font-bold text-neutral-950">
                     <span>Tokyo, Japan 🇯🇵</span>
                     <span className="text-amber-500">4.9 ★</span>
                   </div>
                 </div>
 
-                {/* Floating Card 2: Top-Right Tilted Video Card (Beach / Santorini) */}
-                <div className="absolute -top-4 right-4 w-56 bg-white/85 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl rotate-12 animate-float-delayed opacity-85">
+                {/* 2. Santorini, Greece 🇬🇷 (Active Moving Video) */}
+                <div className="absolute top-4 right-2 w-52 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl rotate-12 animate-float-delayed opacity-85">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
-                    <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-full text-[9px] font-bold text-white uppercase">LIVE VIDEO</div>
+                    <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-full text-[8px] font-bold text-white uppercase flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> LIVE STREAM
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] font-bold text-neutral-900">
+                  <div className="flex items-center justify-between text-[11px] font-jakarta font-bold text-neutral-950">
                     <span>Santorini, Greece 🇬🇷</span>
                     <span className="text-amber-500">5.0 ★</span>
                   </div>
                 </div>
 
-                {/* Floating Card 3: Bottom-Left Tilted Photo Card (Argentina) */}
-                <div className="absolute -bottom-6 left-6 w-56 bg-white/85 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl rotate-6 animate-float opacity-85">
+                {/* 3. Patagonia, Argentina 🇦🇷 (Photo) */}
+                <div className="absolute bottom-4 left-4 w-52 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl rotate-6 animate-float opacity-80">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&q=80" alt="Patagonia Argentina" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
-                  <div className="flex items-center justify-between text-[11px] font-bold text-neutral-900">
+                  <div className="flex items-center justify-between text-[11px] font-jakarta font-bold text-neutral-950">
                     <span>Patagonia, Argentina 🇦🇷</span>
                     <span className="text-amber-500">4.9 ★</span>
                   </div>
                 </div>
 
-                {/* Floating Card 4: Bottom-Right Tilted Photo Card (Bali Paradise) */}
-                <div className="absolute -bottom-6 right-6 w-52 bg-white/85 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl -rotate-12 animate-float-delayed opacity-85">
+                {/* 4. Bali, Indonesia 🇮🇩 (Active Moving Video) */}
+                <div className="absolute bottom-2 right-4 w-48 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl -rotate-12 animate-float-delayed opacity-85">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900 relative">
-                    <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" alt="Bali Paradise" className="w-full h-full object-cover img-smooth-zoom" />
-                    <div className="absolute bottom-2 left-2 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-md text-[9px] font-bold text-white">Ubud & Uluwatu</div>
+                    <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                    <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-full text-[8px] font-bold text-white uppercase flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> LIVE STREAM
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] font-bold text-neutral-900">
+                  <div className="flex items-center justify-between text-[11px] font-jakarta font-bold text-neutral-950">
                     <span>Bali, Indonesia 🇮🇩</span>
                     <span className="text-amber-500">4.9 ★</span>
                   </div>
                 </div>
+
+                {/* 5. Paris, France 🇫🇷 (Photo) */}
+                <div className="absolute top-1/4 -left-10 w-44 bg-white/70 backdrop-blur-md p-2.5 rounded-2xl border border-white/80 shadow-lg rotate-9 animate-float-delayed opacity-75">
+                  <div className="h-24 rounded-xl overflow-hidden mb-1.5 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80" alt="Paris France" className="w-full h-full object-cover img-smooth-zoom" />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] font-jakarta font-bold text-neutral-950">
+                    <span>Paris, France 🇫🇷</span>
+                    <span className="text-amber-500">4.8 ★</span>
+                  </div>
+                </div>
+
+                {/* 6. Amalfi Coast, Italy 🇮🇹 (Active Moving Video) */}
+                <div className="absolute top-1/3 -right-8 w-48 bg-white/70 backdrop-blur-md p-2.5 rounded-2xl border border-white/80 shadow-lg -rotate-15 animate-float opacity-80">
+                  <div className="h-24 rounded-xl overflow-hidden mb-1.5 bg-neutral-900 relative">
+                    <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] font-jakarta font-bold text-neutral-950">
+                    <span>Amalfi Coast 🇮🇹</span>
+                    <span className="text-amber-500">5.0 ★</span>
+                  </div>
+                </div>
+
+                {/* 7. Kyoto, Japan 🇯🇵 (Photo) */}
+                <div className="absolute bottom-1/4 -left-8 w-48 bg-white/70 backdrop-blur-md p-2.5 rounded-2xl border border-white/80 shadow-lg -rotate-6 animate-float opacity-75">
+                  <div className="h-24 rounded-xl overflow-hidden mb-1.5 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80" alt="Kyoto Japan" className="w-full h-full object-cover img-smooth-zoom" />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] font-jakarta font-bold text-neutral-950">
+                    <span>Kyoto Temples 🇯🇵</span>
+                    <span className="text-amber-500">4.9 ★</span>
+                  </div>
+                </div>
+
+                {/* 8. Swiss Alps 🇨🇭 (Active Moving Video) */}
+                <div className="absolute bottom-1/3 -right-10 w-44 bg-white/70 backdrop-blur-md p-2.5 rounded-2xl border border-white/80 shadow-lg rotate-8 animate-float-delayed opacity-80">
+                  <div className="h-24 rounded-xl overflow-hidden mb-1.5 bg-neutral-900 relative">
+                    <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] font-jakarta font-bold text-neutral-950">
+                    <span>Swiss Alps 🇨🇭</span>
+                    <span className="text-amber-500">4.9 ★</span>
+                  </div>
+                </div>
+
+                {/* 9. New York, USA 🇺🇸 (Photo) */}
+                <div className="absolute -top-10 left-1/3 w-40 bg-white/60 backdrop-blur-md p-2 rounded-2xl border border-white/70 shadow-md rotate-14 animate-float opacity-65">
+                  <div className="h-20 rounded-lg overflow-hidden mb-1 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80" alt="New York" className="w-full h-full object-cover img-smooth-zoom" />
+                  </div>
+                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">New York 🇺🇸</div>
+                </div>
+
+                {/* 10. Reykjavik, Iceland 🇮🇸 (Active Moving Video) */}
+                <div className="absolute -top-8 right-1/3 w-44 bg-white/65 backdrop-blur-md p-2 rounded-2xl border border-white/70 shadow-md -rotate-10 animate-float-delayed opacity-70">
+                  <div className="h-20 rounded-lg overflow-hidden mb-1 bg-neutral-900 relative">
+                    <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                  </div>
+                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Iceland Glaciers 🇮🇸</div>
+                </div>
+
+                {/* 11. Cairo, Egypt 🇪🇬 (Photo) */}
+                <div className="absolute -bottom-10 left-1/3 w-44 bg-white/65 backdrop-blur-md p-2 rounded-2xl border border-white/70 shadow-md -rotate-14 animate-float opacity-65">
+                  <div className="h-20 rounded-lg overflow-hidden mb-1 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" alt="Cairo Egypt" className="w-full h-full object-cover img-smooth-zoom" />
+                  </div>
+                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Cairo Pyramids 🇪🇬</div>
+                </div>
+
+                {/* 12. Maldives 🇲🇻 (Active Moving Video) */}
+                <div className="absolute -bottom-10 right-1/3 w-40 bg-white/65 backdrop-blur-md p-2 rounded-2xl border border-white/70 shadow-md rotate-11 animate-float-delayed opacity-70">
+                  <div className="h-20 rounded-lg overflow-hidden mb-1 bg-neutral-900 relative">
+                    <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                  </div>
+                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Maldives Resort 🇲🇻</div>
+                </div>
+
+                {/* 13. Barcelona, Spain 🇪🇸 (Photo) */}
+                <div className="absolute top-12 left-1/4 w-36 bg-white/50 backdrop-blur-sm p-2 rounded-xl border border-white/60 shadow-xs -rotate-3 animate-float opacity-50">
+                  <div className="h-16 rounded-md overflow-hidden mb-1 bg-neutral-900">
+                    <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80" alt="Barcelona" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="text-[8px] font-jakarta font-bold text-neutral-800 text-center">Barcelona 🇪🇸</div>
+                </div>
+
+                {/* 14. Rio de Janeiro, Brazil 🇧🇷 (Active Moving Video) */}
+                <div className="absolute bottom-12 right-1/4 w-36 bg-white/50 backdrop-blur-sm p-2 rounded-xl border border-white/60 shadow-xs rotate-4 animate-float-delayed opacity-50">
+                  <div className="h-16 rounded-md overflow-hidden mb-1 bg-neutral-900 relative">
+                    <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                  </div>
+                  <div className="text-[8px] font-jakarta font-bold text-neutral-800 text-center">Rio de Janeiro 🇧🇷</div>
+                </div>
+
               </div>
 
               {/* Minimalist Luxury Editorial Header */}
