@@ -1,0 +1,29 @@
+-- Batch 6: Americas North & Central
+INSERT INTO "Destination" (city, country, image, description, rating, duration, price, category) VALUES
+('New York', 'USA', 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80', 'Times Square, Central Park, and world-class museums.', 4.8, '5-8 days', 'From $1,199', 'City'),
+('Los Angeles', 'USA', 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80', 'Hollywood, beaches, and Griffith Observatory views.', 4.7, '5-8 days', 'From $1,099', 'City'),
+('San Francisco', 'USA', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80', 'Golden Gate Bridge, Alcatraz, and sourdough bread bowls.', 4.8, '4-7 days', 'From $1,199', 'City'),
+('Las Vegas', 'USA', 'https://images.unsplash.com/photo-1581351721010-8cf859cb14a4?w=800&q=80', 'The Strip, Grand Canyon day trips, and endless entertainment.', 4.7, '4-6 days', 'From $999', 'City'),
+('Miami', 'USA', 'https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?w=800&q=80', 'Art Deco, Cuban food, and neon-lit Biscayne Bay nights.', 4.8, '5-7 days', 'From $1,099', 'Beach'),
+('Chicago', 'USA', 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80', 'Deep dish pizza, jazz, and architectural boat tours.', 4.8, '4-6 days', 'From $999', 'City'),
+('New Orleans', 'USA', 'https://images.unsplash.com/photo-1568515387631-8b650bbcdb90?w=800&q=80', 'Jazz, beignets, Mardi Gras, and haunted history.', 4.8, '4-6 days', 'From $899', 'Culture'),
+('Hawaii', 'USA', 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80', 'Volcanic landscapes, surf culture, and hula traditions.', 4.9, '7-10 days', 'From $1,499', 'Beach'),
+('Toronto', 'Canada', 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=800&q=80', 'CN Tower, Niagara Falls, and multicultural neighborhoods.', 4.7, '4-7 days', 'From $999', 'City'),
+('Vancouver', 'Canada', 'https://images.unsplash.com/photo-1559511260-66a654ae982a?w=800&q=80', 'Mountains meet ocean, Stanley Park, and Whistler skiing.', 4.9, '5-8 days', 'From $1,099', 'Nature'),
+('Montreal', 'Canada', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80', 'French culture, bagels, poutine, and Jazz Festival.', 4.7, '4-6 days', 'From $899', 'City'),
+('Quebec City', 'Canada', 'https://images.unsplash.com/photo-1590059913761-f7a5c9ee0b3b?w=800&q=80', 'Only walled city in North America with French charm.', 4.8, '3-5 days', 'From $849', 'Culture'),
+('Mexico City', 'Mexico', 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=800&q=80', 'Aztec ruins, frida kahlo, street tacos and lucha libre.', 4.7, '5-8 days', 'From $749', 'Culture'),
+('Cancun', 'Mexico', 'https://images.unsplash.com/photo-1552074284-5e88ef1aef18?w=800&q=80', 'Caribbean beaches, cenotes, and Mayan ruins at Chichen Itza.', 4.7, '7-10 days', 'From $999', 'Beach'),
+('Oaxaca', 'Mexico', 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=80', 'Mezcal, mole, Day of the Dead, and Monte Alban ruins.', 4.9, '5-7 days', 'From $699', 'Culture'),
+('Havana', 'Cuba', 'https://images.unsplash.com/photo-1501493870936-9c2e41625521?w=800&q=80', 'Classic cars, mojitos, salsa music, and colonial architecture.', 4.8, '5-7 days', 'From $799', 'Culture'),
+('San Jose', 'Costa Rica', 'https://images.unsplash.com/photo-1536700503589-b8ff8a640763?w=800&q=80', 'Cloud forests, zip lines, sloths, and eco-lodges.', 4.8, '7-10 days', 'From $1,199', 'Nature'),
+('Panama City', 'Panama', 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80', 'Panama Canal, Casco Viejo, and San Blas islands.', 4.7, '5-7 days', 'From $899', 'City'),
+('Guatemala City', 'Guatemala', 'https://images.unsplash.com/photo-1591375462002-5e2b1cef0ecb?w=800&q=80', 'Antigua cobblestones, Lake Atitlan, and Mayan Tikal.', 4.7, '7-10 days', 'From $799', 'Culture'),
+('Belize City', 'Belize', 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=800&q=80', 'Great Blue Hole diving, jaguar reserve, and Mayan sites.', 4.8, '7-10 days', 'From $1,099', 'Adventure');
+
+INSERT INTO "Package" (tag, "tagColor", title, subtitle, image, price, "originalPrice", duration, "groupSize", rating, reviews, includes, highlight, category) VALUES
+('Popular', 'bg-black text-white', 'USA East Coast: NYC to Miami', 'Cities, beaches & culture', 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80', 18500000, 23000000, '12 days', '2-12 people', 4.8, 312, '["Flights","Hotels","NYC tour","Washington DC","Miami Beach"]', 'NYC to Miami', 'City'),
+('Trending', 'bg-rose-500 text-white', 'Mexico Beyond Cancun: CDMX & Oaxaca', 'Tacos, cenotes & pyramids', 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=800&q=80', 11000000, 14000000, '10 days', '2-14 people', 4.8, 234, '["Flights","Hotels","Chichen Itza","Cenote swim","Mezcal tasting"]', 'Mexico City & Oaxaca', 'Culture'),
+('Editor''s Pick', 'bg-amber-400 text-black', 'Costa Rica Eco Adventure', 'Rainforest, sloths & volcanoes', 'https://images.unsplash.com/photo-1536700503589-b8ff8a640763?w=800&q=80', 14000000, 17500000, '10 days', '2-10 people', 4.9, 189, '["Flights","Eco lodges","Zip lining","Wildlife tour","Hot springs"]', 'San Jose & Arenal', 'Nature'),
+('New', 'bg-emerald-500 text-white', 'Canada West: Vancouver & Banff', 'Mountains, glaciers & bears', 'https://images.unsplash.com/photo-1559511260-66a654ae982a?w=800&q=80', 16500000, 20500000, '10 days', '2-12 people', 4.9, 167, '["Flights","Hotels","Banff NP","Icefields Parkway","Whale watching"]', 'Vancouver & Banff', 'Nature'),
+('Popular', 'bg-black text-white', 'Cuba: Havana & Trinidad', 'Classic cars, rum & salsa', 'https://images.unsplash.com/photo-1501493870936-9c2e41625521?w=800&q=80', 10500000, 13500000, '8 days', '2-12 people', 4.8, 145, '["Flights","Casa particular","Salsa lesson","Rum tasting","Trinidad tour"]', 'Havana & Trinidad', 'Culture');

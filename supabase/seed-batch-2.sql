@@ -1,0 +1,29 @@
+-- Batch 2: Middle East & Central Asia
+INSERT INTO "Destination" (city, country, image, description, rating, duration, price, category) VALUES
+('Dubai', 'UAE', 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', 'Futuristic skyline, gold souks, and desert safaris.', 4.8, '5-7 days', 'From $1,199', 'City'),
+('Abu Dhabi', 'UAE', 'https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=800&q=80', 'Sheikh Zayed mosque, F1 circuit, and island resorts.', 4.8, '4-6 days', 'From $1,099', 'City'),
+('Istanbul', 'Turkey', 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=80', 'Where East meets West, Bosphorus and bazaars.', 4.9, '5-8 days', 'From $799', 'Culture'),
+('Cappadocia', 'Turkey', 'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?w=800&q=80', 'Fairy chimneys, hot air balloons, and cave hotels.', 5.0, '4-6 days', 'From $899', 'Nature'),
+('Petra', 'Jordan', 'https://images.unsplash.com/photo-1579606032821-4e6161c81bd3?w=800&q=80', 'Rose-red city carved into rock, Wadi Rum desert.', 4.9, '5-7 days', 'From $849', 'Culture'),
+('Muscat', 'Oman', 'https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=800&q=80', 'Frankincense trails, wadis, and pristine coastline.', 4.8, '6-9 days', 'From $949', 'Nature'),
+('Doha', 'Qatar', 'https://images.unsplash.com/photo-1582516732237-81ebc79af7b8?w=800&q=80', 'Islamic art, souq waqif, and luxury desert camps.', 4.7, '4-6 days', 'From $1,099', 'City'),
+('Tbilisi', 'Georgia', 'https://images.unsplash.com/photo-1580101741682-68faa85e8e3b?w=800&q=80', 'Wine country, ancient churches, and Caucasus mountains.', 4.8, '5-8 days', 'From $699', 'Culture'),
+('Yerevan', 'Armenia', 'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=800&q=80', 'Pink city with Mount Ararat views and cognac distilleries.', 4.7, '4-6 days', 'From $649', 'City'),
+('Baku', 'Azerbaijan', 'https://images.unsplash.com/photo-1584890284614-5a3b4ec4d4e4?w=800&q=80', 'Flame Towers, old city walls, and Caspian coast.', 4.7, '4-6 days', 'From $699', 'City'),
+('Samarkand', 'Uzbekistan', 'https://images.unsplash.com/photo-1610236764979-a9427f6ece6c?w=800&q=80', 'Silk Road treasures and blue-domed Registan Square.', 4.9, '3-5 days', 'From $649', 'Culture'),
+('Almaty', 'Kazakhstan', 'https://images.unsplash.com/photo-1524235975426-093c4bf9a536?w=800&q=80', 'Soviet charm meets Tian Shan mountains and Silk Road.', 4.6, '5-8 days', 'From $749', 'Nature'),
+('Bishkek', 'Kyrgyzstan', 'https://images.unsplash.com/photo-1557530360-f4b49aadbc39?w=800&q=80', 'Nomadic culture, alpine lakes, and mountain trails.', 4.7, '7-10 days', 'From $699', 'Adventure'),
+('Kathmandu', 'Nepal', 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80', 'Base camp for Himalayan adventures and Buddhist heritage.', 4.7, '7-14 days', 'From $649', 'Adventure'),
+('Colombo', 'Sri Lanka', 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80', 'Tea plantations, colonial history, and pristine beaches.', 4.7, '7-10 days', 'From $699', 'Beach'),
+('Male', 'Maldives', 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80', 'Overwater bungalows, coral reefs, and turquoise lagoons.', 5.0, '5-8 days', 'From $1,999', 'Beach'),
+('Dhaka', 'Bangladesh', 'https://images.unsplash.com/photo-1617196034183-421b4040c308?w=800&q=80', 'Rickshaw chaos, Sundarbans mangroves, and Mughal forts.', 4.5, '5-8 days', 'From $499', 'Culture'),
+('Thimphu', 'Bhutan', 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&q=80', 'Kingdom of happiness, Tiger Nest monastery, and archery.', 4.9, '7-10 days', 'From $1,499', 'Nature'),
+('Kabul', 'Afghanistan', 'https://images.unsplash.com/photo-1569262524700-ed9bde7f5a16?w=800&q=80', 'Ancient bazaars, Babur gardens, and Hindu Kush scenery.', 4.2, '5-7 days', 'From $799', 'Culture'),
+('Islamabad', 'Pakistan', 'https://images.unsplash.com/photo-1594131431042-35af47a84f8c?w=800&q=80', 'Faisal Mosque, Margalla Hills, and Karakoram gateway.', 4.5, '5-8 days', 'From $649', 'Nature');
+
+INSERT INTO "Package" (tag, "tagColor", title, subtitle, image, price, "originalPrice", duration, "groupSize", rating, reviews, includes, highlight, category) VALUES
+('Popular', 'bg-black text-white', 'Dubai & Abu Dhabi Luxury', 'Gold, glam & desert dunes', 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', 18500000, 22000000, '7 days', '2-8 people', 4.8, 312, '["5-star hotel","Desert safari","Burj Khalifa","Transfers"]', 'Dubai & Abu Dhabi', 'City'),
+('Trending', 'bg-rose-500 text-white', 'Turkey: Istanbul & Cappadocia', 'Bazaars, balloons & Byzantine', 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=80', 13500000, 17000000, '9 days', '2-14 people', 4.9, 267, '["Flights","Hotels","Hot air balloon","Guided tours"]', 'Istanbul & Cappadocia', 'Culture'),
+('New', 'bg-emerald-500 text-white', 'Silk Road Uzbekistan', 'Samarkand, Bukhara & beyond', 'https://images.unsplash.com/photo-1610236764979-a9427f6ece6c?w=800&q=80', 11000000, 14000000, '10 days', '2-16 people', 4.7, 134, '["Flights","Hotels","Guided tours","Traditional dinner"]', 'Samarkand & Bukhara', 'Culture'),
+('Popular', 'bg-black text-white', 'Caucasus Triple: Georgia, Armenia & Azerbaijan', 'Wine, churches & fire', 'https://images.unsplash.com/photo-1580101741682-68faa85e8e3b?w=800&q=80', 12000000, 15500000, '12 days', '2-14 people', 4.8, 156, '["Flights","Hotels","Wine tasting","City tours"]', 'Tbilisi to Baku', 'Culture'),
+('Editor''s Pick', 'bg-amber-400 text-black', 'Maldives Overwater Escape', 'Villas, reefs & sunsets', 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80', 28000000, 35000000, '7 days', '2 people', 5.0, 198, '["Overwater villa","All meals","Snorkeling","Seaplane"]', 'North Male Atoll', 'Beach');

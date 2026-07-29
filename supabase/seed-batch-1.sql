@@ -1,0 +1,29 @@
+-- Batch 1: Asia (20 destinations + packages)
+INSERT INTO "Destination" (city, country, image, description, rating, duration, price, category) VALUES
+('Tokyo', 'Japan', 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80', 'Neon lights, ancient temples, and world-class cuisine.', 4.9, '7-10 days', 'From $899', 'City'),
+('Kyoto', 'Japan', 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80', 'Timeless geisha districts, bamboo forests, and zen gardens.', 4.9, '5-7 days', 'From $799', 'Culture'),
+('Bali', 'Indonesia', 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80', 'Terraced rice fields, surf breaks, and spiritual temples.', 4.8, '7-14 days', 'From $699', 'Beach'),
+('Bangkok', 'Thailand', 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80', 'Street food paradise with glittering temples and nightlife.', 4.7, '5-8 days', 'From $599', 'City'),
+('Phuket', 'Thailand', 'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800&q=80', 'Crystal waters, limestone cliffs, and beach clubs.', 4.8, '7-10 days', 'From $749', 'Beach'),
+('Seoul', 'South Korea', 'https://images.unsplash.com/photo-1538485399081-7191377e8241?w=800&q=80', 'K-culture epicenter with palaces, markets, and tech hubs.', 4.8, '5-8 days', 'From $849', 'City'),
+('Singapore', 'Singapore', 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&q=80', 'Futuristic skyline, hawker centers, and Gardens by the Bay.', 4.9, '4-6 days', 'From $999', 'City'),
+('Hanoi', 'Vietnam', 'https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=800&q=80', 'Old Quarter charm, pho bowls, and Hoan Kiem Lake.', 4.7, '5-7 days', 'From $499', 'Culture'),
+('Ho Chi Minh City', 'Vietnam', 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&q=80', 'Vibrant streets, war history, and the Mekong Delta.', 4.6, '4-7 days', 'From $479', 'City'),
+('Hoi An', 'Vietnam', 'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=800&q=80', 'Lantern-lit ancient town with tailor shops and beach.', 4.9, '4-6 days', 'From $529', 'Culture'),
+('Siem Reap', 'Cambodia', 'https://images.unsplash.com/photo-1506461883276-594a12b5bdc7?w=800&q=80', 'Gateway to Angkor Wat, the greatest temple complex on earth.', 4.8, '4-6 days', 'From $549', 'Culture'),
+('Luang Prabang', 'Laos', 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80', 'Monks at dawn, waterfalls, and French colonial charm.', 4.8, '5-7 days', 'From $579', 'Nature'),
+('Kathmandu', 'Nepal', 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80', 'Base camp for Himalayan adventures and Buddhist heritage.', 4.7, '7-14 days', 'From $649', 'Adventure'),
+('Colombo', 'Sri Lanka', 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80', 'Tea plantations, colonial history, and pristine beaches.', 4.7, '7-10 days', 'From $699', 'Beach'),
+('Maldives', 'Maldives', 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80', 'Overwater bungalows, coral reefs, and turquoise lagoons.', 5.0, '5-8 days', 'From $1,999', 'Beach'),
+('Mumbai', 'India', 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80', 'Bollywood glamour, colonial architecture, and street food.', 4.6, '5-8 days', 'From $599', 'City'),
+('Jaipur', 'India', 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&q=80', 'Pink City of maharajas, forts, and camel rides.', 4.7, '4-7 days', 'From $549', 'Culture'),
+('Goa', 'India', 'https://images.unsplash.com/photo-1587922546307-776227941871?w=800&q=80', 'Portuguese churches, beach shacks, and spice trails.', 4.7, '6-10 days', 'From $629', 'Beach'),
+('Bhutan', 'Bhutan', 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&q=80', 'Kingdom of happiness with Tiger''s Nest and gross national happiness.', 4.9, '7-10 days', 'From $1,499', 'Nature'),
+('Taipei', 'Taiwan', 'https://images.unsplash.com/photo-1470004914212-05527e49370b?w=800&q=80', 'Night markets, Taipei 101, and hot spring retreats.', 4.8, '5-7 days', 'From $749', 'City');
+
+INSERT INTO "Package" (tag, "tagColor", title, subtitle, image, price, "originalPrice", duration, "groupSize", rating, reviews, includes, highlight, category) VALUES
+('Popular', 'bg-black text-white', 'Japan Highlights: Tokyo & Kyoto', 'Cherry blossoms, temples & ramen', 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80', 12500000, 15000000, '10 days', '2-12 people', 4.9, 342, '["Flights","Hotels","Tour guide","Bullet train pass"]', 'Tokyo & Kyoto', 'Culture'),
+('Trending', 'bg-rose-500 text-white', 'Bali Serenity Retreat', 'Temples, rice terraces & surf', 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80', 9500000, 12000000, '10 days', '2-8 people', 4.8, 287, '["Villa stay","Spa","Cooking class","Airport transfer"]', 'Ubud & Seminyak', 'Beach'),
+('Editor''s Pick', 'bg-amber-400 text-black', 'Maldives Luxury Escape', 'Overwater villas & coral reefs', 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80', 28000000, 35000000, '7 days', '2 people', 5.0, 198, '["Overwater villa","All meals","Snorkeling","Seaplane transfer"]', 'North Male Atoll', 'Beach'),
+('New', 'bg-emerald-500 text-white', 'Vietnam Full Loop', 'Hanoi to Ho Chi Minh City', 'https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=800&q=80', 8500000, 10500000, '12 days', '2-16 people', 4.7, 156, '["Flights","Hotels","Ha Long Bay cruise","Street food tour"]', 'Hanoi to HCMC', 'Culture'),
+('Popular', 'bg-black text-white', 'Thailand Island Hopper', 'Bangkok, Phuket & Koh Samui', 'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800&q=80', 11000000, 14000000, '12 days', '2-12 people', 4.8, 234, '["Flights","Hotels","Island ferry passes","Cooking class"]', 'Bangkok & Islands', 'Beach');
