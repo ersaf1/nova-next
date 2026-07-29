@@ -47,7 +47,10 @@ export default async function PackageSlugPage({
 
   const departures: PackageDeparture[] = (departuresRaw ?? []) as PackageDeparture[]
 
-  const coverImg = pkg.coverImage || pkg.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=85'
+  const rawCover = pkg.coverImage || pkg.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=2000&q=95'
+  const coverImg = rawCover.includes('?') 
+    ? rawCover.replace(/w=\d+/, 'w=2000').replace(/q=\d+/, 'q=95') 
+    : `${rawCover}?w=2000&q=95`
   const displayTitle = pkg.title
   const displayLocation = pkg.subtitle ?? pkg.category ?? ''
   const displayDuration = pkg.durationDays
@@ -72,6 +75,7 @@ export default async function PackageSlugPage({
           fill
           className="object-cover"
           priority
+          unoptimized
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent z-[1]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent z-[1]" />
@@ -145,16 +149,20 @@ export default async function PackageSlugPage({
               <div>
                 <h2 className="text-base font-semibold mb-3">Galeri</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 rounded-2xl overflow-hidden">
-                  {gallery.slice(0, 6).map((img, i) => (
-                    <div key={i} className="relative h-40 overflow-hidden">
-                      <Image
-                        src={img}
-                        alt={`${displayTitle} ${i + 1}`}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  ))}
+                  {gallery.slice(0, 6).map((img, i) => {
+                    const gallerySrc = img.includes('?') ? img.replace(/w=\d+/, 'w=1600').replace(/q=\d+/, 'q=95') : `${img}?w=1600&q=95`
+                    return (
+                      <div key={i} className="relative h-40 overflow-hidden bg-neutral-900">
+                        <Image
+                          src={gallerySrc}
+                          alt={`${displayTitle} ${i + 1}`}
+                          fill
+                          className="object-cover hover:scale-105 transition-transform duration-500"
+                          unoptimized
+                        />
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )}
