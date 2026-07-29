@@ -1,256 +1,262 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import Link from 'next/link'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Upload, Sparkles, MapPin, Play, Star, ChevronRight } from 'lucide-react'
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
+interface NavButtonProps {
+  label: string
+  href: string
 }
 
-interface HeroData {
-  headline: string
-  subheadline: string
-  badgeText: string
-  videoUrl: string
+function NavButton({ label, href }: NavButtonProps) {
+  return (
+    <Link
+      href={href}
+      className="bg-transparent border-none cursor-pointer font-sans text-[15px] font-medium uppercase text-wandor-text tracking-[0.04em] transition-opacity hover:opacity-55"
+    >
+      {label}
+    </Link>
+  )
 }
 
-interface Partner {
-  id?: number
-  name: string
-  fontFamily: string
-  fontWeight: number
-  letterSpacing: string
-  fontSize: string
-  fontStyle?: string
-  textTransform?: string
-}
-
-const DEFAULT_BRANDS: Partner[] = [
-  { name: 'Airbnb', fontFamily: 'Georgia, serif', fontWeight: 700, letterSpacing: '-0.02em', fontSize: '15px' },
-  { name: 'Booking.com', fontFamily: 'Arial, sans-serif', fontWeight: 900, letterSpacing: '0.08em', fontSize: '13px', textTransform: 'uppercase' },
-  { name: 'Expedia', fontFamily: 'Trebuchet MS, sans-serif', fontWeight: 600, letterSpacing: '0.01em', fontSize: '15px', fontStyle: 'italic' },
-  { name: 'Skyscanner', fontFamily: 'Courier New, monospace', fontWeight: 700, letterSpacing: '0.12em', fontSize: '13px', textTransform: 'uppercase' },
-  { name: 'Klook', fontFamily: 'Palatino, Book Antiqua, serif', fontWeight: 400, letterSpacing: '-0.01em', fontSize: '16px' },
-  { name: 'Agoda', fontFamily: 'Impact, Arial Narrow, sans-serif', fontWeight: 400, letterSpacing: '0.04em', fontSize: '14px' },
-  { name: 'TripAdvisor', fontFamily: 'Verdana, sans-serif', fontWeight: 700, letterSpacing: '-0.03em', fontSize: '13px' },
+const DESTINATION_PREVIEWS = [
+  {
+    name: 'Kyoto, Japan',
+    tag: 'Autumn Sakura & Hidden Temples',
+    rating: 4.9,
+    photo: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=85',
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4',
+    prompt: "I'm planning a 7-day trip to Japan in October. I love food, hidden cafes, scenic hikes, and want to avoid crowds...."
+  },
+  {
+    name: 'Buenos Aires & Patagonia, Argentina',
+    tag: 'Tango & Alpine Glaciers',
+    rating: 4.9,
+    photo: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=85',
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4',
+    prompt: "I'm planning a 10-day trip to Argentina. I want to explore Buenos Aires tango culture and trek Patagonia glaciers...."
+  },
+  {
+    name: 'Santorini, Greece',
+    tag: 'Cliffside Villas & Sunset Cruises',
+    rating: 5.0,
+    photo: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=85',
+    video: 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4',
+    prompt: "I'm planning a romantic 6-day getaway to Santorini. Looking for luxury overwater villas, wine tasting, and yachting...."
+  }
 ]
 
-const HeroSection: React.FC = () => {
-  const sectionRef = useRef<HTMLElement>(null)
-  const videoWrapperRef = useRef<HTMLDivElement>(null)
-  const badgeRef = useRef<HTMLDivElement>(null)
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const descriptionRef = useRef<HTMLParagraphElement>(null)
-  const searchRef = useRef<HTMLDivElement>(null)
-  const partnersRef = useRef<HTMLDivElement>(null)
+export default function HeroSection() {
+  const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [hero, setHero] = useState<HeroData>({
-    headline: 'The World,\nUnlocked.',
-    subheadline: 'Plan, book, and experience extraordinary journeys across 195+ countries — all in one place.',
-    badgeText: 'Live availability · 195 UN Countries',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4',
-  })
-  const [brands, setBrands] = useState<Partner[]>(DEFAULT_BRANDS)
-  const [heroReady, setHeroReady] = useState(false)
+  const [activeDestIdx, setActiveDestIdx] = useState(0)
+  const [customPrompt, setCustomPrompt] = useState(DESTINATION_PREVIEWS[0].prompt)
+  const [uploadedFile, setUploadedFile] = useState<string | null>(null)
 
-  useEffect(() => {
-    fetch('/api/hero')
-      .then(r => r.json())
-      .then((data: HeroData) => {
-        if (data && (data.headline || data.subheadline || data.badgeText || data.videoUrl)) {
-          setHero(prev => ({
-            ...prev,
-            ...data,
-            videoUrl: data.videoUrl || 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4'
-          }))
-        }
-        setHeroReady(true)
-      })
-      .catch(() => { setHeroReady(true) })
-    fetch('/api/partners')
-      .then(r => r.json())
-      .then((data: Partner[]) => { if (Array.isArray(data) && data.length > 0) setBrands(data) })
-      .catch(() => {})
-  }, [])
+  const currentDest = DESTINATION_PREVIEWS[activeDestIdx]
 
-  useEffect(() => {
-    if (!sectionRef.current || !videoWrapperRef.current) return
+  const handleUploadClick = () => {
+    fileInputRef.current?.click()
+  }
 
-    const ctx = gsap.context(() => {
-      // 1. Scroll-triggered parallax for background video wrapper
-      gsap.fromTo(
-        videoWrapperRef.current,
-        { yPercent: 0 },
-        {
-          yPercent: 15,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        }
-      )
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploadedFile(e.target.files[0].name)
+    }
+  }
 
-      // 2. Set initial states
-      gsap.set(badgeRef.current, { opacity: 0, y: 25 })
-      gsap.set(titleRef.current, { opacity: 1 }) // title wrapper stays visible; words animate
-      gsap.set(titleRef.current?.querySelectorAll('.word-reveal') ?? [], { y: '110%' })
-      gsap.set(descriptionRef.current, { opacity: 0, y: 20 })
-      gsap.set(searchRef.current, { opacity: 0, y: 20 })
-      gsap.set(partnersRef.current, { opacity: 0, y: 10 })
+  const handlePlanTrip = () => {
+    router.push(`/itinerary?prompt=${encodeURIComponent(customPrompt)}`)
+  }
 
-      // 3. Entrance timeline — word-by-word focal reveal
-      const tl = gsap.timeline({ delay: 0.2 })
-
-      tl.to(badgeRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.2)
-        .to(
-          titleRef.current?.querySelectorAll('.word-reveal') ?? [],
-          {
-            y: '0%',
-            duration: 0.75,
-            stagger: 0.06,
-            ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
-          },
-          0.5
-        )
-        .to(descriptionRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 1.1)
-        .to(searchRef.current, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 1.35)
-        .to(partnersRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 1.55)
-    }, sectionRef)
-
-    return () => ctx.revert()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heroReady])
+  const handleSelectDest = (idx: number) => {
+    setActiveDestIdx(idx)
+    setCustomPrompt(DESTINATION_PREVIEWS[idx].prompt)
+  }
 
   return (
-    <section ref={sectionRef} className="relative w-full h-screen min-h-[820px] overflow-hidden bg-black flex flex-col justify-between">
-      <div ref={videoWrapperRef} className="absolute inset-0 w-full h-full will-change-transform bg-neutral-950">
-        {/* Background Fallback Photo */}
-        <img
-          src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=2000&q=95"
-          alt="Hero Background"
-          className="absolute inset-0 w-full h-full object-cover img-smooth-zoom"
-        />
+    <section className="relative min-h-svh w-full overflow-hidden bg-white text-[#1a1a1a]">
+      {/* Background Ambient Video (z-0) */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        src="https://pollen-batch-41236914.figma.site/_components/v2/f0ee2dae7671c170c34f12e31c4cb41418976c98/769c564298c132f7919405cd9f17c1b1231f341d.769c5642.mp4"
+      />
 
-        {/* Video Background Layer */}
-        {hero.videoUrl && (
-          <video
-            key={hero.videoUrl}
-            src={hero.videoUrl}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover z-10"
-          >
-            <source src={hero.videoUrl} type="video/mp4" />
-          </video>
-        )}
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/88 z-[1]" />
-      <div className="relative z-10 max-w-[88rem] w-full mx-auto px-6 md:px-12 flex flex-col justify-between h-full pt-32 pb-12">
-        <div className="max-w-3xl mt-8 md:mt-16">
-          {/* Badge — floats gently after reveal */}
-          <div
-            ref={badgeRef}
-            className="badge-float inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/95 text-xs font-semibold px-4 py-2 rounded-full mb-6"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            {hero.badgeText}
+      {/* Top White-to-Transparent Gradient Overlay (z-1) */}
+      <div
+        className="absolute inset-x-0 top-0 h-[687px] pointer-events-none z-[1]"
+        style={{
+          background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+        }}
+      />
+
+      {/* Content Wrapper (z-2) */}
+      <div className="relative z-[2] max-w-[1360px] mx-auto min-h-svh flex flex-col justify-between">
+        
+        {/* Navigation Bar */}
+        <nav className="flex items-center justify-between px-6 md:px-20 pt-5 md:pt-6 pb-4">
+          {/* Left Wordmark Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <span className="font-display text-[32px] md:text-[40px] text-black leading-none select-none tracking-tight">
+              wandor
+            </span>
+            <span className="text-[9px] font-bold uppercase tracking-widest bg-black text-white px-2 py-0.5 rounded-full ml-1 font-sans">
+              NOVA AI
+            </span>
+          </Link>
+
+          {/* Center Links (Hidden on Mobile) */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-8 max-md:hidden">
+            <NavButton label="Discover" href="/destinations" />
+            <NavButton label="Pricing" href="/packages" />
+            <NavButton label="FAQs" href="/how-it-works" />
           </div>
 
-          {/* Headline — word-by-word curtain reveal */}
-          <h1
-            ref={titleRef}
-            className="text-white font-medium leading-[0.9] mb-6"
-            style={{
-              fontSize: 'clamp(3.5rem, 9vw, 9rem)',
-              letterSpacing: '-0.06em',
-            }}
-          >
-            {hero.headline.split(/[\n\r]+/).map((line, li) => (
-              <span key={li} className="block">
-                {line.split(' ').map((word, wi) => {
-                  const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase();
-                  const isUnlocked = cleanWord === 'unlocked';
-                  return (
-                    <span
-                      key={wi}
-                      className="inline-block overflow-hidden mr-[0.25em] last:mr-0"
-                      style={{ verticalAlign: 'bottom' }}
-                    >
-                      <span className="word-reveal inline-block">
-                        {isUnlocked ? (
-                          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-indigo-300">
-                            {word}
-                          </span>
-                        ) : (
-                          word
-                        )}
-                      </span>
-                    </span>
-                  )
-                })}
-              </span>
-            ))}
+          {/* Right Action Buttons */}
+          <div className="flex items-center gap-4 md:gap-8">
+            <Link
+              href="/login"
+              className="max-md:hidden bg-transparent border-none cursor-pointer font-sans text-[15px] font-semibold uppercase text-[#292929] tracking-[0.04em] transition-opacity hover:opacity-55"
+            >
+              Login
+            </Link>
+
+            <button
+              onClick={handlePlanTrip}
+              className="bg-wandor-dark text-[#fafafa] border-none cursor-pointer font-sans text-[15px] font-medium uppercase tracking-[0.04em] px-5 py-3.5 rounded-full transition-all hover:bg-[#333] active:scale-95 shadow-md flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Plan My Trip</span>
+            </button>
+          </div>
+        </nav>
+
+        {/* Hero Body */}
+        <div className="flex flex-col items-center px-6 pt-8 md:pt-16 pb-20 text-center my-auto">
+          {/* Main Headline */}
+          <h1 className="font-sans text-[clamp(38px,6vw,68px)] font-medium text-wandor-text leading-[1.05] tracking-[-0.04em] max-w-[820px] mb-4 md:mb-5">
+            Where will you go next?
           </h1>
 
-          <p ref={descriptionRef} className="text-white/80 text-base md:text-lg max-w-xl mb-6 leading-relaxed font-light">
-            {hero.subheadline}
+          {/* Subtitle */}
+          <p className="font-sans text-base md:text-xl font-medium text-wandor-muted leading-relaxed max-w-[520px] mb-8 md:mb-10">
+            Tell our AI where you&apos;re going and what you love across 195 countries. We&apos;ll create a personalized itinerary for you.
           </p>
-        </div>
 
-        <div className="w-full space-y-10">
-          <div ref={searchRef} className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/search"
-              className="inline-flex items-center gap-2 bg-[#175cff] hover:bg-[#0f47cc] text-white text-sm font-semibold px-7 py-3.5 rounded-full transition-all duration-200"
-            >
-              Explore Packages
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/itinerary"
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-semibold px-7 py-3.5 rounded-full hover:bg-white/20 transition-all duration-200"
-            >
-              <Sparkles className="w-4 h-4 text-white/70" />
-              Plan with AI
-            </Link>
+          {/* Destination Preview Mini Switcher Pills */}
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto max-w-full pb-2 scrollbar-none">
+            {DESTINATION_PREVIEWS.map((dest, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSelectDest(idx)}
+                className={`text-xs font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1.5 backdrop-blur-md ${
+                  activeDestIdx === idx
+                    ? 'bg-black text-white shadow-md scale-105'
+                    : 'bg-white/60 text-neutral-800 hover:bg-white border border-white/80'
+                }`}
+              >
+                <MapPin className="w-3 h-3 text-amber-500" />
+                <span>{dest.name}</span>
+              </button>
+            ))}
           </div>
-          <div ref={partnersRef} className="w-full flex flex-col items-start gap-3">
-            <p className="text-white/30 text-[10px] font-semibold tracking-widest uppercase">Trusted partners</p>
-            <div className="w-full max-w-xl overflow-hidden relative">
-              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/30 to-transparent z-[2]" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/30 to-transparent z-[2]" />
-              <div className="marquee-track opacity-50 hover:opacity-80 transition-opacity duration-300">
-                {[...brands, ...brands].map((brand, i) => (
-                  <span
-                    key={i}
-                    className="mx-6 shrink-0 text-white/60 whitespace-nowrap"
-                    style={{
-                      fontFamily: brand.fontFamily,
-                      fontWeight: brand.fontWeight,
-                      letterSpacing: brand.letterSpacing,
-                      fontSize: brand.fontSize,
-                      fontStyle: brand.fontStyle as React.CSSProperties['fontStyle'],
-                      textTransform: brand.textTransform as React.CSSProperties['textTransform'],
-                    }}
-                  >
-                    {brand.name}
-                  </span>
-                ))}
+
+          {/* Liquid Glass Frosted Prompt Card */}
+          <div className="relative w-[701px] max-md:w-[calc(100vw-48px)] min-h-[220px] md:min-h-[238px] bg-white/[0.08] border-[3px] border-white rounded-[44px] shadow-[0_0_15px_0_rgba(0,0,0,0.12)] overflow-hidden backdrop-blur-[20px] p-6 text-left flex flex-col justify-between group transition-all hover:shadow-[0_0_25px_0_rgba(0,0,0,0.18)]">
+            
+            {/* Top Interactive Destination Photo & Video Banner Badge inside Floating Card */}
+            <div className="flex items-center justify-between gap-4 mb-3 border-b border-white/30 pb-3">
+              <div className="flex items-center gap-3">
+                <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-neutral-900 border border-white/60 shrink-0 shadow-xs">
+                  <img
+                    src={currentDest.photo}
+                    alt={currentDest.name}
+                    className="w-full h-full object-cover img-smooth-zoom"
+                  />
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                    <Play className="w-3.5 h-3.5 text-white fill-white" />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs font-bold text-black">{currentDest.name}</span>
+                    <span className="flex items-center text-[10px] font-bold text-amber-600 bg-amber-100/80 px-1.5 py-0.5 rounded-md ml-1">
+                      <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500 mr-0.5" />
+                      {currentDest.rating}
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-medium text-neutral-600 block line-clamp-1">{currentDest.tag}</span>
+                </div>
               </div>
+
+              {uploadedFile && (
+                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/90 px-2.5 py-1 rounded-full border border-emerald-200 truncate max-w-[140px]">
+                  📄 {uploadedFile}
+                </span>
+              )}
+            </div>
+
+            {/* Prompt Text / Interactive Textarea */}
+            <textarea
+              value={customPrompt}
+              onChange={(e) => setCustomPrompt(e.target.value)}
+              rows={2}
+              className="w-full font-sans text-base md:text-xl font-medium text-wandor-prompt leading-relaxed bg-transparent border-none focus:outline-none resize-none placeholder:text-wandor-prompt/50"
+              placeholder="Describe your dream trip (destination, duration, preferences)..."
+            />
+
+            {/* Bottom Actions inside Glass Card */}
+            <div className="flex items-center justify-between pt-3 mt-2">
+              {/* Upload Button */}
+              <button
+                type="button"
+                onClick={handleUploadClick}
+                className="w-11 h-11 bg-white/40 hover:bg-white/80 border border-white/80 rounded-full cursor-pointer flex items-center justify-center backdrop-blur-[14px] transition-all hover:scale-105 active:scale-95 shadow-2xs"
+                aria-label="Upload inspiration"
+                title="Upload itinerary PDF or photo inspiration"
+              >
+                <Upload className="w-[18px] h-[18px] text-wandor-text flex-shrink-0" />
+              </button>
+
+              {/* Hidden File Input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*,.pdf"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+
+              {/* "Plan My Trip" CTA Button */}
+              <button
+                onClick={handlePlanTrip}
+                className="w-[156px] h-13 md:h-14 bg-black border-none rounded-[44px] shadow-[0_0_2px_0_rgba(0,0,0,0.05)] cursor-pointer flex items-center justify-center gap-2 font-sans text-sm md:text-base font-medium text-[#fafafa] uppercase tracking-[0.02em] transition-all hover:bg-[#333] active:scale-95 hover:shadow-lg"
+              >
+                <span>Plan My Trip</span>
+                <ChevronRight className="w-4 h-4 text-white" />
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Footer Sub-bar */}
+        <div className="px-6 md:px-20 pb-6 text-center text-xs text-neutral-500 font-medium flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-black/5 pt-4">
+          <p>© 2026 Wandor by NOVA. Powered by Gemini AI Concierge.</p>
+          <p className="flex items-center gap-4">
+            <Link href="/destinations" className="hover:text-black">195 UN Countries</Link>
+            <Link href="/packages" className="hover:text-black">All-Inclusive Packages</Link>
+            <Link href="/itinerary" className="hover:text-black">AI Planner</Link>
+          </p>
+        </div>
+
       </div>
     </section>
   )
 }
-
-export default HeroSection

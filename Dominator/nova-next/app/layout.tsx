@@ -16,14 +16,22 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'NOVA — Travel Smarter',
-  description: 'Your AI-powered travel companion — from first search to safe return.',
+  title: 'Wandor — Where will you go next?',
+  description: 'Your AI-powered travel companion — from first search to safe return across 195 countries.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Geist:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="font-sans antialiased bg-white text-[#1a1a1a] overflow-x-hidden">
         <PageTransition>{children}</PageTransition>
       </body>
     </html>
