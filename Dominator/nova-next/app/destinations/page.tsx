@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { MapPin, Star, Clock, ArrowRight, Heart, Search, X } from 'lucide-react'
+import { MapPin, Star, Clock, ArrowRight, Heart, Search, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 
 interface Destination {
@@ -17,11 +17,14 @@ interface Destination {
   category: string
 }
 
+const ITEMS_PER_PAGE = 12
+
 export default function DestinationsPage() {
   const [destinations, setDestinations] = useState<Destination[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
 
   const [wishlistIds, setWishlistIds] = useState<number[]>([])
   const [userId, setUserId] = useState<string | null>(null)
@@ -51,6 +54,11 @@ export default function DestinationsPage() {
       }
     })
   }, [])
+
+  // Reset to page 1 whenever category or search query changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedCategory, searchQuery])
 
   const toggleWishlist = async (e: React.MouseEvent, destId: number) => {
     e.preventDefault()
@@ -96,6 +104,34 @@ export default function DestinationsPage() {
     return matchesCategory && matchesSearch
   })
 
+  // Pagination Math
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+  const paginatedDestinations = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return
+    setCurrentPage(page)
+    window.scrollTo({ top: 320, behavior: 'smooth' })
+  }
+
+  // Generate page numbers to render with smart ellipsis
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = []
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i)
+    } else {
+      pages.push(1)
+      if (currentPage > 3) pages.push('...')
+      const start = Math.max(2, currentPage - 1)
+      const end = Math.min(totalPages - 1, currentPage + 1)
+      for (let i = start; i <= end; i++) pages.push(i)
+      if (currentPage < totalPages - 2) pages.push('...')
+      pages.push(totalPages)
+    }
+    return pages
+  }
+
   return (
     <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.01em' }}>
       <Navbar />
@@ -123,7 +159,7 @@ export default function DestinationsPage() {
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Cari negara (misal: Indonesia, Japan, France)..."
+                placeholder="Cari negara (misal: Indonesia, Japan, Argentina)..."
                 className="w-full bg-white border border-black/10 rounded-full pl-10 pr-10 py-3 text-xs text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black transition-all shadow-2xs"
               />
               {searchQuery && (
@@ -151,7 +187,7 @@ export default function DestinationsPage() {
             </div>
           </div>
 
-          {/* Loading */}
+          {/* Loading Skeleton */}
           {loading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {[...Array(6)].map((_, i) => (
@@ -169,9 +205,12 @@ export default function DestinationsPage() {
           {/* Destination Cards Grid */}
           {!loading && (
             <>
-              <div className="flex items-center justify-between mb-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+                <p className="text-xs text-black/50 font-medium">
+                  Menampilkan <span className="font-bold text-black">{filtered.length > 0 ? startIndex + 1 : 0} – {Math.min(startIndex + ITEMS_PER_PAGE, filtered.length)}</span> dari <span className="font-bold text-black">{filtered.length}</span> destinasi negara
+                </p>
                 <p className="text-xs text-black/40 font-medium">
-                  Menampilkan {filtered.length} dari {destinations.length} negara destinasi dunia
+                  Halaman <span className="font-bold text-black">{currentPage}</span> dari <span className="font-bold text-black">{totalPages}</span>
                 </p>
               </div>
 
@@ -182,7 +221,7 @@ export default function DestinationsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {filtered.map((dest) => {
+                  {paginatedDestinations.map((dest) => {
                     const isSaved = wishlistIds.includes(Number(dest.id))
                     return (
                       <Link
@@ -234,6 +273,51 @@ export default function DestinationsPage() {
                       </Link>
                     )
                   })}
+                </div>
+              )}
+
+              {/* Sleek Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-black/10">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-black/10 bg-white hover:bg-black hover:text-white text-black text-xs font-semibold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Halaman Sebelumnya</span>
+                  </button>
+
+                  {/* Page Numbers */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto max-w-full py-1">
+                    {getPageNumbers().map((p, idx) => (
+                      <React.Fragment key={idx}>
+                        {typeof p === 'number' ? (
+                          <button
+                            onClick={() => handlePageChange(p)}
+                            className={`w-9 h-9 rounded-full text-xs font-bold transition-all ${
+                              currentPage === p
+                                ? 'bg-black text-white shadow-xs scale-105'
+                                : 'bg-white text-black/60 hover:text-black border border-black/10 hover:border-black/30'
+                            }`}
+                          >
+                            {p}
+                          </button>
+                        ) : (
+                          <span className="px-2 text-xs text-black/40 font-bold">...</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-black/10 bg-white hover:bg-black hover:text-white text-black text-xs font-semibold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
+                  >
+                    <span>Halaman Selanjutnya</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               )}
             </>
