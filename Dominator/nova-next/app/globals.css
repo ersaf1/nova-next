@@ -396,3 +396,35 @@ input[type='range']::-moz-range-thumb {
 .heading-animate.in-view {
   animation-play-state: running;
 }
+
+/* ─── Ultra-Smooth Image Hover Zoom Utilities ───────────────────────── */
+.img-zoom-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.img-smooth-zoom {
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.group:hover .img-smooth-zoom,
+.img-zoom-container:hover .img-smooth-zoom,
+.img-smooth-zoom:hover {
+  transform: scale(1.07) translateZ(0) !important;
+}
+
+.img-smooth-zoom-subtle {
+  transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), filter 800ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.group:hover .img-smooth-zoom-subtle,
+.img-zoom-container:hover .img-smooth-zoom-subtle,
+.img-smooth-zoom-subtle:hover {
+  transform: scale(1.05) translateZ(0) !important;
+}

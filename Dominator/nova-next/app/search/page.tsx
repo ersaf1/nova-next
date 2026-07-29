@@ -1,7 +1,7 @@
 'use client'
 
 import React, { Suspense, useEffect, useState, useCallback } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Search, SlidersHorizontal, Star, Clock, Users, X } from 'lucide-react'
 import Navbar from '@/components/Navbar'
@@ -11,6 +11,18 @@ import { formatIDR } from '@/lib/types'
 
 const CATEGORIES = ['All', 'Beach', 'Adventure', 'Culture', 'City', 'Nature', 'Luxury']
 const DURATIONS = ['Any', '1-3 days', '4-7 days', '8-14 days', '15+ days']
+const PAGE_SIZE = 9
+
+// Sort options with Indonesian labels
+const SORT_OPTIONS = [
+  { value: 'rating', label: 'Rating' },
+  { value: 'price-asc', label: 'Harga Termurah' },
+  { value: 'price-desc', label: 'Harga Tertinggi' },
+  { value: 'reviews', label: 'Popularitas (reviews)' },
+]
+
+// Tabs that are disabled (coming soon)
+const DISABLED_TABS = ['Penerbangan', 'Hotel', 'Pengalaman']
 
 function SkeletonCard() {
   return (
@@ -37,11 +49,12 @@ function PackageCard({ pkg }: { pkg: TravelPackage }) {
     >
       <div className="relative h-52 overflow-hidden bg-black/5">
         {pkg.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={pkg.image}
             alt={pkg.title}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover img-smooth-zoom"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-black/10 to-black/5 flex items-center justify-center">
@@ -105,7 +118,7 @@ function DestinationCard({ dest }: { dest: Destination }) {
             src={dest.image}
             alt={dest.city}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover img-smooth-zoom"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-black/10 to-black/5 flex items-center justify-center">
@@ -134,26 +147,53 @@ function DestinationCard({ dest }: { dest: Destination }) {
 
 function SearchContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+
+  // Read all filter state from URL
   const type = searchParams.get('type') || 'packages'
   const destination = searchParams.get('destination') || ''
   const checkin = searchParams.get('checkin') || ''
   const checkout = searchParams.get('checkout') || ''
   const travelers = searchParams.get('travelers') || ''
-  const categoryParam = searchParams.get('category') || 'All'
-  const q = searchParams.get('q') || destination
 
+  // URL-synced filters
+  const q = searchParams.get('q') || destination
+  const selectedCategory = searchParams.get('category') || 'All'
+  const sortOrder = searchParams.get('sort') || 'rating'
+  const minPrice = parseInt(searchParams.get('minPrice') || '0', 10)
+  const maxPriceParam = searchParams.get('maxPrice')
+  const selectedDuration = searchParams.get('duration') || 'Any'
+
+  // Local data state
   const [packages, setPackages] = useState<TravelPackage[]>([])
   const [destinations, setDestinations] = useState<Destination[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  // Filters (packages only)
-  const [selectedCategory, setSelectedCategory] = useState(categoryParam)
-  const [selectedDuration, setSelectedDuration] = useState('Any')
-  const [priceRange, setPriceRange] = useState([0, 10000])
-  const [searchText, setSearchText] = useState(destination)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [sortOrder, setSortOrder] = useState('recommended')
+  // visibleCount resets whenever the filter fingerprint changes — no useEffect needed
+  const filterKey = `${q}|${selectedCategory}|${sortOrder}|${minPrice}|${maxPriceParam}|${selectedDuration}`
+  const [lastFilterKey, setLastFilterKey] = useState(filterKey)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  if (filterKey !== lastFilterKey) {
+    setLastFilterKey(filterKey)
+    setVisibleCount(PAGE_SIZE)
+  }
+
+  // Helper: update one or multiple URL params without full reload
+  const setParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const next = new URLSearchParams(searchParams.toString())
+      for (const [key, val] of Object.entries(updates)) {
+        if (val === null || val === '') {
+          next.delete(key)
+        } else {
+          next.set(key, val)
+        }
+      }
+      router.replace('/search?' + next.toString(), { scroll: false })
+    },
+    [searchParams, router]
+  )
 
   useEffect(() => {
     if (type === 'destinations') {
@@ -194,16 +234,19 @@ function SearchContent() {
     return match ? parseInt(match[1], 10) : 0
   }, [])
 
+  const computedMaxPrice = packages.length > 0 ? Math.max(...packages.map((p) => p.price)) : 10_000_000
+  const maxPrice = maxPriceParam !== null ? parseInt(maxPriceParam, 10) : computedMaxPrice
+
   // Packages filter
   const filtered = packages.filter((pkg) => {
-    const text = searchText.toLowerCase()
+    const text = q.toLowerCase()
     if (text && !pkg.title.toLowerCase().includes(text) && !(pkg.subtitle ?? '').toLowerCase().includes(text)) {
       return false
     }
     if (selectedCategory !== 'All' && pkg.category?.toLowerCase() !== selectedCategory.toLowerCase()) {
       return false
     }
-    if (pkg.price < priceRange[0] || pkg.price > priceRange[1]) {
+    if (pkg.price < minPrice || pkg.price > maxPrice) {
       return false
     }
     if (selectedDuration !== 'Any') {
@@ -225,23 +268,50 @@ function SearchContent() {
     )
   })
 
-  const maxPrice = packages.length > 0 ? Math.max(...packages.map((p) => p.price)) : 10000
-
   const sortedPackages = [...filtered].sort((a, b) => {
     if (sortOrder === 'price-asc') return a.price - b.price
     if (sortOrder === 'price-desc') return b.price - a.price
     if (sortOrder === 'rating') return b.rating - a.rating
+    if (sortOrder === 'reviews') return (b.reviews ?? b.reviewCount ?? 0) - (a.reviews ?? a.reviewCount ?? 0)
     return 0
   })
+
+  const visiblePackages = sortedPackages.slice(0, visibleCount)
+  const hasMore = visibleCount < sortedPackages.length
 
   const isDestinations = type === 'destinations'
   const resultCount = isDestinations ? filteredDestinations.length : filtered.length
   const headingText = isDestinations
     ? (q ? `Destinations for "${q}"` : 'All Destinations')
     : (destination ? `Results for "${destination}"` : 'All Packages')
-  const countText = isDestinations
-    ? `${resultCount} destination${resultCount !== 1 ? 's' : ''} found`
-    : `${resultCount} package${resultCount !== 1 ? 's' : ''} found`
+
+  // Active filter chips
+  const activeChips: { label: string; onRemove: () => void }[] = []
+  if (selectedCategory !== 'All') {
+    activeChips.push({ label: selectedCategory, onRemove: () => setParams({ category: null }) })
+  }
+  if (maxPriceParam !== null && parseInt(maxPriceParam, 10) < computedMaxPrice) {
+    activeChips.push({
+      label: `Maks ${formatIDR(parseInt(maxPriceParam, 10))}`,
+      onRemove: () => setParams({ maxPrice: null }),
+    })
+  }
+  if (minPrice > 0) {
+    activeChips.push({
+      label: `Min ${formatIDR(minPrice)}`,
+      onRemove: () => setParams({ minPrice: null }),
+    })
+  }
+  if (selectedDuration !== 'Any') {
+    activeChips.push({ label: selectedDuration, onRemove: () => setParams({ duration: null }) })
+  }
+  if (q && q !== destination) {
+    activeChips.push({ label: `"${q}"`, onRemove: () => setParams({ q: null }) })
+  }
+
+  const clearAllFilters = () => {
+    setParams({ category: null, maxPrice: null, minPrice: null, duration: null, q: null, sort: null })
+  }
 
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
@@ -257,7 +327,30 @@ function SearchContent() {
           <h1 className="text-3xl font-semibold text-black" style={{ letterSpacing: '-0.02em' }}>
             {headingText}
           </h1>
-          <p className="text-sm text-black/50 mt-1">{loading ? '...' : countText}</p>
+          <p className="text-sm text-black/50 mt-1">
+            {loading ? '...' : `${resultCount} hasil ditemukan`}
+          </p>
+
+          {/* Disabled tabs — Flights, Hotels, Experiences */}
+          <div className="flex items-center gap-2 mt-4 flex-wrap">
+            {/* Active tab: Packages */}
+            <span className="text-sm font-medium px-4 py-1.5 rounded-full bg-black text-white">
+              Paket Wisata
+            </span>
+            {DISABLED_TABS.map((tab) => (
+              <span
+                key={tab}
+                title="Segera hadir"
+                className="flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-full bg-white border border-black/10 text-black/30 cursor-not-allowed select-none"
+                aria-disabled="true"
+              >
+                {tab}
+                <span className="text-[10px] font-medium bg-black/5 text-black/30 px-1.5 py-0.5 rounded-full leading-none">
+                  Segera hadir
+                </span>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -274,19 +367,19 @@ function SearchContent() {
                 {/* Search */}
                 <div>
                   <label className="text-xs font-medium text-black/50 uppercase tracking-wider mb-2 block">
-                    Destination
+                    Destinasi
                   </label>
                   <div className="relative">
                     <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/30" />
                     <input
                       type="text"
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      placeholder="Search..."
+                      value={q}
+                      onChange={(e) => setParams({ q: e.target.value || null })}
+                      placeholder="Cari..."
                       className="w-full bg-[#F5F5F5] rounded-xl pl-8 pr-3 py-2 text-sm text-black placeholder:text-black/30 focus:outline-none focus:ring-2 focus:ring-black/10"
                     />
-                    {searchText && (
-                      <button onClick={() => setSearchText('')} className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {q && (
+                      <button onClick={() => setParams({ q: null })} className="absolute right-3 top-1/2 -translate-y-1/2">
                         <X size={12} className="text-black/30" />
                       </button>
                     )}
@@ -296,7 +389,7 @@ function SearchContent() {
                 {/* Category */}
                 <div>
                   <label className="text-xs font-medium text-black/50 uppercase tracking-wider mb-2 block">
-                    Category
+                    Kategori
                   </label>
                   <div className="space-y-1.5">
                     {CATEGORIES.map((cat) => (
@@ -306,7 +399,7 @@ function SearchContent() {
                           name="category"
                           value={cat}
                           checked={selectedCategory === cat}
-                          onChange={() => setSelectedCategory(cat)}
+                          onChange={() => setParams({ category: cat === 'All' ? null : cat })}
                           className="w-4 h-4 accent-black"
                         />
                         <span className="text-sm text-black/70 group-hover:text-black transition-colors">{cat}</span>
@@ -318,26 +411,26 @@ function SearchContent() {
                 {/* Price Range */}
                 <div>
                   <label className="text-xs font-medium text-black/50 uppercase tracking-wider mb-2 block">
-                    Max Price
+                    Harga Maks
                   </label>
                   <input
                     type="range"
                     min={0}
-                    max={maxPrice}
-                    value={priceRange[1]}
-                    onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                    max={computedMaxPrice}
+                    value={maxPrice}
+                    onChange={(e) => setParams({ maxPrice: e.target.value })}
                     className="w-full accent-black"
                   />
                   <div className="flex justify-between text-xs text-black/40 mt-1">
-                    <span>$0</span>
-                    <span>${priceRange[1].toLocaleString()}</span>
+                    <span>{formatIDR(0)}</span>
+                    <span>{formatIDR(maxPrice)}</span>
                   </div>
                 </div>
 
                 {/* Duration */}
                 <div>
                   <label className="text-xs font-medium text-black/50 uppercase tracking-wider mb-2 block">
-                    Duration
+                    Durasi
                   </label>
                   <div className="space-y-1.5">
                     {DURATIONS.map((dur) => (
@@ -347,7 +440,7 @@ function SearchContent() {
                           name="duration"
                           value={dur}
                           checked={selectedDuration === dur}
-                          onChange={() => setSelectedDuration(dur)}
+                          onChange={() => setParams({ duration: dur === 'Any' ? null : dur })}
                           className="w-4 h-4 accent-black"
                         />
                         <span className="text-sm text-black/70 group-hover:text-black transition-colors">{dur}</span>
@@ -358,12 +451,7 @@ function SearchContent() {
 
                 {/* Reset */}
                 <button
-                  onClick={() => {
-                    setSelectedCategory('All')
-                    setSelectedDuration('Any')
-                    setPriceRange([0, maxPrice])
-                    setSearchText('')
-                  }}
+                  onClick={clearAllFilters}
                   className="w-full text-xs text-black/50 hover:text-black border border-black/10 rounded-full py-2 transition-colors duration-200"
                 >
                   Reset filters
@@ -388,7 +476,7 @@ function SearchContent() {
                   {CATEGORIES.filter((c) => c !== 'All').map((cat) => (
                     <button
                       key={cat}
-                      onClick={() => setSelectedCategory(selectedCategory === cat ? 'All' : cat)}
+                      onClick={() => setParams({ category: selectedCategory === cat ? null : cat })}
                       className={`text-xs px-3 py-1.5 rounded-full whitespace-nowrap border transition-colors duration-200 ${
                         selectedCategory === cat
                           ? 'bg-black text-white border-black'
@@ -402,13 +490,13 @@ function SearchContent() {
               </div>
             )}
 
-            {/* Desktop filter chips — packages only */}
+            {/* Desktop category chips — packages only */}
             {!isDestinations && (
-              <div className="hidden lg:flex items-center gap-3 mb-6 flex-wrap">
+              <div className="hidden lg:flex items-center gap-3 mb-4 flex-wrap">
                 {CATEGORIES.map((cat) => (
                   <button
                     key={cat}
-                    onClick={() => setSelectedCategory(cat)}
+                    onClick={() => setParams({ category: cat === 'All' ? null : cat })}
                     className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-200 ${
                       selectedCategory === cat
                         ? 'bg-black text-white border-black'
@@ -421,21 +509,47 @@ function SearchContent() {
               </div>
             )}
 
+            {/* Active filter chips */}
+            {!isDestinations && activeChips.length > 0 && (
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
+                {activeChips.map((chip) => (
+                  <span
+                    key={chip.label}
+                    className="flex items-center gap-1.5 text-xs bg-black text-white px-3 py-1.5 rounded-full"
+                  >
+                    {chip.label}
+                    <button
+                      onClick={chip.onRemove}
+                      aria-label={`Hapus filter ${chip.label}`}
+                      className="hover:opacity-70 transition-opacity"
+                    >
+                      <X size={10} />
+                    </button>
+                  </span>
+                ))}
+                <button
+                  onClick={clearAllFilters}
+                  className="text-xs text-black/50 hover:text-black underline transition-colors"
+                >
+                  Hapus semua
+                </button>
+              </div>
+            )}
+
             {/* Sort + result count bar — packages only */}
             {!isDestinations && !loading && !error && (
               <div className="flex items-center justify-between mb-4">
                 <p className="text-sm text-black/50">
-                  {filtered.length} package{filtered.length !== 1 ? 's' : ''} found
+                  {filtered.length} hasil ditemukan
                 </p>
                 <select
                   value={sortOrder}
-                  onChange={(e) => setSortOrder(e.target.value)}
+                  onChange={(e) => setParams({ sort: e.target.value })}
                   className="text-sm bg-white border border-black/10 rounded-full px-4 py-1.5 text-black focus:outline-none focus:ring-2 focus:ring-black/10 cursor-pointer"
                 >
-                  <option value="recommended">Recommended</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="rating">Rating</option>
+                  {SORT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
                 </select>
               </div>
             )}
@@ -456,10 +570,10 @@ function SearchContent() {
                 <div className="bg-white rounded-2xl border border-black/[0.04] p-16 text-center">
                   <div className="text-5xl mb-4">🔍</div>
                   <h3 className="text-lg font-semibold text-black mb-2" style={{ letterSpacing: '-0.02em' }}>
-                    No destinations found
+                    Tidak ada destinasi ditemukan
                   </h3>
                   <p className="text-sm text-black/50">
-                    Try searching for a different city or country.
+                    Coba cari kota atau negara yang berbeda.
                   </p>
                 </div>
               ) : (
@@ -473,29 +587,36 @@ function SearchContent() {
               <div className="bg-white rounded-2xl border border-black/[0.04] p-16 text-center">
                 <div className="text-5xl mb-4">🔍</div>
                 <h3 className="text-lg font-semibold text-black mb-2" style={{ letterSpacing: '-0.02em' }}>
-                  No packages found
+                  Tidak ada paket ditemukan
                 </h3>
                 <p className="text-sm text-black/50 mb-6">
-                  Try adjusting your filters or searching for a different destination.
+                  Coba sesuaikan filter atau cari destinasi yang berbeda.
                 </p>
                 <button
-                  onClick={() => {
-                    setSelectedCategory('All')
-                    setSelectedDuration('Any')
-                    setPriceRange([0, maxPrice])
-                    setSearchText('')
-                  }}
+                  onClick={clearAllFilters}
                   className="bg-black text-white text-sm px-6 py-2.5 rounded-full hover:bg-black/80 transition-colors duration-200"
                 >
-                  Clear all filters
+                  Hapus semua filter
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {sortedPackages.map((pkg) => (
-                  <PackageCard key={pkg.id} pkg={pkg} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                  {visiblePackages.map((pkg) => (
+                    <PackageCard key={pkg.id} pkg={pkg} />
+                  ))}
+                </div>
+                {hasMore && (
+                  <div className="flex justify-center mt-8">
+                    <button
+                      onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                      className="bg-white border border-black/10 text-black text-sm px-8 py-3 rounded-full hover:bg-black hover:text-white hover:border-black transition-all duration-200"
+                    >
+                      Muat lebih banyak
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

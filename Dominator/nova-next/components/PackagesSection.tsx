@@ -58,7 +58,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
       />
       <div>
         <div className="relative h-48 overflow-hidden">
-          <img src={pkg.image} alt={pkg.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s]" />
+          <img src={pkg.image} alt={pkg.title} loading="lazy" className="w-full h-full object-cover img-smooth-zoom" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           <span className={`absolute top-4 left-4 text-[9px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ${pkg.tagColor}`}>{pkg.tag}</span>
         </div>
