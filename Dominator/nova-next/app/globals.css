@@ -13,6 +13,14 @@
   font-family: 'Special Elite', cursive, serif !important;
 }
 
+.font-serif-luxury {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+}
+
+.font-jakarta {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
 .text-wandor-prompt {
   color: #905831 !important;
 }

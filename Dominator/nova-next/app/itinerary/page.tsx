@@ -358,18 +358,18 @@ export default function ItineraryPage() {
                 </div>
               </div>
 
-              {/* Minimalist Editorial Header */}
-              <div className="text-center space-y-3">
-                <div className="inline-flex items-center gap-1.5 bg-white border border-neutral-200 text-neutral-900 text-[10px] font-bold uppercase tracking-widest px-3.5 py-1 rounded-full shadow-2xs">
+              {/* Minimalist Luxury Editorial Header */}
+              <div className="text-center space-y-4">
+                <div className="inline-flex items-center gap-2 bg-white border border-neutral-200 text-neutral-900 text-[10px] font-jakarta font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-2xs">
                   <Sparkles size={12} className="text-amber-500" />
                   <span>AI Travel Concierge</span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-neutral-950 tracking-tight leading-[1.05]">
+                <h1 className="font-serif-luxury italic text-5xl sm:text-6xl lg:text-7xl font-normal text-neutral-950 tracking-normal leading-[1.0] max-w-3xl mx-auto">
                   Rancang Perjalanan Impian
                 </h1>
 
-                <p className="text-sm sm:text-base text-neutral-600 max-w-xl mx-auto leading-relaxed font-normal">
+                <p className="font-jakarta text-sm sm:text-base text-neutral-600 max-w-xl mx-auto leading-relaxed font-medium">
                   Ketik negara atau kota tujuan (misal: <strong className="text-neutral-950 font-bold">Argentina</strong>, <strong className="text-neutral-950 font-bold">Japan</strong>, <strong className="text-neutral-950 font-bold">Bali</strong>). AI akan merancang rute harian, hotel, dan galeri foto secara instan.
                 </p>
               </div>
@@ -508,7 +508,7 @@ export default function ItineraryPage() {
                       <Sparkles size={10} className="text-amber-400" />
                       Rencana Perjalanan AI
                     </span>
-                    <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-3">
+                    <h1 className="font-serif-luxury italic text-5xl sm:text-6xl font-normal text-white tracking-normal mb-3">
                       {itinerary.destination}
                     </h1>
                     <div className="flex flex-wrap items-center gap-3 text-xs text-white/90 font-medium">
