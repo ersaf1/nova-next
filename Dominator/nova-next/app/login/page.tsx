@@ -74,35 +74,49 @@ function LoginForm() {
     setError('')
     setSuccess('')
 
-    const { data, error } = await supabaseClient.auth.signUp({ email, password })
-    if (error) {
-      // Auto-fallback: If rate limit is hit, try signing in directly!
-      if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many requests')) {
-        const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({ email, password })
-        if (!signInError && signInData?.session) {
-          setSuccess('Akun sudah terdaftar! Masuk ke sistem...')
-          setTimeout(() => {
-            window.location.href = redirect
-          }, 600)
-          return
-        }
-        setError('Akun mungkin sudah terdaftar. Silakan beralih ke tab "Sign in" di atas untuk masuk.')
+    try {
+      // 1. Call Auto-Confirm API route (bypasses email confirmation & rate limits)
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      const apiData = await res.json()
+
+      if (!res.ok && apiData?.error && !apiData.error.includes('already registered')) {
+        setError(mapError(apiData.error))
         setLoading(false)
         return
       }
 
-      setError(mapError(error.message))
-      setLoading(false)
-      return
-    }
+      // 2. Immediately sign in the auto-confirmed user
+      const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({ email, password })
 
-    if (data.session) {
-      setSuccess('Akun berhasil dibuat! Mengalihkan ke halaman dashboard...')
-      setTimeout(() => {
-        window.location.href = redirect
-      }, 600)
-    } else {
-      setSuccess('Akun berhasil dibuat! Silakan cek email Anda untuk konfirmasi sebelum Sign In.')
+      if (signInError) {
+        // Fallback to client signup if admin creation didn't auto-login
+        if (apiData?.error?.includes('already registered')) {
+          setError('Email ini sudah terdaftar. Silakan beralih ke tab "Sign in" di atas.')
+        } else {
+          setError(mapError(signInError.message))
+        }
+        setLoading(false)
+        return
+      }
+
+      if (signInData?.session) {
+        setSuccess('Akun berhasil dibuat & terkonfirmasi! Mengalihkan ke dashboard...')
+        setTimeout(() => {
+          window.location.href = redirect
+        }, 500)
+      } else {
+        setSuccess('Akun berhasil dibuat! Mengalihkan...')
+        setTimeout(() => {
+          window.location.href = redirect
+        }, 500)
+      }
+    } catch (err) {
+      console.error(err)
+      setError('Terjadi kesalahan saat pendaftaran. Silakan coba lagi.')
       setLoading(false)
     }
   }
