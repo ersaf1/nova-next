@@ -1,6 +1,20 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const { data, error } = await supabase
+    .from('Package')
+    .select('*')
+    .eq('id', Number(id))
+    .single()
+  if (error || !data) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  // Parse includes JSON string to array
+  let includes: string[] = []
+  try { includes = JSON.parse(data.includes ?? '[]') } catch { includes = [] }
+  return NextResponse.json({ ...data, includes })
+}
+
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params

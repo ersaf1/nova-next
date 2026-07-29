@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowRight, MapPin, Star, Heart, X, Clock } from 'lucide-react'
 import ScrollReveal from './ScrollReveal'
+import { useStaggerReveal } from '@/hooks/useScrollAnimation'
 
 interface Destination {
   id: number
@@ -160,6 +161,7 @@ const DestinationsSection: React.FC = () => {
   const [destinations, setDestinations] = useState<Destination[]>(staticDestinations)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
+  const { ref: destGridRef } = useStaggerReveal({ stagger: 0.08, duration: 0.7, distance: 70 })
 
   useEffect(() => {
     const el = headingRef.current
@@ -214,8 +216,7 @@ const DestinationsSection: React.FC = () => {
             </div>
           </ScrollReveal>
 
-          <ScrollReveal staggerChildren={true} animation="slide-up" delay={0.1}>
-            <div className="grid grid-cols-3 grid-rows-2 gap-3 md:gap-4" style={{ gridTemplateRows: '280px 280px' }}>
+            <div ref={destGridRef} className="grid grid-cols-3 grid-rows-2 gap-3 md:gap-4" style={{ gridTemplateRows: '280px 280px' }}>
               {destinations.slice(0, 6).map((dest, i) => {
                 const isWide = i === 0 || i === 5
                 const imageUrl = dest.image || DEFAULT_IMAGES[dest.city] || FALLBACK_IMAGE
@@ -261,7 +262,6 @@ const DestinationsSection: React.FC = () => {
                 )
               })}
             </div>
-          </ScrollReveal>
 
           <div className="mt-10 flex justify-center">
             <Link href="/destinations" className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-7 py-3.5 rounded-full hover:bg-neutral-800 transition-colors duration-200">

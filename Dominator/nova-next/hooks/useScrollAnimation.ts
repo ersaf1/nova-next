@@ -1,6 +1,12 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 interface ScrollAnimationOptions {
   threshold?: number
@@ -88,3 +94,57 @@ export function use3DTilt() {
 
   return { ref, tilt }
 }
+
+/**
+ * useStaggerReveal — animates each direct child of the container individually,
+ * alternating from left/right with stagger delay.
+ */
+export function useStaggerReveal(options: {
+  stagger?: number
+  duration?: number
+  distance?: number
+  once?: boolean
+} = {}) {
+  const { stagger = 0.1, duration = 0.7, distance = 60, once = true } = options
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const container = ref.current
+    if (!container) return
+
+    const ctx = gsap.context(() => {
+      const children = Array.from(container.children) as HTMLElement[]
+      if (!children.length) return
+
+      // Set initial state — alternate x direction per item
+      children.forEach((child, i) => {
+        gsap.set(child, {
+          opacity: 0,
+          x: i % 2 === 0 ? -distance : distance,
+          filter: 'blur(6px)',
+        })
+      })
+
+      ScrollTrigger.create({
+        trigger: container,
+        start: 'top 88%',
+        once,
+        onEnter: () => {
+          gsap.to(children, {
+            opacity: 1,
+            x: 0,
+            filter: 'blur(0px)',
+            duration,
+            stagger,
+            ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          })
+        },
+      })
+    }, container)
+
+    return () => ctx.revert()
+  }, [stagger, duration, distance, once])
+
+  return { ref }
+}
+

@@ -4,6 +4,11 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { CheckCircle, Clock } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import dynamic from 'next/dynamic'
+
+const EticketDownloadButton = dynamic(() => import('@/components/EticketDownloadButton'), {
+  ssr: false,
+})
 
 interface Booking {
   id: number
@@ -16,6 +21,9 @@ interface Booking {
   status: string
   price?: number
   totalAmount?: number
+  phone?: string
+  midtrans_order_id?: string
+  created_at?: string
 }
 
 // Simple deterministic QR-like grid from booking id
@@ -253,6 +261,26 @@ export default function ConfirmationPage() {
 
         {/* Action Buttons */}
         <div className="mt-6 space-y-3">
+          {booking && !isPending && (
+            <div className="flex justify-center">
+              <EticketDownloadButton
+                booking={{
+                  id: booking.id,
+                  name: booking.name,
+                  email: booking.email,
+                  phone: booking.phone,
+                  packageName: booking.packageName,
+                  country: booking.country,
+                  travelDate: booking.travelDate,
+                  participants: booking.participants,
+                  totalAmount,
+                  status: booking.status,
+                  midtrans_order_id: booking.midtrans_order_id,
+                  created_at: booking.created_at ?? new Date().toISOString(),
+                }}
+              />
+            </div>
+          )}
           <button
             onClick={() => window.print()}
             className="w-full bg-black text-white rounded-full px-6 py-3 font-medium hover:bg-black/80 transition-colors text-sm"

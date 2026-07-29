@@ -1,0 +1,29 @@
+-- Batch 9: Caribbean & remaining Asia
+INSERT INTO "Destination" (city, country, image, description, rating, duration, price, category) VALUES
+('Kingston', 'Jamaica', 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80', 'Reggae birthplace, jerk chicken, and Blue Mountains coffee.', 4.7, '7-10 days', 'From $899', 'Beach'),
+('Nassau', 'Bahamas', 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80', 'Atlantis resort, swimming pigs, and Caribbean paradise.', 4.8, '7-10 days', 'From $1,199', 'Beach'),
+('San Juan', 'Puerto Rico', 'https://images.unsplash.com/photo-1580687589931-955e36d4c29e?w=800&q=80', 'Old San Juan cobblestones, El Yunque rainforest, beaches.', 4.8, '7-10 days', 'From $999', 'Beach'),
+('Santo Domingo', 'Dominican Republic', 'https://images.unsplash.com/photo-1542259009477-d625272157b7?w=800&q=80', 'First European city in Americas, merengue, and beaches.', 4.7, '7-10 days', 'From $849', 'Beach'),
+('Barbados', 'Barbados', 'https://images.unsplash.com/photo-1571415060716-baac30a38c02?w=800&q=80', 'Rum distilleries, pink sand beaches, and flying fish.', 4.8, '7-10 days', 'From $1,099', 'Beach'),
+('Aruba', 'Aruba', 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800&q=80', 'Eagle Beach, desert landscape, and Dutch colonial charm.', 4.9, '7-10 days', 'From $1,199', 'Beach'),
+('St Lucia', 'Saint Lucia', 'https://images.unsplash.com/photo-1590523278191-995cbcda646b?w=800&q=80', 'Piton mountains, volcanic beaches, and luxury resorts.', 4.9, '7-10 days', 'From $1,299', 'Beach'),
+('Antigua', 'Antigua and Barbuda', 'https://images.unsplash.com/photo-1500503004236-b1c72a00e3fc?w=800&q=80', '365 beaches, sailing regatta, and Nelson Dockyard.', 4.8, '7-10 days', 'From $1,199', 'Beach'),
+('Grenada', 'Grenada', 'https://images.unsplash.com/photo-1605462863863-10d9e47e15ee?w=800&q=80', 'Spice island, underwater sculpture park, and nutmeg.', 4.8, '7-10 days', 'From $1,099', 'Beach'),
+('Trinidad', 'Trinidad and Tobago', 'https://images.unsplash.com/photo-1600180759277-d445a5917e5d?w=800&q=80', 'Carnival capital, steel drums, and rainforest biodiversity.', 4.7, '7-10 days', 'From $999', 'Culture'),
+('Manila', 'Philippines', 'https://images.unsplash.com/photo-1551558989-e5e8c1c44d15?w=800&q=80', 'Intramuros walls, Jeepneys, and gateway to islands.', 4.6, '7-10 days', 'From $699', 'City'),
+('Boracay', 'Philippines', 'https://images.unsplash.com/photo-1580837119756-563d608dd119?w=800&q=80', 'White beach, kitesurfing, and party island atmosphere.', 4.8, '7-10 days', 'From $799', 'Beach'),
+('Phnom Penh', 'Cambodia', 'https://images.unsplash.com/photo-1557702077-82a99c51b3bb?w=800&q=80', 'Royal Palace, tragic history, and Mekong riverside.', 4.7, '5-7 days', 'From $599', 'Culture'),
+('Vientiane', 'Laos', 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80', 'Laid-back capital, Buddhist stupas, and Mekong sunsets.', 4.7, '5-7 days', 'From $579', 'Culture'),
+('Yangon', 'Myanmar', 'https://images.unsplash.com/photo-1570366583862-f91883984fde?w=800&q=80', 'Shwedagon Pagoda, colonial buildings, and Bagan temples.', 4.7, '7-10 days', 'From $699', 'Culture'),
+('Kuala Lumpur', 'Malaysia', 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80', 'Petronas Towers, hawker centers, and Batu Caves.', 4.7, '5-7 days', 'From $699', 'City'),
+('Penang', 'Malaysia', 'https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=800&q=80', 'Street art, Georgetown heritage, and hawker food paradise.', 4.8, '4-6 days', 'From $649', 'Culture'),
+('Brunei', 'Brunei', 'https://images.unsplash.com/photo-1560726645-82c8b3e2eb71?w=800&q=80', 'Oil-rich sultanate, mosques, water villages.', 4.6, '3-5 days', 'From $799', 'Culture'),
+('Dili', 'East Timor', 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=800&q=80', 'Young nation, diving, and Portuguese colonial heritage.', 4.5, '5-7 days', 'From $749', 'Adventure'),
+('Macau', 'China', 'https://images.unsplash.com/photo-1564564295391-7f24f26f568b?w=800&q=80', 'Vegas of Asia, Portuguese heritage, and egg tart pastries.', 4.7, '3-5 days', 'From $799', 'City');
+
+INSERT INTO "Package" (tag, "tagColor", title, subtitle, image, price, "originalPrice", duration, "groupSize", rating, reviews, includes, highlight, category) VALUES
+('Popular', 'bg-black text-white', 'Caribbean Island Hopper', 'Beaches, rum & reggae', 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80', 14500000, 18500000, '10 days', '2-10 people', 4.8, 234, '["Flights","Resorts","Island ferry","Snorkeling","Beach clubs"]', 'Bahamas & Jamaica', 'Beach'),
+('Trending', 'bg-rose-500 text-white', 'Philippines Island Paradise', 'Boracay, Palawan & Manila', 'https://images.unsplash.com/photo-1580837119756-563d608dd119?w=800&q=80', 11000000, 14000000, '10 days', '2-12 people', 4.8, 189, '["Flights","Resorts","Island hopping","Diving","Jeepney tour"]', 'Boracay & El Nido', 'Beach'),
+('Editor''s Pick', 'bg-amber-400 text-black', 'St Lucia Luxury Escape', 'Pitons, resorts & sunsets', 'https://images.unsplash.com/photo-1590523278191-995cbcda646b?w=800&q=80', 16500000, 21000000, '8 days', '2 people', 4.9, 156, '["Flights","5-star resort","Spa","Piton hike","Sunset cruise"]', 'Soufriere & Rodney Bay', 'Beach'),
+('New', 'bg-emerald-500 text-white', 'Trinidad Carnival Experience', 'Steelpan, soca & street party', 'https://images.unsplash.com/photo-1600180759277-d445a5917e5d?w=800&q=80', 13500000, 17000000, '8 days', '2-12 people', 4.8, 134, '["Flights","Hotel","Carnival pass","Costumes","Soca party"]', 'Port of Spain Carnival', 'Culture'),
+('Popular', 'bg-black text-white', 'Southeast Asia Extended', 'Myanmar, Laos & Cambodia temples', 'https://images.unsplash.com/photo-1570366583862-f91883984fde?w=800&q=80', 12000000, 15500000, '14 days', '2-14 people', 4.7, 167, '["Flights","Hotels","Bagan balloons","Luang Prabang","Angkor Wat"]', 'Yangon to Phnom Penh', 'Culture');

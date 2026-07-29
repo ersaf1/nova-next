@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight, Check, MapPin, Clock, Users, Star, Search } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, MapPin, Clock, Users, Star, Search, Tag } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { supabaseClient } from '@/lib/supabase-client'
 
 interface Package {
   id: number
@@ -56,8 +57,28 @@ const BookingPageInner: React.FC = () => {
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState<BookingForm>({ name: '', email: '', phone: '', travelDate: '', participants: 1, notes: '' })
   const [formErrors, setFormErrors] = useState<FormErrors>({})
+  const [voucherCode, setVoucherCode] = useState('')
+  const [voucherLoading, setVoucherLoading] = useState(false)
+  const [voucherResult, setVoucherResult] = useState<{
+    valid: boolean
+    message?: string
+    code?: string
+    discount_type?: string
+    discount_value?: number
+    discount_amount?: number
+    discounted_amount?: number
+  } | null>(null)
+  const [discountAmount, setDiscountAmount] = useState(0)
 
   useEffect(() => {
+    // 1. Force authentication to book — middleware is the first line of defence,
+    //    this client guard is a belt-and-suspenders fallback.
+    supabaseClient.auth.getUser().then(({ data }: { data: { user: unknown } }) => {
+      if (!data.user) {
+        router.replace(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`)
+      }
+    })
+
     fetch('/api/packages')
       .then(r => r.json())
       .then((data: unknown) => {
@@ -77,7 +98,7 @@ const BookingPageInner: React.FC = () => {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [searchParams])
+  }, [searchParams, router])
 
   const countries = Array.from(new Set(packages.map(p => p.category))).filter(Boolean)
   const filteredCountries = countries.filter(c => c.toLowerCase().includes(search.toLowerCase()))
@@ -103,16 +124,52 @@ const BookingPageInner: React.FC = () => {
     return Object.keys(errors).length === 0
   }
 
+  const handleVoucherApply = async () => {
+    if (!voucherCode.trim() || !selectedPackage) return
+    setVoucherLoading(true)
+    setVoucherResult(null)
+    try {
+      const subtotal = selectedPackage.price * form.participants
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: voucherCode.trim(), amount: subtotal }),
+      })
+      const data = await res.json()
+      setVoucherResult(data)
+      if (data.valid) {
+        setDiscountAmount(data.discount_amount ?? 0)
+      } else {
+        setDiscountAmount(0)
+      }
+    } catch {
+      setVoucherResult({ valid: false, message: 'Gagal menghubungi server.' })
+      setDiscountAmount(0)
+    } finally {
+      setVoucherLoading(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedPackage) return
     if (!validateForm()) return
     setSubmitting(true)
     try {
+      const subtotal = selectedPackage.price * form.participants
+      const finalTotal = Math.max(0, subtotal - discountAmount)
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ packageId: selectedPackage.id, packageName: selectedPackage.title, country: selectedCountry, ...form }),
+        body: JSON.stringify({
+          packageId: selectedPackage.id,
+          packageName: selectedPackage.title,
+          country: selectedCountry,
+          ...form,
+          voucherCode: voucherResult?.valid ? voucherResult.code : undefined,
+          discountAmount,
+          totalAmount: finalTotal,
+        }),
       })
       if (res.ok) {
         const data = await res.json()
@@ -313,15 +370,55 @@ const BookingPageInner: React.FC = () => {
                         </ul>
                       </div>
                     )}
+                    {/* Voucher / Promo Code */}
+                    <div className="pt-3 border-t border-black/5">
+                      <p className="text-xs font-medium text-black/50 mb-2 flex items-center gap-1.5">
+                        <Tag className="w-3 h-3" /> Kode Promo
+                      </p>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={voucherCode}
+                          onChange={e => {
+                            setVoucherCode(e.target.value.toUpperCase())
+                            if (voucherResult) { setVoucherResult(null); setDiscountAmount(0) }
+                          }}
+                          placeholder="Masukkan kode"
+                          className="flex-1 border border-black/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20 font-mono uppercase"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleVoucherApply}
+                          disabled={voucherLoading || !voucherCode.trim()}
+                          className="px-3 py-2 bg-black text-white text-xs rounded-xl font-medium disabled:opacity-40 hover:bg-black/80 transition-colors shrink-0"
+                        >
+                          {voucherLoading ? '...' : 'Gunakan'}
+                        </button>
+                      </div>
+                      {voucherResult && (
+                        <p className={`text-xs mt-1.5 ${voucherResult.valid ? 'text-green-600' : 'text-red-500'}`}>
+                          {voucherResult.valid
+                            ? `Diskon ${voucherResult.discount_type === 'percent' ? `${voucherResult.discount_value}%` : `Rp ${voucherResult.discount_amount?.toLocaleString('id-ID')}`} berhasil diterapkan!`
+                            : voucherResult.message}
+                        </p>
+                      )}
+                    </div>
+
                     <div className="pt-3 border-t border-black/5 space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-black/40">${selectedPackage.price.toLocaleString()} × {form.participants} person{form.participants !== 1 ? 's' : ''}</span>
                         <span className="font-medium">${(selectedPackage.price * form.participants).toLocaleString()}</span>
                       </div>
+                      {voucherResult?.valid && discountAmount > 0 && (
+                        <div className="flex justify-between text-sm text-green-600">
+                          <span>Diskon ({voucherResult.code})</span>
+                          <span>-${discountAmount.toLocaleString()}</span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex justify-between font-bold pt-2 border-t border-black/5">
                       <span>Total</span>
-                      <span>${(selectedPackage.price * form.participants).toLocaleString()}</span>
+                      <span>${Math.max(0, selectedPackage.price * form.participants - discountAmount).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>

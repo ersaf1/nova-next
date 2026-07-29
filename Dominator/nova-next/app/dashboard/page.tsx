@@ -7,6 +7,7 @@ import { supabaseClient } from '@/lib/supabase-client'
 import { Luggage, CalendarCheck, CheckCircle2, Search, MapIcon, Ticket } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import Navbar from '@/components/Navbar'
+import CancelBookingModal from '@/components/CancelBookingModal'
 
 type Booking = {
   id: number
@@ -57,6 +58,7 @@ export default function DashboardPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [bookingsLoading, setBookingsLoading] = useState(false)
+  const [modalBooking, setModalBooking] = useState<Booking | null>(null)
 
   useEffect(() => {
     supabaseClient.auth.getUser().then(({ data }) => {
@@ -92,6 +94,23 @@ export default function DashboardPage() {
     { label: 'Upcoming Trips', value: upcomingTrips, icon: CalendarCheck },
     { label: 'Completed', value: completed, icon: CheckCircle2 },
   ]
+
+  const handleCancelBooking = async () => {
+    if (!modalBooking || !user?.email) return
+    const res = await fetch(`/api/bookings/${modalBooking.id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'cancelled', user_email: user.email }),
+    })
+    if (!res.ok) {
+      const data = await res.json()
+      throw new Error(data.error ?? 'Gagal membatalkan booking')
+    }
+    setBookings((prev) =>
+      prev.map((b) => (b.id === modalBooking.id ? { ...b, status: 'cancelled' as const } : b))
+    )
+    setModalBooking(null)
+  }
 
   const displayName = user?.email ? user.email.split('@')[0] : 'there'
 
@@ -224,6 +243,13 @@ export default function DashboardPage() {
                           >
                             View E-ticket
                           </Link>
+                        ) : b.status === 'pending' ? (
+                          <button
+                            onClick={() => setModalBooking(b)}
+                            className="text-xs font-medium text-red-500 hover:text-red-700 transition-colors"
+                          >
+                            Batalkan
+                          </button>
                         ) : (
                           <span className="text-xs text-neutral-300">—</span>
                         )}
@@ -263,6 +289,15 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {modalBooking && (
+        <CancelBookingModal
+          bookingId={modalBooking.id}
+          packageName={modalBooking.packageName}
+          onConfirm={handleCancelBooking}
+          onClose={() => setModalBooking(null)}
+        />
+      )}
     </div>
   )
 }

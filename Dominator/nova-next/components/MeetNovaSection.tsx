@@ -3,9 +3,9 @@ import { ArrowRight } from 'lucide-react'
 import ScrollReveal from './ScrollReveal'
 
 const cards = [
-  { id: 1, colSpan: 'lg:col-span-2', backgroundImage: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=85', title: 'Every journey\nbegins here.', body: 'World-class travel, tailored to you.' },
-  { id: 2, colSpan: '', backgroundImage: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=85', title: 'Always\nseamless.', body: 'One flow. Flights, hotels, experiences.' },
-  { id: 3, colSpan: '', backgroundImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=85', title: 'Fully\npersonalized.', body: 'Smart picks based on your taste.' },
+  { id: 1, colSpan: 'lg:col-span-2', backgroundImage: '', title: 'Every journey\nbegins here.', body: 'World-class travel, tailored to you.' },
+  { id: 2, colSpan: '', backgroundImage: '', title: 'Always\nseamless.', body: 'One flow. Flights, hotels, experiences.' },
+  { id: 3, colSpan: '', backgroundImage: '', title: 'Fully\npersonalized.', body: 'Smart picks based on your taste.' },
 ]
 
 const MeetNovaSection: React.FC = () => {
@@ -29,7 +29,9 @@ const MeetNovaSection: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {cards.map((card) => (
               <div key={card.id} className={`group relative rounded-2xl overflow-hidden cursor-default transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 ${card.colSpan}`} style={{ minHeight: '320px' }}>
-                <img src={card.backgroundImage} alt={card.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out" />
+                {card.backgroundImage ? (
+                  <img src={card.backgroundImage} alt={card.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out" />
+                ) : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/5" />
                 <div className="relative z-10 p-8 min-h-80 flex flex-col justify-between h-full">
                   <div />

@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { MapPin, Clock, Users, Star, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
-import { use3DTilt } from '@/hooks/useScrollAnimation'
+import { use3DTilt, useStaggerReveal } from '@/hooks/useScrollAnimation'
 import ScrollReveal from './ScrollReveal'
 
 interface Package {
@@ -105,6 +105,7 @@ const PackagesSection: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [packages, setPackages] = useState<Package[]>([])
   const headingRef = useRef<HTMLHeadingElement>(null)
+  const { ref: cardsStaggerRef } = useStaggerReveal({ stagger: 0.1, duration: 0.7, distance: 70 })
 
   useEffect(() => {
     const el = headingRef.current
@@ -160,8 +161,7 @@ const PackagesSection: React.FC = () => {
             </div>
           </div>
           <div className="lg:col-span-8 w-full overflow-hidden relative">
-            <ScrollReveal staggerChildren={true} animation="slide-up" delay={0.15}>
-              <div ref={scrollRef} className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none pb-8 w-full">
+              <div ref={cardsStaggerRef} className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none pb-8 w-full">
                 {filteredPackages.length > 0 ? (
                   filteredPackages.map((pkg) => (
                     <PackageCard key={pkg.id} pkg={pkg} />
@@ -172,7 +172,6 @@ const PackagesSection: React.FC = () => {
                   </div>
                 )}
               </div>
-            </ScrollReveal>
           </div>
         </div>
         

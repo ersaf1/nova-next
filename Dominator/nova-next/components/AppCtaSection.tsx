@@ -1,11 +1,63 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Apple, Play } from 'lucide-react'
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 const AppCtaSection: React.FC = () => {
   const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  const [messageType, setMessageType] = useState<'success' | 'error' | null>(null)
+  const [stats, setStats] = useState({ stars: '4.9★', reviews: '150K', downloads: '2M+' })
+
+  useEffect(() => {
+    fetch('/api/stats')
+      .then(r => r.json())
+      .then((data: { statKey: string; value: string }[]) => {
+        if (!Array.isArray(data)) return
+        const get = (key: string) => data.find(s => s.statKey === key)?.value
+        setStats({
+          stars: get('app_store_stars') ?? '4.9★',
+          reviews: get('app_reviews') ?? '150K',
+          downloads: get('app_downloads') ?? '2M+',
+        })
+      })
+      .catch(() => {})
+  }, [])
+
+  const handleSubscribe = async () => {
+    if (!email || !EMAIL_REGEX.test(email)) {
+      setMessage('Invalid email format.')
+      setMessageType('error')
+      return
+    }
+
+    setLoading(true)
+    setMessage('')
+    setMessageType(null)
+
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const data = await res.json()
+      setMessage(data.message)
+      setMessageType(data.success ? 'success' : 'error')
+      if (data.success) setEmail('')
+    } catch {
+      setMessage('An error occurred. Please try again.')
+      setMessageType('error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section className="bg-[#F5F5F5] px-6 py-24">
       <div className="max-w-[88rem] mx-auto">
@@ -42,9 +94,27 @@ const AppCtaSection: React.FC = () => {
               <div className="mt-10 pt-8 border-t border-white/10">
                 <p className="text-white/40 text-sm mb-3">Join the waitlist for early access</p>
                 <div className="flex gap-2">
-                  <input type="email" placeholder="your@email.com" className="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/30 text-sm px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/30" />
-                  <button className="bg-white text-black text-sm font-medium px-5 py-3 rounded-xl hover:bg-white/90 transition-colors duration-200 shrink-0">Join</button>
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubscribe()}
+                    className="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/30 text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-white/40 transition-colors"
+                  />
+                  <button
+                    onClick={handleSubscribe}
+                    disabled={loading}
+                    className="bg-white text-black text-sm font-medium px-5 py-3 rounded-xl hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  >
+                    {loading ? 'Loading...' : 'Notify Me'}
+                  </button>
                 </div>
+                {message && (
+                  <p className={`mt-2 text-xs ${messageType === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                    {message}
+                  </p>
+                )}
               </div>
             </div>
             <div className="relative hidden md:block bg-gradient-to-br from-indigo-900 to-purple-900 min-h-[400px]">

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Wandor — Where will you go next?',
+  title: 'Nova — Travel Platform',
   description: 'Your AI-powered travel companion — from first search to safe return across 195 countries.',
 }
 

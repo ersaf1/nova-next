@@ -1,0 +1,29 @@
+-- Batch 3: Europe West (20 destinations + packages)
+INSERT INTO "Destination" (city, country, image, description, rating, duration, price, category) VALUES
+('Paris', 'France', 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', 'Eiffel Tower, world-class cuisine, and Louvre masterpieces.', 4.9, '5-8 days', 'From $1,049', 'City'),
+('Nice', 'France', 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=800&q=80', 'French Riviera glamour, azure coast, and Matisse museums.', 4.8, '5-7 days', 'From $999', 'Beach'),
+('Rome', 'Italy', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80', 'Colosseum, Vatican, and the best pasta in the world.', 4.9, '5-8 days', 'From $979', 'Culture'),
+('Amalfi Coast', 'Italy', 'https://images.unsplash.com/photo-1534892373695-bf8a04e38c8e?w=800&q=80', 'Cliffside villages, lemon groves, and turquoise sea.', 5.0, '5-7 days', 'From $1,299', 'Beach'),
+('Venice', 'Italy', 'https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=800&q=80', 'Canals, gondolas, and timeless Adriatic romance.', 4.9, '3-5 days', 'From $1,099', 'Culture'),
+('Barcelona', 'Spain', 'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800&q=80', 'Gaudi architecture, tapas culture, and Mediterranean beach.', 4.9, '5-8 days', 'From $949', 'City'),
+('Madrid', 'Spain', 'https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=800&q=80', 'Prado museum, flamenco nights, and churros con chocolate.', 4.8, '4-7 days', 'From $899', 'City'),
+('Lisbon', 'Portugal', 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800&q=80', 'Trams, fado music, pasteis de nata, and Atlantic views.', 4.9, '4-7 days', 'From $849', 'City'),
+('Porto', 'Portugal', 'https://images.unsplash.com/photo-1555881400-ba4babde0bff?w=800&q=80', 'Port wine cellars, azulejo tiles, and Douro Valley.', 4.8, '3-5 days', 'From $799', 'Culture'),
+('Amsterdam', 'Netherlands', 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=800&q=80', 'Canal houses, cycling culture, and Van Gogh Museum.', 4.8, '4-6 days', 'From $999', 'City'),
+('Brussels', 'Belgium', 'https://images.unsplash.com/photo-1559113513-d5f78d09c9af?w=800&q=80', 'Waffles, chocolate, Art Nouveau, and EU heart.', 4.7, '3-5 days', 'From $899', 'City'),
+('Vienna', 'Austria', 'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=800&q=80', 'Imperial palaces, Mozart, coffee houses, and opera.', 4.9, '4-6 days', 'From $999', 'Culture'),
+('Zurich', 'Switzerland', 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&q=80', 'Swiss Alps gateway, luxury watches, and pristine lake.', 4.8, '4-6 days', 'From $1,399', 'City'),
+('Geneva', 'Switzerland', 'https://images.unsplash.com/photo-1573108724029-4c46571d6490?w=800&q=80', 'Jet d''Eau, UN headquarters, and Mont Blanc views.', 4.8, '3-5 days', 'From $1,299', 'City'),
+('Munich', 'Germany', 'https://images.unsplash.com/photo-1595867818082-083862f3d630?w=800&q=80', 'Oktoberfest, Bavarian castles, and beer garden culture.', 4.8, '4-6 days', 'From $949', 'City'),
+('Berlin', 'Germany', 'https://images.unsplash.com/photo-1560969184-10fe8719e047?w=800&q=80', 'History, street art, techno clubs, and Brandenburg Gate.', 4.8, '4-6 days', 'From $899', 'City'),
+('Prague', 'Czech Republic', 'https://images.unsplash.com/photo-1541849546-216549ae216d?w=800&q=80', 'Gothic spires, astronomical clock, and cheap craft beer.', 4.9, '4-6 days', 'From $799', 'Culture'),
+('Budapest', 'Hungary', 'https://images.unsplash.com/photo-1565426873118-a17ed65d74b9?w=800&q=80', 'Thermal baths, ruin bars, and Danube promenade.', 4.9, '4-6 days', 'From $749', 'City'),
+('Santorini', 'Greece', 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80', 'Blue domes, volcanic sunsets, and cliffside villas.', 5.0, '5-7 days', 'From $1,199', 'Beach'),
+('Athens', 'Greece', 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800&q=80', 'Acropolis, ancient agora, and souvlaki streets.', 4.8, '4-6 days', 'From $899', 'Culture');
+
+INSERT INTO "Package" (tag, "tagColor", title, subtitle, image, price, "originalPrice", duration, "groupSize", rating, reviews, includes, highlight, category) VALUES
+('Popular', 'bg-black text-white', 'Italy Grand Tour: Rome, Amalfi & Venice', 'History, coast & canals', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80', 16500000, 20000000, '12 days', '2-12 people', 4.9, 289, '["Flights","Hotels","Vatican tour","Gondola ride","Train passes"]', 'Rome to Venice', 'Culture'),
+('Trending', 'bg-rose-500 text-white', 'Spain & Portugal Explorer', 'Tapas, fado & Gaudi', 'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800&q=80', 14000000, 17500000, '10 days', '2-14 people', 4.9, 234, '["Flights","Hotels","Tapas tour","Flamenco show","Port wine tasting"]', 'Barcelona to Lisbon', 'City'),
+('Editor''s Pick', 'bg-amber-400 text-black', 'Greek Island Hopper: Athens & Santorini', 'Ruins, ruins & sunsets', 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80', 15500000, 19000000, '9 days', '2-10 people', 5.0, 312, '["Flights","Boutique hotels","Acropolis tour","Ferry passes","Wine tasting"]', 'Athens & Santorini', 'Beach'),
+('New', 'bg-emerald-500 text-white', 'Central Europe: Prague, Vienna & Budapest', 'Castles, coffee & thermal baths', 'https://images.unsplash.com/photo-1541849546-216549ae216d?w=800&q=80', 12500000, 15500000, '10 days', '2-16 people', 4.9, 198, '["Flights","Hotels","City tours","Opera tickets","Thermal bath entry"]', 'Prague to Budapest', 'Culture'),
+('Popular', 'bg-black text-white', 'France & Switzerland: Paris to Alps', 'Romance, cheese & mountains', 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', 18000000, 22000000, '10 days', '2-12 people', 4.8, 176, '["Flights","Hotels","Eiffel Tower","Swiss rail pass","Cheese fondue evening"]', 'Paris & Swiss Alps', 'City');

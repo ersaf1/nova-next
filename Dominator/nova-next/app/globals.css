@@ -1,11 +1,15 @@
 @import "tailwindcss";
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
   body {
     background-color: #ffffff;
     color: #1a1a1a;
     font-family: 'Geist', var(--font-sans, system-ui, -apple-system, sans-serif);
-    overflow-x: hidden;
   }
 }
 
@@ -21,21 +25,6 @@
   font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 
-.text-wandor-prompt {
-  color: #905831 !important;
-}
-
-.text-wandor-text {
-  color: #1a1a1a !important;
-}
-
-.text-wandor-muted {
-  color: #767676 !important;
-}
-
-.bg-wandor-dark {
-  background-color: #0a0a0a !important;
-}
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -182,12 +171,6 @@ html {
 
 .card-hover-effect:hover {
   transform: translateY(-4px);
-}
-
-/* Smooth Focus Ring */
-*:focus-visible {
-  outline: 2px solid rgba(99, 102, 241, 0.6);
-  outline-offset: 2px;
 }
 
 /* Shimmer Loading Skeleton Effect */

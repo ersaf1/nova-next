@@ -1,0 +1,29 @@
+-- Batch 5: Africa
+INSERT INTO "Destination" (city, country, image, description, rating, duration, price, category) VALUES
+('Cairo', 'Egypt', 'https://images.unsplash.com/photo-1539768942893-daf53e448371?w=800&q=80', 'Pyramids of Giza, Sphinx, and Egyptian Museum treasures.', 4.8, '5-8 days', 'From $849', 'Culture'),
+('Luxor', 'Egypt', 'https://images.unsplash.com/photo-1562679299-e93e54bd48dc?w=800&q=80', 'Valley of the Kings, Karnak temple, and Nile cruises.', 4.9, '4-6 days', 'From $799', 'Culture'),
+('Marrakech', 'Morocco', 'https://images.unsplash.com/photo-1553531087-b25a89827a68?w=800&q=80', 'Medina souks, riads, and Atlas mountain gateway.', 4.8, '5-7 days', 'From $799', 'Culture'),
+('Fes', 'Morocco', 'https://images.unsplash.com/photo-1560963689-b5682b6440f8?w=800&q=80', 'World largest car-free urban zone and tannery views.', 4.8, '3-5 days', 'From $749', 'Culture'),
+('Cape Town', 'South Africa', 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80', 'Table Mountain, Boulders penguins, and wine valleys.', 4.9, '7-10 days', 'From $1,099', 'Nature'),
+('Johannesburg', 'South Africa', 'https://images.unsplash.com/photo-1577948000111-9c970dfe3743?w=800&q=80', 'Soweto history, Apartheid Museum, and safari gateway.', 4.6, '5-7 days', 'From $899', 'City'),
+('Nairobi', 'Kenya', 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=800&q=80', 'Safari capital with Maasai Mara and giraffe center.', 4.8, '7-12 days', 'From $1,299', 'Nature'),
+('Zanzibar', 'Tanzania', 'https://images.unsplash.com/photo-1577471488278-16eec37ffcc2?w=800&q=80', 'Spice island with white sand beaches and Stone Town.', 4.9, '7-10 days', 'From $1,099', 'Beach'),
+('Serengeti', 'Tanzania', 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80', 'Great wildebeest migration and big five safaris.', 5.0, '7-10 days', 'From $2,499', 'Nature'),
+('Accra', 'Ghana', 'https://images.unsplash.com/photo-1597913426649-fc6e3b5cc70d?w=800&q=80', 'Vibrant markets, slave castle history, and Afrobeats culture.', 4.6, '5-8 days', 'From $799', 'Culture'),
+('Lagos', 'Nigeria', 'https://images.unsplash.com/photo-1618945524163-32451704cbb8?w=800&q=80', 'Africa largest city with Nollywood culture and beaches.', 4.5, '4-7 days', 'From $749', 'City'),
+('Addis Ababa', 'Ethiopia', 'https://images.unsplash.com/photo-1552422535-c45813c61732?w=800&q=80', 'Lalibela rock churches, Blue Nile falls, and coffee origin.', 4.7, '7-10 days', 'From $899', 'Culture'),
+('Tunis', 'Tunisia', 'https://images.unsplash.com/photo-1539053657066-04c6c5fd9e0c?w=800&q=80', 'Medina of Tunis, Carthage ruins, and Sahara edge.', 4.7, '5-7 days', 'From $749', 'Culture'),
+('Dar es Salaam', 'Tanzania', 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=800&q=80', 'Coastal Swahili culture and gateway to Zanzibar.', 4.6, '4-7 days', 'From $699', 'Beach'),
+('Kigali', 'Rwanda', 'https://images.unsplash.com/photo-1568952433726-3896e3881c65?w=800&q=80', 'Cleanest city in Africa, gorilla trekking, and memorial.', 4.8, '5-8 days', 'From $1,199', 'Nature'),
+('Kampala', 'Uganda', 'https://images.unsplash.com/photo-1611891487122-207579d67d98?w=800&q=80', 'Boda boda city with gorilla treks and source of the Nile.', 4.6, '6-9 days', 'From $999', 'Nature'),
+('Windhoek', 'Namibia', 'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=800&q=80', 'Sossusvlei dunes, Etosha wildlife, and desert landscapes.', 4.8, '7-12 days', 'From $1,299', 'Nature'),
+('Victoria Falls', 'Zimbabwe', 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=800&q=80', 'World largest waterfall and white water rafting.', 5.0, '4-6 days', 'From $1,199', 'Adventure'),
+('Dakar', 'Senegal', 'https://images.unsplash.com/photo-1578895101408-1a36b834405b?w=800&q=80', 'Goree Island, Ndiambour market, and Atlantic coast.', 4.6, '5-7 days', 'From $799', 'Culture'),
+('Abidjan', 'Ivory Coast', 'https://images.unsplash.com/photo-1614579800891-7d7f03b10af2?w=800&q=80', 'West Africa business hub with beaches and lagoons.', 4.5, '4-6 days', 'From $749', 'City');
+
+INSERT INTO "Package" (tag, "tagColor", title, subtitle, image, price, "originalPrice", duration, "groupSize", rating, reviews, includes, highlight, category) VALUES
+('Popular', 'bg-black text-white', 'Egypt Classics: Cairo & Luxor Nile Cruise', 'Pharaohs, pyramids & Valley of Kings', 'https://images.unsplash.com/photo-1539768942893-daf53e448371?w=800&q=80', 14500000, 18000000, '10 days', '2-14 people', 4.9, 267, '["Flights","Hotels","Nile cruise","Pyramid entry","Guide"]', 'Cairo & Luxor', 'Culture'),
+('Trending', 'bg-rose-500 text-white', 'Kenya & Tanzania Safari Special', 'Big five, Maasai & Kilimanjaro', 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80', 32000000, 40000000, '12 days', '2-8 people', 5.0, 189, '["Flights","Safari lodge","Game drives","Maasai village","Park fees"]', 'Serengeti & Masai Mara', 'Nature'),
+('Editor''s Pick', 'bg-amber-400 text-black', 'Morocco Imperial Cities Tour', 'Marrakech, Fes & Sahara', 'https://images.unsplash.com/photo-1553531087-b25a89827a68?w=800&q=80', 12500000, 16000000, '9 days', '2-14 people', 4.8, 234, '["Flights","Riads","Sahara camel trek","Desert camp","Souks tour"]', 'Marrakech to Sahara', 'Culture'),
+('New', 'bg-emerald-500 text-white', 'Cape Town & Garden Route Adventure', 'Penguins, vineyards & whales', 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80', 16000000, 20000000, '10 days', '2-12 people', 4.9, 156, '["Flights","Hotels","Table Mountain","Wine tasting","Boulders Beach"]', 'Cape Town & Knysna', 'Nature'),
+('Popular', 'bg-black text-white', 'Rwanda Gorilla Trek & Kigali', 'Mountain gorillas & clean city', 'https://images.unsplash.com/photo-1568952433726-3896e3881c65?w=800&q=80', 22000000, 28000000, '8 days', '2-8 people', 4.9, 134, '["Flights","Lodge","Gorilla trekking permit","Kigali tour","Memorial"]', 'Kigali & Volcanoes NP', 'Nature');

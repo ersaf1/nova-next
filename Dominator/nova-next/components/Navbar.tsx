@@ -49,24 +49,12 @@ const Navbar: React.FC = () => {
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 opacity-0 ${
-        isDark
-          ? 'bg-transparent py-6 text-white'
-          : 'bg-white/95 backdrop-blur-xl border-b border-black/[0.06] py-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] text-neutral-900'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 opacity-0 bg-white border-b border-black/[0.06] py-1 text-neutral-900`}
     >
       <div className="max-w-[88rem] mx-auto flex items-center justify-between gap-8">
         {/* Logo -> Navigasi ke Halaman Utama (/) */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0 group" title="Kembali ke Halaman Utama">
-          <LogoIcon className="w-7 h-7 text-black transition-transform duration-300 group-hover:scale-110" />
-          <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-extrabold text-black tracking-tight">
-              Nova
-            </span>
-            <span className="font-display text-sm text-neutral-500 lowercase">
-              wandor
-            </span>
-          </div>
+          <LogoIcon className="w-20 h-20 transition-transform duration-300 group-hover:scale-110" />
         </Link>
 
         {/* Desktop Nav Links */}
@@ -79,7 +67,7 @@ const Navbar: React.FC = () => {
                 href={href}
                 className={`text-xs sm:text-sm px-4 py-2 rounded-full font-jakarta font-semibold transition-all duration-200 flex items-center gap-1.5 ${
                   active
-                    ? 'text-black font-extrabold bg-black/5 shadow-2xs'
+                    ? 'text-black font-extrabold bg-black/5'
                     : 'text-black/60 hover:text-black hover:bg-black/[0.04]'
                 }`}
               >

@@ -55,7 +55,24 @@ UPDATE "Package"
 SET "description" = highlight
 WHERE "description" IS NULL AND highlight IS NOT NULL;
 
--- 3. Unique constraints
+-- 3. Deduplicate slugs before creating unique index
+-- If two packages produce the same slug, append the id to make it unique
+UPDATE "Package" p1
+SET "slug" = p1."slug" || '-' || p1.id
+WHERE EXISTS (
+  SELECT 1 FROM "Package" p2
+  WHERE p2."slug" = p1."slug" AND p2.id < p1.id
+);
+
+-- Same for destinations
+UPDATE "Destination" d1
+SET "slug" = d1."slug" || '-' || d1.id
+WHERE EXISTS (
+  SELECT 1 FROM "Destination" d2
+  WHERE d2."slug" = d1."slug" AND d2.id < d1.id
+);
+
+-- Unique constraints
 CREATE UNIQUE INDEX IF NOT EXISTS idx_package_slug ON "Package"("slug");
 CREATE UNIQUE INDEX IF NOT EXISTS idx_destination_slug ON "Destination"("slug");
 

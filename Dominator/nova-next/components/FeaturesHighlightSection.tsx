@@ -14,15 +14,6 @@ const FeaturesHighlightSection: React.FC = () => {
       <div className="max-w-[88rem] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <div className="relative h-[560px]">
-            <div className="absolute top-0 left-0 w-[63%] h-[56%] rounded-2xl overflow-hidden group">
-              <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=85" alt="Travel destination" className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-700" />
-            </div>
-            <div className="absolute bottom-0 left-0 w-[46%] h-[43%] rounded-2xl overflow-hidden group">
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=85" alt="Beach destination" className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-700" />
-            </div>
-            <div className="absolute top-[8%] right-0 w-[35%] h-[82%] rounded-2xl overflow-hidden group">
-              <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=800&q=85" alt="Mountain destination" className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-700" />
-            </div>
             <div className="absolute bottom-[24%] left-[42%] bg-white rounded-2xl px-4 py-3 shadow-xl shadow-black/10">
               <p className="text-black font-medium text-sm" style={{ letterSpacing: '-0.01em' }}>Trip saved ✓</p>
               <p className="text-black/40 text-xs">Bali · 7 nights · 2 travelers</p>

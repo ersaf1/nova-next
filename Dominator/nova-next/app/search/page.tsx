@@ -11,6 +11,7 @@ import { formatIDR } from '@/lib/types'
 
 const CATEGORIES = ['All', 'Beach', 'Adventure', 'Culture', 'City', 'Nature', 'Luxury']
 const DURATIONS = ['Any', '1-3 days', '4-7 days', '8-14 days', '15+ days']
+const TRAVEL_MODES = ['Solo', 'Family', 'Adventure', 'Business']
 const PAGE_SIZE = 9
 
 // Sort options with Indonesian labels
@@ -163,6 +164,7 @@ function SearchContent() {
   const minPrice = parseInt(searchParams.get('minPrice') || '0', 10)
   const maxPriceParam = searchParams.get('maxPrice')
   const selectedDuration = searchParams.get('duration') || 'Any'
+  const selectedMode = searchParams.get('mode') || 'All'
 
   // Local data state
   const [packages, setPackages] = useState<TravelPackage[]>([])
@@ -170,8 +172,8 @@ function SearchContent() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  // visibleCount resets whenever the filter fingerprint changes — no useEffect needed
-  const filterKey = `${q}|${selectedCategory}|${sortOrder}|${minPrice}|${maxPriceParam}|${selectedDuration}`
+  // filterKey resets visibleCount when filters change
+  const filterKey = `${q}|${selectedCategory}|${sortOrder}|${minPrice}|${maxPriceParam}|${selectedDuration}|${selectedMode}`
   const [lastFilterKey, setLastFilterKey] = useState(filterKey)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   if (filterKey !== lastFilterKey) {
@@ -256,6 +258,18 @@ function SearchContent() {
       if (selectedDuration === '8-14 days' && (days < 8 || days > 14)) return false
       if (selectedDuration === '15+ days' && days < 15) return false
     }
+    if (selectedMode !== 'All') {
+      const modeKeywords: Record<string, string[]> = {
+        solo: ['solo', 'backpacker', 'solo traveler', 'alone', 'individual'],
+        family: ['family', 'kids', 'children', 'family-friendly', 'group'],
+        adventure: ['adventure', 'hiking', 'extreme', 'trekking', 'outdoor', 'climbing', 'surfing'],
+        business: ['business', 'corporate', 'executive', 'conference', 'work'],
+      }
+      const keywords = modeKeywords[selectedMode.toLowerCase()] ?? [selectedMode.toLowerCase()]
+      const searchText = `${pkg.title} ${pkg.subtitle ?? ''} ${pkg.category ?? ''}`.toLowerCase()
+      const matches = keywords.some(kw => searchText.includes(kw))
+      if (!matches) return false
+    }
     return true
   })
 
@@ -304,6 +318,9 @@ function SearchContent() {
   }
   if (selectedDuration !== 'Any') {
     activeChips.push({ label: selectedDuration, onRemove: () => setParams({ duration: null }) })
+  }
+  if (selectedMode !== 'All') {
+    activeChips.push({ label: `Mode: ${selectedMode}`, onRemove: () => setParams({ mode: null }) })
   }
   if (q && q !== destination) {
     activeChips.push({ label: `"${q}"`, onRemove: () => setParams({ q: null }) })
@@ -445,6 +462,28 @@ function SearchContent() {
                         />
                         <span className="text-sm text-black/70 group-hover:text-black transition-colors">{dur}</span>
                       </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Travel Mode */}
+                <div>
+                  <label className="text-xs font-medium text-black/50 uppercase tracking-wider mb-2 block">
+                    Travel Mode
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {['All', ...TRAVEL_MODES].map((mode) => (
+                      <button
+                        key={mode}
+                        onClick={() => setParams({ mode: mode === 'All' ? null : mode.toLowerCase() })}
+                        className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-200 ${
+                          (mode === 'All' && selectedMode === 'All') || selectedMode === mode.toLowerCase()
+                            ? 'bg-black text-white border-black'
+                            : 'bg-white text-black/60 border-black/10 hover:border-black/30 hover:text-black'
+                        }`}
+                      >
+                        {mode}
+                      </button>
                     ))}
                   </div>
                 </div>
