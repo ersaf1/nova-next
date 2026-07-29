@@ -306,13 +306,13 @@ export default function ItineraryPage() {
         <div className="max-w-[88rem] mx-auto space-y-10">
 
           {!itinerary ? (
-            /* Clean Minimalist Light Theme Form State with Scattered Aesthetic Background Cards */
-            <div className="pt-8 max-w-5xl mx-auto space-y-8 relative">
+            /* Clean Minimalist Light Theme Form State with Full Width Card Canvas */
+            <div className="pt-4 w-full space-y-8 relative">
               
               {/* Scattered Floating Aesthetic Background Cards (Pure Aesthetic Canvas) */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 hidden md:block">
+              <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 hidden lg:block">
                 {/* Floating Card 1: Top-Left Tilted Photo Card (Japan) */}
-                <div className="absolute -top-6 -left-12 w-48 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl -rotate-6 animate-float opacity-80">
+                <div className="absolute -top-4 left-4 w-52 bg-white/85 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl -rotate-6 animate-float opacity-85">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80" alt="Tokyo Japan" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
@@ -323,7 +323,7 @@ export default function ItineraryPage() {
                 </div>
 
                 {/* Floating Card 2: Top-Right Tilted Video Card (Beach / Santorini) */}
-                <div className="absolute -top-4 -right-12 w-52 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl rotate-12 animate-float-delayed opacity-80">
+                <div className="absolute -top-4 right-4 w-56 bg-white/85 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl rotate-12 animate-float-delayed opacity-85">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
                     <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-full text-[9px] font-bold text-white uppercase">LIVE VIDEO</div>
@@ -335,7 +335,7 @@ export default function ItineraryPage() {
                 </div>
 
                 {/* Floating Card 3: Bottom-Left Tilted Photo Card (Argentina) */}
-                <div className="absolute -bottom-10 -left-10 w-52 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl rotate-6 animate-float opacity-80">
+                <div className="absolute -bottom-6 left-6 w-56 bg-white/85 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl rotate-6 animate-float opacity-85">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&q=80" alt="Patagonia Argentina" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
@@ -345,8 +345,8 @@ export default function ItineraryPage() {
                   </div>
                 </div>
 
-                {/* Floating Card 4: Bottom-Right Tilted Video Card (Bali Paradise) */}
-                <div className="absolute -bottom-8 -right-10 w-48 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl -rotate-12 animate-float-delayed opacity-80">
+                {/* Floating Card 4: Bottom-Right Tilted Photo Card (Bali Paradise) */}
+                <div className="absolute -bottom-6 right-6 w-52 bg-white/85 backdrop-blur-md p-3 rounded-2xl border border-white shadow-xl -rotate-12 animate-float-delayed opacity-85">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900 relative">
                     <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80" alt="Bali Paradise" className="w-full h-full object-cover img-smooth-zoom" />
                     <div className="absolute bottom-2 left-2 bg-black/50 backdrop-blur-xs px-2 py-0.5 rounded-md text-[9px] font-bold text-white">Ubud & Uluwatu</div>
@@ -365,17 +365,17 @@ export default function ItineraryPage() {
                   <span>AI Travel Concierge</span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-neutral-950 tracking-tight leading-[1.05]">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-neutral-950 tracking-tight leading-[1.05]">
                   Rancang Perjalanan Impian
                 </h1>
 
-                <p className="text-sm sm:text-base text-neutral-600 max-w-lg mx-auto leading-relaxed font-normal">
+                <p className="text-sm sm:text-base text-neutral-600 max-w-xl mx-auto leading-relaxed font-normal">
                   Ketik negara atau kota tujuan (misal: <strong className="text-neutral-950 font-bold">Argentina</strong>, <strong className="text-neutral-950 font-bold">Japan</strong>, <strong className="text-neutral-950 font-bold">Bali</strong>). AI akan merancang rute harian, hotel, dan galeri foto secara instan.
                 </p>
               </div>
 
-              {/* Full Width Centered Search Form Card */}
-              <div className="max-w-3xl mx-auto bg-white border border-neutral-200/90 rounded-3xl p-6 sm:p-8 shadow-md space-y-6 text-neutral-900 z-10 relative">
+              {/* Full Width Corner-to-Corner Search Form Card */}
+              <div className="w-full max-w-[88rem] mx-auto bg-white border border-neutral-200/90 rounded-3xl p-6 sm:p-10 md:p-12 shadow-lg space-y-8 text-neutral-900 z-10 relative">
                 {loading ? (
                   <div className="py-12 flex flex-col items-center text-center space-y-6">
                     <div className="w-12 h-12 rounded-full border-2 border-neutral-200 border-t-neutral-950 animate-spin flex items-center justify-center">
