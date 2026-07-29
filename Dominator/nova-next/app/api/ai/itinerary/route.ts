@@ -1,44 +1,85 @@
 import { NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { getAttractionsForDestination } from '@/lib/attractions'
+import { readFile } from 'fs/promises'
+import path from 'path'
 
-function generateMockItinerary(destination: string, duration: number) {
+const DESTINATIONS_FILE = path.join(process.cwd(), 'data', 'destinations.json')
+
+async function findCountryData(destination: string) {
+  try {
+    const raw = await readFile(DESTINATIONS_FILE, 'utf-8')
+    const list = JSON.parse(raw)
+    if (Array.isArray(list)) {
+      const match = list.find((item: { country: string; city: string }) =>
+        item.country.toLowerCase().includes(destination.toLowerCase()) ||
+        destination.toLowerCase().includes(item.country.toLowerCase()) ||
+        item.city.toLowerCase().includes(destination.toLowerCase())
+      )
+      if (match) return match
+    }
+  } catch (err) {
+    console.error('Error finding country data:', err)
+  }
+  return null
+}
+
+function generateMockItinerary(destination: string, duration: number, countryData: any = null) {
+  const destName = countryData ? `${countryData.city}, ${countryData.country}` : destination
+  const defaultAttractions = countryData ? [
+    { name: `Pemandangan & Landmark Utama ${countryData.city}`, description: countryData.tagline || countryData.description, image: countryData.image },
+    { name: `Kawasan Wisata Khas ${countryData.country}`, description: `Nikmati pesona alam, kebudayaan, dan daya tarik lokal ${countryData.country}.`, image: countryData.image },
+    { name: `Pusat Kuliner & Seni ${countryData.city}`, description: `Cicipi hidangan otentik dan jelajahi pusat kerajinan lokal.`, image: countryData.image }
+  ] : getAttractionsForDestination(destination)
+
   return {
-    destination,
+    destination: destName,
     duration,
-    totalEstimatedCost: '$800 - $1200',
+    totalEstimatedCost: countryData ? countryData.price : '$800 - $1500',
+    heroImage: countryData ? countryData.image : null,
     days: Array.from({ length: duration }, (_, i) => ({
       day: i + 1,
-      title: `Day ${i + 1} — Explore ${destination}`,
+      title: `Hari ${i + 1} — Eksplorasi ${destName}`,
       activities: [
-        { time: '09:00', activity: 'Morning city tour', location: `${destination} City Center`, duration: '3 hours', cost: '$20', tips: 'Wear comfortable shoes' },
-        { time: '13:00', activity: 'Local lunch experience', location: 'Local restaurant', duration: '1.5 hours', cost: '$15', tips: 'Try the local specialties' },
-        { time: '15:00', activity: 'Cultural site visit', location: `${destination} Museum`, duration: '2 hours', cost: '$10', tips: 'Book tickets in advance' },
-        { time: '19:00', activity: 'Sunset dinner', location: 'Rooftop restaurant', duration: '2 hours', cost: '$40', tips: 'Make a reservation' },
+        { time: '09:00', activity: `Tur Selamat Datang ${destName}`, location: `${destName} City Center`, duration: '3 jam', cost: '$25', tips: 'Gunakan pakaian dan sepatu yang nyaman' },
+        { time: '13:00', activity: 'Makan Siang & Kuliner Khas', location: 'Restoran Lokal', duration: '1.5 jam', cost: '$20', tips: 'Cobalah hidangan favorit warga setempat' },
+        { time: '15:00', activity: 'Kunjungan Situs Objek Wisata Ikonik', location: `${destName} Museum / Landmark`, duration: '2.5 jam', cost: '$15', tips: 'Bawa kamera untuk mengabadikan momen' },
+        { time: '19:00', activity: 'Santap Malam & Suasana Malam Hari', location: 'Spot Panoramic Restaurant', duration: '2 jam', cost: '$45', tips: 'Disarankan melakukan reservasi awal' },
       ],
-      meals: { breakfast: 'Hotel breakfast', lunch: 'Local warung', dinner: 'Fine dining' },
-      accommodation: `${destination} Central Hotel`,
-      estimatedDailyCost: '$150',
+      meals: { breakfast: 'Sarapan Hotel', lunch: 'Kuliner Lokal', dinner: 'Fine Dining / Rooftop' },
+      accommodation: `Hotel Bintang 4 di ${destName}`,
+      estimatedDailyCost: '$150 - $250',
     })),
-    attractions: getAttractionsForDestination(destination),
-    travelTips: ['Book accommodation early', 'Carry local currency', 'Learn basic local phrases'],
-    bestTimeToVisit: 'April to October',
-    localPhrases: [{ phrase: 'Hello', meaning: 'Greeting' }],
+    attractions: defaultAttractions,
+    travelTips: [
+      `Siapkan paspor dan dokumen perjalanan untuk kunjungan ke ${countryData ? countryData.country : destination}.`,
+      'Bawa mata uang lokal atau kartu pembayaran internasional.',
+      'Pelajari frasa sapaan dasar untuk kemudahan berinteraksi dengan warga lokal.'
+    ],
+    bestTimeToVisit: countryData ? 'Sepanjang Tahun (Kondisi Terbaik)' : 'April hingga Oktober',
+    localPhrases: [
+      { phrase: 'Halo / Good day', meaning: 'Salam sapaan' },
+      { phrase: 'Terima kasih', meaning: 'Ungkapan rasa terima kasih' },
+      { phrase: 'Berapa harganya?', meaning: 'Menanyakan harga' }
+    ],
   }
 }
 
 export async function POST(request: Request) {
   let destination = 'Bali'
   let duration = 3
+
   try {
     const body = await request.json()
     destination = body.destination || 'Bali'
     duration = Number(body.duration) || 3
     const { travelers, budget, preferences } = body
 
+    const countryData = await findCountryData(destination)
+
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey || apiKey === 'placeholder') {
-      return NextResponse.json(generateMockItinerary(destination, duration))
+      return NextResponse.json(generateMockItinerary(destination, duration, countryData))
     }
 
     const genAI = new GoogleGenerativeAI(apiKey)
@@ -88,12 +129,16 @@ Return a JSON object with this exact structure:
     if (!jsonMatch) throw new Error('Invalid AI response')
     const itinerary = JSON.parse(jsonMatch[0])
     
-    // Inject images for generated attractions using our mapping helper
+    // Inject image for attractions & country data
     itinerary.attractions = getAttractionsForDestination(destination, itinerary.attractions)
+    if (countryData && countryData.image) {
+      itinerary.heroImage = countryData.image
+    }
     
     return NextResponse.json(itinerary)
   } catch (error) {
-    console.error('AI itinerary error:', error)
-    return NextResponse.json(generateMockItinerary(destination || 'Bali', Number(duration) || 3), { status: 200 })
+    console.error('AI itinerary fallback:', error)
+    const countryData = await findCountryData(destination || 'Bali')
+    return NextResponse.json(generateMockItinerary(destination || 'Bali', Number(duration) || 3, countryData), { status: 200 })
   }
 }

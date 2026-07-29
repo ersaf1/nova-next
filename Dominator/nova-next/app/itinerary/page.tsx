@@ -9,7 +9,6 @@ import {
   Camera, Compass, Image as ImageIcon
 } from 'lucide-react'
 import Navbar from '@/components/Navbar'
-import gsap from 'gsap'
 import { supabaseClient } from '@/lib/supabase-client'
 
 interface Activity {
@@ -40,6 +39,7 @@ interface Itinerary {
   destination: string
   duration: number
   totalEstimatedCost: string
+  heroImage?: string
   days: Day[]
   attractions?: Attraction[]
   travelTips: string[]
@@ -64,6 +64,7 @@ const DESTINATION_HERO_IMAGES: Record<string, string> = {
   rome: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=1600&q=90',
   newyork: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1600&q=90',
   kyoto: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1600&q=90',
+  argentina: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1600&q=90',
 }
 
 const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600&q=90'
@@ -174,11 +175,6 @@ export default function ItineraryPage() {
   const [itinerary, setItinerary] = useState<Itinerary | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const pageRef = useRef<HTMLDivElement>(null)
-  const headerRef = useRef<HTMLDivElement>(null)
-  const formRef = useRef<HTMLDivElement>(null)
-  const resultsRef = useRef<HTMLDivElement>(null)
-
   const [loadingStep, setLoadingStep] = useState(0)
   const loadingMessages = [
     'Searching global travel databases...',
@@ -199,26 +195,6 @@ export default function ItineraryPage() {
     return () => clearInterval(interval)
   }, [loading])
 
-  useEffect(() => {
-    if (!headerRef.current || !formRef.current) return
-    const ctx = gsap.context(() => {
-      gsap.fromTo(headerRef.current, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
-      gsap.fromTo(formRef.current, { opacity: 0, y: 30, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', delay: 0.15 })
-    }, pageRef)
-    return () => ctx.revert()
-  }, [])
-
-  useEffect(() => {
-    if (!itinerary || !resultsRef.current) return
-    const resultsEl = resultsRef.current
-    const ctx = gsap.context(() => {
-      gsap.fromTo(resultsEl, { opacity: 0 }, { opacity: 1, duration: 0.5 })
-      const panels = resultsEl.children
-      gsap.fromTo(panels, { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out' })
-    }, resultsRef)
-    return () => ctx.revert()
-  }, [itinerary])
-
   const togglePreference = (pref: string) => {
     setPreferences((prev) =>
       prev.includes(pref) ? prev.filter((p) => p !== pref) : [...prev, pref]
@@ -236,10 +212,15 @@ export default function ItineraryPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ destination, duration, travelers, budget, preferences: preferences.join(', ') || 'general sightseeing' }),
       })
-      if (!res.ok) throw new Error('Failed')
-      setItinerary(await res.json())
-    } catch {
-      setError('Something went wrong. Please try again.')
+      const data = await res.json()
+      if (data && data.destination && Array.isArray(data.days)) {
+        setItinerary(data)
+      } else {
+        throw new Error('Invalid response')
+      }
+    } catch (err) {
+      console.error(err)
+      setError('Gagal membuat itinerary. Silakan coba lagi.')
     } finally {
       setLoading(false)
     }
@@ -247,12 +228,13 @@ export default function ItineraryPage() {
 
   const getHeroPhoto = () => {
     if (!itinerary) return DEFAULT_HERO_IMAGE
+    if (itinerary.heroImage) return itinerary.heroImage
     const norm = itinerary.destination.toLowerCase().trim().replace(/[^a-z0-9]/g, '')
     return DESTINATION_HERO_IMAGES[norm] || DEFAULT_HERO_IMAGE
   }
 
   return (
-    <div ref={pageRef} className="min-h-screen bg-[#F0F4F8] relative overflow-hidden flex flex-col justify-between" style={{ letterSpacing: '-0.01em' }}>
+    <div className="min-h-screen bg-[#F0F4F8] relative overflow-hidden flex flex-col justify-between" style={{ letterSpacing: '-0.01em' }}>
       <Navbar />
 
       {!itinerary && (
@@ -263,9 +245,9 @@ export default function ItineraryPage() {
 
       <div className="flex-1 w-full max-w-7xl mx-auto px-6 pt-28 pb-24 relative z-10 flex flex-col justify-center">
         {!itinerary ? (
-          /* Initial Form State */
+          /* Form State */
           <div className="max-w-xl w-full mx-auto flex flex-col items-center">
-            <div ref={headerRef} className="text-center mb-8 opacity-0">
+            <div className="text-center mb-8">
               <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-500 bg-slate-900/5 px-3.5 py-1.5 rounded-full mb-5">
                 <Sparkles size={10} className="text-slate-400 animate-pulse" />
                 AI Travel Planner
@@ -274,11 +256,11 @@ export default function ItineraryPage() {
                 Plan your perfect trip.
               </h1>
               <p className="text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-                Describe where you want to go — our AI builds a detailed, day-by-day itinerary with photos & sights.
+                Ketik negara atau kota tujuan Anda (misal: Argentina, Japan, Bali) — AI akan membuatkan jadwal harian & galeri foto objek wisata.
               </p>
             </div>
 
-            <div ref={formRef} className="w-full bg-white/70 backdrop-blur-2xl border border-white/40 shadow-2xl rounded-3xl p-7 space-y-6 opacity-0">
+            <div className="w-full bg-white/80 backdrop-blur-2xl border border-white/40 shadow-2xl rounded-3xl p-7 space-y-6">
               {loading ? (
                 <div className="py-12 flex flex-col items-center text-center space-y-8">
                   <div className="relative w-16 h-16">
@@ -290,20 +272,20 @@ export default function ItineraryPage() {
                     <p className="text-base font-bold text-slate-800 tracking-tight transition-all duration-300" style={{ letterSpacing: '-0.02em' }}>
                       {loadingMessages[loadingStep]}
                     </p>
-                    <p className="text-xs text-slate-400">Powered by Gemini AI · please wait</p>
+                    <p className="text-xs text-slate-400">Powered by Gemini AI · mohon tunggu sebentar</p>
                   </div>
                 </div>
               ) : (
                 <>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Where to</label>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Destinasi Perjalanan</label>
                     <div className="relative">
                       <MapPin size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                       <input
                         type="text"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
-                        placeholder="Bali, Tokyo, Paris, Santorini…"
+                        placeholder="Argentina, Tokyo, Paris, Santorini, Bali…"
                         className="w-full bg-[#E8EFF5] rounded-xl pl-9 pr-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-[#DFE7EE] transition-all duration-300"
                         onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
                       />
@@ -313,7 +295,7 @@ export default function ItineraryPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
                       <div className="flex items-center justify-between mb-2">
-                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Duration</label>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Durasi Hari</label>
                         <span className="text-xs font-bold text-slate-800">{duration} {duration === 1 ? 'day' : 'days'}</span>
                       </div>
                       <input
@@ -324,7 +306,7 @@ export default function ItineraryPage() {
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Travelers</label>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Jumlah Peserta</label>
                       <div className="flex items-center gap-3.5">
                         <button onClick={() => setTravelers(Math.max(1, travelers - 1))}
                           className="w-9 h-9 rounded-xl bg-[#E8EFF5] flex items-center justify-center text-slate-500 hover:bg-[#DFE7EE] hover:text-slate-800 active:scale-[0.91] hover:scale-[1.05] transition-all duration-300 ease-out font-semibold">−</button>
@@ -335,7 +317,7 @@ export default function ItineraryPage() {
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Budget</label>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Tipe Budget</label>
                       <div className="relative">
                         <select 
                           value={budget} 
@@ -350,7 +332,7 @@ export default function ItineraryPage() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Interests</label>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Minat & Hiburan</label>
                     <div className="flex flex-wrap gap-1.5">
                       {PREFERENCE_OPTIONS.map(({ label, emoji }) => (
                         <button key={label} onClick={() => togglePreference(label)}
@@ -380,11 +362,10 @@ export default function ItineraryPage() {
             </div>
           </div>
         ) : (
-          /* Redesigned AI Itinerary Results State */
-          <div ref={resultsRef} className="space-y-8 opacity-0">
+          /* Active Results State */
+          <div className="space-y-8 animate-fade-in">
             {/* Destination Hero Banner */}
-            <div className="relative rounded-3xl overflow-hidden min-h-[320px] flex items-end p-8 sm:p-10 shadow-2xl">
-              {/* Background Image */}
+            <div className="relative rounded-3xl overflow-hidden min-h-[340px] flex items-end p-8 sm:p-10 shadow-2xl bg-neutral-900">
               <img
                 src={getHeroPhoto()}
                 alt={itinerary.destination}
@@ -396,25 +377,25 @@ export default function ItineraryPage() {
                 <div>
                   <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                     <Sparkles className="w-3 h-3 text-indigo-300" />
-                    AI Custom Itinerary
+                    AI Curated Itinerary
                   </div>
                   <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight mb-3" style={{ letterSpacing: '-0.04em' }}>
                     {itinerary.destination}
                   </h1>
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-white/80">
-                    <span className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
-                      <Calendar className="w-3.5 h-3.5 text-white/70" />
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-white/90">
+                    <span className="flex items-center gap-1 bg-black/50 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-white/15">
+                      <Calendar className="w-3.5 h-3.5 text-white/80" />
                       {itinerary.duration} Hari Perjalanan
                     </span>
-                    <span className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+                    <span className="flex items-center gap-1 bg-black/50 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-white/15">
                       <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
                       Est. Biaya: {itinerary.totalEstimatedCost}
                     </span>
-                    <span className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+                    <span className="flex items-center gap-1 bg-black/50 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-white/15">
                       <Sun className="w-3.5 h-3.5 text-amber-400" />
                       Waktu Terbaik: {itinerary.bestTimeToVisit}
                     </span>
-                    <span className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+                    <span className="flex items-center gap-1 bg-black/50 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-white/15">
                       <Users className="w-3.5 h-3.5 text-sky-400" />
                       {travelers} Peserta
                     </span>
@@ -424,7 +405,7 @@ export default function ItineraryPage() {
                 <div className="flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => { setItinerary(null); setDestination('') }}
-                    className="bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/20 text-white text-xs font-semibold px-5 py-3 rounded-xl transition-all"
+                    className="bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white text-xs font-semibold px-5 py-3 rounded-xl transition-all"
                   >
                     Rancang Destinasi Lain
                   </button>
@@ -446,7 +427,7 @@ export default function ItineraryPage() {
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 block mb-1">Visual Highlights</span>
                     <h2 className="text-xl font-bold text-neutral-900 flex items-center gap-2">
-                      <Camera className="w-5 h-5 text-indigo-500" />
+                      <Camera className="w-5 h-5 text-indigo-600" />
                       Foto & Objek Wisata Populer di {itinerary.destination}
                     </h2>
                   </div>
@@ -455,13 +436,13 @@ export default function ItineraryPage() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {itinerary.attractions.map((item, idx) => (
                     <div
                       key={idx}
                       className="group bg-white rounded-2xl border border-neutral-200/80 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
                     >
-                      <div className="relative h-44 overflow-hidden bg-neutral-900">
+                      <div className="relative h-48 overflow-hidden bg-neutral-900">
                         {item.image ? (
                           <img
                             src={item.image}
@@ -475,18 +456,21 @@ export default function ItineraryPage() {
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                        <span className="absolute bottom-3 left-3 right-3 text-white text-xs font-bold leading-tight drop-shadow-sm truncate">
+                        <span className="absolute bottom-3 left-3 right-3 text-white text-xs font-bold leading-tight drop-shadow-sm">
                           {item.name}
                         </span>
                       </div>
 
-                      <div className="p-4 flex-1 flex flex-col justify-between">
+                      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                         <p className="text-neutral-500 text-xs leading-relaxed line-clamp-3 font-normal">
                           {item.description}
                         </p>
-                        <div className="mt-3 pt-2.5 border-t border-neutral-100 flex items-center gap-1 text-[11px] font-semibold text-indigo-600">
-                          <MapPin className="w-3 h-3 text-indigo-500" />
-                          <span>Ikon Destinasi #{idx + 1}</span>
+                        <div className="pt-2.5 border-t border-neutral-100 flex items-center justify-between text-[11px] font-semibold text-indigo-600">
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-indigo-500" />
+                            Highlight #{idx + 1}
+                          </span>
+                          <span className="text-neutral-400">Terverifikasi</span>
                         </div>
                       </div>
                     </div>
@@ -504,7 +488,7 @@ export default function ItineraryPage() {
                     <Compass className="w-5 h-5 text-neutral-600" />
                     Rencana Perjalanan Hari demi Hari
                   </h2>
-                  <span className="text-xs text-neutral-400">{itinerary.days.length} Hari</span>
+                  <span className="text-xs text-neutral-400 font-medium">{itinerary.days.length} Hari Lengkap</span>
                 </div>
 
                 <div className="space-y-3">
