@@ -80,8 +80,8 @@ const Lightbox: React.FC<LightboxProps> = ({ dest, onClose, onPrev, onNext, save
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center" style={{ background: 'rgba(0,0,0,0.92)' }} onClick={onClose}>
       <div className="absolute inset-0" style={{ backgroundImage: `url(${imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(40px) brightness(0.25)', transform: 'scale(1.1)' }} />
       <div className="relative w-full max-w-5xl mx-4 sm:mx-6 rounded-3xl overflow-hidden flex flex-col sm:flex-row shadow-2xl" style={{ maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
-        <div className="relative w-full sm:w-[60%] h-72 sm:h-auto shrink-0 overflow-hidden bg-neutral-900">
-          <img src={imageUrl} alt={dest.city} className="w-full h-full object-cover" style={{ minHeight: '420px' }} />
+        <div className="relative w-full sm:w-[45%] h-56 sm:h-auto shrink-0 overflow-hidden bg-neutral-900" style={{ maxHeight: '420px' }}>
+          <img src={imageUrl} alt={dest.city} className="w-full h-full object-cover" style={{ minHeight: '280px', maxHeight: '420px' }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent sm:bg-gradient-to-r sm:from-transparent sm:to-black/20" />
           {dest.tag && <span className={`absolute top-5 left-5 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ${tagColors[dest.tag]}`}>{dest.tag}</span>}
           <div className="absolute bottom-6 left-6 sm:hidden">
@@ -216,15 +216,19 @@ const DestinationsSection: React.FC = () => {
             </div>
           </ScrollReveal>
 
-            <div ref={destGridRef} className="grid grid-cols-3 grid-rows-2 gap-3 md:gap-4" style={{ gridTemplateRows: '140px 140px' }}>
-              {destinations.slice(0, 6).map((dest, i) => {
-                const isWide = i === 0 || i === 5
+            <div ref={destGridRef} className="grid grid-cols-3 gap-3 md:gap-4" style={{ gridTemplateRows: '200px 200px 200px' }}>
+              {destinations.slice(0, 5).map((dest, i) => {
+                // Row 1: index 0 (col-span-2) + index 1 (col-span-1)  = 3 cols
+                // Row 2: index 2 (col-span-1) + index 3 (col-span-2)  = 3 cols
+                // index 4: col-span-3 full width row
+                const isWide = i === 0 || i === 3
+                const isFullWidth = i === 4
                 const imageUrl = dest.image || DEFAULT_IMAGES[dest.city] || FALLBACK_IMAGE
 
                 return (
                   <div
                     key={dest.id}
-                    className={`group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 ${isWide ? 'col-span-2' : 'col-span-1'}`}
+                    className={`group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 ${isFullWidth ? 'col-span-3' : isWide ? 'col-span-2' : 'col-span-1'}`}
                     onClick={() => setLightboxIndex(i)}
                   >
                     <img

@@ -226,7 +226,7 @@ export default function DestinationsPage() {
                     return (
                       <Link
                         key={dest.id}
-                        href={`/search?destination=${encodeURIComponent(dest.city)}`}
+                        href={`/destinations/${dest.id}`}
                         className="group bg-white rounded-2xl border border-black/[0.04] overflow-hidden hover:shadow-lg transition-all duration-300 relative flex flex-col justify-between"
                       >
                         <div className="relative h-56 overflow-hidden bg-neutral-900">

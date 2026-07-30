@@ -1,0 +1,602 @@
+[
+  {
+    "id": 1,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-11",
+    "capacity": 16,
+    "remainingSlots": 2,
+    "price": 12500000,
+    "status": "limited"
+  },
+  {
+    "id": 2,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-08-18",
+    "endDate": "2026-08-25",
+    "capacity": 16,
+    "remainingSlots": 3,
+    "price": 12500000,
+    "status": "limited"
+  },
+  {
+    "id": 3,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-08",
+    "capacity": 16,
+    "remainingSlots": 4,
+    "price": 12500000,
+    "status": "available"
+  },
+  {
+    "id": 4,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-22",
+    "capacity": 16,
+    "remainingSlots": 5,
+    "price": 12500000,
+    "status": "available"
+  },
+  {
+    "id": 5,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-09-29",
+    "endDate": "2026-10-06",
+    "capacity": 16,
+    "remainingSlots": 6,
+    "price": 12500000,
+    "status": "available"
+  },
+  {
+    "id": 6,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-10-20",
+    "endDate": "2026-10-27",
+    "capacity": 16,
+    "remainingSlots": 8,
+    "price": 12500000,
+    "status": "available"
+  },
+  {
+    "id": 7,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-11-03",
+    "endDate": "2026-11-10",
+    "capacity": 16,
+    "remainingSlots": 10,
+    "price": 12500000,
+    "status": "available"
+  },
+  {
+    "id": 8,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-11-17",
+    "endDate": "2026-11-24",
+    "capacity": 16,
+    "remainingSlots": 12,
+    "price": 12500000,
+    "status": "available"
+  },
+  {
+    "id": 9,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-12-01",
+    "endDate": "2026-12-08",
+    "capacity": 16,
+    "remainingSlots": 14,
+    "price": 12500000,
+    "status": "available"
+  },
+  {
+    "id": 10,
+    "packageSlug": "bali-paradise-escape",
+    "startDate": "2026-12-31",
+    "endDate": "2027-01-07",
+    "capacity": 16,
+    "remainingSlots": 16,
+    "price": 12500000,
+    "status": "available"
+  },
+  {
+    "id": 11,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-15",
+    "capacity": 16,
+    "remainingSlots": 2,
+    "price": 28500000,
+    "status": "limited"
+  },
+  {
+    "id": 12,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-08-18",
+    "endDate": "2026-08-29",
+    "capacity": 16,
+    "remainingSlots": 3,
+    "price": 28500000,
+    "status": "limited"
+  },
+  {
+    "id": 13,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-12",
+    "capacity": 16,
+    "remainingSlots": 4,
+    "price": 28500000,
+    "status": "available"
+  },
+  {
+    "id": 14,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-26",
+    "capacity": 16,
+    "remainingSlots": 5,
+    "price": 28500000,
+    "status": "available"
+  },
+  {
+    "id": 15,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-09-29",
+    "endDate": "2026-10-10",
+    "capacity": 16,
+    "remainingSlots": 6,
+    "price": 28500000,
+    "status": "available"
+  },
+  {
+    "id": 16,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-10-20",
+    "endDate": "2026-10-31",
+    "capacity": 16,
+    "remainingSlots": 8,
+    "price": 28500000,
+    "status": "available"
+  },
+  {
+    "id": 17,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-11-03",
+    "endDate": "2026-11-14",
+    "capacity": 16,
+    "remainingSlots": 10,
+    "price": 28500000,
+    "status": "available"
+  },
+  {
+    "id": 18,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-11-17",
+    "endDate": "2026-11-28",
+    "capacity": 16,
+    "remainingSlots": 12,
+    "price": 28500000,
+    "status": "available"
+  },
+  {
+    "id": 19,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-12-01",
+    "endDate": "2026-12-12",
+    "capacity": 16,
+    "remainingSlots": 14,
+    "price": 28500000,
+    "status": "available"
+  },
+  {
+    "id": 20,
+    "packageSlug": "japan-cherry-blossom",
+    "startDate": "2026-12-31",
+    "endDate": "2027-01-11",
+    "capacity": 16,
+    "remainingSlots": 16,
+    "price": 28500000,
+    "status": "available"
+  },
+  {
+    "id": 21,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-10",
+    "capacity": 8,
+    "remainingSlots": 2,
+    "price": 36000000,
+    "status": "limited"
+  },
+  {
+    "id": 22,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-08-18",
+    "endDate": "2026-08-24",
+    "capacity": 8,
+    "remainingSlots": 3,
+    "price": 36000000,
+    "status": "limited"
+  },
+  {
+    "id": 23,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-07",
+    "capacity": 8,
+    "remainingSlots": 4,
+    "price": 36000000,
+    "status": "available"
+  },
+  {
+    "id": 24,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-21",
+    "capacity": 8,
+    "remainingSlots": 5,
+    "price": 36000000,
+    "status": "available"
+  },
+  {
+    "id": 25,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-09-29",
+    "endDate": "2026-10-05",
+    "capacity": 8,
+    "remainingSlots": 6,
+    "price": 36000000,
+    "status": "available"
+  },
+  {
+    "id": 26,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-10-20",
+    "endDate": "2026-10-26",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 36000000,
+    "status": "available"
+  },
+  {
+    "id": 27,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-11-03",
+    "endDate": "2026-11-09",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 36000000,
+    "status": "available"
+  },
+  {
+    "id": 28,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-11-17",
+    "endDate": "2026-11-23",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 36000000,
+    "status": "available"
+  },
+  {
+    "id": 29,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-12-01",
+    "endDate": "2026-12-07",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 36000000,
+    "status": "available"
+  },
+  {
+    "id": 30,
+    "packageSlug": "santorini-sunsets-villa",
+    "startDate": "2026-12-31",
+    "endDate": "2027-01-06",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 36000000,
+    "status": "available"
+  },
+  {
+    "id": 31,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-12",
+    "capacity": 16,
+    "remainingSlots": 2,
+    "price": 45000000,
+    "status": "limited"
+  },
+  {
+    "id": 32,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-08-18",
+    "endDate": "2026-08-26",
+    "capacity": 16,
+    "remainingSlots": 3,
+    "price": 45000000,
+    "status": "limited"
+  },
+  {
+    "id": 33,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-09",
+    "capacity": 16,
+    "remainingSlots": 4,
+    "price": 45000000,
+    "status": "available"
+  },
+  {
+    "id": 34,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-23",
+    "capacity": 16,
+    "remainingSlots": 5,
+    "price": 45000000,
+    "status": "available"
+  },
+  {
+    "id": 35,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-09-29",
+    "endDate": "2026-10-07",
+    "capacity": 16,
+    "remainingSlots": 6,
+    "price": 45000000,
+    "status": "available"
+  },
+  {
+    "id": 36,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-10-20",
+    "endDate": "2026-10-28",
+    "capacity": 16,
+    "remainingSlots": 8,
+    "price": 45000000,
+    "status": "available"
+  },
+  {
+    "id": 37,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-11-03",
+    "endDate": "2026-11-11",
+    "capacity": 16,
+    "remainingSlots": 10,
+    "price": 45000000,
+    "status": "available"
+  },
+  {
+    "id": 38,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-11-17",
+    "endDate": "2026-11-25",
+    "capacity": 16,
+    "remainingSlots": 12,
+    "price": 45000000,
+    "status": "available"
+  },
+  {
+    "id": 39,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-12-01",
+    "endDate": "2026-12-09",
+    "capacity": 16,
+    "remainingSlots": 14,
+    "price": 45000000,
+    "status": "available"
+  },
+  {
+    "id": 40,
+    "packageSlug": "swiss-alps-experience",
+    "startDate": "2026-12-31",
+    "endDate": "2027-01-08",
+    "capacity": 16,
+    "remainingSlots": 16,
+    "price": 45000000,
+    "status": "available"
+  },
+  {
+    "id": 41,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-09",
+    "capacity": 8,
+    "remainingSlots": 2,
+    "price": 52000000,
+    "status": "limited"
+  },
+  {
+    "id": 42,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-08-18",
+    "endDate": "2026-08-23",
+    "capacity": 8,
+    "remainingSlots": 3,
+    "price": 52000000,
+    "status": "limited"
+  },
+  {
+    "id": 43,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-06",
+    "capacity": 8,
+    "remainingSlots": 4,
+    "price": 52000000,
+    "status": "available"
+  },
+  {
+    "id": 44,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-20",
+    "capacity": 8,
+    "remainingSlots": 5,
+    "price": 52000000,
+    "status": "available"
+  },
+  {
+    "id": 45,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-09-29",
+    "endDate": "2026-10-04",
+    "capacity": 8,
+    "remainingSlots": 6,
+    "price": 52000000,
+    "status": "available"
+  },
+  {
+    "id": 46,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-10-20",
+    "endDate": "2026-10-25",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 52000000,
+    "status": "available"
+  },
+  {
+    "id": 47,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-11-03",
+    "endDate": "2026-11-08",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 52000000,
+    "status": "available"
+  },
+  {
+    "id": 48,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-11-17",
+    "endDate": "2026-11-22",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 52000000,
+    "status": "available"
+  },
+  {
+    "id": 49,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-12-01",
+    "endDate": "2026-12-06",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 52000000,
+    "status": "available"
+  },
+  {
+    "id": 50,
+    "packageSlug": "maldives-overwater-luxury",
+    "startDate": "2026-12-31",
+    "endDate": "2027-01-05",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 52000000,
+    "status": "available"
+  },
+  {
+    "id": 51,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-11",
+    "capacity": 8,
+    "remainingSlots": 2,
+    "price": 31000000,
+    "status": "limited"
+  },
+  {
+    "id": 52,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-08-18",
+    "endDate": "2026-08-25",
+    "capacity": 8,
+    "remainingSlots": 3,
+    "price": 31000000,
+    "status": "limited"
+  },
+  {
+    "id": 53,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-08",
+    "capacity": 8,
+    "remainingSlots": 4,
+    "price": 31000000,
+    "status": "available"
+  },
+  {
+    "id": 54,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-22",
+    "capacity": 8,
+    "remainingSlots": 5,
+    "price": 31000000,
+    "status": "available"
+  },
+  {
+    "id": 55,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-09-29",
+    "endDate": "2026-10-06",
+    "capacity": 8,
+    "remainingSlots": 6,
+    "price": 31000000,
+    "status": "available"
+  },
+  {
+    "id": 56,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-10-20",
+    "endDate": "2026-10-27",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 31000000,
+    "status": "available"
+  },
+  {
+    "id": 57,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-11-03",
+    "endDate": "2026-11-10",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 31000000,
+    "status": "available"
+  },
+  {
+    "id": 58,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-11-17",
+    "endDate": "2026-11-24",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 31000000,
+    "status": "available"
+  },
+  {
+    "id": 59,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-12-01",
+    "endDate": "2026-12-08",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 31000000,
+    "status": "available"
+  },
+  {
+    "id": 60,
+    "packageSlug": "paris-french-riviera",
+    "startDate": "2026-12-31",
+    "endDate": "2027-01-07",
+    "capacity": 8,
+    "remainingSlots": 8,
+    "price": 31000000,
+    "status": "available"
+  }
+]

@@ -24,6 +24,58 @@ async function findCountryData(destination: string) {
   return null
 }
 
+function getMockDayData(dayNum: number, destName: string) {
+  const dayTemplates = [
+    {
+      title: `Hari ${dayNum} — Selamat Datang & Eksplorasi Pusat Kota ${destName}`,
+      activities: [
+        { time: '09:00', activity: `Tur Selamat Datang & Orientasi Kota ${destName}`, location: `${destName} City Center`, duration: '3 jam', cost: 'Gratis/Tips', tips: 'Gunakan pakaian dan sepatu yang nyaman' },
+        { time: '13:00', activity: 'Makan Siang & Kuliner Khas Setempat', location: 'Restoran Tradisional', duration: '1.5 jam', cost: '$15', tips: 'Cobalah menu andalan lokal yang direkomendasikan' },
+        { time: '15:00', activity: 'Kunjungan Landmark Sejarah & Museum Utama', location: `${destName} Historical Site`, duration: '2.5 jam', cost: '$12', tips: 'Bawa kamera untuk mengabadikan arsitektur bersejarah' },
+        { time: '19:00', activity: 'Makan Malam Selamat Datang & Suasana Malam', location: 'Panoramic Rooftop Café', duration: '2 jam', cost: '$30', tips: 'Sangat direkomendasikan melakukan reservasi awal' }
+      ],
+      meals: { breakfast: 'Sarapan Hotel', lunch: 'Restoran Lokal', dinner: 'Rooftop Cafe' },
+      accommodation: `Hotel Boutique di Pusat Kota ${destName}`
+    },
+    {
+      title: `Hari ${dayNum} — Petualangan Alam & Spot Foto Ikonik ${destName}`,
+      activities: [
+        { time: '08:30', activity: `Petualangan Alam & Trekking Ringan`, location: `${destName} Nature Park / Ridge`, duration: '4 jam', cost: '$20', tips: 'Bawa air minum dan pakai krim pelindung matahari' },
+        { time: '13:00', activity: 'Makan Siang di Area Tepi Sungai/Tepi Pantai', location: 'Rumah Makan Tradisional', duration: '1.5 jam', cost: '$10', tips: 'Nikmati pemandangan alam sambil makan siang' },
+        { time: '15:30', activity: 'Jelajah Desa Wisata atau Kawasan Heritage', location: `${destName} Old Town`, duration: '3 jam', cost: 'Gratis', tips: 'Cobalah berinteraksi ramah dengan penduduk sekitar' },
+        { time: '19:30', activity: 'Makan Malam Santai & Berburu Street Food', location: 'Street Food Market / Pasar Malam', duration: '2 jam', cost: '$15', tips: 'Siapkan uang tunai kecil untuk kemudahan transaksi' }
+      ],
+      meals: { breakfast: 'Sarapan Buffet', lunch: 'Cafe Tepi Jalan', dinner: 'Street Food Market' },
+      accommodation: `Hotel Boutique di Pusat Kota ${destName}`
+    },
+    {
+      title: `Hari ${dayNum} — Meresapi Kebudayaan & Kehidupan Lokal ${destName}`,
+      activities: [
+        { time: '09:30', activity: `Jelajah Galeri Seni, Istana Kuno, atau Kastil`, location: `${destName} Palace / Art Gallery`, duration: '3 jam', cost: '$18', tips: 'Patuhi aturan pengambilan gambar di dalam area gedung' },
+        { time: '13:00', activity: 'Makan Siang dengan Tema Gastronomi Lokal', location: 'Bistro Modern', duration: '1.5 jam', cost: '$25', tips: 'Tanyakan rekomendasi Chef untuk menu hari ini' },
+        { time: '15:00', activity: 'Berbelanja Oleh-oleh & Kerajinan Khas', location: 'Pasar Seni / Local Craft Bazaar', duration: '3 jam', cost: 'Sesuai belanja', tips: 'Tawar harga secara wajar jika berbelanja di pasar tradisional' },
+        { time: '19:00', activity: 'Makan Malam Perpisahan & Pertunjukan Seni', location: 'Theater & Dinner Hall', duration: '3 jam', cost: '$40', tips: 'Gunakan pakaian kasual rapi untuk acara makan malam' }
+      ],
+      meals: { breakfast: 'Sarapan Sehat', lunch: 'Bistro Gastronomi', dinner: 'Dinner & Culture Show' },
+      accommodation: `Resort / Villa Wisata di ${destName}`
+    },
+    {
+      title: `Hari ${dayNum} — Rileksasi & Waktu Bebas di ${destName}`,
+      activities: [
+        { time: '10:00', activity: `Waktu Santai, Rekreasi Mandiri, atau Spa`, location: `${destName} Recreation Area / Spa`, duration: '2.5 jam', cost: '$35', tips: 'Saatnya rileks setelah hari-hari penuh petualangan' },
+        { time: '13:00', activity: 'Makan Siang Santai di Kafe Tepi Jalan', location: 'Estetik Café', duration: '1.5 jam', cost: '$18', tips: 'Cocok untuk bersantai sambil mengamati aktivitas lokal kota' },
+        { time: '15:00', activity: 'Kunjungan Taman Botani / Taman Kota Terbuka', location: `${destName} Botanical Garden`, duration: '2 jam', cost: '$5', tips: 'Nikmati suasana sore yang teduh dan asri' },
+        { time: '18:30', activity: 'Makan Malam Santai & Berburu Sunset Terakhir', location: 'Sunset View Point Lounge', duration: '2 jam', cost: '$25', tips: 'Datang lebih awal sebelum waktu matahari terbenam untuk spot terbaik' }
+      ],
+      meals: { breakfast: 'Sarapan Hotel', lunch: 'Kafe Estetik', dinner: 'Sunset Lounge' },
+      accommodation: `Resort / Villa Wisata di ${destName}`
+    }
+  ]
+
+  const index = (dayNum - 1) % dayTemplates.length
+  return dayTemplates[index]
+}
+
 function generateMockItinerary(destination: string, duration: number, countryData: any = null) {
   const destName = countryData ? `${countryData.city}, ${countryData.country}` : destination
   const defaultAttractions = countryData ? [
@@ -37,19 +89,18 @@ function generateMockItinerary(destination: string, duration: number, countryDat
     duration,
     totalEstimatedCost: countryData ? countryData.price : '$800 - $1500',
     heroImage: countryData ? countryData.image : null,
-    days: Array.from({ length: duration }, (_, i) => ({
-      day: i + 1,
-      title: `Hari ${i + 1} — Eksplorasi ${destName}`,
-      activities: [
-        { time: '09:00', activity: `Tur Selamat Datang ${destName}`, location: `${destName} City Center`, duration: '3 jam', cost: '$25', tips: 'Gunakan pakaian dan sepatu yang nyaman' },
-        { time: '13:00', activity: 'Makan Siang & Kuliner Khas', location: 'Restoran Lokal', duration: '1.5 jam', cost: '$20', tips: 'Cobalah hidangan favorit warga setempat' },
-        { time: '15:00', activity: 'Kunjungan Situs Objek Wisata Ikonik', location: `${destName} Museum / Landmark`, duration: '2.5 jam', cost: '$15', tips: 'Bawa kamera untuk mengabadikan momen' },
-        { time: '19:00', activity: 'Santap Malam & Suasana Malam Hari', location: 'Spot Panoramic Restaurant', duration: '2 jam', cost: '$45', tips: 'Disarankan melakukan reservasi awal' },
-      ],
-      meals: { breakfast: 'Sarapan Hotel', lunch: 'Kuliner Lokal', dinner: 'Fine Dining / Rooftop' },
-      accommodation: `Hotel Bintang 4 di ${destName}`,
-      estimatedDailyCost: '$150 - $250',
-    })),
+    days: Array.from({ length: duration }, (_, i) => {
+      const dayNum = i + 1
+      const dayData = getMockDayData(dayNum, destName)
+      return {
+        day: dayNum,
+        title: dayData.title,
+        activities: dayData.activities,
+        meals: dayData.meals,
+        accommodation: dayData.accommodation,
+        estimatedDailyCost: '$120 - $200',
+      }
+    }),
     attractions: defaultAttractions,
     travelTips: [
       `Siapkan paspor dan dokumen perjalanan untuk kunjungan ke ${countryData ? countryData.country : destination}.`,
@@ -62,7 +113,7 @@ function generateMockItinerary(destination: string, duration: number, countryDat
       { phrase: 'Terima kasih', meaning: 'Ungkapan rasa terima kasih' },
       { phrase: 'Berapa harganya?', meaning: 'Menanyakan harga' }
     ],
-    aiIntro: `Yang cocok untuk kamu adalah itinerary ${destName} selama ${duration} hari ini. Kami sudah menyiapkan rencana perjalanan terbaik berdasarkan destinasi impianmu — tinggal ikuti saja dan nikmati perjalanannya!`,
+    aiIntro: `Yang cocok untuk kamu adalah itinerary ${destName} selama ${duration} days ini. Rencana perjalanan dirancang khusus untuk memberikan pengalaman bervariasi setiap harinya dari pusat kota hingga keindahan alamnya!`,
   }
 }
 

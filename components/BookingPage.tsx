@@ -69,6 +69,8 @@ const BookingPageInner: React.FC = () => {
     discounted_amount?: number
   } | null>(null)
   const [discountAmount, setDiscountAmount] = useState(0)
+  const [matchedPackages, setMatchedPackages] = useState<Package[] | null>(null)
+  const [noMatchesFound, setNoMatchesFound] = useState(false)
 
   useEffect(() => {
     // 1. Force authentication to book — middleware is the first line of defence,
@@ -79,20 +81,72 @@ const BookingPageInner: React.FC = () => {
       }
     })
 
-    fetch('/api/packages')
-      .then(r => r.json())
-      .then((data: unknown) => {
-        if (Array.isArray(data)) {
-          setPackages(data as Package[])
-          // Auto-select package from URL param
-          const paramId = searchParams.get('packageId')
-          if (paramId) {
-            const found = (data as Package[]).find(p => String(p.id) === paramId)
-            if (found) {
-              setSelectedPackage(found)
-              setSelectedCountry(found.category)
-              setStep(2)
-            }
+    const fetchPackages = fetch('/api/packages').then(r => r.json())
+    const fetchDests = fetch('/api/destinations').then(r => r.json()).catch(() => [])
+
+    Promise.all([fetchPackages, fetchDests])
+      .then(([pkgsData, destsData]) => {
+        let loadedPackages: Package[] = []
+        if (Array.isArray(pkgsData)) {
+          setPackages(pkgsData)
+          loadedPackages = pkgsData
+        }
+
+        const paramId = searchParams.get('packageId')
+        const destQuery = searchParams.get('destination')
+
+        if (paramId && loadedPackages.length > 0) {
+          const found = loadedPackages.find(p => String(p.id) === paramId)
+          if (found) {
+            setSelectedPackage(found)
+            setSelectedCountry(found.category)
+            setStep(2)
+            return
+          }
+        }
+
+        if (destQuery && loadedPackages.length > 0) {
+          // Find matched destination
+          const matchedDest = Array.isArray(destsData)
+            ? destsData.find(d =>
+                (d.city || '').toLowerCase() === destQuery.toLowerCase() ||
+                (d.country || '').toLowerCase() === destQuery.toLowerCase() ||
+                destQuery.toLowerCase().includes((d.city || '').toLowerCase()) ||
+                (d.city || '').toLowerCase().includes(destQuery.toLowerCase())
+              )
+            : null
+
+          const searchTerms = [destQuery.toLowerCase()]
+          if (matchedDest) {
+            if (matchedDest.city) searchTerms.push(matchedDest.city.toLowerCase())
+            if (matchedDest.country) searchTerms.push(matchedDest.country.toLowerCase())
+          }
+
+          // Filter packages by search terms
+          const filtered = loadedPackages.filter(p => {
+            const title = (p.title || '').toLowerCase()
+            const subtitle = (p.subtitle || '').toLowerCase()
+            const highlight = (p.highlight || '').toLowerCase()
+            const category = (p.category || '').toLowerCase()
+
+            return searchTerms.some(term =>
+              title.includes(term) ||
+              subtitle.includes(term) ||
+              highlight.includes(term) ||
+              category.includes(term)
+            )
+          })
+
+          if (filtered.length > 0) {
+            setMatchedPackages(filtered)
+            setSelectedCountry(matchedDest ? `${matchedDest.city}, ${matchedDest.country}` : destQuery)
+            setStep(1)
+          } else {
+            // No specific package matches
+            setNoMatchesFound(true)
+            setMatchedPackages(loadedPackages) // Show all packages as fallback
+            setSelectedCountry(destQuery)
+            setStep(1)
           }
         }
       })
@@ -255,7 +309,7 @@ const BookingPageInner: React.FC = () => {
                     const count = packages.filter(p => p.category === country).length
                     const thumb = packages.find(p => p.category === country)?.image
                     return (
-                      <button key={country} onClick={() => { setSelectedCountry(country); setStep(1) }} className="group relative bg-white rounded-2xl overflow-hidden border border-black/[0.04] hover:shadow-lg transition-all duration-300 text-left h-36">
+                      <button key={country} onClick={() => { setSelectedCountry(country); setMatchedPackages(null); setNoMatchesFound(false); setStep(1) }} className="group relative bg-white rounded-2xl overflow-hidden border border-black/[0.04] hover:shadow-lg transition-all duration-300 text-left h-36">
                         {thumb && <img src={thumb} alt={country} className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300" />}
                         <div className="relative p-5 h-full flex flex-col justify-between">
                           <MapPin className="w-5 h-5 text-black/40" />
@@ -275,9 +329,16 @@ const BookingPageInner: React.FC = () => {
           {/* Step 1: Select Package */}
           {step === 1 && (
             <div>
-              <p className="text-sm text-black/40 mb-6">Showing packages for <span className="text-black font-medium">{selectedCountry}</span></p>
+              {noMatchesFound ? (
+                <p className="text-sm text-neutral-600 mb-6 bg-amber-50 border border-amber-200/60 rounded-2xl p-4">
+                  Maaf, belum tersedia paket khusus untuk <span className="font-semibold text-black">{selectedCountry}</span>.
+                  Silakan pilih paket perjalanan terbaik kami lainnya di bawah ini:
+                </p>
+              ) : (
+                <p className="text-sm text-black/40 mb-6">Showing packages for <span className="text-black font-medium">{selectedCountry}</span></p>
+              )}
               <div className="grid md:grid-cols-2 gap-5">
-                {filteredPackages.map(pkg => (
+                {(matchedPackages || filteredPackages).map(pkg => (
                   <button key={pkg.id} onClick={() => { setSelectedPackage(pkg); setStep(2) }} className="group bg-white rounded-3xl overflow-hidden border border-black/[0.04] hover:shadow-xl transition-all duration-300 text-left flex flex-col">
                     <div className="relative h-44 overflow-hidden">
                       <img src={pkg.image} alt={pkg.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />

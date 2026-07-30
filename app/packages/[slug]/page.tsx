@@ -3,10 +3,35 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, Check, X, Star, Clock, Users, MapPin } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { readFile } from 'fs/promises'
+import path from 'path'
 import Navbar from '@/components/Navbar'
 import PackageDetailClient from '@/components/PackageDetailClient'
 import type { TravelPackage, PackageDeparture } from '@/lib/types'
 import { formatIDR } from '@/lib/types'
+
+async function getPackageBySlug(slug: string) {
+  // Try Supabase first
+  try {
+    const { data, error } = await supabase
+      .from('Package')
+      .select('*')
+      .eq('slug', slug)
+      .neq('status', 'archived')
+      .single()
+    if (!error && data) return data
+  } catch {}
+
+  // Fallback to local JSON
+  try {
+    const raw = await readFile(path.join(process.cwd(), 'data', 'packages.json'), 'utf-8')
+    const packages = JSON.parse(raw)
+    const found = packages.find((p: { slug?: string }) => p.slug === slug)
+    if (found) return { ...found, status: 'published' }
+  } catch {}
+
+  return null
+}
 
 export default async function PackageSlugPage({
   params,
@@ -15,23 +40,16 @@ export default async function PackageSlugPage({
 }) {
   const { slug } = await params
 
-  // Fetch package
-  const { data: pkgRaw, error } = await supabase
-    .from('Package')
-    .select('*')
-    .eq('slug', slug)
-    .neq('status', 'archived')
-    .single()
-
-  if (error || !pkgRaw) notFound()
+  const pkgRaw = await getPackageBySlug(slug)
+  if (!pkgRaw) notFound()
 
   // Parse JSON arrays
   let includes: string[] = []
   let gallery: string[] = []
   let excluded: string[] = []
-  try { includes = JSON.parse(pkgRaw.includes ?? '[]') } catch { includes = [] }
-  try { gallery = JSON.parse(pkgRaw.gallery ?? '[]') } catch { gallery = [] }
-  try { excluded = JSON.parse(pkgRaw.excluded ?? '[]') } catch { excluded = [] }
+  try { includes = Array.isArray(pkgRaw.includes) ? pkgRaw.includes : JSON.parse(pkgRaw.includes ?? '[]') } catch { includes = [] }
+  try { gallery = Array.isArray(pkgRaw.gallery) ? pkgRaw.gallery : JSON.parse(pkgRaw.gallery ?? '[]') } catch { gallery = [] }
+  try { excluded = Array.isArray(pkgRaw.excluded) ? pkgRaw.excluded : JSON.parse(pkgRaw.excluded ?? '[]') } catch { excluded = [] }
 
   const pkg: TravelPackage = { ...pkgRaw, includes, gallery, excluded }
 

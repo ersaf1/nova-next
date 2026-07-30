@@ -1,6 +1,32 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { readFile } from 'fs/promises'
+import path from 'path'
 import type { PackageDeparture } from '@/lib/types'
+
+async function getLocalDeparturesByPackageId(packageId: number, all: boolean) {
+  try {
+    // Lookup slug from packages.json
+    const pkgsRaw = await readFile(path.join(process.cwd(), 'data', 'packages.json'), 'utf-8')
+    const packages: { slug: string }[] = JSON.parse(pkgsRaw)
+    // local packages don't have numeric ids — use index+1 as id
+    const pkg = packages[packageId - 1]
+    if (!pkg?.slug) return []
+
+    const depsRaw = await readFile(path.join(process.cwd(), 'data', 'departures.json'), 'utf-8')
+    const departures: Array<Record<string, unknown>> = JSON.parse(depsRaw)
+    const today = new Date().toISOString().split('T')[0]
+
+    return departures
+      .filter(d =>
+        d.packageSlug === pkg.slug &&
+        (all || (d.startDate as string) >= today && d.status !== 'cancelled')
+      )
+      .sort((a, b) => ((a.startDate as string) > (b.startDate as string) ? 1 : -1))
+  } catch {
+    return []
+  }
+}
 
 // GET /api/packages/[id]/departures
 // Returns upcoming available departures for a package
@@ -32,13 +58,16 @@ export async function GET(
 
     const { data, error } = await query
 
-    if (error) throw error
-
-    return NextResponse.json((data ?? []) as PackageDeparture[])
-  } catch (err) {
-    console.error('departures GET error:', err)
-    return NextResponse.json({ error: 'Failed to fetch departures' }, { status: 500 })
+    if (!error && data && data.length > 0) {
+      return NextResponse.json(data as PackageDeparture[])
+    }
+  } catch {
+    // fallthrough to local
   }
+
+  // Fallback: local departures.json
+  const local = await getLocalDeparturesByPackageId(packageId, all)
+  return NextResponse.json(local)
 }
 
 // POST /api/packages/[id]/departures — admin only

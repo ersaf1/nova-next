@@ -46,7 +46,7 @@ export async function GET(request: Request) {
     const { data, error } = await supabase
       .from('Booking')
       .select('*')
-      .or(`userId.eq.${user.id},contactEmail.eq.${user.email}`)
+      .or(`userId.eq.${user.id},email.eq.${user.email}`)
       .order('createdAt', { ascending: false })
 
     if (error) throw error
@@ -170,21 +170,16 @@ export async function POST(request: Request) {
 
     const bookingData = {
       bookingCode,
-      packageId,
       packageName: pkg.title,
       departureId: departureId || null,
       departureStartDate: departureStartDate || null,
       departureEndDate: departureEndDate || null,
-      contactName: resolvedName,
-      contactEmail: resolvedEmail,
-      contactPhone: resolvedPhone,
       participants: Number(participants),
       unitPrice,
       subtotal,
       discountAmount,
       serviceFee: SERVICE_FEE,
       totalAmount,
-      voucherCode: voucherCode || null,
       notes: notes || null,
       bookingStatus: 'pending',
       paymentStatus: 'unpaid',
@@ -196,6 +191,7 @@ export async function POST(request: Request) {
       name: resolvedName,
       email: resolvedEmail,
       phone: resolvedPhone,
+      promoCode: voucherCode || null,
     }
 
     const { data, error } = await supabase

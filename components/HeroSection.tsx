@@ -41,6 +41,7 @@ const DEFAULT_BRANDS: Partner[] = [
 const HeroSection: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null)
   const videoWrapperRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const badgeRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const descriptionRef = useRef<HTMLParagraphElement>(null)
@@ -51,10 +52,17 @@ const HeroSection: React.FC = () => {
     headline: 'The World,\nUnlocked.',
     subheadline: 'Plan, book, and experience extraordinary journeys across 195+ countries — all in one place.',
     badgeText: 'Live availability · 195 UN Countries',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4',
+    videoUrl: '/uploads/1785249740102-88207-602915574.mp4',
   })
   const [brands, setBrands] = useState<Partner[]>(DEFAULT_BRANDS)
   const [heroReady, setHeroReady] = useState(false)
+
+  // Trigger autoplay setiap kali videoUrl berubah
+  useEffect(() => {
+    if (!videoRef.current || !hero.videoUrl) return
+    videoRef.current.load()
+    videoRef.current.play().catch(() => {})
+  }, [hero.videoUrl])
 
   useEffect(() => {
     fetch('/api/hero')
@@ -64,7 +72,7 @@ const HeroSection: React.FC = () => {
           setHero(prev => ({
             ...prev,
             ...data,
-            videoUrl: data.videoUrl || 'https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4'
+            videoUrl: data.videoUrl || '/uploads/1785249740102-88207-602915574.mp4'
           }))
         }
         setHeroReady(true)
@@ -130,26 +138,17 @@ const HeroSection: React.FC = () => {
   return (
     <section ref={sectionRef} className="relative w-full h-screen min-h-[820px] overflow-hidden bg-black flex flex-col justify-between">
       <div ref={videoWrapperRef} className="absolute inset-0 w-full h-full will-change-transform bg-neutral-950">
-        {/* Background Fallback Photo */}
-        <img
-          src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=2000&q=95"
-          alt="Hero Background"
-          className="absolute inset-0 w-full h-full object-cover img-smooth-zoom"
-        />
-
-        {/* Video Background Layer */}
+        {/* Video Background */}
         {hero.videoUrl && (
           <video
-            key={hero.videoUrl}
+            ref={videoRef}
             src={hero.videoUrl}
             autoPlay
             muted
             loop
             playsInline
-            className="absolute inset-0 w-full h-full object-cover z-10"
-          >
-            <source src={hero.videoUrl} type="video/mp4" />
-          </video>
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         )}
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/88 z-[1]" />

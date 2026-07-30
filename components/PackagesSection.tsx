@@ -119,7 +119,18 @@ const PackagesSection: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    fetch('/api/packages').then(r => r.json()).then((data: unknown) => { if (Array.isArray(data)) setPackages(data as Package[]) }).catch(() => {})
+    fetch('/api/packages').then(r => r.json()).then((data: unknown) => {
+      if (Array.isArray(data)) {
+        // Filter hanya package yang valid: punya slug, rating, harga wajar, dan highlight
+        const valid = (data as Package[]).filter(p =>
+          (p as { slug?: string }).slug &&
+          p.rating &&
+          p.price > 100 &&
+          p.highlight
+        )
+        setPackages(valid as Package[])
+      }
+    }).catch(() => {})
   }, [])
 
   const filters = ['All', 'Beach', 'Mountain', 'City']

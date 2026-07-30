@@ -3,9 +3,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
-import { Menu, X, Sparkles, Home } from 'lucide-react'
+import { Menu, X, Sparkles, Home, LogOut } from 'lucide-react'
 import LogoIcon from './LogoIcon'
 import gsap from 'gsap'
+import { supabaseClient } from '@/lib/supabase-client'
+import type { User } from '@supabase/supabase-js'
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -18,6 +20,7 @@ const NAV_LINKS = [
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
   const navRef = useRef<HTMLElement>(null)
   const router = useRouter()
   const pathname = usePathname()
@@ -36,6 +39,24 @@ const Navbar: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    // Ambil session awal
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+    })
+    // Dengarkan perubahan auth (login/logout)
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleSignOut = async () => {
+    await supabaseClient.auth.signOut()
+    router.push('/')
+    setMenuOpen(false)
+  }
 
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
@@ -81,18 +102,30 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Right Actions */}
         <div className="hidden md:flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all"
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => router.push('/login')}
-            className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all"
-          >
-            Masuk
-          </button>
+          {user ? (
+            <>
+              <button
+                onClick={() => router.push('/dashboard')}
+                className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all"
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={handleSignOut}
+                className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all flex items-center gap-1.5"
+              >
+                <LogOut size={13} />
+                Keluar
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => router.push('/login')}
+              className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all"
+            >
+              Masuk
+            </button>
+          )}
           <button
             onClick={() => router.push('/search')}
             className="text-xs sm:text-sm font-jakarta font-bold px-5 py-2.5 rounded-full bg-neutral-950 hover:bg-black text-white transition-all shadow-xs"
@@ -134,18 +167,30 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-2 pt-3 border-t border-black/[0.06]">
-            <button
-              onClick={() => { router.push('/dashboard'); setMenuOpen(false) }}
-              className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl text-black/70 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
-            >
-              Dashboard
-            </button>
-            <button
-              onClick={() => { router.push('/login'); setMenuOpen(false) }}
-              className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl bg-black/[0.04] text-black hover:bg-black/[0.08] transition-colors text-center"
-            >
-              Masuk
-            </button>
+            {user ? (
+              <>
+                <button
+                  onClick={() => { router.push('/dashboard'); setMenuOpen(false) }}
+                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl text-black/70 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
+                >
+                  Dashboard
+                </button>
+                <button
+                  onClick={handleSignOut}
+                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl bg-black/[0.04] text-black hover:bg-black/[0.08] transition-colors text-center flex items-center justify-center gap-1.5"
+                >
+                  <LogOut size={13} />
+                  Keluar
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => { router.push('/login'); setMenuOpen(false) }}
+                className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl bg-black/[0.04] text-black hover:bg-black/[0.08] transition-colors text-center"
+              >
+                Masuk
+              </button>
+            )}
             <button
               onClick={() => { router.push('/search'); setMenuOpen(false) }}
               className="w-full text-sm font-jakarta font-bold px-4 py-2.5 rounded-xl bg-neutral-950 text-white hover:bg-black transition-colors text-center"

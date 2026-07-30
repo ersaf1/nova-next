@@ -311,7 +311,7 @@ export default function ItineraryPage() {
             <div className="pt-4 w-full space-y-8 relative">
               
               {/* 14 Scattered Floating Aesthetic Cards (Active Moving Videos & Frosted Glass Blur Canvas) */}
-              <div className="absolute -inset-x-8 -inset-y-12 pointer-events-none overflow-hidden z-0 hidden lg:block">
+              <div className="absolute -inset-x-24 -inset-y-12 pointer-events-none z-0 hidden lg:block">
                 
                 {/* 1. Tokyo, Japan 🇯🇵 (Photo) */}
                 <div className="absolute top-2 left-2 w-48 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl -rotate-8 animate-float opacity-80">

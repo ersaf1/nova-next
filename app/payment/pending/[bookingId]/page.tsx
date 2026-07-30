@@ -57,12 +57,12 @@ export default function PaymentPendingPage() {
   useEffect(() => {
     supabaseClient.auth.getUser().then(({ data }) => {
       if (!data.user) {
-        router.replace(`/login?redirect=/payment/pending/${bookingId}`)
+        router.replace(`/login?redirect=/payment/${bookingId}`)
         return
       }
-      fetchBooking()
+      // Redirect ke payment simulator
+      router.replace(`/payment/${bookingId}`)
     })
-    // fetchBooking and router are stable — omitted intentionally
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingId])
 

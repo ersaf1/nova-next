@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     // 3. Fetch booking from DB using service role client
     const { data: booking } = await supabase
       .from('Booking')
-      .select('id, totalAmount, contactName, contactEmail, packageName, userId, email, bookingCode, paymentStatus')
+      .select('id, totalAmount, packageName, userId, email, name, bookingCode, paymentStatus')
       .eq('id', bookingId)
       .single()
 
@@ -65,8 +65,8 @@ export async function POST(request: Request) {
         gross_amount: booking.totalAmount, // FROM DB, not from browser
       },
       customer_details: {
-        first_name: booking.contactName,
-        email: booking.contactEmail,
+        first_name: booking.name,
+        email: booking.email,
       },
       item_details: [{
         id: `BKG-${booking.id}`,

@@ -161,15 +161,25 @@ export default function PackagesPage() {
       .then((r) => r.json())
       .then((data: Package[]) => {
         if (Array.isArray(data) && data.length > 0) {
-          const formatted = data.map(p => ({
-            ...p,
-            includes: Array.isArray(p.includes)
-              ? p.includes
-              : typeof p.includes === 'string'
-              ? JSON.parse(p.includes)
-              : []
-          }))
-          setPackages(formatted)
+          const formatted = data
+            .filter(p =>
+              p.slug &&
+              p.rating &&
+              p.price > 100000 &&
+              p.highlight &&
+              p.groupSize &&
+              // duration harus string biasa, bukan JSON array
+              typeof p.duration === 'string' && !p.duration.startsWith('[')
+            )
+            .map(p => ({
+              ...p,
+              includes: Array.isArray(p.includes)
+                ? p.includes
+                : typeof p.includes === 'string'
+                ? (() => { try { return JSON.parse(p.includes as string) } catch { return [] } })()
+                : []
+            }))
+          setPackages(formatted.length > 0 ? formatted : STATIC_PACKAGES)
         }
         setLoading(false)
       })
