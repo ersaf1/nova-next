@@ -25,15 +25,18 @@ async function findCountryData(destination: string) {
   return null
 }
 
-function getMockDayData(dayNum: number, destName: string) {
+function getMockDayData(dayNum: number, destName: string, realPlaces: string[] = []) {
+  // Use real place names when available, fallback to generic templates
+  const p = (idx: number, fallback: string) => realPlaces[idx] ?? fallback
+
   const dayTemplates = [
     {
       title: `Hari ${dayNum} — Selamat Datang & Eksplorasi Pusat Kota ${destName}`,
       activities: [
-        { time: '09:00', activity: `Tur Selamat Datang & Orientasi Kota ${destName}`, location: `${destName} City Center`, duration: '3 jam', cost: 'Gratis/Tips', tips: 'Gunakan pakaian dan sepatu yang nyaman' },
-        { time: '13:00', activity: 'Makan Siang & Kuliner Khas Setempat', location: 'Restoran Tradisional', duration: '1.5 jam', cost: '$15', tips: 'Cobalah menu andalan lokal yang direkomendasikan' },
-        { time: '15:00', activity: 'Kunjungan Landmark Sejarah & Museum Utama', location: `${destName} Historical Site`, duration: '2.5 jam', cost: '$12', tips: 'Bawa kamera untuk mengabadikan arsitektur bersejarah' },
-        { time: '19:00', activity: 'Makan Malam Selamat Datang & Suasana Malam', location: 'Panoramic Rooftop Café', duration: '2 jam', cost: '$30', tips: 'Sangat direkomendasikan melakukan reservasi awal' }
+        { time: '09:00', activity: `Tur Selamat Datang & Orientasi Kota ${destName}`, location: p(0, `${destName} City Center`), duration: '3 jam', cost: 'Gratis/Tips', tips: 'Gunakan pakaian dan sepatu yang nyaman' },
+        { time: '13:00', activity: 'Makan Siang & Kuliner Khas Setempat', location: p(1, 'Restoran Tradisional'), duration: '1.5 jam', cost: '$15', tips: 'Cobalah menu andalan lokal yang direkomendasikan' },
+        { time: '15:00', activity: 'Kunjungan Landmark Sejarah & Museum Utama', location: p(2, `${destName} Historical Site`), duration: '2.5 jam', cost: '$12', tips: 'Bawa kamera untuk mengabadikan arsitektur bersejarah' },
+        { time: '19:00', activity: 'Makan Malam Selamat Datang & Suasana Malam', location: p(3, 'Panoramic Rooftop Café'), duration: '2 jam', cost: '$30', tips: 'Sangat direkomendasikan melakukan reservasi awal' }
       ],
       meals: { breakfast: 'Sarapan Hotel', lunch: 'Restoran Lokal', dinner: 'Rooftop Cafe' },
       accommodation: `Hotel Boutique di Pusat Kota ${destName}`
@@ -41,10 +44,10 @@ function getMockDayData(dayNum: number, destName: string) {
     {
       title: `Hari ${dayNum} — Petualangan Alam & Spot Foto Ikonik ${destName}`,
       activities: [
-        { time: '08:30', activity: `Petualangan Alam & Trekking Ringan`, location: `${destName} Nature Park / Ridge`, duration: '4 jam', cost: '$20', tips: 'Bawa air minum dan pakai krim pelindung matahari' },
-        { time: '13:00', activity: 'Makan Siang di Area Tepi Sungai/Tepi Pantai', location: 'Rumah Makan Tradisional', duration: '1.5 jam', cost: '$10', tips: 'Nikmati pemandangan alam sambil makan siang' },
-        { time: '15:30', activity: 'Jelajah Desa Wisata atau Kawasan Heritage', location: `${destName} Old Town`, duration: '3 jam', cost: 'Gratis', tips: 'Cobalah berinteraksi ramah dengan penduduk sekitar' },
-        { time: '19:30', activity: 'Makan Malam Santai & Berburu Street Food', location: 'Street Food Market / Pasar Malam', duration: '2 jam', cost: '$15', tips: 'Siapkan uang tunai kecil untuk kemudahan transaksi' }
+        { time: '08:30', activity: `Petualangan Alam & Trekking Ringan`, location: p(4, `${destName} Nature Park / Ridge`), duration: '4 jam', cost: '$20', tips: 'Bawa air minum dan pakai krim pelindung matahari' },
+        { time: '13:00', activity: 'Makan Siang di Area Tepi Sungai/Tepi Pantai', location: p(5, 'Rumah Makan Tradisional'), duration: '1.5 jam', cost: '$10', tips: 'Nikmati pemandangan alam sambil makan siang' },
+        { time: '15:30', activity: 'Jelajah Desa Wisata atau Kawasan Heritage', location: p(6, `${destName} Old Town`), duration: '3 jam', cost: 'Gratis', tips: 'Cobalah berinteraksi ramah dengan penduduk sekitar' },
+        { time: '19:30', activity: 'Makan Malam Santai & Berburu Street Food', location: p(7, 'Street Food Market / Pasar Malam'), duration: '2 jam', cost: '$15', tips: 'Siapkan uang tunai kecil untuk kemudahan transaksi' }
       ],
       meals: { breakfast: 'Sarapan Buffet', lunch: 'Cafe Tepi Jalan', dinner: 'Street Food Market' },
       accommodation: `Hotel Boutique di Pusat Kota ${destName}`
@@ -52,10 +55,10 @@ function getMockDayData(dayNum: number, destName: string) {
     {
       title: `Hari ${dayNum} — Meresapi Kebudayaan & Kehidupan Lokal ${destName}`,
       activities: [
-        { time: '09:30', activity: `Jelajah Galeri Seni, Istana Kuno, atau Kastil`, location: `${destName} Palace / Art Gallery`, duration: '3 jam', cost: '$18', tips: 'Patuhi aturan pengambilan gambar di dalam area gedung' },
-        { time: '13:00', activity: 'Makan Siang dengan Tema Gastronomi Lokal', location: 'Bistro Modern', duration: '1.5 jam', cost: '$25', tips: 'Tanyakan rekomendasi Chef untuk menu hari ini' },
-        { time: '15:00', activity: 'Berbelanja Oleh-oleh & Kerajinan Khas', location: 'Pasar Seni / Local Craft Bazaar', duration: '3 jam', cost: 'Sesuai belanja', tips: 'Tawar harga secara wajar jika berbelanja di pasar tradisional' },
-        { time: '19:00', activity: 'Makan Malam Perpisahan & Pertunjukan Seni', location: 'Theater & Dinner Hall', duration: '3 jam', cost: '$40', tips: 'Gunakan pakaian kasual rapi untuk acara makan malam' }
+        { time: '09:30', activity: `Jelajah Galeri Seni, Istana Kuno, atau Kastil`, location: p(8, `${destName} Palace / Art Gallery`), duration: '3 jam', cost: '$18', tips: 'Patuhi aturan pengambilan gambar di dalam area gedung' },
+        { time: '13:00', activity: 'Makan Siang dengan Tema Gastronomi Lokal', location: p(9, 'Bistro Modern'), duration: '1.5 jam', cost: '$25', tips: 'Tanyakan rekomendasi Chef untuk menu hari ini' },
+        { time: '15:00', activity: 'Berbelanja Oleh-oleh & Kerajinan Khas', location: p(10, 'Pasar Seni / Local Craft Bazaar'), duration: '3 jam', cost: 'Sesuai belanja', tips: 'Tawar harga secara wajar jika berbelanja di pasar tradisional' },
+        { time: '19:00', activity: 'Makan Malam Perpisahan & Pertunjukan Seni', location: p(11, 'Theater & Dinner Hall'), duration: '3 jam', cost: '$40', tips: 'Gunakan pakaian kasual rapi untuk acara makan malam' }
       ],
       meals: { breakfast: 'Sarapan Sehat', lunch: 'Bistro Gastronomi', dinner: 'Dinner & Culture Show' },
       accommodation: `Resort / Villa Wisata di ${destName}`
@@ -63,10 +66,10 @@ function getMockDayData(dayNum: number, destName: string) {
     {
       title: `Hari ${dayNum} — Rileksasi & Waktu Bebas di ${destName}`,
       activities: [
-        { time: '10:00', activity: `Waktu Santai, Rekreasi Mandiri, atau Spa`, location: `${destName} Recreation Area / Spa`, duration: '2.5 jam', cost: '$35', tips: 'Saatnya rileks setelah hari-hari penuh petualangan' },
-        { time: '13:00', activity: 'Makan Siang Santai di Kafe Tepi Jalan', location: 'Estetik Café', duration: '1.5 jam', cost: '$18', tips: 'Cocok untuk bersantai sambil mengamati aktivitas lokal kota' },
-        { time: '15:00', activity: 'Kunjungan Taman Botani / Taman Kota Terbuka', location: `${destName} Botanical Garden`, duration: '2 jam', cost: '$5', tips: 'Nikmati suasana sore yang teduh dan asri' },
-        { time: '18:30', activity: 'Makan Malam Santai & Berburu Sunset Terakhir', location: 'Sunset View Point Lounge', duration: '2 jam', cost: '$25', tips: 'Datang lebih awal sebelum waktu matahari terbenam untuk spot terbaik' }
+        { time: '10:00', activity: `Waktu Santai, Rekreasi Mandiri, atau Spa`, location: p(0, `${destName} Recreation Area / Spa`), duration: '2.5 jam', cost: '$35', tips: 'Saatnya rileks setelah hari-hari penuh petualangan' },
+        { time: '13:00', activity: 'Makan Siang Santai di Kafe Tepi Jalan', location: p(1, 'Estetik Café'), duration: '1.5 jam', cost: '$18', tips: 'Cocok untuk bersantai sambil mengamati aktivitas lokal kota' },
+        { time: '15:00', activity: 'Kunjungan Taman Botani / Taman Kota Terbuka', location: p(2, `${destName} Botanical Garden`), duration: '2 jam', cost: '$5', tips: 'Nikmati suasana sore yang teduh dan asri' },
+        { time: '18:30', activity: 'Makan Malam Santai & Berburu Sunset Terakhir', location: p(3, 'Sunset View Point Lounge'), duration: '2 jam', cost: '$25', tips: 'Datang lebih awal sebelum waktu matahari terbenam untuk spot terbaik' }
       ],
       meals: { breakfast: 'Sarapan Hotel', lunch: 'Kafe Estetik', dinner: 'Sunset Lounge' },
       accommodation: `Resort / Villa Wisata di ${destName}`
@@ -77,7 +80,7 @@ function getMockDayData(dayNum: number, destName: string) {
   return dayTemplates[index]
 }
 
-function generateMockItinerary(destination: string, duration: number, countryData: any = null) {
+function generateMockItinerary(destination: string, duration: number, countryData: any = null, realPlaces: string[] = []) {
   const destName = countryData ? `${countryData.city}, ${countryData.country}` : destination
   const defaultAttractions = countryData ? [
     { name: `Pemandangan & Landmark Utama ${countryData.city}`, description: countryData.tagline || countryData.description, image: countryData.image },
@@ -92,7 +95,7 @@ function generateMockItinerary(destination: string, duration: number, countryDat
     heroImage: countryData ? countryData.image : null,
     days: Array.from({ length: duration }, (_, i) => {
       const dayNum = i + 1
-      const dayData = getMockDayData(dayNum, destName)
+      const dayData = getMockDayData(dayNum, destName, realPlaces)
       return {
         day: dayNum,
         title: dayData.title,
@@ -199,10 +202,14 @@ Return a JSON object with this exact structure:
     console.error('AI itinerary fallback:', error)
     const dest = destination || 'Bali'
     const countryData = await findCountryData(dest)
-    const mock = generateMockItinerary(dest, Number(duration) || 3, countryData)
 
-    // Still inject real Geoapify places even when Gemini fails
+    // Fetch real Geoapify places first — use names for activity locations + attractions
     const realPlaces = await getOrFetchPlaces(dest)
+    const realPlaceNames = realPlaces.map(p => p.name)
+
+    const mock = generateMockItinerary(dest, Number(duration) || 3, countryData, realPlaceNames)
+
+    // Inject real Geoapify places into attractions gallery
     if (realPlaces.length > 0) {
       mock.attractions = mergePlacesIntoAttractions(realPlaces)
     }
