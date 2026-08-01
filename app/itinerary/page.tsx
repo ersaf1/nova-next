@@ -154,24 +154,42 @@ function DayAccordion({ day, index }: { day: Day; index: number }) {
                     <div className="w-px flex-1 bg-neutral-200/80 mt-1 mx-auto" style={{ minHeight: 18 }} />
                   )}
                 </div>
-                <div className="flex-1 bg-neutral-50/80 rounded-xl p-4 border border-neutral-200/60">
-                  <div className="flex items-start justify-between gap-3 mb-1.5">
-                    <p className="text-xs font-bold text-neutral-900 leading-snug">{act.activity}</p>
-                    <span className="text-[11px] font-semibold text-neutral-700 shrink-0 bg-white border border-neutral-200 rounded-full px-2.5 py-0.5">{act.cost}</span>
-                  </div>
-                  <p className="text-[11px] text-neutral-500 flex items-center gap-1.5">
-                    <MapPin size={10} className="shrink-0 text-neutral-400" />
-                    {act.location}
-                    <span className="text-neutral-300">Â·</span>
-                    <Clock size={10} className="shrink-0 text-neutral-400" />
-                    {act.duration}
-                  </p>
-                  {act.tips && (
-                    <p className="text-[11px] text-neutral-600 mt-2 flex items-start gap-1.5 bg-amber-50/50 border border-amber-200/40 p-2 rounded-lg">
-                      <Lightbulb size={11} className="mt-0.5 shrink-0 text-amber-600" />
-                      <span>{act.tips}</span>
+                <div className="flex-1 bg-neutral-50/80 rounded-xl overflow-hidden border border-neutral-200/60">
+                  {/* Photo banner — Unsplash keyword search, hidden on error */}
+                  <img
+                    src={`https://source.unsplash.com/featured/800x240/?${encodeURIComponent(act.location)}`}
+                    alt={act.location}
+                    loading="lazy"
+                    className="w-full h-36 object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                  />
+                  <div className="p-4">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <p className="text-xs font-bold text-neutral-900 leading-snug">{act.activity}</p>
+                      <span className="text-[11px] font-semibold text-neutral-700 shrink-0 bg-white border border-neutral-200 rounded-full px-2.5 py-0.5">{act.cost}</span>
+                    </div>
+                    {/* Location — bigger, linkable */}
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.location)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-800 hover:text-blue-600 transition-colors group mb-1"
+                    >
+                      <MapPin size={12} className="shrink-0 text-neutral-400 group-hover:text-blue-500 transition-colors" />
+                      {act.location}
+                      <ArrowRight size={11} className="text-neutral-300 group-hover:text-blue-500 transition-colors" />
+                    </a>
+                    <p className="text-[11px] text-neutral-400 flex items-center gap-1 mb-0">
+                      <Clock size={10} className="shrink-0" />
+                      {act.duration}
                     </p>
-                  )}
+                    {act.tips && (
+                      <p className="text-[11px] text-neutral-600 mt-2.5 flex items-start gap-1.5 bg-amber-50/50 border border-amber-200/40 p-2 rounded-lg">
+                        <Lightbulb size={11} className="mt-0.5 shrink-0 text-amber-600" />
+                        <span>{act.tips}</span>
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
