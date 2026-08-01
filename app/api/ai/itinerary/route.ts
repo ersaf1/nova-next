@@ -197,7 +197,16 @@ Return a JSON object with this exact structure:
     return NextResponse.json(itinerary)
   } catch (error) {
     console.error('AI itinerary fallback:', error)
-    const countryData = await findCountryData(destination || 'Bali')
-    return NextResponse.json(generateMockItinerary(destination || 'Bali', Number(duration) || 3, countryData), { status: 200 })
+    const dest = destination || 'Bali'
+    const countryData = await findCountryData(dest)
+    const mock = generateMockItinerary(dest, Number(duration) || 3, countryData)
+
+    // Still inject real Geoapify places even when Gemini fails
+    const realPlaces = await getOrFetchPlaces(dest)
+    if (realPlaces.length > 0) {
+      mock.attractions = mergePlacesIntoAttractions(realPlaces)
+    }
+
+    return NextResponse.json(mock, { status: 200 })
   }
 }
