@@ -155,9 +155,9 @@ function DayAccordion({ day, index }: { day: Day; index: number }) {
                   )}
                 </div>
                 <div className="flex-1 bg-neutral-50/80 rounded-xl overflow-hidden border border-neutral-200/60">
-                  {/* Photo banner — Unsplash keyword search, hidden on error */}
+                  {/* Photo banner — unique per location using picsum seed */}
                   <img
-                    src={`https://source.unsplash.com/featured/800x240/?${encodeURIComponent(act.location)}`}
+                    src={`https://picsum.photos/seed/${encodeURIComponent(act.location + act.activity)}/800/240`}
                     alt={act.location}
                     loading="lazy"
                     className="w-full h-36 object-cover"
