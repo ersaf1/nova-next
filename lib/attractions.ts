@@ -2,6 +2,8 @@ export interface Attraction {
   name: string
   description: string
   image: string
+  lat?: number   // from Geoapify
+  lon?: number   // from Geoapify
 }
 
 export const DESTINATION_ATTRACTIONS: Record<string, Attraction[]> = {
@@ -72,4 +74,30 @@ export function getAttractionsForDestination(destination: string, apiAttractions
     { name: 'Nature & Parks', description: 'Relax in local green spaces, scenic view points, and beautiful natural areas.', image: GENERAL_TRAVEL_PHOTOS[1] },
     { name: 'Local Food & Cafes', description: 'Experience the local culinary scene, street food markets, and cozy cafes.', image: GENERAL_TRAVEL_PHOTOS[2] },
   ]
+}
+
+// ─── Geoapify integration ────────────────────────────────────
+import type { GeoapifyPlace } from './geoapify/types'
+
+function formatCategory(category: string): string {
+  const last = category.split('.').pop() ?? category
+  return last.charAt(0).toUpperCase() + last.slice(1).replace(/_/g, ' ')
+}
+
+// Converts Geoapify places into the Attraction shape used by the itinerary UI.
+// Geoapify places have no photos — GENERAL_TRAVEL_PHOTOS used as visual fallback.
+export function mergePlacesIntoAttractions(places: GeoapifyPlace[]): Attraction[] {
+  return places.map((place, idx) => ({
+    name: place.name,
+    description: [
+      place.categories[0] ? formatCategory(place.categories[0]) : 'Attraction',
+      place.address,
+      place.openingHours ? `Buka: ${place.openingHours}` : null,
+    ]
+      .filter(Boolean)
+      .join(' · '),
+    image: GENERAL_TRAVEL_PHOTOS[idx % GENERAL_TRAVEL_PHOTOS.length],
+    lat: place.lat,
+    lon: place.lon,
+  }))
 }

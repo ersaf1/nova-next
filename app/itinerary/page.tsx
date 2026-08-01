@@ -1,6 +1,6 @@
-'use client'
+﻿'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
   MapPin, DollarSign, Users, Calendar,
@@ -49,11 +49,11 @@ interface Itinerary {
 }
 
 const PREFERENCE_OPTIONS = [
-  { label: 'Beach', emoji: '🏖️' },
-  { label: 'Culture', emoji: '🏛️' },
-  { label: 'Food', emoji: '🍜' },
-  { label: 'Adventure', emoji: '🧗' },
-  { label: 'Shopping', emoji: '🛍️' },
+  { label: 'Beach', emoji: 'ðŸ–ï¸' },
+  { label: 'Culture', emoji: 'ðŸ›ï¸' },
+  { label: 'Food', emoji: 'ðŸœ' },
+  { label: 'Adventure', emoji: 'ðŸ§—' },
+  { label: 'Shopping', emoji: 'ðŸ›ï¸' },
 ]
 const BUDGET_OPTIONS = ['Budget', 'Mid-range', 'Luxury']
 
@@ -137,7 +137,7 @@ function DayAccordion({ day, index }: { day: Day; index: number }) {
           </span>
           <div>
             <p className="font-bold text-sm text-neutral-900 leading-snug">{day.title}</p>
-            <p className="text-xs text-neutral-400 mt-0.5">{day.estimatedDailyCost} · {day.activities.length} aktivitas</p>
+            <p className="text-xs text-neutral-400 mt-0.5">{day.estimatedDailyCost} Â· {day.activities.length} aktivitas</p>
           </div>
         </div>
         <ChevronDown size={16} className={`text-neutral-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180 text-neutral-950' : ''}`} />
@@ -162,7 +162,7 @@ function DayAccordion({ day, index }: { day: Day; index: number }) {
                   <p className="text-[11px] text-neutral-500 flex items-center gap-1.5">
                     <MapPin size={10} className="shrink-0 text-neutral-400" />
                     {act.location}
-                    <span className="text-neutral-300">·</span>
+                    <span className="text-neutral-300">Â·</span>
                     <Clock size={10} className="shrink-0 text-neutral-400" />
                     {act.duration}
                   </p>
@@ -204,7 +204,7 @@ function DayAccordion({ day, index }: { day: Day; index: number }) {
   )
 }
 
-export default function ItineraryPage() {
+function ItineraryPageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -313,18 +313,18 @@ export default function ItineraryPage() {
               {/* 14 Scattered Floating Aesthetic Cards (Active Moving Videos & Frosted Glass Blur Canvas) */}
               <div className="absolute -inset-x-24 -inset-y-12 pointer-events-none z-0 hidden lg:block">
                 
-                {/* 1. Tokyo, Japan 🇯🇵 (Photo) */}
+                {/* 1. Tokyo, Japan ðŸ‡¯ðŸ‡µ (Photo) */}
                 <div className="absolute top-2 left-2 w-48 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl -rotate-8 animate-float opacity-80">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80" alt="Tokyo Japan" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
                   <div className="flex items-center justify-between text-[11px] font-jakarta font-bold text-neutral-950">
-                    <span>Tokyo, Japan 🇯🇵</span>
-                    <span className="text-amber-500">4.9 ★</span>
+                    <span>Tokyo, Japan ðŸ‡¯ðŸ‡µ</span>
+                    <span className="text-amber-500">4.9 â˜…</span>
                   </div>
                 </div>
 
-                {/* 2. Santorini, Greece 🇬🇷 (Active Moving Video) */}
+                {/* 2. Santorini, Greece ðŸ‡¬ðŸ‡· (Active Moving Video) */}
                 <div className="absolute top-4 right-2 w-52 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl rotate-12 animate-float-delayed opacity-85">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
@@ -333,23 +333,23 @@ export default function ItineraryPage() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-[11px] font-jakarta font-bold text-neutral-950">
-                    <span>Santorini, Greece 🇬🇷</span>
-                    <span className="text-amber-500">5.0 ★</span>
+                    <span>Santorini, Greece ðŸ‡¬ðŸ‡·</span>
+                    <span className="text-amber-500">5.0 â˜…</span>
                   </div>
                 </div>
 
-                {/* 3. Patagonia, Argentina 🇦🇷 (Photo) */}
+                {/* 3. Patagonia, Argentina ðŸ‡¦ðŸ‡· (Photo) */}
                 <div className="absolute bottom-4 left-4 w-52 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl rotate-6 animate-float opacity-80">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&q=80" alt="Patagonia Argentina" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
                   <div className="flex items-center justify-between text-[11px] font-jakarta font-bold text-neutral-950">
-                    <span>Patagonia, Argentina 🇦🇷</span>
-                    <span className="text-amber-500">4.9 ★</span>
+                    <span>Patagonia, Argentina ðŸ‡¦ðŸ‡·</span>
+                    <span className="text-amber-500">4.9 â˜…</span>
                   </div>
                 </div>
 
-                {/* 4. Bali, Indonesia 🇮🇩 (Active Moving Video) */}
+                {/* 4. Bali, Indonesia ðŸ‡®ðŸ‡© (Active Moving Video) */}
                 <div className="absolute bottom-2 right-4 w-48 bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xl -rotate-12 animate-float-delayed opacity-85">
                   <div className="h-28 rounded-xl overflow-hidden mb-2 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
@@ -358,101 +358,101 @@ export default function ItineraryPage() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-[11px] font-jakarta font-bold text-neutral-950">
-                    <span>Bali, Indonesia 🇮🇩</span>
-                    <span className="text-amber-500">4.9 ★</span>
+                    <span>Bali, Indonesia ðŸ‡®ðŸ‡©</span>
+                    <span className="text-amber-500">4.9 â˜…</span>
                   </div>
                 </div>
 
-                {/* 5. Paris, France 🇫🇷 (Photo) */}
+                {/* 5. Paris, France ðŸ‡«ðŸ‡· (Photo) */}
                 <div className="absolute top-1/4 -left-10 w-44 bg-white/70 backdrop-blur-md p-2.5 rounded-2xl border border-white/80 shadow-lg rotate-9 animate-float-delayed opacity-75">
                   <div className="h-24 rounded-xl overflow-hidden mb-1.5 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80" alt="Paris France" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
                   <div className="flex items-center justify-between text-[10px] font-jakarta font-bold text-neutral-950">
-                    <span>Paris, France 🇫🇷</span>
-                    <span className="text-amber-500">4.8 ★</span>
+                    <span>Paris, France ðŸ‡«ðŸ‡·</span>
+                    <span className="text-amber-500">4.8 â˜…</span>
                   </div>
                 </div>
 
-                {/* 6. Amalfi Coast, Italy 🇮🇹 (Active Moving Video) */}
+                {/* 6. Amalfi Coast, Italy ðŸ‡®ðŸ‡¹ (Active Moving Video) */}
                 <div className="absolute top-1/3 -right-8 w-48 bg-white/70 backdrop-blur-md p-2.5 rounded-2xl border border-white/80 shadow-lg -rotate-15 animate-float opacity-80">
                   <div className="h-24 rounded-xl overflow-hidden mb-1.5 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
                   </div>
                   <div className="flex items-center justify-between text-[10px] font-jakarta font-bold text-neutral-950">
-                    <span>Amalfi Coast 🇮🇹</span>
-                    <span className="text-amber-500">5.0 ★</span>
+                    <span>Amalfi Coast ðŸ‡®ðŸ‡¹</span>
+                    <span className="text-amber-500">5.0 â˜…</span>
                   </div>
                 </div>
 
-                {/* 7. Kyoto, Japan 🇯🇵 (Photo) */}
+                {/* 7. Kyoto, Japan ðŸ‡¯ðŸ‡µ (Photo) */}
                 <div className="absolute bottom-1/4 -left-8 w-48 bg-white/70 backdrop-blur-md p-2.5 rounded-2xl border border-white/80 shadow-lg -rotate-6 animate-float opacity-75">
                   <div className="h-24 rounded-xl overflow-hidden mb-1.5 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80" alt="Kyoto Japan" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
                   <div className="flex items-center justify-between text-[10px] font-jakarta font-bold text-neutral-950">
-                    <span>Kyoto Temples 🇯🇵</span>
-                    <span className="text-amber-500">4.9 ★</span>
+                    <span>Kyoto Temples ðŸ‡¯ðŸ‡µ</span>
+                    <span className="text-amber-500">4.9 â˜…</span>
                   </div>
                 </div>
 
-                {/* 8. Swiss Alps 🇨🇭 (Active Moving Video) */}
+                {/* 8. Swiss Alps ðŸ‡¨ðŸ‡­ (Active Moving Video) */}
                 <div className="absolute bottom-1/3 -right-10 w-44 bg-white/70 backdrop-blur-md p-2.5 rounded-2xl border border-white/80 shadow-lg rotate-8 animate-float-delayed opacity-80">
                   <div className="h-24 rounded-xl overflow-hidden mb-1.5 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
                   </div>
                   <div className="flex items-center justify-between text-[10px] font-jakarta font-bold text-neutral-950">
-                    <span>Swiss Alps 🇨🇭</span>
-                    <span className="text-amber-500">4.9 ★</span>
+                    <span>Swiss Alps ðŸ‡¨ðŸ‡­</span>
+                    <span className="text-amber-500">4.9 â˜…</span>
                   </div>
                 </div>
 
-                {/* 9. New York, USA 🇺🇸 (Photo) */}
+                {/* 9. New York, USA ðŸ‡ºðŸ‡¸ (Photo) */}
                 <div className="absolute -top-10 left-1/3 w-40 bg-white/60 backdrop-blur-md p-2 rounded-2xl border border-white/70 shadow-md rotate-14 animate-float opacity-65">
                   <div className="h-20 rounded-lg overflow-hidden mb-1 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80" alt="New York" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
-                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">New York 🇺🇸</div>
+                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">New York ðŸ‡ºðŸ‡¸</div>
                 </div>
 
-                {/* 10. Reykjavik, Iceland 🇮🇸 (Active Moving Video) */}
+                {/* 10. Reykjavik, Iceland ðŸ‡®ðŸ‡¸ (Active Moving Video) */}
                 <div className="absolute -top-8 right-1/3 w-44 bg-white/65 backdrop-blur-md p-2 rounded-2xl border border-white/70 shadow-md -rotate-10 animate-float-delayed opacity-70">
                   <div className="h-20 rounded-lg overflow-hidden mb-1 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
                   </div>
-                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Iceland Glaciers 🇮🇸</div>
+                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Iceland Glaciers ðŸ‡®ðŸ‡¸</div>
                 </div>
 
-                {/* 11. Cairo, Egypt 🇪🇬 (Photo) */}
+                {/* 11. Cairo, Egypt ðŸ‡ªðŸ‡¬ (Photo) */}
                 <div className="absolute -bottom-10 left-1/3 w-44 bg-white/65 backdrop-blur-md p-2 rounded-2xl border border-white/70 shadow-md -rotate-14 animate-float opacity-65">
                   <div className="h-20 rounded-lg overflow-hidden mb-1 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" alt="Cairo Egypt" className="w-full h-full object-cover img-smooth-zoom" />
                   </div>
-                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Cairo Pyramids 🇪🇬</div>
+                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Cairo Pyramids ðŸ‡ªðŸ‡¬</div>
                 </div>
 
-                {/* 12. Maldives 🇲🇻 (Active Moving Video) */}
+                {/* 12. Maldives ðŸ‡²ðŸ‡» (Active Moving Video) */}
                 <div className="absolute -bottom-10 right-1/3 w-40 bg-white/65 backdrop-blur-md p-2 rounded-2xl border border-white/70 shadow-md rotate-11 animate-float-delayed opacity-70">
                   <div className="h-20 rounded-lg overflow-hidden mb-1 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
                   </div>
-                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Maldives Resort 🇲🇻</div>
+                  <div className="text-[9px] font-jakarta font-bold text-neutral-900 text-center">Maldives Resort ðŸ‡²ðŸ‡»</div>
                 </div>
 
-                {/* 13. Barcelona, Spain 🇪🇸 (Photo) */}
+                {/* 13. Barcelona, Spain ðŸ‡ªðŸ‡¸ (Photo) */}
                 <div className="absolute top-12 left-1/4 w-36 bg-white/50 backdrop-blur-sm p-2 rounded-xl border border-white/60 shadow-xs -rotate-3 animate-float opacity-50">
                   <div className="h-16 rounded-md overflow-hidden mb-1 bg-neutral-900">
                     <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80" alt="Barcelona" className="w-full h-full object-cover" />
                   </div>
-                  <div className="text-[8px] font-jakarta font-bold text-neutral-800 text-center">Barcelona 🇪🇸</div>
+                  <div className="text-[8px] font-jakarta font-bold text-neutral-800 text-center">Barcelona ðŸ‡ªðŸ‡¸</div>
                 </div>
 
-                {/* 14. Rio de Janeiro, Brazil 🇧🇷 (Active Moving Video) */}
+                {/* 14. Rio de Janeiro, Brazil ðŸ‡§ðŸ‡· (Active Moving Video) */}
                 <div className="absolute bottom-12 right-1/4 w-36 bg-white/50 backdrop-blur-sm p-2 rounded-xl border border-white/60 shadow-xs rotate-4 animate-float-delayed opacity-50">
                   <div className="h-16 rounded-md overflow-hidden mb-1 bg-neutral-900 relative">
                     <video src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-beach-with-turquoise-water-41525-large.mp4" autoPlay loop muted playsInline className="w-full h-full object-cover" />
                   </div>
-                  <div className="text-[8px] font-jakarta font-bold text-neutral-800 text-center">Rio de Janeiro 🇧🇷</div>
+                  <div className="text-[8px] font-jakarta font-bold text-neutral-800 text-center">Rio de Janeiro ðŸ‡§ðŸ‡·</div>
                 </div>
 
               </div>
@@ -484,7 +484,7 @@ export default function ItineraryPage() {
                       <p className="text-sm font-bold text-neutral-950">
                         {loadingMessages[loadingStep]}
                       </p>
-                      <p className="text-xs text-neutral-500">Powered by Gemini AI · mohon tunggu sebentar</p>
+                      <p className="text-xs text-neutral-500">Powered by Gemini AI Â· mohon tunggu sebentar</p>
                     </div>
                   </div>
                 ) : (
@@ -550,7 +550,7 @@ export default function ItineraryPage() {
                             onClick={() => setTravelers(Math.max(1, travelers - 1))}
                             className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-950 hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors"
                           >
-                            −
+                            âˆ’
                           </button>
                           <span className="text-xs font-jakarta font-extrabold text-neutral-950">{travelers} Orang</span>
                           <button
@@ -812,9 +812,16 @@ export default function ItineraryPage() {
               </div>
             </div>
           )}
-
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ItineraryPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-neutral-950" />}>
+      <ItineraryPageInner />
+    </Suspense>
   )
 }

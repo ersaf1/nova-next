@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { getAttractionsForDestination } from '@/lib/attractions'
+import { getAttractionsForDestination, mergePlacesIntoAttractions } from '@/lib/attractions'
+import { getOrFetchPlaces } from '@/lib/geoapify/places-cache'
 import { readFile } from 'fs/promises'
 import path from 'path'
 
@@ -182,8 +183,13 @@ Return a JSON object with this exact structure:
     if (!jsonMatch) throw new Error('Invalid AI response')
     const itinerary = JSON.parse(jsonMatch[0])
     
-    // Inject image for attractions & country data
-    itinerary.attractions = getAttractionsForDestination(destination, itinerary.attractions)
+    // Inject real places from Geoapify (with static fallback)
+    const realPlaces = await getOrFetchPlaces(destination)
+    if (realPlaces.length > 0) {
+      itinerary.attractions = mergePlacesIntoAttractions(realPlaces)
+    } else {
+      itinerary.attractions = getAttractionsForDestination(destination, itinerary.attractions)
+    }
     if (countryData && countryData.image) {
       itinerary.heroImage = countryData.image
     }

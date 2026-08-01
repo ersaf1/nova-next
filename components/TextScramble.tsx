@@ -7,7 +7,7 @@ interface TextScrambleProps {
   className?: string
   trigger?: boolean // external trigger, defaults to IntersectionObserver
   speed?: number    // ms per frame
-  as?: keyof JSX.IntrinsicElements
+  as?: keyof React.JSX.IntrinsicElements
 }
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'

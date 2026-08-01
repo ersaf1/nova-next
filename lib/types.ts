@@ -293,3 +293,6 @@ export function getPaymentStatusColor(status: Booking['paymentStatus']): string 
 export function packageHref(pkg: { slug?: string; id: number }): string {
   return `/packages/${pkg.slug ?? pkg.id}`
 }
+
+// ─── Re-export Geoapify types ────────────────────────────────
+export type { GeoapifyPlace, GeocodingResult, AutocompleteSuggestion, SearchPlacesParams } from './geoapify/types'
