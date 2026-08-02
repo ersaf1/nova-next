@@ -7,6 +7,25 @@ import path from 'path'
 
 const DESTINATIONS_FILE = path.join(process.cwd(), 'data', 'destinations.json')
 
+function shuffle<T>(arr: T[]): T[] {
+  const copy = [...arr]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  }
+  return copy
+}
+
+// Sudut kreatif acak supaya tiap generate terasa berbeda
+const CREATIVE_ANGLES = [
+  'kuliner lokal dan hidden gems',
+  'alam, spot foto ikonik, dan suasana santai',
+  'budaya, sejarah, dan kehidupan warga lokal',
+  'pengalaman unik yang jarang dikunjungi turis',
+  'keseimbangan antara landmark terkenal dan tempat anti-mainstream',
+  'petualangan aktif di siang hari dan suasana malam yang hidup',
+]
+
 async function findCountryData(destination: string) {
   try {
     const raw = await readFile(DESTINATIONS_FILE, 'utf-8')
@@ -25,9 +44,11 @@ async function findCountryData(destination: string) {
   return null
 }
 
-function getMockDayData(dayNum: number, destName: string, realPlaces: string[] = []) {
+function getMockDayData(dayNum: number, destName: string, realPlaces: string[], shuffledTemplates: number[]) {
   // Use real place names when available, fallback to generic templates
-  const p = (idx: number, fallback: string) => realPlaces[idx] ?? fallback
+  const p = (idx: number, fallback: string) => realPlaces.length > 0
+    ? realPlaces[idx % realPlaces.length]
+    : fallback
 
   const dayTemplates = [
     {
@@ -66,19 +87,27 @@ function getMockDayData(dayNum: number, destName: string, realPlaces: string[] =
     {
       title: `Hari ${dayNum} — Rileksasi & Waktu Bebas di ${destName}`,
       activities: [
-        { time: '10:00', activity: `Waktu Santai, Rekreasi Mandiri, atau Spa`, location: p(0, `${destName} Recreation Area / Spa`), duration: '2.5 jam', cost: '$35', tips: 'Saatnya rileks setelah hari-hari penuh petualangan' },
-        { time: '13:00', activity: 'Makan Siang Santai di Kafe Tepi Jalan', location: p(1, 'Estetik Café'), duration: '1.5 jam', cost: '$18', tips: 'Cocok untuk bersantai sambil mengamati aktivitas lokal kota' },
-        { time: '15:00', activity: 'Kunjungan Taman Botani / Taman Kota Terbuka', location: p(2, `${destName} Botanical Garden`), duration: '2 jam', cost: '$5', tips: 'Nikmati suasana sore yang teduh dan asri' },
-        { time: '18:30', activity: 'Makan Malam Santai & Berburu Sunset Terakhir', location: p(3, 'Sunset View Point Lounge'), duration: '2 jam', cost: '$25', tips: 'Datang lebih awal sebelum waktu matahari terbenam untuk spot terbaik' }
+        { time: '10:00', activity: `Waktu Santai, Rekreasi Mandiri, atau Spa`, location: p(12, `${destName} Recreation Area / Spa`), duration: '2.5 jam', cost: '$35', tips: 'Saatnya rileks setelah hari-hari penuh petualangan' },
+        { time: '13:00', activity: 'Makan Siang Santai di Kafe Tepi Jalan', location: p(13, 'Estetik Café'), duration: '1.5 jam', cost: '$18', tips: 'Cocok untuk bersantai sambil mengamati aktivitas lokal kota' },
+        { time: '15:00', activity: 'Kunjungan Taman Botani / Taman Kota Terbuka', location: p(14, `${destName} Botanical Garden`), duration: '2 jam', cost: '$5', tips: 'Nikmati suasana sore yang teduh dan asri' },
+        { time: '18:30', activity: 'Makan Malam Santai & Berburu Sunset Terakhir', location: p(15, 'Sunset View Point Lounge'), duration: '2 jam', cost: '$25', tips: 'Datang lebih awal sebelum waktu matahari terbenam untuk spot terbaik' }
       ],
       meals: { breakfast: 'Sarapan Hotel', lunch: 'Kafe Estetik', dinner: 'Sunset Lounge' },
       accommodation: `Resort / Villa Wisata di ${destName}`
     }
   ]
 
-  const index = (dayNum - 1) % dayTemplates.length
+  // Urutan template diacak per request supaya susunan hari tidak selalu sama
+  const index = shuffledTemplates[(dayNum - 1) % shuffledTemplates.length]
   return dayTemplates[index]
 }
+
+const MOCK_INTROS = [
+  (destName: string, duration: number) => `Yang cocok untuk kamu adalah itinerary ${destName} selama ${duration} hari ini — susunannya sengaja bervariasi biar tiap hari terasa beda!`,
+  (destName: string, duration: number) => `Berdasarkan preferensi kamu, perjalanan ${duration} hari di ${destName} ini pas banget. Ada campuran kota, alam, dan kulinernya!`,
+  (destName: string, duration: number) => `Ini dia rencana ${duration} hari di ${destName} yang dirancang santai tapi tetap padat pengalaman. Selamat jalan-jalan!`,
+  (destName: string, duration: number) => `${destName} selama ${duration} hari? Bisa! Itinerary ini menyeimbangkan waktu eksplorasi dan waktu santai kamu.`,
+]
 
 function generateMockItinerary(destination: string, duration: number, countryData: any = null, realPlaces: string[] = []) {
   const destName = countryData ? `${countryData.city}, ${countryData.country}` : destination
@@ -88,14 +117,20 @@ function generateMockItinerary(destination: string, duration: number, countryDat
     { name: `Pusat Kuliner & Seni ${countryData.city}`, description: `Cicipi hidangan otentik dan jelajahi pusat kerajinan lokal.`, image: countryData.image }
   ] : getAttractionsForDestination(destination)
 
+  // Acak urutan template hari + nama tempat supaya fallback tidak statis
+  const shuffledTemplates = shuffle([0, 1, 2, 3])
+  const shuffledPlaces = shuffle(realPlaces)
+  const intro = MOCK_INTROS[Math.floor(Math.random() * MOCK_INTROS.length)]
+
   return {
+    isMock: true,
     destination: destName,
     duration,
     totalEstimatedCost: countryData ? countryData.price : '$800 - $1500',
     heroImage: countryData ? countryData.image : null,
     days: Array.from({ length: duration }, (_, i) => {
       const dayNum = i + 1
-      const dayData = getMockDayData(dayNum, destName, realPlaces)
+      const dayData = getMockDayData(dayNum, destName, shuffledPlaces, shuffledTemplates)
       return {
         day: dayNum,
         title: dayData.title,
@@ -117,7 +152,7 @@ function generateMockItinerary(destination: string, duration: number, countryDat
       { phrase: 'Terima kasih', meaning: 'Ungkapan rasa terima kasih' },
       { phrase: 'Berapa harganya?', meaning: 'Menanyakan harga' }
     ],
-    aiIntro: `Yang cocok untuk kamu adalah itinerary ${destName} selama ${duration} days ini. Rencana perjalanan dirancang khusus untuk memberikan pengalaman bervariasi setiap harinya dari pusat kota hingga keindahan alamnya!`,
+    aiIntro: intro(destName, duration),
   }
 }
 
@@ -133,17 +168,33 @@ export async function POST(request: Request) {
 
     const countryData = await findCountryData(destination)
 
+    // Ambil tempat asli Geoapify lebih dulu — dipakai untuk grounding prompt & galeri
+    const realPlaces = await getOrFetchPlaces(destination)
+    const shuffledPlaces = shuffle(realPlaces)
+
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey || apiKey === 'placeholder') {
-      return NextResponse.json(generateMockItinerary(destination, duration, countryData))
+      return NextResponse.json(generateMockItinerary(destination, duration, countryData, shuffledPlaces.map(p => p.name)))
     }
 
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      generationConfig: {
+        temperature: 0.95,
+        topP: 0.9,
+        maxOutputTokens: 8192,
+        responseMimeType: 'application/json',
+      },
+    })
 
-    const prompt = `Create a detailed ${duration}-day travel itinerary for ${destination} for ${travelers} travelers with a budget of ${budget}. 
+    const placeLines = shuffledPlaces.slice(0, 15).map(pl => `- ${pl.name} — ${pl.address}`).join('\n')
+    const angle = CREATIVE_ANGLES[Math.floor(Math.random() * CREATIVE_ANGLES.length)]
+
+    const prompt = `Create a detailed ${duration}-day travel itinerary for ${destination} for ${travelers} travelers with a budget of ${budget}.
 Preferences: ${preferences || 'general sightseeing'}.
-
+Creative angle for this itinerary: emphasize ${angle}. Write with fresh, natural wording — every generation must feel different. Avoid generic filler phrases and vary activity descriptions between days.
+${placeLines ? `\nHere are REAL, verified places in/near ${destination} from a places database. Build the itinerary around THESE places — use their exact names as activity "location" values whenever relevant, and never invent place names:\n${placeLines}\n` : ''}
 Return a JSON object with this exact structure:
 {
   "destination": "string",
@@ -157,7 +208,7 @@ Return a JSON object with this exact structure:
         {
           "time": "string (e.g. 09:00)",
           "activity": "string",
-          "location": "string", 
+          "location": "string",
           "duration": "string (e.g. 2 hours)",
           "cost": "string",
           "tips": "string"
@@ -180,23 +231,34 @@ Return a JSON object with this exact structure:
   "localPhrases": [{"phrase": "string", "meaning": "string"}]
 }`
 
-    const result = await model.generateContent(prompt)
-    const text = result.response.text()
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) throw new Error('Invalid AI response')
-    const itinerary = JSON.parse(jsonMatch[0])
-    
-    // Inject real places from Geoapify (with static fallback)
-    const realPlaces = await getOrFetchPlaces(destination)
+    // Coba sampai 2x sebelum menyerah ke fallback
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let itinerary: any = null
+    let lastError: unknown = null
+    for (let attempt = 1; attempt <= 2 && !itinerary; attempt++) {
+      try {
+        const result = await model.generateContent(prompt)
+        const text = result.response.text()
+        const jsonMatch = text.match(/\{[\s\S]*\}/)
+        if (!jsonMatch) throw new Error('Invalid AI response')
+        itinerary = JSON.parse(jsonMatch[0])
+      } catch (err) {
+        lastError = err
+        console.error(`Gemini itinerary attempt ${attempt} failed:`, err)
+      }
+    }
+    if (!itinerary) throw lastError ?? new Error('AI itinerary generation failed')
+
+    // Galeri attractions tetap memakai tempat asli Geoapify (fallback statis bila kosong)
     if (realPlaces.length > 0) {
-      itinerary.attractions = mergePlacesIntoAttractions(realPlaces)
+      itinerary.attractions = mergePlacesIntoAttractions(shuffledPlaces)
     } else {
       itinerary.attractions = getAttractionsForDestination(destination, itinerary.attractions)
     }
     if (countryData && countryData.image) {
       itinerary.heroImage = countryData.image
     }
-    
+
     return NextResponse.json(itinerary)
   } catch (error) {
     console.error('AI itinerary fallback:', error)
@@ -205,13 +267,13 @@ Return a JSON object with this exact structure:
 
     // Fetch real Geoapify places first — use names for activity locations + attractions
     const realPlaces = await getOrFetchPlaces(dest)
-    const realPlaceNames = realPlaces.map(p => p.name)
+    const realPlaceNames = shuffle(realPlaces.map(p => p.name))
 
     const mock = generateMockItinerary(dest, Number(duration) || 3, countryData, realPlaceNames)
 
     // Inject real Geoapify places into attractions gallery
     if (realPlaces.length > 0) {
-      mock.attractions = mergePlacesIntoAttractions(realPlaces)
+      mock.attractions = mergePlacesIntoAttractions(shuffle(realPlaces))
     }
 
     return NextResponse.json(mock, { status: 200 })

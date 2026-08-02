@@ -1,0 +1,3 @@
+- Berkomunikasi dalam bahasa Indonesia (campur Inggris secukupnya). Confidence: 0.8
+- Mengutamakan animasi UI yang halus dan berkualitas tinggi ("bagus smooth"). Confidence: 0.7
+- Tidak suka elemen UI yang bertabrakan / overlap — tata letak harus bersih dan tidak saling tindih. Confidence: 0.7

@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(npm:*)",
+      "Shell(npx tsc --noEmit)",
+      "Shell(ls node_modules/typescript/package.json node_modules/gsap/package.json node_modules/lenis/package.json node_modules/next/package.json 2>&1; ls node_modules | wc -l)",
+      "Shell(ls -d node_modules 2>&1; ls node_modules 2>/dev/null | head -20; echo \"---\"; ls node_modules/.bin 2>/dev/null | head -10)",
+      "Shell(netstat:*)",
+      "powershell",
+      "Shell(git:*)",
+      "Shell(node \"C:\\Users\\lulus\\AppData\\Local\\Temp\\commandcode\\C--Users-lulus-Dominator-nova-next\\83f59ce7-9da0-4106-9f83-c05d4ae834f2\\scratchpad\\test-gemini.mjs\")",
+      "Shell(node -e \"const fs=require('fs');const env=fs.readFileSync('C:/Users/lulus/Dominator/nova-next/.env','utf8');const k=env.match(/^GEOAPIFY_API_KEY=(.+)$/m)?.[1]?.trim();fetch('https://api.geoapify.com/v1/geocode/search?text=Bali&limit=1&apiKey='+k).then(async r=>{console.log('Geoapify status:',r.status);if(r.ok){const d=await r.json();console.log('Result sample:',d.features?.[0]?.properties?.formatted)}else{console.log((await r.text()).slice(0,200))}})\")"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}
