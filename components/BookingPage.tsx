@@ -1,14 +1,36 @@
 'use client'
 
 import React, { useState, useEffect, Suspense } from 'react'
+import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight, Check, MapPin, Clock, Users, Star, Search, Tag } from 'lucide-react'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  MapPin,
+  Clock,
+  Users,
+  Star,
+  Search,
+  Tag,
+  Calendar,
+  Phone,
+  Mail,
+  User,
+  ShieldCheck,
+  Sparkles,
+  FileText,
+  CreditCard,
+} from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { supabaseClient } from '@/lib/supabase-client'
+import { formatIDR } from '@/lib/types'
+import gsap from 'gsap'
 
 interface Package {
   id: number
+  slug?: string
   tag: string
   tagColor: string
   title: string
@@ -42,7 +64,11 @@ interface FormErrors {
   participants?: string
 }
 
-const STEPS = ['Destination', 'Package', 'Details']
+const STEPS = [
+  { id: 'dest', label: 'Pilih Destinasi', icon: MapPin },
+  { id: 'pkg', label: 'Pilih Paket', icon: Sparkles },
+  { id: 'details', label: 'Data Pemesan', icon: User },
+]
 
 const BookingPageInner: React.FC = () => {
   const router = useRouter()
@@ -55,7 +81,14 @@ const BookingPageInner: React.FC = () => {
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [form, setForm] = useState<BookingForm>({ name: '', email: '', phone: '', travelDate: '', participants: 1, notes: '' })
+  const [form, setForm] = useState<BookingForm>({
+    name: '',
+    email: '',
+    phone: '',
+    travelDate: '',
+    participants: 1,
+    notes: '',
+  })
   const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [voucherCode, setVoucherCode] = useState('')
   const [voucherLoading, setVoucherLoading] = useState(false)
@@ -73,16 +106,23 @@ const BookingPageInner: React.FC = () => {
   const [noMatchesFound, setNoMatchesFound] = useState(false)
 
   useEffect(() => {
-    // 1. Force authentication to book — middleware is the first line of defence,
-    //    this client guard is a belt-and-suspenders fallback.
-    supabaseClient.auth.getUser().then(({ data }: { data: { user: unknown } }) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    supabaseClient.auth.getUser().then(({ data }: { data: { user: any } }) => {
       if (!data.user) {
         router.replace(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`)
+      } else {
+        const user = data.user
+        setForm((prev) => ({
+          ...prev,
+          name: prev.name || user.user_metadata?.full_name || user.user_metadata?.name || '',
+          email: prev.email || user.email || '',
+          phone: prev.phone || user.user_metadata?.phone || '',
+        }))
       }
     })
 
-    const fetchPackages = fetch('/api/packages').then(r => r.json())
-    const fetchDests = fetch('/api/destinations').then(r => r.json()).catch(() => [])
+    const fetchPackages = fetch('/api/packages').then((r) => r.json())
+    const fetchDests = fetch('/api/destinations').then((r) => r.json()).catch(() => [])
 
     Promise.all([fetchPackages, fetchDests])
       .then(([pkgsData, destsData]) => {
@@ -96,7 +136,7 @@ const BookingPageInner: React.FC = () => {
         const destQuery = searchParams.get('destination')
 
         if (paramId && loadedPackages.length > 0) {
-          const found = loadedPackages.find(p => String(p.id) === paramId)
+          const found = loadedPackages.find((p) => String(p.id) === paramId)
           if (found) {
             setSelectedPackage(found)
             setSelectedCountry(found.category)
@@ -106,13 +146,13 @@ const BookingPageInner: React.FC = () => {
         }
 
         if (destQuery && loadedPackages.length > 0) {
-          // Find matched destination
           const matchedDest = Array.isArray(destsData)
-            ? destsData.find(d =>
-                (d.city || '').toLowerCase() === destQuery.toLowerCase() ||
-                (d.country || '').toLowerCase() === destQuery.toLowerCase() ||
-                destQuery.toLowerCase().includes((d.city || '').toLowerCase()) ||
-                (d.city || '').toLowerCase().includes(destQuery.toLowerCase())
+            ? destsData.find(
+                (d) =>
+                  (d.city || '').toLowerCase() === destQuery.toLowerCase() ||
+                  (d.country || '').toLowerCase() === destQuery.toLowerCase() ||
+                  destQuery.toLowerCase().includes((d.city || '').toLowerCase()) ||
+                  (d.city || '').toLowerCase().includes(destQuery.toLowerCase())
               )
             : null
 
@@ -122,18 +162,18 @@ const BookingPageInner: React.FC = () => {
             if (matchedDest.country) searchTerms.push(matchedDest.country.toLowerCase())
           }
 
-          // Filter packages by search terms
-          const filtered = loadedPackages.filter(p => {
+          const filtered = loadedPackages.filter((p) => {
             const title = (p.title || '').toLowerCase()
             const subtitle = (p.subtitle || '').toLowerCase()
             const highlight = (p.highlight || '').toLowerCase()
             const category = (p.category || '').toLowerCase()
 
-            return searchTerms.some(term =>
-              title.includes(term) ||
-              subtitle.includes(term) ||
-              highlight.includes(term) ||
-              category.includes(term)
+            return searchTerms.some(
+              (term) =>
+                title.includes(term) ||
+                subtitle.includes(term) ||
+                highlight.includes(term) ||
+                category.includes(term)
             )
           })
 
@@ -142,9 +182,8 @@ const BookingPageInner: React.FC = () => {
             setSelectedCountry(matchedDest ? `${matchedDest.city}, ${matchedDest.country}` : destQuery)
             setStep(1)
           } else {
-            // No specific package matches
             setNoMatchesFound(true)
-            setMatchedPackages(loadedPackages) // Show all packages as fallback
+            setMatchedPackages(loadedPackages)
             setSelectedCountry(destQuery)
             setStep(1)
           }
@@ -154,26 +193,42 @@ const BookingPageInner: React.FC = () => {
       .finally(() => setLoading(false))
   }, [searchParams, router])
 
-  const countries = Array.from(new Set(packages.map(p => p.category))).filter(Boolean)
-  const filteredCountries = countries.filter(c => c.toLowerCase().includes(search.toLowerCase()))
-  const filteredPackages = packages.filter(p => p.category === selectedCountry)
+  // GSAP Smooth Step Animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.gsap-booking-step',
+        { opacity: 0, y: 22, scale: 0.99 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power3.out' }
+      )
+      gsap.fromTo(
+        '.gsap-booking-sidebar',
+        { opacity: 0, x: 25 },
+        { opacity: 1, x: 0, duration: 0.55, delay: 0.08, ease: 'power3.out' }
+      )
+    })
+    return () => ctx.revert()
+  }, [step])
+
+  const countries = Array.from(new Set(packages.map((p) => p.category))).filter(Boolean)
+  const filteredCountries = countries.filter((c) => c.toLowerCase().includes(search.toLowerCase()))
+  const filteredPackages = packages.filter((p) => p.category === selectedCountry)
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const val = e.target.name === 'participants' ? (parseInt(e.target.value) || 1) : e.target.value
-    setForm(prev => ({ ...prev, [e.target.name]: val }))
-    // Clear error on change
+    const val = e.target.name === 'participants' ? parseInt(e.target.value) || 1 : e.target.value
+    setForm((prev) => ({ ...prev, [e.target.name]: val }))
     if (formErrors[e.target.name as keyof FormErrors]) {
-      setFormErrors(prev => ({ ...prev, [e.target.name]: undefined }))
+      setFormErrors((prev) => ({ ...prev, [e.target.name]: undefined }))
     }
   }
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {}
-    if (!form.name.trim()) errors.name = 'Full name is required'
-    if (!form.email.trim()) errors.email = 'Email is required'
-    if (!form.phone.trim()) errors.phone = 'Phone number is required'
-    if (!form.travelDate) errors.travelDate = 'Travel date is required'
-    if (!form.participants || form.participants < 1) errors.participants = 'At least 1 participant required'
+    if (!form.name.trim()) errors.name = 'Nama lengkap wajib diisi'
+    if (!form.email.trim() || !form.email.includes('@')) errors.email = 'Email tidak valid'
+    if (!form.phone.trim() || form.phone.length < 8) errors.phone = 'Nomor WhatsApp / telepon wajib diisi'
+    if (!form.travelDate) errors.travelDate = 'Pilih tanggal keberangkatan'
+    if (!form.participants || form.participants < 1) errors.participants = 'Minimal 1 peserta'
     setFormErrors(errors)
     return Object.keys(errors).length === 0
   }
@@ -197,7 +252,7 @@ const BookingPageInner: React.FC = () => {
         setDiscountAmount(0)
       }
     } catch {
-      setVoucherResult({ valid: false, message: 'Gagal menghubungi server.' })
+      setVoucherResult({ valid: false, message: 'Gagal memvalidasi voucher' })
       setDiscountAmount(0)
     } finally {
       setVoucherLoading(false)
@@ -227,7 +282,7 @@ const BookingPageInner: React.FC = () => {
       })
       if (res.ok) {
         const data = await res.json()
-        router.push('/payment/' + data.id)
+        router.push('/payment/confirmation/' + data.id)
       }
     } finally {
       setSubmitting(false)
@@ -236,24 +291,53 @@ const BookingPageInner: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
         <Navbar />
-        <div className="flex-1 flex items-center justify-center px-6 pt-24 pb-16">
-          <div className="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-sm border border-black/[0.04]">
-            <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
-              <Check className="w-8 h-8 text-white" />
+        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 pt-28 pb-16">
+          <div className="bg-white rounded-3xl p-8 sm:p-10 max-w-lg w-full text-center shadow-xl border border-neutral-200/90 space-y-6 animate-fade-in">
+            <div className="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center mx-auto shadow-md">
+              <Check className="w-8 h-8 stroke-[2.5]" />
             </div>
-            <h2 className="text-2xl font-bold tracking-tight mb-2" style={{ letterSpacing: '-0.02em' }}>Booking Confirmed!</h2>
-            <p className="text-black/50 text-sm mb-2">Thank you, <span className="text-black font-medium">{form.name}</span>.</p>
-            <p className="text-black/50 text-sm mb-8">Confirmation sent to <span className="text-black font-medium">{form.email}</span>.</p>
-            <div className="bg-[#F5F5F5] rounded-2xl p-5 text-left mb-8 space-y-2">
-              <div className="flex justify-between text-sm"><span className="text-black/50">Package</span><span className="font-medium">{selectedPackage?.title}</span></div>
-              <div className="flex justify-between text-sm"><span className="text-black/50">Destination</span><span className="font-medium">{selectedCountry}</span></div>
-              <div className="flex justify-between text-sm"><span className="text-black/50">Date</span><span className="font-medium">{form.travelDate}</span></div>
-              <div className="flex justify-between text-sm"><span className="text-black/50">Participants</span><span className="font-medium">{form.participants} person{form.participants !== 1 ? 's' : ''}</span></div>
-              <div className="flex justify-between text-sm pt-2 border-t border-black/5"><span className="text-black/50">Total</span><span className="font-bold">${selectedPackage ? (selectedPackage.price * form.participants).toLocaleString() : 0}</span></div>
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-jakarta font-black text-neutral-950 mb-2">
+                Pemesanan Berhasil!
+              </h2>
+              <p className="text-neutral-500 font-jakarta text-sm">
+                Terima kasih, <strong className="text-neutral-900">{form.name}</strong>. Rincian e-tiket telah dikirimkan ke <strong className="text-neutral-900">{form.email}</strong>.
+              </p>
             </div>
-            <button onClick={() => router.push('/')} className="w-full bg-black text-white font-medium py-3 rounded-full hover:bg-black/80 transition-colors text-sm">Back to Home</button>
+
+            <div className="bg-neutral-50 rounded-2xl p-5 text-left space-y-2.5 border border-neutral-200/70 font-jakarta text-xs">
+              <div className="flex justify-between">
+                <span className="text-neutral-400 font-medium">Paket</span>
+                <span className="font-bold text-neutral-900">{selectedPackage?.title}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400 font-medium">Destinasi</span>
+                <span className="font-bold text-neutral-900">{selectedCountry}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400 font-medium">Tanggal</span>
+                <span className="font-bold text-neutral-900">{form.travelDate}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400 font-medium">Peserta</span>
+                <span className="font-bold text-neutral-900">{form.participants} Orang</span>
+              </div>
+              <div className="flex justify-between pt-2.5 border-t border-neutral-200 font-bold text-sm">
+                <span className="text-neutral-900">Total Pembayaran</span>
+                <span className="text-emerald-600">
+                  {selectedPackage ? formatIDR(selectedPackage.price * form.participants - discountAmount) : formatIDR(0)}
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => router.push('/dashboard/bookings')}
+              className="w-full bg-neutral-950 text-white font-jakarta font-extrabold py-3.5 rounded-xl hover:bg-black transition-all text-sm shadow-md active:scale-95 cursor-pointer"
+            >
+              Lihat Tiket di Dashboard
+            </button>
           </div>
         </div>
         <Footer />
@@ -262,60 +346,134 @@ const BookingPageInner: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-neutral-900">
       <Navbar />
-      <div className="flex-1 pt-28 pb-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-10">
-            <button onClick={() => step === 0 ? router.push('/') : setStep(s => s - 1)} className="flex items-center gap-2 text-sm text-black/40 hover:text-black transition-colors mb-6">
-              <ArrowLeft className="w-4 h-4" />
-              {step === 0 ? 'Back to Home' : 'Back'}
-            </button>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2" style={{ letterSpacing: '-0.03em' }}>Book Your Trip</h1>
-            <p className="text-black/50 text-sm">Choose your dream destination and start your adventure.</p>
-          </div>
-
-          {/* Step Progress */}
-          <div className="flex items-center gap-2 mb-10">
-            {STEPS.map((label, i) => (
-              <React.Fragment key={label}>
-                <div className="flex items-center gap-2">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${i < step ? 'bg-black text-white' : i === step ? 'bg-black text-white ring-4 ring-black/10' : 'bg-black/10 text-black/30'}`}>
-                    {i < step ? <Check className="w-3.5 h-3.5" /> : i + 1}
-                  </div>
-                  <span className={`text-sm font-medium hidden sm:block ${i === step ? 'text-black' : 'text-black/30'}`}>{label}</span>
-                </div>
-                {i < STEPS.length - 1 && <div className={`flex-1 h-px ${i < step ? 'bg-black' : 'bg-black/10'}`} />}
-              </React.Fragment>
-            ))}
-          </div>
-
-          {/* Step 0: Select Destination */}
-          {step === 0 && (
+      <div className="flex-1 pt-28 pb-20 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto space-y-8">
+          {/* Header & Back Action */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <div className="mb-6">
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-black/30" />
-                  <input type="text" placeholder="Search destinations..." value={search} onChange={e => setSearch(e.target.value)} className="w-full pl-11 pr-4 py-3.5 bg-white border border-black/[0.06] rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-black/10 placeholder:text-black/30" />
-                </div>
+              <button
+                onClick={() => (step === 0 ? router.push('/') : setStep((s) => s - 1))}
+                className="inline-flex items-center gap-2 text-xs font-jakarta font-bold text-neutral-500 hover:text-neutral-950 transition-colors mb-2 cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>{step === 0 ? 'Kembali ke Beranda' : 'Kembali ke Langkah Sebelumnya'}</span>
+              </button>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-jakarta font-black text-neutral-950 tracking-tight">
+                Pemesanan Perjalanan Nova
+              </h1>
+              <p className="text-neutral-500 font-jakarta text-xs sm:text-sm font-normal mt-1">
+                Lengkapi langkah mudah untuk mengamankan slot perjalanan impianmu.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 rounded-2xl px-4 py-2 text-emerald-800 text-xs font-jakarta font-bold self-start">
+              <ShieldCheck size={16} className="text-emerald-600" />
+              <span>Garansi Keberangkatan 100%</span>
+            </div>
+          </div>
+
+          {/* Step Progress Navigation Bar */}
+          <div className="bg-white border border-neutral-200/90 rounded-2xl p-3 shadow-2xs">
+            <div className="grid grid-cols-3 gap-2">
+              {STEPS.map((s, i) => {
+                const Icon = s.icon
+                const isCurrent = i === step
+                const isPast = i < step
+                return (
+                  <button
+                    key={s.id}
+                    disabled={i > step && !selectedPackage}
+                    onClick={() => {
+                      if (i < step || (i === 1 && selectedCountry) || (i === 2 && selectedPackage)) {
+                        setStep(i)
+                      }
+                    }}
+                    className={`flex items-center justify-center sm:justify-start gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl text-xs font-jakarta font-bold transition-all ${
+                      isCurrent
+                        ? 'bg-neutral-950 text-white shadow-xs'
+                        : isPast
+                        ? 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 cursor-pointer'
+                        : 'text-neutral-400 bg-transparent cursor-not-allowed'
+                    }`}
+                  >
+                    <div
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center text-[10px] shrink-0 font-extrabold ${
+                        isCurrent
+                          ? 'bg-white text-neutral-950'
+                          : isPast
+                          ? 'bg-emerald-500 text-white'
+                          : 'bg-neutral-200 text-neutral-500'
+                      }`}
+                    >
+                      {isPast ? <Check size={12} className="stroke-[3]" /> : i + 1}
+                    </div>
+                    <span className="hidden sm:inline truncate">{s.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* ─── Step 0: Destination Selection ─── */}
+          {step === 0 && (
+            <div className="gsap-booking-step space-y-6">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <input
+                  type="text"
+                  placeholder="Cari destinasi atau negara impianmu..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-neutral-200/90 rounded-2xl text-xs sm:text-sm font-jakarta font-bold text-neutral-950 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 shadow-2xs"
+                />
               </div>
+
               {loading ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">{[...Array(6)].map((_, i) => <div key={i} className="bg-white rounded-2xl h-32 animate-pulse" />)}</div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="bg-neutral-200/60 rounded-2xl h-36 animate-pulse" />
+                  ))}
+                </div>
               ) : filteredCountries.length === 0 ? (
-                <div className="text-center py-16 text-black/30 text-sm">No destinations found.</div>
+                <div className="text-center py-16 text-neutral-400 text-xs font-jakarta font-bold bg-white rounded-3xl border border-neutral-200/90">
+                  Tidak ada destinasi yang cocok dengan kata kunci tersebut.
+                </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {filteredCountries.map(country => {
-                    const count = packages.filter(p => p.category === country).length
-                    const thumb = packages.find(p => p.category === country)?.image
+                  {filteredCountries.map((country) => {
+                    const count = packages.filter((p) => p.category === country).length
+                    const thumb = packages.find((p) => p.category === country)?.image
                     return (
-                      <button key={country} onClick={() => { setSelectedCountry(country); setMatchedPackages(null); setNoMatchesFound(false); setStep(1) }} className="group relative bg-white rounded-2xl overflow-hidden border border-black/[0.04] hover:shadow-lg transition-all duration-300 text-left h-36">
-                        {thumb && <img src={thumb} alt={country} className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300" />}
-                        <div className="relative p-5 h-full flex flex-col justify-between">
-                          <MapPin className="w-5 h-5 text-black/40" />
+                      <button
+                        key={country}
+                        onClick={() => {
+                          setSelectedCountry(country)
+                          setMatchedPackages(null)
+                          setNoMatchesFound(false)
+                          setStep(1)
+                        }}
+                        className="group relative bg-white rounded-2xl overflow-hidden border border-neutral-200/90 hover:border-neutral-950 hover:shadow-lg transition-all duration-300 text-left h-36 cursor-pointer active:scale-95"
+                      >
+                        {thumb && (
+                          <img
+                            src={thumb}
+                            alt={country}
+                            className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500"
+                          />
+                        )}
+                        <div className="relative p-5 h-full flex flex-col justify-between z-10">
+                          <div className="w-8 h-8 rounded-xl bg-white/90 backdrop-blur-md flex items-center justify-center shadow-2xs">
+                            <MapPin className="w-4 h-4 text-neutral-900" />
+                          </div>
                           <div>
-                            <p className="font-bold text-base tracking-tight" style={{ letterSpacing: '-0.02em' }}>{country}</p>
-                            <p className="text-xs text-black/40 mt-0.5">{count} package{count !== 1 ? 's' : ''} available</p>
+                            <p className="font-jakarta font-black text-sm sm:text-base text-neutral-950 leading-tight">
+                              {country}
+                            </p>
+                            <p className="text-[11px] font-jakarta font-bold text-neutral-500 mt-1">
+                              {count} pilihan paket
+                            </p>
                           </div>
                         </div>
                       </button>
@@ -326,160 +484,331 @@ const BookingPageInner: React.FC = () => {
             </div>
           )}
 
-          {/* Step 1: Select Package */}
+          {/* ─── Step 1: Package Selection ─── */}
           {step === 1 && (
-            <div>
+            <div className="gsap-booking-step space-y-6">
               {noMatchesFound ? (
-                <p className="text-sm text-neutral-600 mb-6 bg-amber-50 border border-amber-200/60 rounded-2xl p-4">
-                  Maaf, belum tersedia paket khusus untuk <span className="font-semibold text-black">{selectedCountry}</span>.
-                  Silakan pilih paket perjalanan terbaik kami lainnya di bawah ini:
-                </p>
+                <div className="text-xs font-jakarta text-neutral-700 bg-amber-50 border border-amber-200/80 rounded-2xl p-4 leading-relaxed">
+                  Belum ada paket spesifik untuk <strong>{selectedCountry}</strong>. Silakan pilih dari pilihan paket terpopuler kami di bawah:
+                </div>
               ) : (
-                <p className="text-sm text-black/40 mb-6">Showing packages for <span className="text-black font-medium">{selectedCountry}</span></p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-jakarta font-bold text-neutral-500">
+                    Menampilkan paket wisata untuk <strong className="text-neutral-950">{selectedCountry}</strong>
+                  </p>
+                  <button
+                    onClick={() => setStep(0)}
+                    className="text-xs font-jakarta font-bold text-blue-600 hover:underline cursor-pointer"
+                  >
+                    Ganti Destinasi
+                  </button>
+                </div>
               )}
+
               <div className="grid md:grid-cols-2 gap-5">
-                {(matchedPackages || filteredPackages).map(pkg => (
-                  <button key={pkg.id} onClick={() => { setSelectedPackage(pkg); setStep(2) }} className="group bg-white rounded-3xl overflow-hidden border border-black/[0.04] hover:shadow-xl transition-all duration-300 text-left flex flex-col">
-                    <div className="relative h-44 overflow-hidden">
-                      <img src={pkg.image} alt={pkg.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                      <span className={`absolute top-3 left-3 text-[9px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ${pkg.tagColor}`}>{pkg.tag}</span>
+                {(matchedPackages || filteredPackages).map((pkg, idx) => (
+                  <div
+                    key={pkg.slug || pkg.id || `booking-pkg-${idx}`}
+                    className="group bg-white rounded-3xl overflow-hidden border border-neutral-200/90 hover:border-neutral-950 hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between"
+                  >
+                    <div className="relative h-48 overflow-hidden bg-neutral-900">
+                      <img
+                        src={pkg.image}
+                        alt={pkg.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 img-smooth-zoom"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      <span className={`absolute top-3 left-3 text-[10px] font-jakarta font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-2xs ${pkg.tagColor || 'bg-white text-neutral-950'}`}>
+                        {pkg.tag || 'Popular'}
+                      </span>
                     </div>
-                    <div className="p-5 flex-1 flex flex-col justify-between">
+
+                    <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                       <div>
-                        <h3 className="font-bold text-base mb-1" style={{ letterSpacing: '-0.02em' }}>{pkg.title}</h3>
-                        <p className="text-xs text-black/40 mb-3">{pkg.subtitle}</p>
-                        <div className="flex flex-wrap gap-3 text-xs text-black/50 mb-4">
-                          <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{pkg.duration}</span>
-                          <span className="flex items-center gap-1"><Users className="w-3 h-3" />{pkg.groupSize}</span>
-                          <span className="flex items-center gap-1"><Star className="w-3 h-3 fill-amber-400 text-amber-400" />{pkg.rating}</span>
+                        <h3 className="font-jakarta font-extrabold text-base text-neutral-950 mb-1 leading-snug">
+                          {pkg.title}
+                        </h3>
+                        <p className="font-jakarta text-xs text-neutral-500 mb-3 line-clamp-2">
+                          {pkg.subtitle}
+                        </p>
+                        <div className="flex flex-wrap gap-3 text-[11px] font-jakarta font-semibold text-neutral-600">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5 text-neutral-400" />
+                            {pkg.duration}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Users className="w-3.5 h-3.5 text-neutral-400" />
+                            {pkg.groupSize}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                            {pkg.rating} ({pkg.reviews})
+                          </span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between pt-3 border-t border-black/5">
-                        <div><span className="font-bold text-lg">${pkg.price.toLocaleString()}</span><span className="text-xs text-black/30 ml-1">/person</span></div>
-                        <span className="flex items-center gap-1 text-xs font-semibold text-black bg-black/5 px-3 py-1.5 rounded-full group-hover:bg-black group-hover:text-white transition-colors">Select <ArrowRight className="w-3 h-3" /></span>
+
+                      <div className="flex items-center justify-between pt-4 border-t border-neutral-100">
+                        <div>
+                          <p className="text-[10px] font-jakarta font-bold text-neutral-400 uppercase tracking-wider">Harga Mulai</p>
+                          <p className="font-jakarta font-black text-base text-neutral-950">{formatIDR(pkg.price)}</p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setSelectedPackage(pkg)
+                            setStep(2)
+                          }}
+                          className="bg-neutral-950 text-white text-xs font-jakarta font-extrabold px-4 py-2.5 rounded-xl hover:bg-black transition-all flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
+                        >
+                          <span>Pilih Paket</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     </div>
-                  </button>
+                  </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Step 2: Form Details */}
+          {/* ─── Step 2: Traveler Details & Instant Order Summary ─── */}
           {step === 2 && selectedPackage && (
-            <div className="grid md:grid-cols-5 gap-8">
-              <form onSubmit={handleSubmit} className="md:col-span-3 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-2">
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Full Name *</label>
-                    <input name="name" value={form.name} onChange={handleFormChange} placeholder="Your name" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20 ${formErrors.name ? 'border-red-400' : 'border-black/10'}`} />
-                    {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
-                  </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* Form Column */}
+              <form onSubmit={handleSubmit} className="gsap-booking-step lg:col-span-7 bg-white rounded-3xl border border-neutral-200/90 p-6 sm:p-8 shadow-sm space-y-6">
+                <div className="border-b border-neutral-100 pb-4">
+                  <h3 className="font-jakarta font-black text-lg text-neutral-950 flex items-center gap-2">
+                    <User size={18} className="text-neutral-800" />
+                    <span>Informasi Pemesan Utama</span>
+                  </h3>
+                  <p className="text-neutral-500 font-jakarta text-xs mt-0.5">
+                    Data ini digunakan untuk pengiriman e-tiket dan verifikasi di lokasi.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Name Input */}
                   <div>
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Email *</label>
-                    <input name="email" type="email" value={form.email} onChange={handleFormChange} placeholder="you@example.com" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20 ${formErrors.email ? 'border-red-400' : 'border-black/10'}`} />
-                    {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
+                    <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">
+                      Nama Lengkap (sesuai KTP/Paspor) *
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <input
+                        name="name"
+                        value={form.name}
+                        onChange={handleFormChange}
+                        placeholder="Contoh: Alexander Pratama"
+                        className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 ${
+                          formErrors.name ? 'border-rose-500' : 'border-neutral-200'
+                        }`}
+                      />
+                    </div>
+                    {formErrors.name && <p className="text-rose-600 text-[11px] font-jakarta font-semibold mt-1">{formErrors.name}</p>}
                   </div>
+
+                  {/* Email & Phone */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">Email Aktif *</label>
+                      <div className="relative">
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                        <input
+                          name="email"
+                          type="email"
+                          value={form.email}
+                          onChange={handleFormChange}
+                          placeholder="nama@email.com"
+                          className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 ${
+                            formErrors.email ? 'border-rose-500' : 'border-neutral-200'
+                          }`}
+                        />
+                      </div>
+                      {formErrors.email && <p className="text-rose-600 text-[11px] font-jakarta font-semibold mt-1">{formErrors.email}</p>}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">No. WhatsApp / Telepon *</label>
+                      <div className="relative">
+                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                        <input
+                          name="phone"
+                          type="tel"
+                          value={form.phone}
+                          onChange={handleFormChange}
+                          placeholder="081234567890"
+                          className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 ${
+                            formErrors.phone ? 'border-rose-500' : 'border-neutral-200'
+                          }`}
+                        />
+                      </div>
+                      {formErrors.phone && <p className="text-rose-600 text-[11px] font-jakarta font-semibold mt-1">{formErrors.phone}</p>}
+                    </div>
+                  </div>
+
+                  {/* Travel Date & Participant Counter */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">Tanggal Keberangkatan *</label>
+                      <div className="relative">
+                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                        <input
+                          name="travelDate"
+                          type="date"
+                          value={form.travelDate}
+                          onChange={handleFormChange}
+                          min={new Date().toISOString().split('T')[0]}
+                          className={`w-full border rounded-xl pl-10 pr-4 py-2.5 text-xs font-jakarta font-bold text-neutral-950 bg-white focus:outline-none focus:ring-2 focus:ring-neutral-950/20 cursor-pointer ${
+                            formErrors.travelDate ? 'border-rose-500' : 'border-neutral-200'
+                          }`}
+                        />
+                      </div>
+                      {formErrors.travelDate && <p className="text-rose-600 text-[11px] font-jakarta font-semibold mt-1">{formErrors.travelDate}</p>}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">Jumlah Peserta *</label>
+                      <div className="flex items-center justify-between bg-white border border-neutral-200 rounded-xl p-1.5 shadow-2xs">
+                        <button
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, participants: Math.max(1, prev.participants - 1) }))}
+                          className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-950 hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors cursor-pointer"
+                        >
+                          −
+                        </button>
+                        <span className="text-xs font-jakarta font-extrabold text-neutral-950">{form.participants} Orang</span>
+                        <button
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, participants: Math.min(20, prev.participants + 1) }))}
+                          className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-950 hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors cursor-pointer"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Notes */}
                   <div>
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Phone *</label>
-                    <input name="phone" type="tel" value={form.phone} onChange={handleFormChange} placeholder="+1 ..." className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20 ${formErrors.phone ? 'border-red-400' : 'border-black/10'}`} />
-                    {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Travel Date *</label>
-                    <input name="travelDate" type="date" value={form.travelDate} onChange={handleFormChange} min={new Date().toISOString().split('T')[0]} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white ${formErrors.travelDate ? 'border-red-400' : 'border-black/10'}`} />
-                    {formErrors.travelDate && <p className="text-red-500 text-xs mt-1">{formErrors.travelDate}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Participants *</label>
-                    <input name="participants" type="number" value={form.participants} onChange={handleFormChange} min={1} max={20} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white ${formErrors.participants ? 'border-red-400' : 'border-black/10'}`} />
-                    {formErrors.participants && <p className="text-red-500 text-xs mt-1">{formErrors.participants}</p>}
-                  </div>
-                  <div className="col-span-2">
-                    <label className="block text-xs font-medium text-black/50 mb-1.5">Notes (optional)</label>
-                    <textarea name="notes" value={form.notes} onChange={handleFormChange} placeholder="Special requests..." rows={3} className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 bg-white resize-none placeholder:text-black/20" />
+                    <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">Catatan Khusus (opsional)</label>
+                    <textarea
+                      name="notes"
+                      value={form.notes}
+                      onChange={handleFormChange}
+                      placeholder="Contoh: Makanan halal, vegetarian, ranjang double bed, penjemputan bandara..."
+                      rows={3}
+                      className="w-full border border-neutral-200 rounded-xl px-4 py-3 text-xs font-jakarta font-medium text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 resize-none"
+                    />
                   </div>
                 </div>
-                <button type="submit" disabled={submitting} className="w-full bg-black text-white font-medium py-4 rounded-full hover:bg-black/80 disabled:opacity-50 transition-colors text-sm flex items-center justify-center gap-2">
-                  {submitting ? 'Processing...' : <><span>Confirm Booking</span><ArrowRight className="w-4 h-4" /></>}
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full bg-neutral-950 text-white font-jakarta font-extrabold py-4 rounded-2xl hover:bg-black disabled:opacity-50 transition-all text-sm flex items-center justify-center gap-2 shadow-xl shadow-neutral-950/15 active:scale-[0.99] cursor-pointer"
+                >
+                  <CreditCard size={18} className="text-amber-400" />
+                  <span>{submitting ? 'Memproses Pesanan...' : 'Lanjut ke Pembayaran'}</span>
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
-              <div className="md:col-span-2">
-                <div className="bg-white rounded-3xl overflow-hidden border border-black/[0.04] sticky top-28">
-                  <div className="relative h-36 overflow-hidden">
-                    <img src={selectedPackage.image} alt={selectedPackage.title} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <span className={`absolute top-3 left-3 text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${selectedPackage.tagColor}`}>{selectedPackage.tag}</span>
-                  </div>
-                  <div className="p-5 space-y-3">
-                    <h3 className="font-bold text-base" style={{ letterSpacing: '-0.02em' }}>{selectedPackage.title}</h3>
-                    <div className="flex flex-wrap gap-2 text-xs text-black/50">
-                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{selectedPackage.duration}</span>
-                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{selectedCountry}</span>
+
+              {/* Order Summary Sidebar */}
+              <div className="gsap-booking-sidebar lg:col-span-5 space-y-4 lg:sticky lg:top-28">
+                <div className="bg-white rounded-3xl overflow-hidden border border-neutral-200/90 shadow-sm">
+                  {/* Photo Header */}
+                  <div className="relative h-40 overflow-hidden bg-neutral-900">
+                    <Image src={selectedPackage.image} alt={selectedPackage.title} fill className="object-cover img-smooth-zoom" sizes="100vw" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                    <span className={`absolute top-3 left-3 text-[10px] font-jakarta font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-2xs ${selectedPackage.tagColor || 'bg-white text-neutral-950'}`}>
+                      {selectedPackage.tag || 'Selected'}
+                    </span>
+                    <div className="absolute bottom-3 left-3 right-3 text-white">
+                      <h4 className="font-jakarta font-bold text-sm leading-snug">{selectedPackage.title}</h4>
+                      <p className="text-[11px] text-white/80 font-medium">{selectedCountry}</p>
                     </div>
+                  </div>
+
+                  <div className="p-5 space-y-4">
+                    {/* Includes Checklist */}
                     {selectedPackage.includes && selectedPackage.includes.length > 0 && (
-                      <div className="pt-3 border-t border-black/5">
-                        <p className="text-xs font-medium text-black/50 mb-2">Includes</p>
-                        <ul className="space-y-1">
-                          {selectedPackage.includes.map((item, i) => (
-                            <li key={i} className="flex items-center gap-1.5 text-xs text-black/60">
-                              <Check className="w-3 h-3 text-black/40 shrink-0" />
-                              {item}
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-jakarta font-bold uppercase tracking-wider text-neutral-400">
+                          Sudah Termasuk
+                        </p>
+                        <ul className="space-y-1.5">
+                          {selectedPackage.includes.slice(0, 4).map((item, i) => (
+                            <li key={i} className="flex items-center gap-2 text-xs font-jakarta text-neutral-600 font-medium">
+                              <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 stroke-[2.5]" />
+                              <span>{item}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
                     )}
-                    {/* Voucher / Promo Code */}
-                    <div className="pt-3 border-t border-black/5">
-                      <p className="text-xs font-medium text-black/50 mb-2 flex items-center gap-1.5">
-                        <Tag className="w-3 h-3" /> Kode Promo
+
+                    {/* Voucher Box */}
+                    <div className="pt-3 border-t border-neutral-100 space-y-2">
+                      <p className="text-xs font-jakarta font-bold text-neutral-900 flex items-center gap-1.5">
+                        <Tag className="w-3.5 h-3.5 text-amber-500" />
+                        <span>Kupon & Diskon Promo</span>
                       </p>
                       <div className="flex gap-2">
                         <input
                           type="text"
                           value={voucherCode}
-                          onChange={e => {
+                          onChange={(e) => {
                             setVoucherCode(e.target.value.toUpperCase())
-                            if (voucherResult) { setVoucherResult(null); setDiscountAmount(0) }
+                            if (voucherResult) {
+                              setVoucherResult(null)
+                              setDiscountAmount(0)
+                            }
                           }}
-                          placeholder="Masukkan kode"
-                          className="flex-1 border border-black/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-black/10 bg-white placeholder:text-black/20 font-mono uppercase"
+                          placeholder="KODE PROMO"
+                          className="flex-1 border border-neutral-200 rounded-xl px-3 py-2 text-xs font-jakarta font-bold text-neutral-950 uppercase placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 bg-neutral-50"
                         />
                         <button
                           type="button"
                           onClick={handleVoucherApply}
                           disabled={voucherLoading || !voucherCode.trim()}
-                          className="px-3 py-2 bg-black text-white text-xs rounded-xl font-medium disabled:opacity-40 hover:bg-black/80 transition-colors shrink-0"
+                          className="px-4 py-2 bg-neutral-950 text-white text-xs font-jakarta font-bold rounded-xl disabled:opacity-40 hover:bg-black transition-all shrink-0 cursor-pointer"
                         >
                           {voucherLoading ? '...' : 'Gunakan'}
                         </button>
                       </div>
                       {voucherResult && (
-                        <p className={`text-xs mt-1.5 ${voucherResult.valid ? 'text-green-600' : 'text-red-500'}`}>
+                        <p className={`text-xs font-jakarta font-bold ${voucherResult.valid ? 'text-emerald-600' : 'text-rose-500'}`}>
                           {voucherResult.valid
-                            ? `Diskon ${voucherResult.discount_type === 'percent' ? `${voucherResult.discount_value}%` : `Rp ${voucherResult.discount_amount?.toLocaleString('id-ID')}`} berhasil diterapkan!`
+                            ? `Diskon ${formatIDR(voucherResult.discount_amount || discountAmount)} aktif!`
                             : voucherResult.message}
                         </p>
                       )}
                     </div>
 
-                    <div className="pt-3 border-t border-black/5 space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-black/40">${selectedPackage.price.toLocaleString()} × {form.participants} person{form.participants !== 1 ? 's' : ''}</span>
-                        <span className="font-medium">${(selectedPackage.price * form.participants).toLocaleString()}</span>
+                    {/* Price Breakdown */}
+                    <div className="pt-3 border-t border-neutral-100 space-y-2 font-jakarta text-xs">
+                      <div className="flex justify-between text-neutral-600">
+                        <span>Harga Paket ({form.participants} Orang)</span>
+                        <span className="font-bold text-neutral-900">{formatIDR(selectedPackage.price * form.participants)}</span>
                       </div>
-                      {voucherResult?.valid && discountAmount > 0 && (
-                        <div className="flex justify-between text-sm text-green-600">
-                          <span>Diskon ({voucherResult.code})</span>
-                          <span>-${discountAmount.toLocaleString()}</span>
+                      {discountAmount > 0 && (
+                        <div className="flex justify-between text-emerald-600 font-bold">
+                          <span>Diskon Promo ({voucherCode})</span>
+                          <span>− {formatIDR(discountAmount)}</span>
                         </div>
                       )}
                     </div>
-                    <div className="flex justify-between font-bold pt-2 border-t border-black/5">
-                      <span>Total</span>
-                      <span>${Math.max(0, selectedPackage.price * form.participants - discountAmount).toLocaleString()}</span>
+
+                    {/* Grand Total */}
+                    <div className="pt-3 border-t border-neutral-200 flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] font-jakarta font-bold uppercase tracking-wider text-neutral-400">Total Tagihan</p>
+                        <p className="text-lg font-jakarta font-black text-neutral-950">
+                          {formatIDR(Math.max(0, selectedPackage.price * form.participants - discountAmount))}
+                        </p>
+                      </div>
+                      <span className="text-[10px] font-jakarta font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md">
+                        Bebas Biaya Admin
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -495,15 +824,17 @@ const BookingPageInner: React.FC = () => {
 
 const BookingPage: React.FC = () => {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
-        <Navbar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+          <Navbar />
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-950 rounded-full animate-spin" />
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    }>
+      }
+    >
       <BookingPageInner />
     </Suspense>
   )

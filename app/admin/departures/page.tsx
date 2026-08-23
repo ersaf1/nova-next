@@ -167,7 +167,7 @@ export default function DeparturesAdmin() {
           className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black w-full max-w-sm"
         >
           <option value="">-- Pilih paket --</option>
-          {packages.map(pkg => (
+          {packages.map((pkg) => (
             <option key={pkg.id} value={pkg.id}>{pkg.title}</option>
           ))}
         </select>

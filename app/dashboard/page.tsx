@@ -49,7 +49,7 @@ const STATUS_STYLES: Record<string, string> = {
 const QUICK_ACTIONS = [
   { label: 'Search Packages', description: 'Browse all destinations', href: '/search', icon: Search },
   { label: 'Plan Itinerary', description: 'AI-powered trip planning', href: '/itinerary', icon: MapIcon },
-  { label: 'Book a Trip', description: 'Start a new booking', href: '/booking', icon: Ticket },
+  { label: 'Book a Trip', description: 'Start a new booking', href: '/packages', icon: Ticket },
 ]
 
 export default function DashboardPage() {
@@ -61,6 +61,7 @@ export default function DashboardPage() {
   const [modalBooking, setModalBooking] = useState<Booking | null>(null)
 
   useEffect(() => {
+    const controller = new AbortController()
     supabaseClient.auth.getUser().then(({ data }) => {
       if (!data.user) {
         router.replace('/login?redirect=/dashboard')
@@ -71,7 +72,7 @@ export default function DashboardPage() {
       // Fetch bookings filtered by this user's email
       if (data.user.email) {
         setBookingsLoading(true)
-        fetch(`/api/bookings?email=${encodeURIComponent(data.user.email)}`)
+        fetch(`/api/bookings?email=${encodeURIComponent(data.user.email)}`, { signal: controller.signal })
           .then((r) => r.json())
           .then((data) => {
             if (Array.isArray(data)) setBookings(data)
@@ -82,6 +83,7 @@ export default function DashboardPage() {
         setLoading(false)
       }
     })
+    return () => controller.abort()
   }, [router])
 
   const now = new Date()
@@ -167,7 +169,7 @@ export default function DashboardPage() {
               My Bookings
             </h2>
             <Link
-              href="/booking"
+              href="/packages"
               className="text-xs font-medium text-neutral-500 hover:text-black transition-colors"
             >
               + New booking

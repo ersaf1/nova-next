@@ -27,9 +27,9 @@ export default function DashboardBookingsPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'active' | 'completed' | 'cancelled'>('all')
 
-  const fetchBookings = async () => {
+  const fetchBookings = async (signal: AbortSignal) => {
     try {
-      const res = await fetch('/api/bookings')
+      const res = await fetch('/api/bookings', { signal })
       if (!res.ok) throw new Error()
       const data = await res.json()
       setBookings(Array.isArray(data) ? data : [])
@@ -41,10 +41,12 @@ export default function DashboardBookingsPage() {
   }
 
   useEffect(() => {
+    const controller = new AbortController()
     supabaseClient.auth.getUser().then(({ data }) => {
       if (!data.user) { router.replace('/login?redirect=/dashboard/bookings'); return }
-      fetchBookings()
+      fetchBookings(controller.signal)
     })
+    return () => controller.abort()
     // fetchBookings and router are stable — omitted intentionally
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

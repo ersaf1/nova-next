@@ -9,9 +9,11 @@ import { supabase } from '@/lib/supabase'
 
 export async function POST(request: Request) {
   try {
-    const { code, subtotal } = await request.json()
+    const body = await request.json()
+    const code = body.code
+    const subtotal = typeof body.subtotal === 'number' ? body.subtotal : (typeof body.amount === 'number' ? body.amount : null)
 
-    if (!code || typeof subtotal !== 'number') {
+    if (!code || subtotal === null) {
       return NextResponse.json({ valid: false, message: 'Kode dan subtotal diperlukan' }, { status: 400 })
     }
 

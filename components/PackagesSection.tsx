@@ -2,16 +2,17 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { MapPin, Clock, Users, Star, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { use3DTilt, useStaggerReveal } from '@/hooks/useScrollAnimation'
 import ScrollReveal from './ScrollReveal'
 
 interface Package {
-  id: number; tag: string; tagColor: string; title: string; subtitle: string
+  id?: number | string; tag: string; tagColor: string; title: string; subtitle: string
   image: string; price: number; originalPrice: number; duration: string
   groupSize: string; rating: number; reviews: number; includes: string[]
-  highlight: string; category: string
+  highlight: string; category: string; slug?: string
 }
 
 interface PackageCardProps { pkg: Package }
@@ -34,18 +35,18 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
   return (
     <div
       ref={ref}
-      className="group relative rounded-3xl overflow-hidden cursor-pointer w-[310px] md:w-[350px] shrink-0 snap-start flex flex-col justify-between transition-all duration-300"
+      className="group relative rounded-3xl overflow-hidden cursor-pointer w-[310px] md:w-[350px] shrink-0 snap-start flex flex-col justify-between"
       style={{
-        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateZ(0)`,
         transformStyle: 'preserve-3d',
-        willChange: 'transform',
-        background: 'rgba(255,255,255,0.55)',
-        backdropFilter: 'blur(20px) saturate(160%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(160%)',
-        border: '1px solid rgba(255,255,255,0.85)',
+        transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background-color 0.2s ease',
+        background: 'rgba(255,255,255,0.94)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        border: '1px solid rgba(255,255,255,0.9)',
         boxShadow: (tilt.x !== 0 || tilt.y !== 0)
-          ? '0 20px 50px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9), 0 0 0 1px rgba(255,255,255,0.6)'
-          : '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9), 0 0 0 1px rgba(255,255,255,0.6)',
+          ? '0 16px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)'
+          : '0 4px 20px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04)',
       }}
     >
       {/* Specular highlight — top-left glass reflection */}
@@ -58,7 +59,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
       />
       <div>
         <div className="relative h-48 overflow-hidden">
-          <img src={pkg.image} alt={pkg.title} loading="lazy" className="w-full h-full object-cover img-smooth-zoom" />
+          <Image src={pkg.image} alt={pkg.title} fill className="object-cover img-smooth-zoom" sizes="(max-width: 768px) 100vw, 350px" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           <span className={`absolute top-4 left-4 text-[9px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ${pkg.tagColor}`}>{pkg.tag}</span>
         </div>
@@ -76,24 +77,24 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
         </div>
       </div>
       <div className="p-6 pt-0 border-t border-black/[0.06] flex items-center justify-between gap-4 mt-auto">
-        <div>
+        <div className="min-w-0">
           <span className="text-black/40 text-[9px] font-bold uppercase tracking-wider block mb-0.5">Mulai dari / Orang</span>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-black text-2xl font-bold" style={{ letterSpacing: '-0.03em' }}>
-              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(pkg.price)}
-            </span>
+          <div className="flex flex-col">
             {(pkg.originalPrice ?? 0) > pkg.price && (
-              <span className="text-black/35 text-xs line-through">
+              <span className="text-black/35 text-[10px] md:text-xs line-through leading-none mb-1">
                 {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(pkg.originalPrice ?? 0)}
               </span>
             )}
+            <span className="text-black text-xl md:text-2xl font-bold leading-none" style={{ letterSpacing: '-0.03em' }}>
+              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(pkg.price)}
+            </span>
           </div>
         </div>
         <Link
           href={`/packages/${(pkg as { slug?: string }).slug ?? pkg.id}`}
-          className="bg-neutral-50 hover:bg-black hover:text-white text-black text-xs font-bold px-4 py-2.5 rounded-full transition-colors duration-300 flex items-center gap-1.5 border border-black/[0.04] shrink-0"
+          className="bg-neutral-50 hover:bg-black hover:text-white text-black text-xs font-bold px-3 py-2 md:px-4 md:py-2.5 rounded-full transition-colors duration-300 flex items-center gap-1 md:gap-1.5 border border-black/[0.04] shrink-0"
         >
-          Lihat detail<ArrowRight className="w-3.5 h-3.5" />
+          Lihat detail<ArrowRight className="w-3 h-3 md:w-3.5 md:h-3.5" />
         </Link>
       </div>
     </div>
@@ -119,7 +120,8 @@ const PackagesSection: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    fetch('/api/packages').then(r => r.json()).then((data: unknown) => {
+    const controller = new AbortController()
+    fetch('/api/packages', { signal: controller.signal }).then(r => r.json()).then((data: unknown) => {
       if (Array.isArray(data)) {
         // Filter hanya package yang valid: punya slug, rating, harga wajar, dan highlight
         const valid = (data as Package[]).filter(p =>
@@ -131,6 +133,7 @@ const PackagesSection: React.FC = () => {
         setPackages(valid as Package[])
       }
     }).catch(() => {})
+    return () => controller.abort()
   }, [])
 
   const filters = ['All', 'Beach', 'Mountain', 'City']
@@ -174,8 +177,8 @@ const PackagesSection: React.FC = () => {
           <div className="lg:col-span-8 w-full overflow-hidden relative">
               <div ref={cardsStaggerRef} className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none pb-8 w-full">
                 {filteredPackages.length > 0 ? (
-                  filteredPackages.map((pkg) => (
-                    <PackageCard key={pkg.id} pkg={pkg} />
+                  filteredPackages.map((pkg, idx) => (
+                    <PackageCard key={pkg.slug || pkg.id || `pkg-${idx}`} pkg={pkg} />
                   ))
                 ) : (
                   <div className="min-h-80 w-full flex flex-col items-center justify-center bg-neutral-50 border border-black/[0.03] rounded-3xl p-8">

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
+import Image from 'next/image'
 import { Star, MapPin } from 'lucide-react'
 import { useGSAPStagger } from '@/hooks/useGSAP'
 
@@ -67,7 +68,7 @@ const TestimonialsSection: React.FC = () => {
                 <p className="text-black/80 text-base leading-relaxed mb-6">"{t.text}"</p>
               </div>
               <div className="flex items-center gap-3 pt-5 border-t border-black/5">
-                <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
+                <Image src={t.avatar} alt={t.name} width={40} height={40} className="rounded-full object-cover" />
                 <div>
                   <p className="text-black font-medium text-sm">{t.name}</p>
                   <div className="flex items-center gap-1">

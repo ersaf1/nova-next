@@ -22,8 +22,8 @@ export default function LocationSearch({
 
   useEffect(() => {
     if (query.length < 2) {
-      setSuggestions([])
-      setOpen(false)
+      setSuggestions(prev => (prev.length > 0 ? [] : prev))
+      setOpen(prev => (prev ? false : prev))
       return
     }
 

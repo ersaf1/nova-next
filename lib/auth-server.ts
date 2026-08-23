@@ -38,7 +38,11 @@ export async function getUserFromRequest(request: Request): Promise<User | null>
           )
           if (ssrCookieKey) {
             try {
-              const raw = decodeURIComponent(cookies[ssrCookieKey])
+              let raw = decodeURIComponent(cookies[ssrCookieKey])
+              // Supabase SSR v0.5+ encodes cookie as "base64-<base64(JSON)>"
+              if (raw.startsWith('base64-')) {
+                raw = Buffer.from(raw.slice(7), 'base64').toString('utf-8')
+              }
               // Value may be a JSON array (chunked) or a plain JSON object
               const parsed: unknown = JSON.parse(raw)
               if (Array.isArray(parsed)) {
@@ -69,13 +73,15 @@ export async function getUserFromRequest(request: Request): Promise<User | null>
   }
 }
 
+export type AppRole = 'user' | 'booking_officer' | 'admin' | 'super_admin'
+
 /**
  * Returns the role for a given user from the user_roles table.
  * Defaults to 'user' when no record exists.
  */
 export async function getUserRole(
   userId: string
-): Promise<'user' | 'admin' | 'super_admin' | null> {
+): Promise<AppRole | null> {
   try {
     const { data, error } = await supabaseAdmin
       .from('user_roles')
@@ -87,8 +93,8 @@ export async function getUserRole(
     if (!data) return 'user' // default role when no record
 
     const role = data.role as string
-    if (role === 'admin' || role === 'super_admin' || role === 'user') {
-      return role
+    if (role === 'admin' || role === 'super_admin' || role === 'booking_officer' || role === 'user') {
+      return role as AppRole
     }
 
     return 'user'

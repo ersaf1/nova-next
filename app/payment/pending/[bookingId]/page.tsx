@@ -60,8 +60,8 @@ export default function PaymentPendingPage() {
         router.replace(`/login?redirect=/payment/${bookingId}`)
         return
       }
-      // Redirect ke payment simulator
-      router.replace(`/payment/${bookingId}`)
+      // Redirect straight to confirmation
+      router.replace(`/payment/confirmation/${bookingId}`)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingId])

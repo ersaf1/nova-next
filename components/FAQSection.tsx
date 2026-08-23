@@ -53,7 +53,7 @@ const FAQSection: React.FC = () => {
           </div>
           <div className="transition-all duration-700 delay-150" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(40px)' }}>
             <div className="flex flex-col gap-3">
-              {faqs.map((faq, i) => (
+              {faqs.slice(0, 5).map((faq, i) => (
                 <div key={faq.id} className="border-b border-black/[0.06] last:border-0">
                   <button
                     onClick={() => setOpenIndex(openIndex === i ? null : i)}
@@ -76,6 +76,17 @@ const FAQSection: React.FC = () => {
                   </div>
                 </div>
               ))}
+              {faqs.length > 5 && (
+                <div className="pt-4 pl-7 text-left">
+                  <a 
+                    href="/faq" 
+                    className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black/60 hover:text-black transition-colors duration-200"
+                  >
+                    View all {faqs.length} FAQs
+                    <span className="text-sm font-light">→</span>
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>

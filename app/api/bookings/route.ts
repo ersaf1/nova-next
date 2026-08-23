@@ -3,6 +3,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { supabase } from '@/lib/supabase'
 import { sendBookingConfirmation } from '@/lib/email'
+import { sendWhatsAppNotification } from '@/lib/whatsapp'
 
 function generateBookingCode(): string {
   const prefix = 'NVA'
@@ -181,8 +182,8 @@ export async function POST(request: Request) {
       serviceFee: SERVICE_FEE,
       totalAmount,
       notes: notes || null,
-      bookingStatus: 'pending',
-      paymentStatus: 'unpaid',
+      bookingStatus: 'confirmed',
+      paymentStatus: 'paid',
       userId: userId || null,
       // legacy fallback fields
       country: country || null,
@@ -211,6 +212,21 @@ export async function POST(request: Request) {
       travelDate: travelDate || departureStartDate || '',
       participants: Number(participants),
       totalAmount,
+    }).catch(() => {})
+
+    // Trigger WhatsApp notification (fire-and-forget)
+    sendWhatsAppNotification({
+      phone: resolvedPhone,
+      name: resolvedName,
+      type: 'booking_created',
+      data: {
+        bookingId: data.id,
+        bookingCode,
+        packageName: pkg.title,
+        travelDate: travelDate || departureStartDate || '',
+        participants: Number(participants),
+        totalAmount
+      }
     }).catch(() => {})
 
     // Decrement remaining slots if departure selected (non-fatal, fire-and-forget)

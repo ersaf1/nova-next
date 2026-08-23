@@ -1,0 +1,53 @@
+{
+  "url": "http://localhost:3001/admin/hero",
+  "timestamp": "2026-08-23T07:14:35.113Z",
+  "summary": {
+    "totalErrors": 0,
+    "critical": 0,
+    "warnings": 0,
+    "notice": 0
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "form > div > div:nth-of-type(2) > div > button",
+      "text": "Show password",
+      "box": {
+        "x": 804,
+        "y": 443,
+        "width": 16,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Show password\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > form > div > div:nth-of-type(2) > button",
+      "text": "Forgot password?",
+      "box": {
+        "x": 448,
+        "y": 480,
+        "width": 94,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Forgot password?\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\admin-hero.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/admin/hero`\n> **Timestamp:** `23/08/2026, 2:14:35 pm`\n> **Status:** **0 Defects Detected** (🔴 0 Critical, 🟠 0 Warnings, 🔵 0 Notices)\n\n## 🎉 Perfect Score!\nNo UI defects, runtime exceptions, dead buttons, or missing elements were detected on this page.\n"
+}

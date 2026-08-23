@@ -3,8 +3,9 @@
 import React, { Suspense, useEffect, useState, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Search, SlidersHorizontal, Star, Clock, Users, X } from 'lucide-react'
+import { Search, SlidersHorizontal, Star, Clock, Users, X, ArrowUpDown } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import CustomSelect from '@/components/ui/CustomSelect'
 
 import type { TravelPackage, Destination } from '@/lib/types'
 import { formatIDR } from '@/lib/types'
@@ -88,17 +89,23 @@ function PackageCard({ pkg }: { pkg: TravelPackage }) {
             {pkg.rating} ({pkg.reviews})
           </span>
         </div>
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-lg font-bold text-black" style={{ letterSpacing: '-0.02em' }}>
-              {formatIDR(pkg.price)}
-            </span>
-            {(pkg.originalPrice ?? 0) > pkg.price && (
-              <span className="text-xs text-black/30 line-through ml-2">{formatIDR(pkg.originalPrice ?? 0)}</span>
-            )}
-            <span className="text-xs text-black/40 ml-1">/ orang</span>
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex flex-col">
+              {(pkg.originalPrice ?? 0) > pkg.price && (
+                <span className="text-xs text-black/30 line-through leading-none mb-1">
+                  {formatIDR(pkg.originalPrice ?? 0)}
+                </span>
+              )}
+              <div className="flex items-baseline leading-none">
+                <span className="text-lg font-bold text-black" style={{ letterSpacing: '-0.02em' }}>
+                  {formatIDR(pkg.price)}
+                </span>
+                <span className="text-xs text-black/40 ml-1">/ orang</span>
+              </div>
+            </div>
           </div>
-          <span className="text-sm font-medium bg-black text-white px-4 py-2 rounded-full hover:bg-black/80 transition-colors duration-200">
+          <span className="text-sm font-medium bg-black text-white px-4 py-2 rounded-full hover:bg-black/80 transition-colors duration-200 shrink-0">
             Lihat Detail
           </span>
         </div>
@@ -198,11 +205,12 @@ function SearchContent() {
   )
 
   useEffect(() => {
+    const controller = new AbortController()
     if (type === 'destinations') {
       async function fetchDestinations() {
         try {
           setLoading(true)
-          const res = await fetch('/api/destinations')
+          const res = await fetch('/api/destinations', { signal: controller.signal })
           const data = await res.json()
           setDestinations(Array.isArray(data) ? data : [])
         } catch {
@@ -216,7 +224,7 @@ function SearchContent() {
       async function fetchPackages() {
         try {
           setLoading(true)
-          const res = await fetch('/api/packages')
+          const res = await fetch('/api/packages', { signal: controller.signal })
           if (!res.ok) throw new Error('Failed to fetch packages')
           const data = await res.json()
           setPackages(Array.isArray(data) ? data : [])
@@ -229,6 +237,7 @@ function SearchContent() {
       }
       fetchPackages()
     }
+    return () => controller.abort()
   }, [type])
 
   const parseDurationDays = useCallback((dur: string): number => {
@@ -242,8 +251,20 @@ function SearchContent() {
   // Packages filter
   const filtered = packages.filter((pkg) => {
     const text = q.toLowerCase()
-    if (text && !pkg.title.toLowerCase().includes(text) && !(pkg.subtitle ?? '').toLowerCase().includes(text)) {
-      return false
+    if (text) {
+      const queryParts = text.split(/[,•]/).map(part => part.trim()).filter(Boolean)
+      const titleLower = pkg.title.toLowerCase()
+      const subtitleLower = (pkg.subtitle ?? '').toLowerCase()
+      
+      const matchesFull = titleLower.includes(text) || subtitleLower.includes(text)
+      const matchesAnyPart = queryParts.some(part => {
+        if (part.length <= 2) return false
+        return titleLower.includes(part) || subtitleLower.includes(part)
+      })
+      
+      if (!matchesFull && !matchesAnyPart) {
+        return false
+      }
     }
     if (selectedCategory !== 'All' && pkg.category?.toLowerCase() !== selectedCategory.toLowerCase()) {
       return false
@@ -581,15 +602,18 @@ function SearchContent() {
                 <p className="text-sm text-black/50">
                   {filtered.length} hasil ditemukan
                 </p>
-                <select
-                  value={sortOrder}
-                  onChange={(e) => setParams({ sort: e.target.value })}
-                  className="text-sm bg-white border border-black/10 rounded-full px-4 py-1.5 text-black focus:outline-none focus:ring-2 focus:ring-black/10 cursor-pointer"
-                >
-                  {SORT_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </select>
+                <div className="w-56">
+                  <CustomSelect
+                    value={sortOrder}
+                    onChange={(val) => setParams({ sort: val })}
+                    options={SORT_OPTIONS.map((opt) => ({
+                      id: opt.value,
+                      label: opt.label,
+                    }))}
+                    icon={<ArrowUpDown size={14} />}
+                    align="right"
+                  />
+                </div>
               </div>
             )}
 
@@ -641,8 +665,8 @@ function SearchContent() {
             ) : (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {visiblePackages.map((pkg) => (
-                    <PackageCard key={pkg.id} pkg={pkg} />
+                  {visiblePackages.map((pkg, idx) => (
+                    <PackageCard key={pkg.slug || pkg.id || `search-pkg-${idx}`} pkg={pkg} />
                   ))}
                 </div>
                 {hasMore && (

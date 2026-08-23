@@ -1,16 +1,56 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-geist-sans), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
+
 @layer base {
   html {
-    scroll-behavior: smooth;
     overflow-x: hidden;
+    scroll-behavior: smooth;
   }
 
   body {
     background-color: #ffffff;
     color: #1a1a1a;
-    font-family: 'Geist', var(--font-sans, system-ui, -apple-system, sans-serif);
+    font-family: var(--font-sans);
+    text-rendering: optimizeSpeed;
   }
+
+  img, video {
+    content-visibility: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Lenis Butter-Smooth Scroll Physics */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 .font-display {
@@ -23,6 +63,30 @@
 
 .font-jakarta {
   font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* Universal Luxury Select & Dropdown Styling */
+select {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
+}
+
+select:hover {
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+select:focus {
+  outline: none;
+  border-color: #171717;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+select option {
+  padding: 10px 14px;
+  background-color: #ffffff;
+  color: #171717;
+  font-weight: 600;
 }
 
 
@@ -164,13 +228,71 @@ html {
   color: #ffffff;
 }
 
-/* Modern Card Hover Effects */
-.card-hover-effect {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+/* Global Interactive Smoothness — Hover & Click Physics */
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+.btn-smooth {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
+button:active,
+a:active,
+[role="button"]:active,
+.btn-smooth:active {
+  transform: scale(0.965);
+  transition-duration: 0.12s;
+}
+
+/* Smooth Interactive Card & Component Hover Effects */
+.smooth-interactive,
+.card-hover-effect {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.smooth-interactive:hover,
 .card-hover-effect:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px) scale(1.008) translateZ(0);
+}
+
+.smooth-interactive:active,
+.card-hover-effect:active {
+  transform: translateY(-1px) scale(0.985) translateZ(0);
+  transition-duration: 0.12s !important;
+}
+
+/* Smooth Icon & Arrow Transitions */
+svg,
+.lucide {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              fill 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .group-hover\:translate-x-1,
+.group:hover .group-hover\:translate-x-1\.5 {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.group:hover .group-hover\:scale-105,
+.group:hover .group-hover\:scale-110 {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 /* Shimmer Loading Skeleton Effect */

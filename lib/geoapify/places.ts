@@ -53,7 +53,11 @@ export async function fetchPlacesForCity(
   apiKey: string
 ): Promise<GeoapifyPlace[]> {
   const { geocodeText } = await import('./geocoding')
-  const geo = await geocodeText(cityName, apiKey, 'city')
+  // Try city type first, then fallback to unconstrained geocode for small towns, parks, and local spots
+  let geo = await geocodeText(cityName, apiKey, 'city')
+  if (!geo) {
+    geo = await geocodeText(cityName, apiKey)
+  }
   if (!geo) return []
 
   return searchPlaces(

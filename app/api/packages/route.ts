@@ -34,7 +34,10 @@ async function getLocalPackages() {
     const parsed = JSON.parse(data)
     return parsed
       .filter(isValidPackage)
-      .map(parseIncludes)
+      .map((p: Record<string, unknown>, idx: number) => ({
+        id: p.id ?? p.destinationId ?? (idx + 1),
+        ...parseIncludes(p),
+      }))
   } catch {
     return []
   }

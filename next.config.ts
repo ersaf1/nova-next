@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       'lucide-react',
       'gsap',
+      'lenis',
       'clsx',
       'tailwind-merge',
       '@radix-ui/react-toast',
@@ -13,6 +14,8 @@ const nextConfig: NextConfig = {
     ],
   },
   images: {
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'images.pexels.com' },

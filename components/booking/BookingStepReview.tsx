@@ -76,7 +76,7 @@ export default function BookingStepReview({ pkg, departure, contact, travelers, 
 
   return (
     <div className="space-y-6">
-      <BookingProgress currentStep={3} />
+      <BookingProgress currentStep={2} />
 
       {/* Package info */}
       <div className="bg-white rounded-2xl border border-black/[0.06] p-5 space-y-3">

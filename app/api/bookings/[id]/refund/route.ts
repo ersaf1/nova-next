@@ -24,11 +24,11 @@ export async function POST(
     return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
   }
 
-  // Ownership check — owner or admin
+  // Ownership check — owner or admin/booking officer
   const bookingEmail = booking.email as string | null
   if (bookingEmail !== user.email) {
     const role = await getUserRole(user.id)
-    if (!['admin', 'super_admin'].includes(role ?? '')) {
+    if (!['booking_officer', 'admin', 'super_admin'].includes(role ?? '')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
   }
@@ -70,7 +70,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
-  const authResult = await requireRole(request, ['admin', 'super_admin'])
+  const authResult = await requireRole(request, ['booking_officer', 'admin', 'super_admin'])
   if (authResult instanceof NextResponse) return authResult
 
   const body = await request.json() as { action?: string }

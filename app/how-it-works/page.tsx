@@ -310,7 +310,7 @@ export default function HowItWorksPage() {
 
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <button
-                onClick={() => router.push('/itinerary')}
+                onClick={() => router.push('/ai-planner')}
                 className="px-6 py-3.5 rounded-2xl bg-white text-neutral-950 text-xs font-extrabold hover:bg-neutral-100 transition-colors flex items-center gap-2 shadow-md"
               >
                 <Sparkles className="w-4 h-4 text-amber-500" />

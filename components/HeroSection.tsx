@@ -57,15 +57,37 @@ const HeroSection: React.FC = () => {
   const [brands, setBrands] = useState<Partner[]>(DEFAULT_BRANDS)
   const [heroReady, setHeroReady] = useState(false)
 
-  // Trigger autoplay setiap kali videoUrl berubah
+  // Trigger autoplay and auto-pause when scrolled out of view to save GPU cycles
   useEffect(() => {
-    if (!videoRef.current || !hero.videoUrl) return
-    videoRef.current.load()
-    videoRef.current.play().catch(() => {})
+    const video = videoRef.current
+    const section = sectionRef.current
+    if (!video || !hero.videoUrl) return
+
+    video.load()
+    video.play().catch(() => {})
+
+    // Pause video when section is not visible
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {})
+        } else {
+          video.pause()
+        }
+      },
+      { threshold: 0.05 }
+    )
+
+    if (section) observer.observe(section)
+    return () => {
+      observer.disconnect()
+    }
   }, [hero.videoUrl])
 
   useEffect(() => {
-    fetch('/api/hero')
+    const controller = new AbortController()
+    const { signal } = controller
+    fetch('/api/hero', { signal })
       .then(r => r.json())
       .then((data: HeroData) => {
         if (data && (data.headline || data.subheadline || data.badgeText || data.videoUrl)) {
@@ -78,10 +100,11 @@ const HeroSection: React.FC = () => {
         setHeroReady(true)
       })
       .catch(() => { setHeroReady(true) })
-    fetch('/api/partners')
+    fetch('/api/partners', { signal })
       .then(r => r.json())
       .then((data: Partner[]) => { if (Array.isArray(data) && data.length > 0) setBrands(data) })
       .catch(() => {})
+    return () => controller.abort()
   }, [])
 
   useEffect(() => {
@@ -214,7 +237,7 @@ const HeroSection: React.FC = () => {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href="/itinerary"
+              href="/ai-planner"
               className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-semibold px-7 py-3.5 rounded-full hover:bg-white/20 transition-all duration-200"
             >
               <Sparkles className="w-4 h-4 text-white/70" />

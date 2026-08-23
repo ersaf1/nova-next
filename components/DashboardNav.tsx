@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Ticket, Heart, Map, User, LogOut } from 'lucide-react'
+import { LayoutDashboard, Ticket, Heart, Map, User, LogOut, Bell } from 'lucide-react'
 import { supabaseClient } from '@/lib/supabase-client'
 import { useRouter } from 'next/navigation'
 
@@ -11,6 +11,7 @@ const NAV = [
   { href: '/dashboard/bookings', label: 'Booking Saya', icon: Ticket },
   { href: '/dashboard/wishlist', label: 'Wishlist', icon: Heart },
   { href: '/dashboard/itineraries', label: 'Itinerary AI', icon: Map },
+  { href: '/dashboard/notifications', label: 'Notifikasi', icon: Bell },
   { href: '/dashboard/profile', label: 'Profil', icon: User },
 ]
 

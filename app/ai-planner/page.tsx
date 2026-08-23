@@ -20,7 +20,7 @@ export default async function AiPlannerPage() {
   if (!user) redirect('/login?redirect=/ai-planner')
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white">
+    <div className="min-h-screen bg-[#F8FAFC] text-neutral-900">
       <Navbar />
       <AiPlannerClient />
     </div>

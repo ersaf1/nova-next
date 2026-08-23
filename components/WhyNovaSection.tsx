@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { Shield, Zap, HeadphonesIcon, CreditCard, LucideIcon } from 'lucide-react'
 import ScrollReveal from './ScrollReveal'
 
@@ -54,7 +55,7 @@ const WhyNovaSection: React.FC = () => {
               return (
                 <div key={feature.title} className="group relative rounded-2xl overflow-hidden cursor-default transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5" style={{ height: '340px' }}>
                   {feature.image ? (
-                    <img src={feature.image} alt={feature.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-700 ease-out" />
+                    <Image src={feature.image} alt={feature.title} fill className="object-cover group-hover:scale-[1.05] transition-transform duration-700 ease-out" />
                   ) : null}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
                   <div className="absolute top-5 left-5 w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center">

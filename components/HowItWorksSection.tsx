@@ -105,7 +105,7 @@ const HowItWorksSection: React.FC = () => {
 
           <div className="flex items-center gap-3 shrink-0">
             <button
-              onClick={() => router.push('/itinerary')}
+              onClick={() => router.push('/ai-planner')}
               className="bg-neutral-950 text-white text-xs font-bold px-6 py-3.5 rounded-2xl hover:bg-neutral-800 transition-all shadow-md flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-amber-400" />

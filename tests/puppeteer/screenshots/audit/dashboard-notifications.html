@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI & Web Error Audit Report - http://localhost:3001/dashboard/notifications</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --critical: #ef4444;
+      --warning: #f59e0b;
+      --notice: #3b82f6;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .header {
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    h1 { margin: 0 0 8px 0; font-size: 24px; }
+    .url { color: var(--text-muted); font-size: 14px; word-break: break-all; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-val { font-size: 28px; font-weight: bold; margin-top: 4px; }
+    .stat-val.crit { color: var(--critical); }
+    .stat-val.warn { color: var(--warning); }
+    .stat-val.not { color: var(--notice); }
+    .stat-val.total { color: var(--text); }
+    .section-title { font-size: 18px; margin: 24px 0 12px 0; color: #38bdf8; }
+    .screenshot-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      overflow: auto;
+      max-height: 500px;
+    }
+    .screenshot-img { max-width: 100%; border-radius: 4px; display: block; }
+    .issues-list { display: flex; flex-direction: column; gap: 10px; }
+    .issue-item {
+      background: var(--card-bg);
+      border-left: 4px solid var(--border);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 16px;
+    }
+    .issue-item.critical { border-left-color: var(--critical); }
+    .issue-item.warning { border-left-color: var(--warning); }
+    .issue-item.notice { border-left-color: var(--notice); }
+    .issue-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .issue-badge {
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+    .badge-critical { background: var(--critical); color: white; }
+    .badge-warning { background: var(--warning); color: black; }
+    .badge-notice { background: var(--notice); color: white; }
+    .issue-category { font-size: 12px; color: var(--text-muted); }
+    .issue-msg { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+    .issue-detail { font-family: monospace; font-size: 12px; background: rgba(0,0,0,0.3); padding: 6px 8px; border-radius: 4px; color: #cbd5e1; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🛡️ Puppeteer UI/UX & Web Error Detector Report</h1>
+    <div class="url">Target: <strong>http://localhost:3001/dashboard/notifications</strong> | Generated: 23/08/2026, 2:12:33 pm</div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Total Errors</div><div class="stat-val total">2</div></div>
+    <div class="stat-card"><div class="stat-label">Critical Defects</div><div class="stat-val crit">1</div></div>
+    <div class="stat-card"><div class="stat-label">Warnings</div><div class="stat-val warn">0</div></div>
+    <div class="stat-card"><div class="stat-label">Notices</div><div class="stat-val not">1</div></div>
+  </div>
+
+  
+  <div class="section-title">📸 Annotated Full-Page Visual Inspection</div>
+  <div class="screenshot-container">
+    <img class="screenshot-img" src="dashboard-notifications.png" alt="Annotated UI Screenshot">
+  </div>
+  
+
+  <div class="section-title">📋 Detailed Defect Logs (2)</div>
+  <div class="issues-list">
+    
+      <div class="issue-item critical">
+        <div class="issue-header">
+          <span class="issue-badge badge-critical">critical</span>
+          <span class="issue-category">Dead Buttons & Links &bull; potential-dead-button</span>
+        </div>
+        <div class="issue-msg">Dead button confirmed! Clicking &quot;Sign in&quot; triggered no URL change, no DOM mutation, and no modal/state change.</div>
+        
+          <div class="issue-detail">Selector: div &gt; div &gt; div:nth-of-type(2) &gt; div &gt; button</div>
+        
+      </div>
+    
+      <div class="issue-item notice">
+        <div class="issue-header">
+          <span class="issue-badge badge-notice">notice</span>
+          <span class="issue-category">Dead Buttons & Links &bull; potential-dead-button</span>
+        </div>
+        <div class="issue-msg">Button &quot;Forgot password?&quot; has no standard action or form association (needs click verification)</div>
+        
+          <div class="issue-detail">Selector: div:nth-of-type(2) &gt; form &gt; div &gt; div:nth-of-type(2) &gt; button</div>
+        
+      </div>
+    
+  </div>
+</body>
+</html>

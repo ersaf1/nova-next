@@ -1,0 +1,136 @@
+{
+  "url": "http://localhost:3001/promo",
+  "timestamp": "2026-08-23T07:11:48.852Z",
+  "summary": {
+    "totalErrors": 7,
+    "critical": 0,
+    "warnings": 0,
+    "notice": 7
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 1039,
+        "y": 6,
+        "width": 76,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Masuk\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 1123,
+        "y": 4,
+        "width": 109,
+        "height": 40,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > nav > div > button",
+      "text": "Toggle menu",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Toggle menu\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Masuk\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div:nth-of-type(2) > div > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 401,
+        "y": 324,
+        "width": 16,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 739,
+        "y": 324,
+        "width": 16,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(2) > div > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 1078,
+        "y": 324,
+        "width": 16,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\promo.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/promo`\n> **Timestamp:** `23/08/2026, 2:11:48 pm`\n> **Status:** **7 Defects Detected** (🔴 0 Critical, 🟠 0 Warnings, 🔵 7 Notices)\n\n## 🎯 Objective\nFix all identified front-end, runtime, interactive, and visual rendering defects on the target page. Follow the prioritized checklist below task-by-task.\n\n---\n\n### Task 1: Fix Dead Buttons, Inoperative Links & Click Traps (🔴 High Priority)\n\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > nav > div > button`\n  - **Element Details:** Text: `\"Toggle menu\"` | Href: `N/A`\n  - **Problem:** Button \"Toggle menu\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Masuk\"` | Href: `N/A`\n  - **Problem:** Button \"Masuk\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n\n---\n\n## 🔍 Verification Step\nAfter applying code fixes, re-run the detector to verify 0 remaining defects:\n```bash\nnode C:\\Users\\lulus\\.config\\opencode\\skills\\puppeteer-error-detector\\scripts\\detect-errors.js \"http://localhost:3001/promo\" --screenshot ./post-fix-audit.png\n```\n"
+}

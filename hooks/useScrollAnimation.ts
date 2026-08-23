@@ -73,20 +73,32 @@ export function use3DTilt() {
     const el = ref.current
     if (!el) return
 
+    let rafId: number
+
     const handleMouseMove = (e: MouseEvent) => {
       const rect = el.getBoundingClientRect()
       const cx = rect.left + rect.width / 2
       const cy = rect.top + rect.height / 2
       const dx = (e.clientX - cx) / (rect.width / 2)
       const dy = (e.clientY - cy) / (rect.height / 2)
-      setTilt({ x: dy * -8, y: dx * 8 })
+
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => {
+        setTilt({ x: dy * -7, y: dx * 7 })
+      })
     }
 
-    const handleMouseLeave = () => setTilt({ x: 0, y: 0 })
+    const handleMouseLeave = () => {
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => {
+        setTilt({ x: 0, y: 0 })
+      })
+    }
 
-    el.addEventListener('mousemove', handleMouseMove)
-    el.addEventListener('mouseleave', handleMouseLeave)
+    el.addEventListener('mousemove', handleMouseMove, { passive: true })
+    el.addEventListener('mouseleave', handleMouseLeave, { passive: true })
     return () => {
+      cancelAnimationFrame(rafId)
       el.removeEventListener('mousemove', handleMouseMove)
       el.removeEventListener('mouseleave', handleMouseLeave)
     }
@@ -116,27 +128,26 @@ export function useStaggerReveal(options: {
       const children = Array.from(container.children) as HTMLElement[]
       if (!children.length) return
 
-      // Set initial state — alternate x direction per item
-      children.forEach((child, i) => {
+      // Set initial state without heavy blur
+      children.forEach((child) => {
         gsap.set(child, {
           opacity: 0,
-          x: i % 2 === 0 ? -distance : distance,
-          filter: 'blur(6px)',
+          y: 28,
         })
       })
 
       ScrollTrigger.create({
         trigger: container,
-        start: 'top 88%',
+        start: 'top 90%',
         once,
         onEnter: () => {
           gsap.to(children, {
             opacity: 1,
-            x: 0,
-            filter: 'blur(0px)',
+            y: 0,
             duration,
             stagger,
-            ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+            ease: 'power2.out',
+            clearProps: 'transform,opacity',
           })
         },
       })

@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
-import { Menu, X, Sparkles, Home, LogOut } from 'lucide-react'
+import { Menu, X, Sparkles, Home, LogOut, Bell } from 'lucide-react'
 import LogoIcon from './LogoIcon'
+import CurrencySwitcher from './CurrencySwitcher'
 import gsap from 'gsap'
 import { supabaseClient } from '@/lib/supabase-client'
 import type { User } from '@supabase/supabase-js'
@@ -13,7 +14,7 @@ const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Destinations', href: '/destinations' },
   { label: 'Packages', href: '/packages' },
-  { label: 'AI Planner', href: '/itinerary', highlight: true },
+  { label: 'AI Planner', href: '/ai-planner', highlight: true },
   { label: 'How It Works', href: '/how-it-works' },
 ]
 
@@ -104,6 +105,13 @@ const Navbar: React.FC = () => {
         <div className="hidden md:flex items-center gap-2 shrink-0">
           {user ? (
             <>
+              <Link
+                href="/dashboard/notifications"
+                className="p-2 rounded-full text-black/50 hover:text-black hover:bg-black/[0.04] transition-all"
+                title="Notifikasi"
+              >
+                <Bell size={16} />
+              </Link>
               <button
                 onClick={() => router.push('/dashboard')}
                 className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all"
@@ -174,6 +182,13 @@ const Navbar: React.FC = () => {
                   className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl text-black/70 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
                 >
                   Dashboard
+                </button>
+                <button
+                  onClick={() => { router.push('/dashboard/notifications'); setMenuOpen(false) }}
+                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl text-black/70 hover:text-black hover:bg-black/[0.04] transition-colors text-left flex items-center gap-2"
+                >
+                  <Bell size={13} />
+                  Notifikasi
                 </button>
                 <button
                   onClick={handleSignOut}

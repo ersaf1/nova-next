@@ -19,8 +19,10 @@ import {
   ExternalLink,
   MessageSquare,
   FileText,
+  Printer,
   X
 } from 'lucide-react'
+import EInvoiceModal from '@/components/EInvoiceModal'
 
 interface Booking {
   id: number
@@ -49,6 +51,7 @@ export default function BookingsAdmin() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
+  const [invoiceBooking, setInvoiceBooking] = useState<Booking | null>(null)
 
   const load = () => {
     setLoading(true)
@@ -266,6 +269,17 @@ export default function BookingsAdmin() {
                       <td className="px-5 py-4 text-right" onClick={e => e.stopPropagation()}>
                         <div className="flex items-center justify-end gap-2">
                           <button
+                            onClick={e => {
+                              e.stopPropagation()
+                              setInvoiceBooking(item)
+                            }}
+                            className="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 border border-emerald-200/80 font-semibold text-[11px] transition-all flex items-center gap-1"
+                            title="Cetak E-Tiket & Invoice PDF"
+                          >
+                            <Printer className="w-3 h-3" />
+                            <span>Tiket</span>
+                          </button>
+                          <button
                             onClick={() => setSelectedBooking(item)}
                             className="px-3 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-900 hover:text-white text-neutral-800 font-semibold text-[11px] transition-all flex items-center gap-1"
                           >
@@ -477,6 +491,14 @@ export default function BookingsAdmin() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Printable E-Invoice & E-Tiket Modal */}
+      {invoiceBooking && (
+        <EInvoiceModal
+          booking={invoiceBooking}
+          onClose={() => setInvoiceBooking(null)}
+        />
       )}
     </div>
   )

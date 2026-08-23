@@ -1,0 +1,83 @@
+{
+  "url": "http://localhost:3001/register",
+  "timestamp": "2026-08-23T07:11:07.368Z",
+  "summary": {
+    "totalErrors": 0,
+    "critical": 0,
+    "warnings": 0,
+    "notice": 0
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button",
+      "text": "Sign in",
+      "box": {
+        "x": 452,
+        "y": 242,
+        "width": 188,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Sign in\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button:nth-of-type(2)",
+      "text": "Sign up",
+      "box": {
+        "x": 640,
+        "y": 242,
+        "width": 188,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Sign up\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "form > div > div:nth-of-type(2) > div > button",
+      "text": "Show password",
+      "box": {
+        "x": 804,
+        "y": 435,
+        "width": 16,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Show password\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "form > div > div:nth-of-type(3) > div > button",
+      "text": "Show confirm password",
+      "box": {
+        "x": 804,
+        "y": 519,
+        "width": 16,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Show confirm password\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\register.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/register`\n> **Timestamp:** `23/08/2026, 2:11:07 pm`\n> **Status:** **0 Defects Detected** (🔴 0 Critical, 🟠 0 Warnings, 🔵 0 Notices)\n\n## 🎉 Perfect Score!\nNo UI defects, runtime exceptions, dead buttons, or missing elements were detected on this page.\n"
+}

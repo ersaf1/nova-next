@@ -105,7 +105,7 @@ export default function DashboardItinerariesPage() {
           <main className="flex-1 min-w-0 space-y-6">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-bold text-black">Itinerary AI Tersimpan</h1>
-              <Link href="/itinerary" className="text-sm text-neutral-500 hover:text-black transition-colors">
+              <Link href="/ai-planner" className="text-sm text-neutral-500 hover:text-black transition-colors">
                 + Buat Itinerary Baru
               </Link>
             </div>

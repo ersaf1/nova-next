@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import PageTransition from '@/components/PageTransition'
+import SmoothScroll from '@/components/SmoothScroll'
 import CrispChat from '@/components/CrispChat'
+import { CurrencyProvider } from '@/context/CurrencyContext'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -52,7 +54,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="font-sans antialiased bg-white text-[#1a1a1a] overflow-x-hidden">
-        <PageTransition>{children}</PageTransition>
+        <CurrencyProvider>
+          <SmoothScroll>
+            <PageTransition>{children}</PageTransition>
+          </SmoothScroll>
+        </CurrencyProvider>
         <CrispChat />
       </body>
     </html>

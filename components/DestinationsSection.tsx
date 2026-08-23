@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ArrowRight, MapPin, Star, Heart, X, Clock } from 'lucide-react'
 import ScrollReveal from './ScrollReveal'
@@ -27,17 +28,17 @@ const tagColors: Record<string, string> = {
 }
 
 const DEFAULT_IMAGES: Record<string, string> = {
-  Tokyo: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=85',
-  Santorini: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1200&q=85',
-  'New York': 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1200&q=85',
-  Bali: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&q=85',
-  Paris: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&q=85',
-  Rome: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=1200&q=85',
-  Reykjavik: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=1200&q=85',
-  'Machu Picchu': 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=1200&q=85',
+  Tokyo: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&q=75',
+  Santorini: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&auto=format&q=75',
+  'New York': 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&auto=format&q=75',
+  Bali: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&auto=format&q=75',
+  Paris: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&auto=format&q=75',
+  Rome: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&auto=format&q=75',
+  Reykjavik: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=600&auto=format&q=75',
+  'Machu Picchu': 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&auto=format&q=75',
 }
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=85'
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&q=75'
 
 const staticDestinations: Destination[] = [
   { id: 1, city: 'Tokyo', country: 'Japan', tagline: 'Where tradition meets tomorrow', price: 'From $899', image: DEFAULT_IMAGES.Tokyo, tag: 'Popular', rating: 4.9, duration: '7–10 days' },
@@ -81,7 +82,7 @@ const Lightbox: React.FC<LightboxProps> = ({ dest, onClose, onPrev, onNext, save
       <div className="absolute inset-0" style={{ backgroundImage: `url(${imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(40px) brightness(0.25)', transform: 'scale(1.1)' }} />
       <div className="relative w-full max-w-5xl mx-4 sm:mx-6 rounded-3xl overflow-hidden flex flex-col sm:flex-row shadow-2xl" style={{ maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
         <div className="relative w-full sm:w-[45%] h-56 sm:h-auto shrink-0 overflow-hidden bg-neutral-900" style={{ maxHeight: '420px' }}>
-          <img src={imageUrl} alt={dest.city} className="w-full h-full object-cover" style={{ minHeight: '280px', maxHeight: '420px' }} />
+          <Image src={imageUrl} alt={dest.city} fill className="object-cover" sizes="(max-width: 640px) 100vw, 45vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent sm:bg-gradient-to-r sm:from-transparent sm:to-black/20" />
           {dest.tag && <span className={`absolute top-5 left-5 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ${tagColors[dest.tag]}`}>{dest.tag}</span>}
           <div className="absolute bottom-6 left-6 sm:hidden">
@@ -175,7 +176,8 @@ const DestinationsSection: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    fetch('/api/destinations')
+    const controller = new AbortController()
+    fetch('/api/destinations', { signal: controller.signal })
       .then(r => r.json())
       .then((data: Destination[]) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -189,6 +191,7 @@ const DestinationsSection: React.FC = () => {
         }
       })
       .catch(() => setDestinations(staticDestinations))
+    return () => controller.abort()
   }, [])
 
   const toggleSave = (city: string, e: React.MouseEvent) => {
@@ -216,11 +219,10 @@ const DestinationsSection: React.FC = () => {
             </div>
           </ScrollReveal>
 
-            <div ref={destGridRef} className="grid grid-cols-3 gap-3 md:gap-4" style={{ gridTemplateRows: '200px 200px 200px' }}>
+            <div ref={destGridRef} className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 sm:auto-rows-[200px]">
               {destinations.slice(0, 5).map((dest, i) => {
-                // Row 1: index 0 (col-span-2) + index 1 (col-span-1)  = 3 cols
-                // Row 2: index 2 (col-span-1) + index 3 (col-span-2)  = 3 cols
-                // index 4: col-span-3 full width row
+                // Mobile: 1 col each
+                // Tablet/Desktop: Row 1 (2+1), Row 2 (1+2), Row 3 (3)
                 const isWide = i === 0 || i === 3
                 const isFullWidth = i === 4
                 const imageUrl = dest.image || DEFAULT_IMAGES[dest.city] || FALLBACK_IMAGE
@@ -228,7 +230,7 @@ const DestinationsSection: React.FC = () => {
                 return (
                   <div
                     key={dest.id}
-                    className={`group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 ${isFullWidth ? 'col-span-3' : isWide ? 'col-span-2' : 'col-span-1'}`}
+                    className={`group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 h-48 sm:h-auto ${isFullWidth ? 'sm:col-span-3' : isWide ? 'sm:col-span-2' : 'sm:col-span-1'}`}
                     onClick={() => setLightboxIndex(i)}
                   >
                     <img

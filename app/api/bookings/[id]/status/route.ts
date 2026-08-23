@@ -32,7 +32,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     if (booking.email !== user.email) {
       const role = await getUserRole(user.id)
-      if (!['admin', 'super_admin'].includes(role ?? '')) {
+      if (!['booking_officer', 'admin', 'super_admin'].includes(role ?? '')) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
     }

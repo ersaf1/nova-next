@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { supabaseClient } from '@/lib/supabase-client'
 import { formatIDR } from '@/lib/types'
 import type { PackageDeparture } from '@/lib/types'
@@ -89,7 +90,7 @@ export default function BookingStepDetails({ pkg, departure, onNext }: Props) {
         <div className="flex gap-4">
           {(pkg.coverImage ?? pkg.image) && (
             <div className="w-20 h-16 rounded-xl overflow-hidden shrink-0 bg-neutral-100">
-              <img src={pkg.coverImage ?? pkg.image} alt={pkg.title} className="w-full h-full object-cover" />
+              <Image src={(pkg.coverImage ?? pkg.image)!} alt={pkg.title} fill className="object-cover" sizes="80px" />
             </div>
           )}
           <div>
@@ -179,7 +180,7 @@ export default function BookingStepDetails({ pkg, departure, onNext }: Props) {
           type="submit"
           className="w-full bg-black text-white font-semibold py-3.5 rounded-xl hover:bg-neutral-800 active:bg-neutral-950 transition-colors text-sm"
         >
-          Lanjutkan ke Data Traveler
+          Lanjutkan ke Review
         </button>
       </form>
     </div>

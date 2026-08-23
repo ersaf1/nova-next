@@ -3,11 +3,6 @@
 import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -19,26 +14,22 @@ export default function PageTransition({ children }: { children: React.ReactNode
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ref.current,
-        { opacity: 0, y: 16 },
+        { opacity: 0 },
         {
           opacity: 1,
-          y: 0,
-          duration: 0.45,
+          duration: 0.35,
           ease: 'power2.out',
-          clearProps: 'transform',
         }
       )
     }, ref)
 
-    return () => {
-      ctx.revert()
-      ScrollTrigger.getAll().forEach(t => t.kill())
-    }
+    return () => ctx.revert()
   }, [pathname])
 
   return (
-    <div ref={ref} style={{ willChange: 'transform, opacity' }}>
+    <div ref={ref} className="w-full">
       {children}
     </div>
   )
 }
+

@@ -25,7 +25,7 @@ function LoginForm() {
   const redirect = searchParams.get('redirect') || '/dashboard'
   const isAdminLogin = redirect.startsWith('/admin')
 
-  const [tab, setTab] = useState<Tab>('signin')
+  const [tab, setTab] = useState<Tab>((searchParams.get('tab') as Tab) === 'signup' ? 'signup' : 'signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')

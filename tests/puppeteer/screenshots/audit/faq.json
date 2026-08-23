@@ -1,0 +1,459 @@
+{
+  "url": "http://localhost:3001/faq",
+  "timestamp": "2026-08-23T07:11:36.562Z",
+  "summary": {
+    "totalErrors": 29,
+    "critical": 0,
+    "warnings": 0,
+    "notice": 29
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 1042,
+        "y": 6,
+        "width": 75,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Masuk\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 1125,
+        "y": 4,
+        "width": 108,
+        "height": 40,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > nav > div > button",
+      "text": "Toggle menu",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Toggle menu\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Masuk\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button",
+      "text": "How do I book a trip with NOVA?",
+      "box": {
+        "x": 257,
+        "y": 410,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"How do I book a trip with NOVA?\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(2) > button",
+      "text": "Can I customize my travel package?",
+      "box": {
+        "x": 257,
+        "y": 550,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Can I customize my travel package?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(3) > button",
+      "text": "What is included in the package price?",
+      "box": {
+        "x": 257,
+        "y": 624,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"What is included in the package price?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(4) > button",
+      "text": "How does the AI Itinerary Planner work?",
+      "box": {
+        "x": 257,
+        "y": 698,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How does the AI Itinerary Planner work?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(5) > button",
+      "text": "What is the cancellation policy?",
+      "box": {
+        "x": 257,
+        "y": 772,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"What is the cancellation policy?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(6) > button",
+      "text": "Is my payment secure?",
+      "box": {
+        "x": 257,
+        "y": 846,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Is my payment secure?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(7) > button",
+      "text": "Can I book for a group?",
+      "box": {
+        "x": 257,
+        "y": 920,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Can I book for a group?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(8) > button",
+      "text": "How do I get my e-ticket after booking?",
+      "box": {
+        "x": 257,
+        "y": 994,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How do I get my e-ticket after booking?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(9) > button",
+      "text": "How do I book a trip with NOVA?",
+      "box": {
+        "x": 257,
+        "y": 1068,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How do I book a trip with NOVA?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(10) > button",
+      "text": "Can I customize my travel package?",
+      "box": {
+        "x": 257,
+        "y": 1142,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Can I customize my travel package?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(11) > button",
+      "text": "What is included in the package price?",
+      "box": {
+        "x": 257,
+        "y": 1216,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"What is included in the package price?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(12) > button",
+      "text": "How does the AI Itinerary Planner work?",
+      "box": {
+        "x": 257,
+        "y": 1290,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How does the AI Itinerary Planner work?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(13) > button",
+      "text": "What is the cancellation policy?",
+      "box": {
+        "x": 257,
+        "y": 1364,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"What is the cancellation policy?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(14) > button",
+      "text": "Is my payment secure?",
+      "box": {
+        "x": 257,
+        "y": 1438,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Is my payment secure?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(15) > button",
+      "text": "Can I book for a group?",
+      "box": {
+        "x": 257,
+        "y": 1512,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Can I book for a group?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(16) > button",
+      "text": "How do I get my e-ticket after booking?",
+      "box": {
+        "x": 257,
+        "y": 1586,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How do I get my e-ticket after booking?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(17) > button",
+      "text": "How do I book a trip with NOVA?",
+      "box": {
+        "x": 257,
+        "y": 1660,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How do I book a trip with NOVA?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(18) > button",
+      "text": "Can I customize my travel package?",
+      "box": {
+        "x": 257,
+        "y": 1734,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Can I customize my travel package?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(19) > button",
+      "text": "What is included in the package price?",
+      "box": {
+        "x": 257,
+        "y": 1808,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"What is included in the package price?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(20) > button",
+      "text": "How does the AI Itinerary Planner work?",
+      "box": {
+        "x": 257,
+        "y": 1882,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How does the AI Itinerary Planner work?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(21) > button",
+      "text": "What is the cancellation policy?",
+      "box": {
+        "x": 257,
+        "y": 1956,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"What is the cancellation policy?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(22) > button",
+      "text": "Is my payment secure?",
+      "box": {
+        "x": 257,
+        "y": 2030,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Is my payment secure?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(23) > button",
+      "text": "Can I book for a group?",
+      "box": {
+        "x": 257,
+        "y": 2104,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Can I book for a group?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(24) > button",
+      "text": "How do I get my e-ticket after booking?",
+      "box": {
+        "x": 257,
+        "y": 2178,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How do I get my e-ticket after booking?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(25) > button",
+      "text": "Apakah ini pertanyaan test dari puppeteer?",
+      "box": {
+        "x": 257,
+        "y": 2252,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Apakah ini pertanyaan test dari puppeteer?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(26) > button",
+      "text": "Apakah ini pertanyaan test dari puppeteer?",
+      "box": {
+        "x": 257,
+        "y": 2326,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Apakah ini pertanyaan test dari puppeteer?\" has no standard action or form association (needs click verification)"
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\faq.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/faq`\n> **Timestamp:** `23/08/2026, 2:11:36 pm`\n> **Status:** **29 Defects Detected** (🔴 0 Critical, 🟠 0 Warnings, 🔵 29 Notices)\n\n## 🎯 Objective\nFix all identified front-end, runtime, interactive, and visual rendering defects on the target page. Follow the prioritized checklist below task-by-task.\n\n---\n\n### Task 1: Fix Dead Buttons, Inoperative Links & Click Traps (🔴 High Priority)\n\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > nav > div > button`\n  - **Element Details:** Text: `\"Toggle menu\"` | Href: `N/A`\n  - **Problem:** Button \"Toggle menu\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Masuk\"` | Href: `N/A`\n  - **Problem:** Button \"Masuk\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Can I customize my travel package?\"` | Href: `N/A`\n  - **Problem:** Button \"Can I customize my travel package?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"What is included in the package price?\"` | Href: `N/A`\n  - **Problem:** Button \"What is included in the package price?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(4) > button`\n  - **Element Details:** Text: `\"How does the AI Itinerary Planner work?\"` | Href: `N/A`\n  - **Problem:** Button \"How does the AI Itinerary Planner work?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(5) > button`\n  - **Element Details:** Text: `\"What is the cancellation policy?\"` | Href: `N/A`\n  - **Problem:** Button \"What is the cancellation policy?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(6) > button`\n  - **Element Details:** Text: `\"Is my payment secure?\"` | Href: `N/A`\n  - **Problem:** Button \"Is my payment secure?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(7) > button`\n  - **Element Details:** Text: `\"Can I book for a group?\"` | Href: `N/A`\n  - **Problem:** Button \"Can I book for a group?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(8) > button`\n  - **Element Details:** Text: `\"How do I get my e-ticket after booking?\"` | Href: `N/A`\n  - **Problem:** Button \"How do I get my e-ticket after booking?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(9) > button`\n  - **Element Details:** Text: `\"How do I book a trip with NOVA?\"` | Href: `N/A`\n  - **Problem:** Button \"How do I book a trip with NOVA?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(10) > button`\n  - **Element Details:** Text: `\"Can I customize my travel package?\"` | Href: `N/A`\n  - **Problem:** Button \"Can I customize my travel package?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(11) > button`\n  - **Element Details:** Text: `\"What is included in the package price?\"` | Href: `N/A`\n  - **Problem:** Button \"What is included in the package price?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(12) > button`\n  - **Element Details:** Text: `\"How does the AI Itinerary Planner work?\"` | Href: `N/A`\n  - **Problem:** Button \"How does the AI Itinerary Planner work?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(13) > button`\n  - **Element Details:** Text: `\"What is the cancellation policy?\"` | Href: `N/A`\n  - **Problem:** Button \"What is the cancellation policy?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(14) > button`\n  - **Element Details:** Text: `\"Is my payment secure?\"` | Href: `N/A`\n  - **Problem:** Button \"Is my payment secure?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(15) > button`\n  - **Element Details:** Text: `\"Can I book for a group?\"` | Href: `N/A`\n  - **Problem:** Button \"Can I book for a group?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(16) > button`\n  - **Element Details:** Text: `\"How do I get my e-ticket after booking?\"` | Href: `N/A`\n  - **Problem:** Button \"How do I get my e-ticket after booking?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(17) > button`\n  - **Element Details:** Text: `\"How do I book a trip with NOVA?\"` | Href: `N/A`\n  - **Problem:** Button \"How do I book a trip with NOVA?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(18) > button`\n  - **Element Details:** Text: `\"Can I customize my travel package?\"` | Href: `N/A`\n  - **Problem:** Button \"Can I customize my travel package?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(19) > button`\n  - **Element Details:** Text: `\"What is included in the package price?\"` | Href: `N/A`\n  - **Problem:** Button \"What is included in the package price?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(20) > button`\n  - **Element Details:** Text: `\"How does the AI Itinerary Planner work?\"` | Href: `N/A`\n  - **Problem:** Button \"How does the AI Itinerary Planner work?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(21) > button`\n  - **Element Details:** Text: `\"What is the cancellation policy?\"` | Href: `N/A`\n  - **Problem:** Button \"What is the cancellation policy?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(22) > button`\n  - **Element Details:** Text: `\"Is my payment secure?\"` | Href: `N/A`\n  - **Problem:** Button \"Is my payment secure?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(23) > button`\n  - **Element Details:** Text: `\"Can I book for a group?\"` | Href: `N/A`\n  - **Problem:** Button \"Can I book for a group?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(24) > button`\n  - **Element Details:** Text: `\"How do I get my e-ticket after booking?\"` | Href: `N/A`\n  - **Problem:** Button \"How do I get my e-ticket after booking?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(25) > button`\n  - **Element Details:** Text: `\"Apakah ini pertanyaan test dari puppeteer?\"` | Href: `N/A`\n  - **Problem:** Button \"Apakah ini pertanyaan test dari puppeteer?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(26) > button`\n  - **Element Details:** Text: `\"Apakah ini pertanyaan test dari puppeteer?\"` | Href: `N/A`\n  - **Problem:** Button \"Apakah ini pertanyaan test dari puppeteer?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n\n---\n\n## 🔍 Verification Step\nAfter applying code fixes, re-run the detector to verify 0 remaining defects:\n```bash\nnode C:\\Users\\lulus\\.config\\opencode\\skills\\puppeteer-error-detector\\scripts\\detect-errors.js \"http://localhost:3001/faq\" --screenshot ./post-fix-audit.png\n```\n"
+}

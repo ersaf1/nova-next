@@ -1,0 +1,724 @@
+{
+  "url": "http://localhost:3001/",
+  "timestamp": "2026-08-23T07:10:43.063Z",
+  "summary": {
+    "totalErrors": 48,
+    "critical": 12,
+    "warnings": 2,
+    "notice": 34
+  },
+  "consoleErrors": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "location": {
+        "url": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80"
+      },
+      "severity": "critical"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "location": {
+        "url": "https://images.unsplash.com/photo-1525874684015-5837e263121c?w=1600&q=90"
+      },
+      "severity": "critical"
+    }
+  ],
+  "networkErrors": [
+    {
+      "type": "request-failed",
+      "url": "http://localhost:3001/uploads/1785249740102-88207-602915574.mp4",
+      "method": "GET",
+      "resourceType": "media",
+      "errorText": "net::ERR_ABORTED",
+      "severity": "critical"
+    },
+    {
+      "type": "request-failed",
+      "url": "http://localhost:3001/uploads/1785249740102-88207-602915574.mp4",
+      "method": "GET",
+      "resourceType": "media",
+      "errorText": "net::ERR_ABORTED",
+      "severity": "critical"
+    },
+    {
+      "type": "request-failed",
+      "url": "http://localhost:3001/uploads/1785249740102-88207-602915574.mp4",
+      "method": "GET",
+      "resourceType": "media",
+      "errorText": "net::ERR_ABORTED",
+      "severity": "critical"
+    },
+    {
+      "type": "request-failed",
+      "url": "http://localhost:3001/uploads/1785247524371-88207-602915574.mp4",
+      "method": "GET",
+      "resourceType": "media",
+      "errorText": "net::ERR_ABORTED",
+      "severity": "critical"
+    },
+    {
+      "type": "request-failed",
+      "url": "http://localhost:3001/uploads/1785247524371-88207-602915574.mp4",
+      "method": "GET",
+      "resourceType": "media",
+      "errorText": "net::ERR_ABORTED",
+      "severity": "critical"
+    },
+    {
+      "type": "http-error-response",
+      "status": 404,
+      "statusText": "",
+      "url": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80",
+      "resourceType": "image",
+      "severity": "warning"
+    },
+    {
+      "type": "http-error-response",
+      "status": 404,
+      "statusText": "",
+      "url": "https://images.unsplash.com/photo-1525874684015-5837e263121c?w=1600&q=90",
+      "resourceType": "image",
+      "severity": "warning"
+    }
+  ],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 1039,
+        "y": 6,
+        "width": 76,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Masuk\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 1123,
+        "y": 4,
+        "width": 109,
+        "height": 40,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > nav > div > button",
+      "text": "Toggle menu",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Toggle menu\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Masuk\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#destinations > div > div:nth-of-type(2) > div > button",
+      "text": "Save Cox's Bazar & Sundarbans",
+      "box": {
+        "x": 828,
+        "y": 1842,
+        "width": 28,
+        "height": 28,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Save Cox's Bazar & Sundarbans\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div > div:nth-of-type(3) > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 436,
+        "y": 1906,
+        "width": 48,
+        "height": 48,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#destinations > div > div:nth-of-type(2) > div:nth-of-type(2) > button",
+      "text": "Save Bali",
+      "box": {
+        "x": 1244,
+        "y": 1842,
+        "width": 28,
+        "height": 28,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Save Bali\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 1060,
+        "y": 1906,
+        "width": 48,
+        "height": 48,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#destinations > div > div:nth-of-type(2) > div:nth-of-type(3) > button",
+      "text": "Save Bangkok",
+      "box": {
+        "x": 412,
+        "y": 2058,
+        "width": 28,
+        "height": 28,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Save Bangkok\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(3) > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 228,
+        "y": 2122,
+        "width": 48,
+        "height": 48,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#destinations > div > div:nth-of-type(2) > div:nth-of-type(4) > button",
+      "text": "Save Phuket",
+      "box": {
+        "x": 1244,
+        "y": 2058,
+        "width": 28,
+        "height": 28,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Save Phuket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div:nth-of-type(4) > div:nth-of-type(3) > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 852,
+        "y": 2122,
+        "width": 48,
+        "height": 48,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#destinations > div > div:nth-of-type(2) > div:nth-of-type(5) > button",
+      "text": "Save Seoul",
+      "box": {
+        "x": 1244,
+        "y": 2274,
+        "width": 28,
+        "height": 28,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Save Seoul\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div:nth-of-type(5) > div:nth-of-type(3) > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 644,
+        "y": 2338,
+        "width": 48,
+        "height": 48,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button",
+      "text": "All Trips",
+      "box": {
+        "x": 4,
+        "y": 3024,
+        "width": 192,
+        "height": 42,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Dead button confirmed! Clicking \"All Trips\" triggered no URL change, no DOM mutation, and no modal/state change.",
+      "confirmedDead": true
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button:nth-of-type(2)",
+      "text": "Beach",
+      "box": {
+        "x": -4,
+        "y": 3074,
+        "width": 192,
+        "height": 42,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Beach\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button:nth-of-type(3)",
+      "text": "Mountain",
+      "box": {
+        "x": -4,
+        "y": 3124,
+        "width": 192,
+        "height": 42,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Mountain\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button:nth-of-type(4)",
+      "text": "City",
+      "box": {
+        "x": -4,
+        "y": 3174,
+        "width": 192,
+        "height": 42,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"City\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div:nth-of-type(3) > button",
+      "text": "Previous trip",
+      "box": {
+        "x": -4,
+        "y": 3240,
+        "width": 44,
+        "height": 44,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Previous trip\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div:nth-of-type(3) > button:nth-of-type(2)",
+      "text": "Next trip",
+      "box": {
+        "x": 52,
+        "y": 3240,
+        "width": 44,
+        "height": 44,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Next trip\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#packages > div > div:nth-of-type(2) > div > button",
+      "text": "Claim offer",
+      "box": {
+        "x": 1039,
+        "y": 3435,
+        "width": 148,
+        "height": 48,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Claim offer\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#how-it-works > div > div > div:nth-of-type(2) > button",
+      "text": "Coba AI Planner",
+      "box": {
+        "x": 1121,
+        "y": 3903,
+        "width": 163,
+        "height": 44,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Coba AI Planner\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 1170,
+        "y": 4099,
+        "width": 8,
+        "height": 8,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 1184,
+        "y": 4099,
+        "width": 32,
+        "height": 8,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(3)",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 1222,
+        "y": 4099,
+        "width": 8,
+        "height": 8,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(4)",
+      "text": "[Empty Button]",
+      "box": {
+        "x": 1236,
+        "y": 4099,
+        "width": 8,
+        "height": 8,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"unnamed\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(4) > button",
+      "text": "Pelajari Selengkapnya",
+      "box": {
+        "x": 1052,
+        "y": 4528,
+        "width": 192,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Pelajari Selengkapnya\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#experiences > div > div:nth-of-type(2) > div > button",
+      "text": "Solo\n\nYour pace, your rules.",
+      "box": {
+        "x": -54,
+        "y": 6283,
+        "width": 478,
+        "height": 160,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Solo\n\nYour pace, your rules.\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#experiences > div > div:nth-of-type(2) > div > button:nth-of-type(2)",
+      "text": "Family\n\nMemories for everyone.",
+      "box": {
+        "x": 46,
+        "y": 6455,
+        "width": 478,
+        "height": 110,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Family\n\nMemories for everyone.\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#experiences > div > div:nth-of-type(2) > div > button:nth-of-type(3)",
+      "text": "Adventure\n\nPush every limit.",
+      "box": {
+        "x": -54,
+        "y": 6577,
+        "width": 478,
+        "height": 110,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Adventure\n\nPush every limit.\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "section#experiences > div > div:nth-of-type(2) > div > button:nth-of-type(4)",
+      "text": "Business\n\nEffortless corporate travel.",
+      "box": {
+        "x": 46,
+        "y": 6699,
+        "width": 478,
+        "height": 110,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Business\n\nEffortless corporate travel.\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div > div > button",
+      "text": "How do I book a trip with NOVA?",
+      "box": {
+        "x": 660,
+        "y": 8655,
+        "width": 568,
+        "height": 68,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How do I book a trip with NOVA?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div > div:nth-of-type(2) > button",
+      "text": "Can I customize my travel package?",
+      "box": {
+        "x": 660,
+        "y": 8832,
+        "width": 568,
+        "height": 68,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Can I customize my travel package?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div > div:nth-of-type(3) > button",
+      "text": "What is included in the package price?",
+      "box": {
+        "x": 660,
+        "y": 8913,
+        "width": 568,
+        "height": 68,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"What is included in the package price?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div > div:nth-of-type(4) > button",
+      "text": "How does the AI Itinerary Planner work?",
+      "box": {
+        "x": 660,
+        "y": 8994,
+        "width": 568,
+        "height": 68,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"How does the AI Itinerary Planner work?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(2) > div > div:nth-of-type(5) > button",
+      "text": "What is the cancellation policy?",
+      "box": {
+        "x": 660,
+        "y": 9075,
+        "width": 568,
+        "height": 68,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"What is the cancellation policy?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div > button",
+      "text": "Download on the\nApp Store",
+      "box": {
+        "x": 105,
+        "y": 9767,
+        "width": 169,
+        "height": 66,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Download on the\nApp Store\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div > button:nth-of-type(2)",
+      "text": "Get it on\nGoogle Play",
+      "box": {
+        "x": 286,
+        "y": 9767,
+        "width": 156,
+        "height": 66,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Get it on\nGoogle Play\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button",
+      "text": "Notify Me",
+      "box": {
+        "x": 478,
+        "y": 9934,
+        "width": 100,
+        "height": 45,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Notify Me\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [
+    {
+      "type": "broken-image",
+      "src": "https://images.unsplash.com/photo-1525874684015-5837e263121c?w=1600&q=90",
+      "alt": "Cox's Bazar & Sundarbans, Bangladesh",
+      "selector": "section#destinations > div > div:nth-of-type(2) > div > img",
+      "box": {
+        "x": 52,
+        "y": 1830,
+        "width": 816,
+        "height": 200,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Image failed to render (naturalWidth: 0, src: https://images.unsplash.com/photo-1525874684015-5837e263121c?w=1600&q=90)"
+    },
+    {
+      "type": "broken-image",
+      "src": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80",
+      "alt": "Sarah Mitchell",
+      "selector": "div > div:nth-of-type(2) > div > div:nth-of-type(2) > img",
+      "box": {
+        "x": 71,
+        "y": 7405,
+        "width": 39,
+        "height": 39,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Image failed to render (naturalWidth: 0, src: https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80)"
+    },
+    {
+      "type": "broken-image",
+      "src": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80",
+      "alt": "Sarah Mitchell",
+      "selector": "div > div:nth-of-type(2) > div:nth-of-type(4) > div:nth-of-type(2) > img",
+      "box": {
+        "x": 71,
+        "y": 7699,
+        "width": 39,
+        "height": 39,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Image failed to render (naturalWidth: 0, src: https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80)"
+    },
+    {
+      "type": "broken-image",
+      "src": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80",
+      "alt": "Sarah Mitchell",
+      "selector": "div > div:nth-of-type(2) > div:nth-of-type(7) > div:nth-of-type(2) > img",
+      "box": {
+        "x": 71,
+        "y": 8008,
+        "width": 39,
+        "height": 39,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Image failed to render (naturalWidth: 0, src: https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80)"
+    }
+  ],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\homepage.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/`\n> **Timestamp:** `23/08/2026, 2:10:43 pm`\n> **Status:** **48 Defects Detected** (🔴 12 Critical, 🟠 2 Warnings, 🔵 34 Notices)\n\n## 🎯 Objective\nFix all identified front-end, runtime, interactive, and visual rendering defects on the target page. Follow the prioritized checklist below task-by-task.\n\n---\n\n### Task 1: Fix JavaScript Runtime, Console & Framework Errors (🔴 High Priority)\n\n- [ ] **Fix ERROR:** `Failed to load resource: the server responded with a status of 404 ()`\n  - **Action:** Inspect the source of `console.error` and resolve the underlying failure.\n- [ ] **Fix ERROR:** `Failed to load resource: the server responded with a status of 404 ()`\n  - **Action:** Inspect the source of `console.error` and resolve the underlying failure.\n\n### Task 2: Fix Failed Network Requests & API Endpoints (🔴 High Priority)\n\n- [ ] **Fix Network Failure (request-failed):** `http://localhost:3001/uploads/1785249740102-88207-602915574.mp4`\n  - **Status / Error:** `net::ERR_ABORTED` (Resource: `media`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n- [ ] **Fix Network Failure (request-failed):** `http://localhost:3001/uploads/1785249740102-88207-602915574.mp4`\n  - **Status / Error:** `net::ERR_ABORTED` (Resource: `media`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n- [ ] **Fix Network Failure (request-failed):** `http://localhost:3001/uploads/1785249740102-88207-602915574.mp4`\n  - **Status / Error:** `net::ERR_ABORTED` (Resource: `media`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n- [ ] **Fix Network Failure (request-failed):** `http://localhost:3001/uploads/1785247524371-88207-602915574.mp4`\n  - **Status / Error:** `net::ERR_ABORTED` (Resource: `media`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n- [ ] **Fix Network Failure (request-failed):** `http://localhost:3001/uploads/1785247524371-88207-602915574.mp4`\n  - **Status / Error:** `net::ERR_ABORTED` (Resource: `media`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n- [ ] **Fix Network Failure (http-error-response):** `https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80`\n  - **Status / Error:** `HTTP 404 ` (Resource: `image`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n- [ ] **Fix Network Failure (http-error-response):** `https://images.unsplash.com/photo-1525874684015-5837e263121c?w=1600&q=90`\n  - **Status / Error:** `HTTP 404 ` (Resource: `image`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n\n### Task 3: Fix Dead Buttons, Inoperative Links & Click Traps (🔴 High Priority)\n\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > nav > div > button`\n  - **Element Details:** Text: `\"Toggle menu\"` | Href: `N/A`\n  - **Problem:** Button \"Toggle menu\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Masuk\"` | Href: `N/A`\n  - **Problem:** Button \"Masuk\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#destinations > div > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"Save Cox's Bazar & Sundarbans\"` | Href: `N/A`\n  - **Problem:** Button \"Save Cox's Bazar & Sundarbans\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#destinations > div > div:nth-of-type(2) > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Save Bali\"` | Href: `N/A`\n  - **Problem:** Button \"Save Bali\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#destinations > div > div:nth-of-type(2) > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"Save Bangkok\"` | Href: `N/A`\n  - **Problem:** Button \"Save Bangkok\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#destinations > div > div:nth-of-type(2) > div:nth-of-type(4) > button`\n  - **Element Details:** Text: `\"Save Phuket\"` | Href: `N/A`\n  - **Problem:** Button \"Save Phuket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div:nth-of-type(4) > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#destinations > div > div:nth-of-type(2) > div:nth-of-type(5) > button`\n  - **Element Details:** Text: `\"Save Seoul\"` | Href: `N/A`\n  - **Problem:** Button \"Save Seoul\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div:nth-of-type(5) > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [CRITICAL] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"All Trips\"` | Href: `N/A`\n  - **Problem:** Dead button confirmed! Clicking \"All Trips\" triggered no URL change, no DOM mutation, and no modal/state change.\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div > button:nth-of-type(3)`\n  - **Element Details:** Text: `\"Mountain\"` | Href: `N/A`\n  - **Problem:** Button \"Mountain\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div > button:nth-of-type(4)`\n  - **Element Details:** Text: `\"City\"` | Href: `N/A`\n  - **Problem:** Button \"City\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"Previous trip\"` | Href: `N/A`\n  - **Problem:** Button \"Previous trip\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div > div:nth-of-type(3) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Next trip\"` | Href: `N/A`\n  - **Problem:** Button \"Next trip\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#packages > div > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"Claim offer\"` | Href: `N/A`\n  - **Problem:** Button \"Claim offer\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#how-it-works > div > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Coba AI Planner\"` | Href: `N/A`\n  - **Problem:** Button \"Coba AI Planner\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(3)`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(4)`\n  - **Element Details:** Text: `\"[Empty Button]\"` | Href: `N/A`\n  - **Problem:** Button \"unnamed\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(4) > button`\n  - **Element Details:** Text: `\"Pelajari Selengkapnya\"` | Href: `N/A`\n  - **Problem:** Button \"Pelajari Selengkapnya\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#experiences > div > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"Solo\n\nYour pace, your rules.\"` | Href: `N/A`\n  - **Problem:** Button \"Solo\n\nYour pace, your rules.\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#experiences > div > div:nth-of-type(2) > div > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Family\n\nMemories for everyone.\"` | Href: `N/A`\n  - **Problem:** Button \"Family\n\nMemories for everyone.\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#experiences > div > div:nth-of-type(2) > div > button:nth-of-type(3)`\n  - **Element Details:** Text: `\"Adventure\n\nPush every limit.\"` | Href: `N/A`\n  - **Problem:** Button \"Adventure\n\nPush every limit.\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `section#experiences > div > div:nth-of-type(2) > div > button:nth-of-type(4)`\n  - **Element Details:** Text: `\"Business\n\nEffortless corporate travel.\"` | Href: `N/A`\n  - **Problem:** Button \"Business\n\nEffortless corporate travel.\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div > div > button`\n  - **Element Details:** Text: `\"How do I book a trip with NOVA?\"` | Href: `N/A`\n  - **Problem:** Button \"How do I book a trip with NOVA?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Can I customize my travel package?\"` | Href: `N/A`\n  - **Problem:** Button \"Can I customize my travel package?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"What is included in the package price?\"` | Href: `N/A`\n  - **Problem:** Button \"What is included in the package price?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div > div:nth-of-type(4) > button`\n  - **Element Details:** Text: `\"How does the AI Itinerary Planner work?\"` | Href: `N/A`\n  - **Problem:** Button \"How does the AI Itinerary Planner work?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(2) > div > div:nth-of-type(5) > button`\n  - **Element Details:** Text: `\"What is the cancellation policy?\"` | Href: `N/A`\n  - **Problem:** Button \"What is the cancellation policy?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n\n### Task 4: Fix Broken Media & Stuck Loaders\n\n- [ ] **Fix Broken Media (broken-image) on selector:** `section#destinations > div > div:nth-of-type(2) > div > img`\n  - **Source:** `https://images.unsplash.com/photo-1525874684015-5837e263121c?w=1600&q=90` | Alt: `\"Cox's Bazar & Sundarbans, Bangladesh\"`\n  - **Action:** Provide a valid image URL/asset path, or add a fallback placeholder image (`onError={handleImageFallback}`).\n- [ ] **Fix Broken Media (broken-image) on selector:** `div > div:nth-of-type(2) > div > div:nth-of-type(2) > img`\n  - **Source:** `https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80` | Alt: `\"Sarah Mitchell\"`\n  - **Action:** Provide a valid image URL/asset path, or add a fallback placeholder image (`onError={handleImageFallback}`).\n- [ ] **Fix Broken Media (broken-image) on selector:** `div > div:nth-of-type(2) > div:nth-of-type(4) > div:nth-of-type(2) > img`\n  - **Source:** `https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80` | Alt: `\"Sarah Mitchell\"`\n  - **Action:** Provide a valid image URL/asset path, or add a fallback placeholder image (`onError={handleImageFallback}`).\n- [ ] **Fix Broken Media (broken-image) on selector:** `div > div:nth-of-type(2) > div:nth-of-type(7) > div:nth-of-type(2) > img`\n  - **Source:** `https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80` | Alt: `\"Sarah Mitchell\"`\n  - **Action:** Provide a valid image URL/asset path, or add a fallback placeholder image (`onError={handleImageFallback}`).\n\n---\n\n## 🔍 Verification Step\nAfter applying code fixes, re-run the detector to verify 0 remaining defects:\n```bash\nnode C:\\Users\\lulus\\.config\\opencode\\skills\\puppeteer-error-detector\\scripts\\detect-errors.js \"http://localhost:3001/\" --screenshot ./post-fix-audit.png\n```\n"
+}

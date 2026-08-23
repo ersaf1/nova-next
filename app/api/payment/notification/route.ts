@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     // 3. Fetch booking from DB
     const { data: booking } = await supabase
       .from('Booking')
-      .select('id, totalAmount, paymentStatus, email, name, packageName')
+      .select('id, totalAmount, paymentStatus, email, name, packageName, departureId, participants')
       .eq('id', bookingId)
       .single()
 
@@ -90,6 +90,18 @@ export async function POST(request: Request) {
         paid_at: paymentStatus === 'paid' ? (transaction_time ?? new Date().toISOString()) : null,
       })
       .eq('id', bookingId)
+
+    // Restore departure slots if payment was expired or failed (non-fatal)
+    if (['failed', 'expired'].includes(paymentStatus) && booking.departureId && booking.participants) {
+      try {
+        await supabase.rpc('increment_departure_slots', {
+          p_departure_id: booking.departureId,
+          p_count: Number(booking.participants),
+        })
+      } catch {
+        // ignore if RPC not created
+      }
+    }
 
     // Send payment confirmed email (fire-and-forget)
     if (paymentStatus === 'paid' && booking.email) {

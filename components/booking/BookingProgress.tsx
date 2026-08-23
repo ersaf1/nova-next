@@ -2,12 +2,11 @@ import { Check } from 'lucide-react'
 
 const STEPS = [
   { num: 1, label: 'Detail' },
-  { num: 2, label: 'Traveler' },
-  { num: 3, label: 'Review' },
-  { num: 4, label: 'Pembayaran' },
+  { num: 2, label: 'Review' },
+  { num: 3, label: 'Pembayaran' },
 ]
 
-export default function BookingProgress({ currentStep }: { currentStep: 1 | 2 | 3 | 4 }) {
+export default function BookingProgress({ currentStep }: { currentStep: 1 | 2 | 3 }) {
   return (
     <div className="flex items-center justify-center gap-0 w-full max-w-md mx-auto">
       {STEPS.map((step, i) => {

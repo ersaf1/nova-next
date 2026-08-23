@@ -1,0 +1,274 @@
+{
+  "url": "http://localhost:3001/packages",
+  "timestamp": "2026-08-23T07:11:22.392Z",
+  "summary": {
+    "totalErrors": 19,
+    "critical": 6,
+    "warnings": 3,
+    "notice": 10
+  },
+  "consoleErrors": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "location": {
+        "url": "https://images.unsplash.com/photo-1641886783464-118ba9b0a543?w=1600&q=90"
+      },
+      "severity": "critical"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "location": {
+        "url": "https://images.unsplash.com/photo-1476514525535-ce74f4526f61?w=1600&q=90"
+      },
+      "severity": "critical"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "location": {
+        "url": "https://images.unsplash.com/photo-1558981803-35a09c25f464?w=1600&q=90"
+      },
+      "severity": "critical"
+    }
+  ],
+  "networkErrors": [
+    {
+      "type": "http-error-response",
+      "status": 404,
+      "statusText": "",
+      "url": "https://images.unsplash.com/photo-1641886783464-118ba9b0a543?w=1600&q=90",
+      "resourceType": "image",
+      "severity": "warning"
+    },
+    {
+      "type": "http-error-response",
+      "status": 404,
+      "statusText": "",
+      "url": "https://images.unsplash.com/photo-1476514525535-ce74f4526f61?w=1600&q=90",
+      "resourceType": "image",
+      "severity": "warning"
+    },
+    {
+      "type": "http-error-response",
+      "status": 404,
+      "statusText": "",
+      "url": "https://images.unsplash.com/photo-1558981803-35a09c25f464?w=1600&q=90",
+      "resourceType": "image",
+      "severity": "warning"
+    }
+  ],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 1042,
+        "y": 6,
+        "width": 75,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Masuk\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 1125,
+        "y": 4,
+        "width": 108,
+        "height": 40,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > nav > div > button",
+      "text": "Toggle menu",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Toggle menu\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Masuk\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(2) > button",
+      "text": "All",
+      "box": {
+        "x": 779,
+        "y": 460,
+        "width": 47,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"All\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Beach",
+      "box": {
+        "x": 834,
+        "y": 459,
+        "width": 70,
+        "height": 38,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Beach\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(3)",
+      "text": "Mountain",
+      "box": {
+        "x": 913,
+        "y": 459,
+        "width": 88,
+        "height": 38,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Mountain\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(4)",
+      "text": "City",
+      "box": {
+        "x": 1009,
+        "y": 459,
+        "width": 57,
+        "height": 38,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"City\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(5)",
+      "text": "Cultural",
+      "box": {
+        "x": 1074,
+        "y": 459,
+        "width": 80,
+        "height": 38,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Cultural\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(6)",
+      "text": "Adventure",
+      "box": {
+        "x": 1162,
+        "y": 459,
+        "width": 94,
+        "height": 38,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Adventure\" has no standard action or form association (needs click verification)"
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [
+    {
+      "type": "broken-image",
+      "src": "https://images.unsplash.com/photo-1558981803-35a09c25f464?w=1600&q=90",
+      "alt": "Metro Tour Monte Carlo",
+      "selector": "div > div:nth-of-type(4) > a:nth-of-type(2) > div > img",
+      "box": {
+        "x": 444,
+        "y": 614,
+        "width": 393,
+        "height": 240,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Image failed to render (naturalWidth: 0, src: https://images.unsplash.com/photo-1558981803-35a09c25f464?w=1600&q=90)"
+    },
+    {
+      "type": "broken-image",
+      "src": "https://images.unsplash.com/photo-1476514525535-ce74f4526f61?w=1600&q=90",
+      "alt": "Jelajah Sejarah & Budaya Austria",
+      "selector": "div > div:nth-of-type(4) > a:nth-of-type(4) > div > img",
+      "box": {
+        "x": 25,
+        "y": 1214,
+        "width": 393,
+        "height": 240,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Image failed to render (naturalWidth: 0, src: https://images.unsplash.com/photo-1476514525535-ce74f4526f61?w=1600&q=90)"
+    },
+    {
+      "type": "broken-image",
+      "src": "https://images.unsplash.com/photo-1641886783464-118ba9b0a543?w=1600&q=90",
+      "alt": "Eksotika Bahari Guinea-Bissau",
+      "selector": "div > div:nth-of-type(4) > a:nth-of-type(8) > div > img",
+      "box": {
+        "x": 444,
+        "y": 1814,
+        "width": 393,
+        "height": 240,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Image failed to render (naturalWidth: 0, src: https://images.unsplash.com/photo-1641886783464-118ba9b0a543?w=1600&q=90)"
+    }
+  ],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\packages.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/packages`\n> **Timestamp:** `23/08/2026, 2:11:22 pm`\n> **Status:** **19 Defects Detected** (🔴 6 Critical, 🟠 3 Warnings, 🔵 10 Notices)\n\n## 🎯 Objective\nFix all identified front-end, runtime, interactive, and visual rendering defects on the target page. Follow the prioritized checklist below task-by-task.\n\n---\n\n### Task 1: Fix JavaScript Runtime, Console & Framework Errors (🔴 High Priority)\n\n- [ ] **Fix ERROR:** `Failed to load resource: the server responded with a status of 404 ()`\n  - **Action:** Inspect the source of `console.error` and resolve the underlying failure.\n- [ ] **Fix ERROR:** `Failed to load resource: the server responded with a status of 404 ()`\n  - **Action:** Inspect the source of `console.error` and resolve the underlying failure.\n- [ ] **Fix ERROR:** `Failed to load resource: the server responded with a status of 404 ()`\n  - **Action:** Inspect the source of `console.error` and resolve the underlying failure.\n\n### Task 2: Fix Failed Network Requests & API Endpoints (🔴 High Priority)\n\n- [ ] **Fix Network Failure (http-error-response):** `https://images.unsplash.com/photo-1641886783464-118ba9b0a543?w=1600&q=90`\n  - **Status / Error:** `HTTP 404 ` (Resource: `image`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n- [ ] **Fix Network Failure (http-error-response):** `https://images.unsplash.com/photo-1476514525535-ce74f4526f61?w=1600&q=90`\n  - **Status / Error:** `HTTP 404 ` (Resource: `image`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n- [ ] **Fix Network Failure (http-error-response):** `https://images.unsplash.com/photo-1558981803-35a09c25f464?w=1600&q=90`\n  - **Status / Error:** `HTTP 404 ` (Resource: `image`)\n  - **Action:** Verify endpoint URL route, backend API status, CORS headers, or mock server handler to ensure this request succeeds with HTTP 200.\n\n### Task 3: Fix Dead Buttons, Inoperative Links & Click Traps (🔴 High Priority)\n\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > nav > div > button`\n  - **Element Details:** Text: `\"Toggle menu\"` | Href: `N/A`\n  - **Problem:** Button \"Toggle menu\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Masuk\"` | Href: `N/A`\n  - **Problem:** Button \"Masuk\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"All\"` | Href: `N/A`\n  - **Problem:** Button \"All\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Beach\"` | Href: `N/A`\n  - **Problem:** Button \"Beach\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(3)`\n  - **Element Details:** Text: `\"Mountain\"` | Href: `N/A`\n  - **Problem:** Button \"Mountain\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(4)`\n  - **Element Details:** Text: `\"City\"` | Href: `N/A`\n  - **Problem:** Button \"City\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(5)`\n  - **Element Details:** Text: `\"Cultural\"` | Href: `N/A`\n  - **Problem:** Button \"Cultural\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div:nth-of-type(2) > button:nth-of-type(6)`\n  - **Element Details:** Text: `\"Adventure\"` | Href: `N/A`\n  - **Problem:** Button \"Adventure\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n\n### Task 4: Fix Broken Media & Stuck Loaders\n\n- [ ] **Fix Broken Media (broken-image) on selector:** `div > div:nth-of-type(4) > a:nth-of-type(2) > div > img`\n  - **Source:** `https://images.unsplash.com/photo-1558981803-35a09c25f464?w=1600&q=90` | Alt: `\"Metro Tour Monte Carlo\"`\n  - **Action:** Provide a valid image URL/asset path, or add a fallback placeholder image (`onError={handleImageFallback}`).\n- [ ] **Fix Broken Media (broken-image) on selector:** `div > div:nth-of-type(4) > a:nth-of-type(4) > div > img`\n  - **Source:** `https://images.unsplash.com/photo-1476514525535-ce74f4526f61?w=1600&q=90` | Alt: `\"Jelajah Sejarah & Budaya Austria\"`\n  - **Action:** Provide a valid image URL/asset path, or add a fallback placeholder image (`onError={handleImageFallback}`).\n- [ ] **Fix Broken Media (broken-image) on selector:** `div > div:nth-of-type(4) > a:nth-of-type(8) > div > img`\n  - **Source:** `https://images.unsplash.com/photo-1641886783464-118ba9b0a543?w=1600&q=90` | Alt: `\"Eksotika Bahari Guinea-Bissau\"`\n  - **Action:** Provide a valid image URL/asset path, or add a fallback placeholder image (`onError={handleImageFallback}`).\n\n---\n\n## 🔍 Verification Step\nAfter applying code fixes, re-run the detector to verify 0 remaining defects:\n```bash\nnode C:\\Users\\lulus\\.config\\opencode\\skills\\puppeteer-error-detector\\scripts\\detect-errors.js \"http://localhost:3001/packages\" --screenshot ./post-fix-audit.png\n```\n"
+}

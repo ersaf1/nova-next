@@ -1,0 +1,220 @@
+{
+  "url": "http://localhost:3001/how-it-works",
+  "timestamp": "2026-08-23T07:11:42.821Z",
+  "summary": {
+    "totalErrors": 13,
+    "critical": 0,
+    "warnings": 0,
+    "notice": 13
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 1042,
+        "y": 6,
+        "width": 75,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Masuk\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 1125,
+        "y": 4,
+        "width": 108,
+        "height": 40,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > nav > div > button",
+      "text": "Toggle menu",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Toggle menu\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Masuk\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(3) > div > div:nth-of-type(2) > button",
+      "text": "AI Planner Demo",
+      "box": {
+        "x": 705,
+        "y": 1555,
+        "width": 126,
+        "height": 32,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"AI Planner Demo\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(3) > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "195 UN Countries Database",
+      "box": {
+        "x": 839,
+        "y": 1555,
+        "width": 189,
+        "height": 32,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"195 UN Countries Database\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(3) > div > div:nth-of-type(2) > button:nth-of-type(3)",
+      "text": "Instant E-Ticket Booking",
+      "box": {
+        "x": 1036,
+        "y": 1555,
+        "width": 172,
+        "height": 32,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Instant E-Ticket Booking\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(4) > div:nth-of-type(2) > div > button",
+      "text": "Bagaimana cara kerja AI Travel Planner di NOVA?",
+      "box": {
+        "x": 257,
+        "y": 2073,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Bagaimana cara kerja AI Travel Planner di NOVA?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(2) > button",
+      "text": "Apakah paket travel di NOVA sudah termasuk tiket pesawat?",
+      "box": {
+        "x": 257,
+        "y": 2211,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Apakah paket travel di NOVA sudah termasuk tiket pesawat?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(3) > button",
+      "text": "Bagaimana cara menerima E-Ticket setelah melakukan booking?",
+      "box": {
+        "x": 257,
+        "y": 2285,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Bagaimana cara menerima E-Ticket setelah melakukan booking?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(4) > button",
+      "text": "Apakah saya bisa mengubah tanggal atau membatalkan perjalanan?",
+      "box": {
+        "x": 257,
+        "y": 2359,
+        "width": 766,
+        "height": 60,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Apakah saya bisa mengubah tanggal atau membatalkan perjalanan?\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(5) > div:nth-of-type(2) > button",
+      "text": "Coba AI Planner",
+      "box": {
+        "x": 856,
+        "y": 2550,
+        "width": 165,
+        "height": 44,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Coba AI Planner\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(5) > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Jelajahi 195 Destinasi",
+      "box": {
+        "x": 1033,
+        "y": 2549,
+        "width": 175,
+        "height": 46,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Jelajahi 195 Destinasi\" has no standard action or form association (needs click verification)"
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\how-it-works.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/how-it-works`\n> **Timestamp:** `23/08/2026, 2:11:42 pm`\n> **Status:** **13 Defects Detected** (🔴 0 Critical, 🟠 0 Warnings, 🔵 13 Notices)\n\n## 🎯 Objective\nFix all identified front-end, runtime, interactive, and visual rendering defects on the target page. Follow the prioritized checklist below task-by-task.\n\n---\n\n### Task 1: Fix Dead Buttons, Inoperative Links & Click Traps (🔴 High Priority)\n\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > nav > div > button`\n  - **Element Details:** Text: `\"Toggle menu\"` | Href: `N/A`\n  - **Problem:** Button \"Toggle menu\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Masuk\"` | Href: `N/A`\n  - **Problem:** Button \"Masuk\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(3) > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"AI Planner Demo\"` | Href: `N/A`\n  - **Problem:** Button \"AI Planner Demo\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(3) > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"195 UN Countries Database\"` | Href: `N/A`\n  - **Problem:** Button \"195 UN Countries Database\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(3) > div > div:nth-of-type(2) > button:nth-of-type(3)`\n  - **Element Details:** Text: `\"Instant E-Ticket Booking\"` | Href: `N/A`\n  - **Problem:** Button \"Instant E-Ticket Booking\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(4) > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"Bagaimana cara kerja AI Travel Planner di NOVA?\"` | Href: `N/A`\n  - **Problem:** Button \"Bagaimana cara kerja AI Travel Planner di NOVA?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Apakah paket travel di NOVA sudah termasuk tiket pesawat?\"` | Href: `N/A`\n  - **Problem:** Button \"Apakah paket travel di NOVA sudah termasuk tiket pesawat?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(3) > button`\n  - **Element Details:** Text: `\"Bagaimana cara menerima E-Ticket setelah melakukan booking?\"` | Href: `N/A`\n  - **Problem:** Button \"Bagaimana cara menerima E-Ticket setelah melakukan booking?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(4) > div:nth-of-type(2) > div:nth-of-type(4) > button`\n  - **Element Details:** Text: `\"Apakah saya bisa mengubah tanggal atau membatalkan perjalanan?\"` | Href: `N/A`\n  - **Problem:** Button \"Apakah saya bisa mengubah tanggal atau membatalkan perjalanan?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(5) > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Coba AI Planner\"` | Href: `N/A`\n  - **Problem:** Button \"Coba AI Planner\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div:nth-of-type(5) > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Jelajahi 195 Destinasi\"` | Href: `N/A`\n  - **Problem:** Button \"Jelajahi 195 Destinasi\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n\n---\n\n## 🔍 Verification Step\nAfter applying code fixes, re-run the detector to verify 0 remaining defects:\n```bash\nnode C:\\Users\\lulus\\.config\\opencode\\skills\\puppeteer-error-detector\\scripts\\detect-errors.js \"http://localhost:3001/how-it-works\" --screenshot ./post-fix-audit.png\n```\n"
+}

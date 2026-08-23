@@ -73,8 +73,50 @@ async function main() {
 
   const items = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'))
 
-  const updated = items.map((item, index) => {
-    const photoId = UNIQUE_UNSPLASH_IDS[index % UNIQUE_UNSPLASH_IDS.length]
+  const keyCountryMappings = {
+    'Indonesia': '1555400038-63f5ba517a47', // Bali Tegalalang Rice Terrace
+    'Japan': '1540959733332-eab4deabeeaf', // Tokyo Street
+    'Jordan': '1544644181-1484b3fdfc62', // Petra Jordan
+    'Greece': '1570077188670-e3a8d69ac5ff', // Santorini Caldera
+    'France': '1502602898657-3e91760cbb34', // Paris Eiffel Tower
+    'New Zealand': '1507699622108-4be3abd695ad', // Queenstown Lake
+    'Maldives': '1514282401047-d79a71a590e8', // Maldives
+    'Peru': '1526392060635-9d6019884377', // Machu Picchu
+    'United Arab Emirates': '1512453979798-5ea266f8880c', // Dubai
+    'South Africa': '1580618672591-eb180b1a973f', // Cape Town
+    'Italy': '1552832230-c0197dd311b5', // Rome Colosseum
+    'Iceland': '1504893524553-b855bce32c67', // Reykjavik
+    'Australia': '1502784444187-359ac186c5bb', // Sydney
+    'United States': '1496442226666-8d4d0e62e6e9', // New York
+    'Brazil': '1533105079780-92b9be482077'  // Rio
+  }
+
+  const additionalLandmarks = [
+    '1542051841857-5f90071e7989', // Shibuya Crossing
+    '1503899036084-c55cdd92da26', // Senso-ji Temple
+    '1536098561742-ca998e48cbcc', // Tokyo Tower
+    '1511739001486-6bfe10ce785f', // Paris Eiffel Tower 2
+    '1499856871958-5b9627545d1a', // Paris 2
+    '1478358161113-b0e11994a36b'  // London Big Ben
+  ]
+
+  const LANDMARK_IDS = new Set([
+    ...Object.values(keyCountryMappings),
+    ...additionalLandmarks
+  ])
+
+  // Filter out landmark IDs from UNIQUE_UNSPLASH_IDS to create a generic pool
+  const genericPool = UNIQUE_UNSPLASH_IDS.filter(id => !LANDMARK_IDS.has(id))
+
+  let genericIndex = 0
+  const updated = items.map((item) => {
+    let photoId
+    if (keyCountryMappings[item.country]) {
+      photoId = keyCountryMappings[item.country]
+    } else {
+      photoId = genericPool[genericIndex % genericPool.length]
+      genericIndex++
+    }
     const uniqueHdUrl = `https://images.unsplash.com/photo-${photoId}?w=1600&q=90`
 
     return {
@@ -93,7 +135,23 @@ async function main() {
     console.log(`Syncing 195 unique photo destination entries to Supabase DB...`)
     for (let i = 0; i < updated.length; i += 50) {
       const chunk = updated.slice(i, i + 50)
-      await supabase.from('Destination').upsert(chunk, { onConflict: 'city' })
+      // Map only to valid Destination columns in the database (avoiding tag, tagline, etc.)
+      const dbChunk = chunk.map(item => ({
+        city: item.city,
+        country: item.country,
+        image: item.image,
+        description: item.description,
+        rating: item.rating,
+        duration: item.duration,
+        price: item.price,
+        category: item.category,
+        name: item.name || item.city,
+        slug: item.slug || item.city.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+      }))
+      const { error } = await supabase.from('Destination').upsert(dbChunk, { onConflict: 'slug' })
+      if (error) {
+        console.error(`Error syncing chunk ${i}:`, error.message)
+      }
     }
     console.log(`🎉 Supabase database updated with 195 unique HD country photos!`)
   } catch (err) {

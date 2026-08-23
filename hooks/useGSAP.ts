@@ -7,7 +7,7 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-export function useGSAPFadeUp(stagger = 0.1) {
+export function useGSAPFadeUp(stagger = 0.08) {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -16,19 +16,21 @@ export function useGSAPFadeUp(stagger = 0.1) {
     if (!elements.length) return
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(elements,
-        { opacity: 0, y: 60 },
+      gsap.fromTo(
+        elements,
+        { opacity: 0, y: 22 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.55,
           stagger,
-          ease: 'power3.out',
+          ease: 'power2.out',
+          clearProps: 'transform,opacity',
           scrollTrigger: {
             trigger: ref.current,
-            start: 'top 80%',
+            start: 'top 90%',
             once: true,
-          }
+          },
         }
       )
     }, ref)
@@ -39,7 +41,7 @@ export function useGSAPFadeUp(stagger = 0.1) {
   return ref
 }
 
-export function useGSAPStagger(stagger = 0.08) {
+export function useGSAPStagger(stagger = 0.06) {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -48,20 +50,22 @@ export function useGSAPStagger(stagger = 0.08) {
     if (!elements.length) return
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(elements,
-        { opacity: 0, y: 40, scale: 0.95 },
+      gsap.fromTo(
+        elements,
+        { opacity: 0, y: 20, scale: 0.98 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.6,
+          duration: 0.5,
           stagger,
           ease: 'power2.out',
+          clearProps: 'transform,opacity',
           scrollTrigger: {
             trigger: ref.current,
-            start: 'top 75%',
+            start: 'top 88%',
             once: true,
-          }
+          },
         }
       )
     }, ref)
@@ -71,3 +75,4 @@ export function useGSAPStagger(stagger = 0.08) {
 
   return ref
 }
+

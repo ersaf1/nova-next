@@ -62,17 +62,17 @@ export function getAttractionsForDestination(destination: string, apiAttractions
   }
 
   if (apiAttractions && apiAttractions.length > 0) {
-    return apiAttractions.map((attr, idx) => ({
+    return apiAttractions.map((attr) => ({
       name: attr.name,
       description: attr.description,
-      image: GENERAL_TRAVEL_PHOTOS[idx % GENERAL_TRAVEL_PHOTOS.length]
+      image: `/api/geo/map-image?query=${encodeURIComponent(attr.name + ' ' + destination)}`
     }))
   }
 
   return [
-    { name: 'Scenic Landmarks', description: 'Explore the local architecture, historic squares, and iconic neighborhood views.', image: GENERAL_TRAVEL_PHOTOS[0] },
-    { name: 'Nature & Parks', description: 'Relax in local green spaces, scenic view points, and beautiful natural areas.', image: GENERAL_TRAVEL_PHOTOS[1] },
-    { name: 'Local Food & Cafes', description: 'Experience the local culinary scene, street food markets, and cozy cafes.', image: GENERAL_TRAVEL_PHOTOS[2] },
+    { name: 'Scenic Landmarks', description: 'Explore the local architecture, historic squares, and iconic neighborhood views.', image: `/api/geo/map-image?query=${encodeURIComponent('Scenic Landmarks ' + destination)}` },
+    { name: 'Nature & Parks', description: 'Relax in local green spaces, scenic view points, and beautiful natural areas.', image: `/api/geo/map-image?query=${encodeURIComponent('Nature Parks ' + destination)}` },
+    { name: 'Local Food & Cafes', description: 'Experience the local culinary scene, street food markets, and cozy cafes.', image: `/api/geo/map-image?query=${encodeURIComponent('Local Food ' + destination)}` },
   ]
 }
 
@@ -85,9 +85,8 @@ function formatCategory(category: string): string {
 }
 
 // Converts Geoapify places into the Attraction shape used by the itinerary UI.
-// Geoapify places have no photos — GENERAL_TRAVEL_PHOTOS used as visual fallback.
 export function mergePlacesIntoAttractions(places: GeoapifyPlace[]): Attraction[] {
-  return places.map((place, idx) => ({
+  return places.map((place) => ({
     name: place.name,
     description: [
       place.categories[0] ? formatCategory(place.categories[0]) : 'Attraction',
@@ -96,7 +95,7 @@ export function mergePlacesIntoAttractions(places: GeoapifyPlace[]): Attraction[
     ]
       .filter(Boolean)
       .join(' · '),
-    image: GENERAL_TRAVEL_PHOTOS[idx % GENERAL_TRAVEL_PHOTOS.length],
+    image: `/api/geo/map-image?lat=${place.lat}&lon=${place.lon}&query=${encodeURIComponent(place.name)}`,
     lat: place.lat,
     lon: place.lon,
   }))

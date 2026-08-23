@@ -22,9 +22,9 @@ interface ScrollRevealProps {
 export default function ScrollReveal({
   children,
   animation = 'slide-up',
-  duration = 0.9,
+  duration = 0.55,
   delay = 0,
-  stagger = 0.12,
+  stagger = 0.08,
   staggerChildren = false,
   threshold = 0.15,
   once = true,
@@ -35,7 +35,7 @@ export default function ScrollReveal({
     if (!containerRef.current) return
 
     const ctx = gsap.context(() => {
-      const ease = 'cubic-bezier(0.16, 1, 0.3, 1)'
+      const ease = 'power2.out'
 
       let startVars: gsap.TweenVars = { opacity: 0 }
       const endVars: gsap.TweenVars = {
@@ -43,34 +43,32 @@ export default function ScrollReveal({
         x: 0,
         y: 0,
         scale: 1,
-        filter: 'blur(0px)',
         duration,
         delay,
         ease,
+        clearProps: 'transform,opacity',
         scrollTrigger: {
           trigger: containerRef.current,
-          start: 'top 90%',
+          start: 'top 92%',
           toggleActions: once ? 'play none none none' : 'play reverse play reverse',
         },
       }
 
       switch (animation) {
         case 'slide-up':
-          startVars = { opacity: 0, y: 60, filter: 'blur(8px)' }
+          startVars = { opacity: 0, y: 24 }
           break
         case 'slide-down':
-          startVars = { opacity: 0, y: -60, filter: 'blur(4px)' }
+          startVars = { opacity: 0, y: -24 }
           break
         case 'slide-left':
-          // Enters from the right side
-          startVars = { opacity: 0, x: 80, filter: 'blur(6px)' }
+          startVars = { opacity: 0, x: 28 }
           break
         case 'slide-right':
-          // Enters from the left side
-          startVars = { opacity: 0, x: -80, filter: 'blur(6px)' }
+          startVars = { opacity: 0, x: -28 }
           break
         case 'zoom-in':
-          startVars = { opacity: 0, scale: 0.93, filter: 'blur(4px)' }
+          startVars = { opacity: 0, scale: 0.97 }
           break
         case 'fade':
         default:
@@ -100,7 +98,7 @@ export default function ScrollReveal({
   }, [animation, duration, delay, stagger, staggerChildren, threshold, once])
 
   return (
-    <div ref={containerRef} style={{ willChange: 'transform, opacity' }} className="w-full">
+    <div ref={containerRef} className="w-full">
       {children}
     </div>
   )

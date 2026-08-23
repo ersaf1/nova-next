@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin, Clock, Star, ArrowLeft, Calendar, ShieldCheck, Sparkles, Check } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { readFile } from 'fs/promises'
+import path from 'path'
 import { getAttractionsForDestination } from '@/lib/attractions'
 import Navbar from '@/components/Navbar'
 import ReviewSection from '@/components/ReviewSection'
@@ -19,15 +21,28 @@ type Destination = {
   category: string
 }
 
-export default async function DestinationDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const { data: destination, error } = await supabase
+async function getDestination(id: string): Promise<Destination | null> {
+  const { data, error } = await supabase
     .from('Destination')
     .select('*')
     .eq('id', Number(id))
     .single()
+  if (!error && data) return data as Destination
 
-  if (error || !destination) notFound()
+  try {
+    const raw = await readFile(path.join(process.cwd(), 'data', 'destinations.json'), 'utf-8')
+    const list: Destination[] = JSON.parse(raw)
+    return list.find(d => d.id === Number(id)) ?? null
+  } catch {
+    return null
+  }
+}
+
+export default async function DestinationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const destination = await getDestination(id)
+
+  if (!destination) notFound()
 
   const dest = destination as Destination
   const attractions = getAttractionsForDestination(dest.city)

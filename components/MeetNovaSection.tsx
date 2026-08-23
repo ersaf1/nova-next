@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import ScrollReveal from './ScrollReveal'
 
@@ -30,7 +31,7 @@ const MeetNovaSection: React.FC = () => {
             {cards.map((card) => (
               <div key={card.id} className={`group relative rounded-2xl overflow-hidden cursor-default transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 ${card.colSpan}`} style={{ minHeight: '320px' }}>
                 {card.backgroundImage ? (
-                  <img src={card.backgroundImage} alt={card.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out" />
+                  <Image src={card.backgroundImage} alt={card.title} fill className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out" />
                 ) : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/5" />
                 <div className="relative z-10 p-8 min-h-80 flex flex-col justify-between h-full">

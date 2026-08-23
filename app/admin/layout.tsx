@@ -23,6 +23,8 @@ import {
   ShieldCheck,
   Crown,
   ReceiptText,
+  Users,
+  FileSpreadsheet,
 } from 'lucide-react'
 
 interface MeResponse {
@@ -67,6 +69,8 @@ const navCategories: NavCategory[] = [
     category: 'Operations',
     items: [
       { path: '/admin/bookings', label: 'Bookings', icon: Calendar },
+      { path: '/admin/users', label: 'User Management', icon: Users },
+      { path: '/admin/reports', label: 'Laporan & Export', icon: FileSpreadsheet },
       { path: '/admin/refunds', label: 'Refunds', icon: ReceiptText },
       { path: '/admin/coupons', label: 'Coupons & Promos', icon: Ticket },
     ],
@@ -74,6 +78,7 @@ const navCategories: NavCategory[] = [
   {
     category: 'System',
     items: [
+      { path: '/admin/audit-logs', label: 'Audit Logs & Safety', icon: ShieldCheck },
       { path: '/admin/settings', label: 'Settings', icon: Settings },
     ],
   },
@@ -90,7 +95,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     fetch('/api/auth/me')
       .then(r => r.json())
       .then((data: MeResponse & { error?: string }) => {
-        if (!data.role || !['admin', 'super_admin'].includes(data.role)) {
+        if (!data.role || !['booking_officer', 'admin', 'super_admin'].includes(data.role)) {
           router.push('/login?redirect=/admin')
         } else {
           setUser(data)
@@ -160,39 +165,66 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Categorized Navigation */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-6">
-          {navCategories.map((category) => (
-            <div key={category.category}>
-              <h3 className="px-3 text-[11px] font-semibold tracking-wider text-neutral-500 uppercase mb-2">
-                {category.category}
-              </h3>
-              <div className="space-y-1">
-                {category.items.map((item) => {
-                  const Icon = item.icon
-                  const isActive = item.exact
-                    ? pathname === item.path
-                    : pathname === item.path || pathname.startsWith(item.path + '/')
+          {navCategories
+            .map((category) => {
+              if (user?.role === 'booking_officer') {
+                if (category.category === 'Overview') return category
+                if (category.category === 'Operations') {
+                  return {
+                    ...category,
+                    items: category.items.filter((item) =>
+                      ['/admin/bookings', '/admin/refunds', '/admin/reports'].includes(item.path)
+                    ),
+                  }
+                }
+                return null
+              }
+              if (user?.role === 'admin') {
+                if (category.category === 'System') return null
+                if (category.category === 'Operations') {
+                  return {
+                    ...category,
+                    items: category.items.filter((item) => item.path !== '/admin/users'),
+                  }
+                }
+                return category
+              }
+              return category
+            })
+            .filter(Boolean)
+            .map((category) => (
+              <div key={category!.category}>
+                <h3 className="px-3 text-[11px] font-semibold tracking-wider text-neutral-500 uppercase mb-2">
+                  {category!.category}
+                </h3>
+                <div className="space-y-1">
+                  {category!.items.map((item) => {
+                    const Icon = item.icon
+                    const isActive = item.exact
+                      ? pathname === item.path
+                      : pathname === item.path || pathname.startsWith(item.path + '/')
 
-                  return (
-                    <Link
-                      key={item.path}
-                      href={item.path}
-                      className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
-                        isActive
-                          ? 'bg-white text-neutral-950 font-semibold shadow-xs'
-                          : 'text-neutral-400 hover:text-white hover:bg-neutral-900 font-medium'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-neutral-950' : 'text-neutral-400'}`} />
-                        <span className="truncate">{item.label}</span>
-                      </div>
-                      {isActive && <ChevronRight className="w-4 h-4 text-neutral-950 shrink-0 ml-1" />}
-                    </Link>
-                  )
-                })}
+                    return (
+                      <Link
+                        key={item.path}
+                        href={item.path}
+                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
+                          isActive
+                            ? 'bg-white text-neutral-950 font-semibold shadow-xs'
+                            : 'text-neutral-400 hover:text-white hover:bg-neutral-900 font-medium'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-neutral-950' : 'text-neutral-400'}`} />
+                          <span className="truncate">{item.label}</span>
+                        </div>
+                        {isActive && <ChevronRight className="w-4 h-4 text-neutral-950 shrink-0 ml-1" />}
+                      </Link>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </nav>
 
         {/* Footer */}
@@ -207,6 +239,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px] font-semibold shrink-0">
                   <Crown className="w-2.5 h-2.5" />
                   super
+                </span>
+              ) : user.role === 'booking_officer' ? (
+                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-semibold shrink-0">
+                  <Ticket className="w-2.5 h-2.5" />
+                  booking ops
                 </span>
               ) : (
                 <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold shrink-0">

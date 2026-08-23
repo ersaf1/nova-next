@@ -3,10 +3,9 @@
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabaseClient } from '@/lib/supabase-client'
-import type { TravelPackage, PackageDeparture, Traveler } from '@/lib/types'
+import type { TravelPackage, PackageDeparture } from '@/lib/types'
 import Navbar from '@/components/Navbar'
 import BookingStepDetails from '@/components/booking/BookingStepDetails'
-import BookingStepTravelers from '@/components/booking/BookingStepTravelers'
 import BookingStepReview from '@/components/booking/BookingStepReview'
 import BookingStepPayment from '@/components/booking/BookingStepPayment'
 
@@ -17,7 +16,7 @@ interface ContactForm {
   participants: number
 }
 
-type Step = 1 | 2 | 3 | 4
+type Step = 1 | 2 | 3
 
 export default function BookingFlowPage({
   params,
@@ -35,7 +34,6 @@ export default function BookingFlowPage({
 
   // Booking state preserved across steps
   const [contact, setContact] = useState<ContactForm>({ contactName: '', contactEmail: '', contactPhone: '', participants: 1 })
-  const [travelers, setTravelers] = useState<Traveler[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [bookingResult, setBookingResult] = useState<{ id: number; bookingCode: string; totalAmount: number } | null>(null)
 
@@ -81,15 +79,8 @@ export default function BookingFlowPage({
 
   const handleDetailsNext = (form: ContactForm) => {
     setContact(form)
-    // Initialize traveler rows based on participant count
-    setTravelers(prev => {
-      const rows: Traveler[] = Array.from({ length: form.participants }, (_, i) => prev[i] ?? { fullName: '', gender: '', birthDate: '', nationality: '', passportNumber: '', passportExpiry: '' })
-      return rows
-    })
     setStep(2)
   }
-
-  const handleTravelersNext = () => setStep(3)
 
   const handleReviewNext = async (promoCode?: string, discountAmount?: number) => {
     if (submitting) return
@@ -105,7 +96,6 @@ export default function BookingFlowPage({
           contactEmail: contact.contactEmail,
           contactPhone: contact.contactPhone,
           participants: contact.participants,
-          travelers,
           ...(promoCode ? { voucherCode: promoCode, discountAmount } : {}),
         }),
       })
@@ -116,7 +106,7 @@ export default function BookingFlowPage({
         bookingCode: data.bookingCode ?? data.booking_code ?? '',
         totalAmount: data.totalAmount ?? data.total_amount ?? 0,
       })
-      setStep(4)
+      setStep(3)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Terjadi kesalahan saat membuat booking')
     } finally {
@@ -155,7 +145,7 @@ export default function BookingFlowPage({
       <Navbar />
       <div className="max-w-xl mx-auto px-6 py-10">
 
-        {error && step !== 4 && (
+        {error && step !== 3 && (
           <div className="mb-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
             {error}
             <button onClick={() => setError(null)} className="ml-2 underline">Tutup</button>
@@ -166,31 +156,22 @@ export default function BookingFlowPage({
           <BookingStepDetails pkg={pkg} departure={departure} onNext={handleDetailsNext} />
         )}
         {step === 2 && (
-          <BookingStepTravelers
-            count={contact.participants}
-            travelers={travelers}
-            onChange={setTravelers}
-            onNext={handleTravelersNext}
-            onBack={() => setStep(1)}
-          />
-        )}
-        {step === 3 && (
           <BookingStepReview
             pkg={pkg}
             departure={departure}
             contact={contact}
-            travelers={travelers}
+            travelers={[]}
             onNext={handleReviewNext}
-            onBack={() => setStep(2)}
+            onBack={() => setStep(1)}
             submitting={submitting}
           />
         )}
-        {step === 4 && bookingResult && (
+        {step === 3 && bookingResult && (
           <BookingStepPayment
             bookingId={bookingResult.id}
             bookingCode={bookingResult.bookingCode}
             totalAmount={bookingResult.totalAmount}
-            onBack={() => setStep(3)}
+            onBack={() => setStep(2)}
           />
         )}
       </div>

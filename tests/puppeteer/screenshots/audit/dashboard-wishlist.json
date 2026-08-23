@@ -1,0 +1,82 @@
+{
+  "url": "http://localhost:3001/dashboard/wishlist",
+  "timestamp": "2026-08-23T07:12:43.008Z",
+  "summary": {
+    "totalErrors": 2,
+    "critical": 1,
+    "warnings": 0,
+    "notice": 1
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button",
+      "text": "Sign in",
+      "box": {
+        "x": 452,
+        "y": 272,
+        "width": 188,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "critical",
+      "message": "Dead button confirmed! Clicking \"Sign in\" triggered no URL change, no DOM mutation, and no modal/state change.",
+      "confirmedDead": true
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div:nth-of-type(2) > div > button:nth-of-type(2)",
+      "text": "Sign up",
+      "box": {
+        "x": 640,
+        "y": 272,
+        "width": 188,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Sign up\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "form > div > div:nth-of-type(2) > div > button",
+      "text": "Show password",
+      "box": {
+        "x": 804,
+        "y": 465,
+        "width": 16,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Show password\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > form > div > div:nth-of-type(2) > button",
+      "text": "Forgot password?",
+      "box": {
+        "x": 448,
+        "y": 502,
+        "width": 94,
+        "height": 16,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Forgot password?\" has no standard action or form association (needs click verification)"
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\dashboard-wishlist.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/dashboard/wishlist`\n> **Timestamp:** `23/08/2026, 2:12:43 pm`\n> **Status:** **2 Defects Detected** (🔴 1 Critical, 🟠 0 Warnings, 🔵 1 Notices)\n\n## 🎯 Objective\nFix all identified front-end, runtime, interactive, and visual rendering defects on the target page. Follow the prioritized checklist below task-by-task.\n\n---\n\n### Task 1: Fix Dead Buttons, Inoperative Links & Click Traps (🔴 High Priority)\n\n- [ ] **Fix [CRITICAL] potential-dead-button on selector:** `div > div > div:nth-of-type(2) > div > button`\n  - **Element Details:** Text: `\"Sign in\"` | Href: `N/A`\n  - **Problem:** Dead button confirmed! Clicking \"Sign in\" triggered no URL change, no DOM mutation, and no modal/state change.\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > form > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Forgot password?\"` | Href: `N/A`\n  - **Problem:** Button \"Forgot password?\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n\n---\n\n## 🔍 Verification Step\nAfter applying code fixes, re-run the detector to verify 0 remaining defects:\n```bash\nnode C:\\Users\\lulus\\.config\\opencode\\skills\\puppeteer-error-detector\\scripts\\detect-errors.js \"http://localhost:3001/dashboard/wishlist\" --screenshot ./post-fix-audit.png\n```\n"
+}

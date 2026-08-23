@@ -1,18 +1,20 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import ScrollReveal from '@/components/ScrollReveal'
 import StatsBar from '@/components/StatsBar'
 import MeetNovaSection from '@/components/MeetNovaSection'
-import DestinationsSection from '@/components/DestinationsSection'
-import PackagesSection from '@/components/PackagesSection'
-import HowItWorksSection from '@/components/HowItWorksSection'
-import WhyNovaSection from '@/components/WhyNovaSection'
-import FeaturesHighlightSection from '@/components/FeaturesHighlightSection'
-import ExperiencesSection from '@/components/ExperiencesSection'
-import TestimonialsSection from '@/components/TestimonialsSection'
-import BackedBySection from '@/components/BackedBySection'
-import FAQSection from '@/components/FAQSection'
-import AppCtaSection from '@/components/AppCtaSection'
+
+const DestinationsSection = dynamic(() => import('@/components/DestinationsSection'), { ssr: false })
+const PackagesSection = dynamic(() => import('@/components/PackagesSection'), { ssr: false })
+const HowItWorksSection = dynamic(() => import('@/components/HowItWorksSection'), { ssr: false })
+const WhyNovaSection = dynamic(() => import('@/components/WhyNovaSection'), { ssr: false })
+const FeaturesHighlightSection = dynamic(() => import('@/components/FeaturesHighlightSection'), { ssr: false })
+const ExperiencesSection = dynamic(() => import('@/components/ExperiencesSection'), { ssr: false })
+const TestimonialsSection = dynamic(() => import('@/components/TestimonialsSection'), { ssr: false })
+const BackedBySection = dynamic(() => import('@/components/BackedBySection'), { ssr: false })
+const FAQSection = dynamic(() => import('@/components/FAQSection'), { ssr: false })
+const AppCtaSection = dynamic(() => import('@/components/AppCtaSection'), { ssr: false })
 
 export default function AnimatedSections() {
   return (

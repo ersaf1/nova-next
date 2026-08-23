@@ -447,7 +447,7 @@ export default function PackagesPage() {
               <h3 className="text-xl font-bold">Butuh Rencana Perjalanan Custom Sesuai Keinginan?</h3>
               <p className="text-xs text-neutral-400 max-w-xl">Gunakan fitur AI Travel Planner kami untuk merancang jadwal hari demi hari secara gratis dalam hitungan detik.</p>
             </div>
-            <Link href="/itinerary" className="px-6 py-3.5 rounded-2xl bg-white text-neutral-950 text-xs font-extrabold hover:bg-neutral-100 transition-colors flex items-center gap-2 shrink-0 shadow-md">
+            <Link href="/ai-planner" className="px-6 py-3.5 rounded-2xl bg-white text-neutral-950 text-xs font-extrabold hover:bg-neutral-100 transition-colors flex items-center gap-2 shrink-0 shadow-md">
               <Sparkles className="w-4 h-4 text-indigo-600" />
               <span>Gunakan AI Travel Planner</span>
             </Link>

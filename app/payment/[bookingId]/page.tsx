@@ -69,6 +69,9 @@ export default function PaymentPage() {
       .then((data: Booking) => {
         setBooking(data ?? null)
         setLoading(false)
+        if (data?.paymentStatus === 'paid' || data?.bookingStatus === 'confirmed') {
+          router.replace(`/payment/confirmation/${bookingId}`)
+        }
       })
       .catch(() => setLoading(false))
   }, [bookingId])

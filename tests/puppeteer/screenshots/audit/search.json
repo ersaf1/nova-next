@@ -1,0 +1,402 @@
+{
+  "url": "http://localhost:3001/search",
+  "timestamp": "2026-08-23T07:11:29.940Z",
+  "summary": {
+    "totalErrors": 26,
+    "critical": 0,
+    "warnings": 0,
+    "notice": 26
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "deadButtons": [
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 1039,
+        "y": 6,
+        "width": 76,
+        "height": 36,
+        "visible": true
+      },
+      "severity": "info",
+      "message": "Button \"Masuk\" is responsive (triggered DOM mutation or state change).",
+      "confirmedDead": false
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 1123,
+        "y": 4,
+        "width": 109,
+        "height": 40,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > nav > div > button",
+      "text": "Toggle menu",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Toggle menu\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button",
+      "text": "Masuk",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Masuk\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Cari Paket",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Cari Paket\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "aside > div > div:nth-of-type(5) > div > button",
+      "text": "All",
+      "box": {
+        "x": 49,
+        "y": 923,
+        "width": 41,
+        "height": 30,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"All\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "aside > div > div:nth-of-type(5) > div > button:nth-of-type(2)",
+      "text": "Solo",
+      "box": {
+        "x": 98,
+        "y": 923,
+        "width": 52,
+        "height": 30,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Solo\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "aside > div > div:nth-of-type(5) > div > button:nth-of-type(3)",
+      "text": "Family",
+      "box": {
+        "x": 158,
+        "y": 923,
+        "width": 64,
+        "height": 30,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Family\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "aside > div > div:nth-of-type(5) > div > button:nth-of-type(4)",
+      "text": "Adventure",
+      "box": {
+        "x": 49,
+        "y": 961,
+        "width": 86,
+        "height": 30,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Adventure\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "aside > div > div:nth-of-type(5) > div > button:nth-of-type(5)",
+      "text": "Business",
+      "box": {
+        "x": 143,
+        "y": 961,
+        "width": 78,
+        "height": 30,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Business\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > aside > div > button",
+      "text": "Reset filters",
+      "box": {
+        "x": 49,
+        "y": 1015,
+        "width": 206,
+        "height": 34,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Reset filters\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div > button",
+      "text": "Filters",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Filters\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div > button",
+      "text": "Beach",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Beach\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div > button:nth-of-type(2)",
+      "text": "Adventure",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Adventure\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div > button:nth-of-type(3)",
+      "text": "Culture",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Culture\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div > button:nth-of-type(4)",
+      "text": "City",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"City\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div > button:nth-of-type(5)",
+      "text": "Nature",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Nature\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div > div > div > button:nth-of-type(6)",
+      "text": "Luxury",
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "visible": false
+      },
+      "severity": "notice",
+      "message": "Button \"Luxury\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div:nth-of-type(2) > button",
+      "text": "All",
+      "box": {
+        "x": 312,
+        "y": 258,
+        "width": 50,
+        "height": 34,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"All\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(2)",
+      "text": "Beach",
+      "box": {
+        "x": 374,
+        "y": 258,
+        "width": 75,
+        "height": 34,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Beach\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(3)",
+      "text": "Adventure",
+      "box": {
+        "x": 461,
+        "y": 258,
+        "width": 100,
+        "height": 34,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Adventure\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(4)",
+      "text": "Culture",
+      "box": {
+        "x": 573,
+        "y": 258,
+        "width": 81,
+        "height": 34,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Culture\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(5)",
+      "text": "City",
+      "box": {
+        "x": 666,
+        "y": 258,
+        "width": 60,
+        "height": 34,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"City\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(6)",
+      "text": "Nature",
+      "box": {
+        "x": 737,
+        "y": 258,
+        "width": 77,
+        "height": 34,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Nature\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(7)",
+      "text": "Luxury",
+      "box": {
+        "x": 827,
+        "y": 258,
+        "width": 78,
+        "height": 34,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Luxury\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div > div:nth-of-type(3) > div > div > button",
+      "text": "Rating",
+      "box": {
+        "x": 1032,
+        "y": 308,
+        "width": 224,
+        "height": 38,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Rating\" has no standard action or form association (needs click verification)"
+    },
+    {
+      "type": "potential-dead-button",
+      "selector": "div:nth-of-type(2) > div > div > div:nth-of-type(5) > button",
+      "text": "Muat lebih banyak",
+      "box": {
+        "x": 692,
+        "y": 1664,
+        "width": 183,
+        "height": 46,
+        "visible": true
+      },
+      "severity": "notice",
+      "message": "Button \"Muat lebih banyak\" has no standard action or form association (needs click verification)"
+    }
+  ],
+  "emptyOrMissingElements": [],
+  "stuckLoaders": [],
+  "placeholderOrBugTokens": [],
+  "brokenMedia": [],
+  "securityOrSecrets": [],
+  "layoutDefects": [],
+  "accessibilityAndForms": [],
+  "annotatedScreenshot": "C:\\Users\\lulus\\Dominator\\nova-next\\tests\\puppeteer\\screenshots\\audit\\search.png",
+  "opencodePrompt": "# 🛠️ OpenCode Action Plan: Automated UI/UX & Web Defect Remediation\n\n> **Audit Target:** `http://localhost:3001/search`\n> **Timestamp:** `23/08/2026, 2:11:29 pm`\n> **Status:** **26 Defects Detected** (🔴 0 Critical, 🟠 0 Warnings, 🔵 26 Notices)\n\n## 🎯 Objective\nFix all identified front-end, runtime, interactive, and visual rendering defects on the target page. Follow the prioritized checklist below task-by-task.\n\n---\n\n### Task 1: Fix Dead Buttons, Inoperative Links & Click Traps (🔴 High Priority)\n\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > nav > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > nav > div > button`\n  - **Element Details:** Text: `\"Toggle menu\"` | Href: `N/A`\n  - **Problem:** Button \"Toggle menu\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"Masuk\"` | Href: `N/A`\n  - **Problem:** Button \"Masuk\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `nav > div:nth-of-type(2) > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Cari Paket\"` | Href: `N/A`\n  - **Problem:** Button \"Cari Paket\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `aside > div > div:nth-of-type(5) > div > button`\n  - **Element Details:** Text: `\"All\"` | Href: `N/A`\n  - **Problem:** Button \"All\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `aside > div > div:nth-of-type(5) > div > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Solo\"` | Href: `N/A`\n  - **Problem:** Button \"Solo\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `aside > div > div:nth-of-type(5) > div > button:nth-of-type(3)`\n  - **Element Details:** Text: `\"Family\"` | Href: `N/A`\n  - **Problem:** Button \"Family\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `aside > div > div:nth-of-type(5) > div > button:nth-of-type(4)`\n  - **Element Details:** Text: `\"Adventure\"` | Href: `N/A`\n  - **Problem:** Button \"Adventure\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `aside > div > div:nth-of-type(5) > div > button:nth-of-type(5)`\n  - **Element Details:** Text: `\"Business\"` | Href: `N/A`\n  - **Problem:** Button \"Business\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > aside > div > button`\n  - **Element Details:** Text: `\"Reset filters\"` | Href: `N/A`\n  - **Problem:** Button \"Reset filters\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div > button`\n  - **Element Details:** Text: `\"Filters\"` | Href: `N/A`\n  - **Problem:** Button \"Filters\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div > div > button`\n  - **Element Details:** Text: `\"Beach\"` | Href: `N/A`\n  - **Problem:** Button \"Beach\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div > div > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Adventure\"` | Href: `N/A`\n  - **Problem:** Button \"Adventure\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div > div > button:nth-of-type(3)`\n  - **Element Details:** Text: `\"Culture\"` | Href: `N/A`\n  - **Problem:** Button \"Culture\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div > div > button:nth-of-type(4)`\n  - **Element Details:** Text: `\"City\"` | Href: `N/A`\n  - **Problem:** Button \"City\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div > div > button:nth-of-type(5)`\n  - **Element Details:** Text: `\"Nature\"` | Href: `N/A`\n  - **Problem:** Button \"Nature\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div > div > div > button:nth-of-type(6)`\n  - **Element Details:** Text: `\"Luxury\"` | Href: `N/A`\n  - **Problem:** Button \"Luxury\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div:nth-of-type(2) > button`\n  - **Element Details:** Text: `\"All\"` | Href: `N/A`\n  - **Problem:** Button \"All\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(2)`\n  - **Element Details:** Text: `\"Beach\"` | Href: `N/A`\n  - **Problem:** Button \"Beach\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(3)`\n  - **Element Details:** Text: `\"Adventure\"` | Href: `N/A`\n  - **Problem:** Button \"Adventure\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(4)`\n  - **Element Details:** Text: `\"Culture\"` | Href: `N/A`\n  - **Problem:** Button \"Culture\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(5)`\n  - **Element Details:** Text: `\"City\"` | Href: `N/A`\n  - **Problem:** Button \"City\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(6)`\n  - **Element Details:** Text: `\"Nature\"` | Href: `N/A`\n  - **Problem:** Button \"Nature\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div:nth-of-type(2) > button:nth-of-type(7)`\n  - **Element Details:** Text: `\"Luxury\"` | Href: `N/A`\n  - **Problem:** Button \"Luxury\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div > div:nth-of-type(3) > div > div > button`\n  - **Element Details:** Text: `\"Rating\"` | Href: `N/A`\n  - **Problem:** Button \"Rating\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n- [ ] **Fix [NOTICE] potential-dead-button on selector:** `div:nth-of-type(2) > div > div > div:nth-of-type(5) > button`\n  - **Element Details:** Text: `\"Muat lebih banyak\"` | Href: `N/A`\n  - **Problem:** Button \"Muat lebih banyak\" has no standard action or form association (needs click verification)\n  - **Action:** Attach the missing event listener / onClick handler, state mutation, or form submission handler to this button.\n\n---\n\n## 🔍 Verification Step\nAfter applying code fixes, re-run the detector to verify 0 remaining defects:\n```bash\nnode C:\\Users\\lulus\\.config\\opencode\\skills\\puppeteer-error-detector\\scripts\\detect-errors.js \"http://localhost:3001/search\" --screenshot ./post-fix-audit.png\n```\n"
+}
