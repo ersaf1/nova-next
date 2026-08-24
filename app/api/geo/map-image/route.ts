@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   const apiKey = process.env.GEOAPIFY_API_KEY
 
   if (!apiKey) {
-    return NextResponse.redirect('https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80')
+    return NextResponse.redirect('https://picsum.photos/seed/map-fallback/800/450')
   }
 
   let finalLat = lat
@@ -29,8 +29,7 @@ export async function GET(request: Request) {
   }
 
   if (!finalLat || !finalLon) {
-    // Return a default scenic map or travel photo
-    return NextResponse.redirect('https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80')
+    return NextResponse.redirect('https://picsum.photos/seed/map-no-coords/800/450')
   }
 
   // Construct the Static Map URL
@@ -53,5 +52,5 @@ export async function GET(request: Request) {
     console.error('Error fetching static map from Geoapify:', err)
   }
 
-  return NextResponse.redirect('https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80')
+  return NextResponse.redirect('https://picsum.photos/seed/map-error/800/450')
 }

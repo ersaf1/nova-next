@@ -17,19 +17,12 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 async function fetchUnsplashPhoto(query: string, width = 2000, quality = 95): Promise<string | null> {
-  try {
-    const res = await fetch(`https://unsplash.com/napi/search/photos?query=${encodeURIComponent(query)}&per_page=3`)
-    if (!res.ok) return null
-    const data = await res.json()
-    if (data.results && data.results.length > 0) {
-      const idx = Math.floor(Math.random() * Math.min(3, data.results.length))
-      const rawUrl = data.results[idx].urls.raw
-      return `${rawUrl}?w=${width}&fit=crop&q=${quality}`
-    }
-  } catch (err) {
-    console.error('Failed to fetch Unsplash photo:', err)
-  }
-  return null
+  // Unsplash /napi/ is a private endpoint blocked in production environments.
+  // Use picsum.photos as a reliable, CORS-friendly fallback instead.
+  // Generate a deterministic seed from the query so the same query always
+  // returns the same image (avoids jarring swaps on re-render).
+  const seed = query.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').slice(0, 40) || 'travel'
+  return `https://picsum.photos/seed/${seed}/${width}/1200`
 }
 
 // Sudut kreatif acak supaya tiap generate terasa berbeda

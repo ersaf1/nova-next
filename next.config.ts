@@ -23,6 +23,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'cdn.pixabay.com' },
       { protocol: 'https', hostname: 'jrnmzwtjqcvknoclycbd.supabase.co' },
       { protocol: 'https', hostname: 'picsum.photos' },
+      { protocol: 'https', hostname: 'maps.geoapify.com' },
+      { protocol: 'https', hostname: '*.supabase.co' },
     ],
   },
   turbopack: {
