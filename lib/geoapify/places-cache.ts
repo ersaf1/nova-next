@@ -5,8 +5,8 @@ import { fetchPlacesForCity } from './places'
 // Server-side only — uses service role key when available, falls back to anon key.
 // RLS is disabled on places_cache so anon key works fine.
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'placeholder-key'
 )
 
 const TTL_DAYS = 7
