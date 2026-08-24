@@ -2,6 +2,11 @@
   "name": "nova-next",
   "version": "0.1.0",
   "private": true,
+  "allowScripts": {
+    "puppeteer": true,
+    "sharp": true,
+    "unrs-resolver": true
+  },
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
