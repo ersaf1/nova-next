@@ -334,7 +334,7 @@ const BookingPageInner: React.FC = () => {
 
             <button
               onClick={() => router.push('/dashboard/bookings')}
-              className="w-full bg-neutral-950 text-white font-jakarta font-extrabold py-3.5 rounded-xl hover:bg-black transition-all text-sm shadow-md active:scale-95 cursor-pointer"
+              className="w-full bg-brand text-white font-jakarta font-extrabold py-3.5 rounded-xl hover:bg-brand-dark transition-all text-sm shadow-md active:scale-95 cursor-pointer"
             >
               Lihat Tiket di Dashboard
             </button>
@@ -392,7 +392,7 @@ const BookingPageInner: React.FC = () => {
                     }}
                     className={`flex items-center justify-center sm:justify-start gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl text-xs font-jakarta font-bold transition-all ${
                       isCurrent
-                        ? 'bg-neutral-950 text-white shadow-xs'
+                        ? 'bg-brand text-white shadow-xs'
                         : isPast
                         ? 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 cursor-pointer'
                         : 'text-neutral-400 bg-transparent cursor-not-allowed'
@@ -426,7 +426,7 @@ const BookingPageInner: React.FC = () => {
                   placeholder="Cari destinasi atau negara impianmu..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-neutral-200/90 rounded-2xl text-xs sm:text-sm font-jakarta font-bold text-neutral-950 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 shadow-2xs"
+                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-neutral-200/90 rounded-2xl text-xs sm:text-sm font-jakarta font-bold text-neutral-950 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 shadow-2xs"
                 />
               </div>
 
@@ -454,7 +454,7 @@ const BookingPageInner: React.FC = () => {
                           setNoMatchesFound(false)
                           setStep(1)
                         }}
-                        className="group relative bg-white rounded-2xl overflow-hidden border border-neutral-200/90 hover:border-neutral-950 hover:shadow-lg transition-all duration-300 text-left h-36 cursor-pointer active:scale-95"
+                        className="group relative bg-white rounded-2xl overflow-hidden border border-neutral-200/90 hover:border-brand-dark hover:shadow-lg transition-all duration-300 text-left h-36 cursor-pointer active:scale-95"
                       >
                         {thumb && (
                           <img
@@ -509,7 +509,7 @@ const BookingPageInner: React.FC = () => {
                 {(matchedPackages || filteredPackages).map((pkg, idx) => (
                   <div
                     key={pkg.slug || pkg.id || `booking-pkg-${idx}`}
-                    className="group bg-white rounded-3xl overflow-hidden border border-neutral-200/90 hover:border-neutral-950 hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between"
+                    className="group bg-white rounded-3xl overflow-hidden border border-neutral-200/90 hover:border-brand-dark hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between"
                   >
                     <div className="relative h-48 overflow-hidden bg-neutral-900">
                       <img
@@ -557,7 +557,7 @@ const BookingPageInner: React.FC = () => {
                             setSelectedPackage(pkg)
                             setStep(2)
                           }}
-                          className="bg-neutral-950 text-white text-xs font-jakarta font-extrabold px-4 py-2.5 rounded-xl hover:bg-black transition-all flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
+                          className="bg-brand text-white text-xs font-jakarta font-extrabold px-4 py-2.5 rounded-xl hover:bg-brand-dark transition-all flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
                         >
                           <span>Pilih Paket</span>
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -598,7 +598,7 @@ const BookingPageInner: React.FC = () => {
                         value={form.name}
                         onChange={handleFormChange}
                         placeholder="Contoh: Alexander Pratama"
-                        className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 ${
+                        className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 ${
                           formErrors.name ? 'border-rose-500' : 'border-neutral-200'
                         }`}
                       />
@@ -618,7 +618,7 @@ const BookingPageInner: React.FC = () => {
                           value={form.email}
                           onChange={handleFormChange}
                           placeholder="nama@email.com"
-                          className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 ${
+                          className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 ${
                             formErrors.email ? 'border-rose-500' : 'border-neutral-200'
                           }`}
                         />
@@ -636,7 +636,7 @@ const BookingPageInner: React.FC = () => {
                           value={form.phone}
                           onChange={handleFormChange}
                           placeholder="081234567890"
-                          className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 ${
+                          className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 ${
                             formErrors.phone ? 'border-rose-500' : 'border-neutral-200'
                           }`}
                         />
@@ -657,7 +657,7 @@ const BookingPageInner: React.FC = () => {
                           value={form.travelDate}
                           onChange={handleFormChange}
                           min={new Date().toISOString().split('T')[0]}
-                          className={`w-full border rounded-xl pl-10 pr-4 py-2.5 text-xs font-jakarta font-bold text-neutral-950 bg-white focus:outline-none focus:ring-2 focus:ring-neutral-950/20 cursor-pointer ${
+                          className={`w-full border rounded-xl pl-10 pr-4 py-2.5 text-xs font-jakarta font-bold text-neutral-950 bg-white focus:outline-none focus:ring-2 focus:ring-brand/25 cursor-pointer ${
                             formErrors.travelDate ? 'border-rose-500' : 'border-neutral-200'
                           }`}
                         />
@@ -671,7 +671,7 @@ const BookingPageInner: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => setForm((prev) => ({ ...prev, participants: Math.max(1, prev.participants - 1) }))}
-                          className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-950 hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors cursor-pointer"
+                          className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-brand hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors cursor-pointer"
                         >
                           −
                         </button>
@@ -679,7 +679,7 @@ const BookingPageInner: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => setForm((prev) => ({ ...prev, participants: Math.min(20, prev.participants + 1) }))}
-                          className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-950 hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors cursor-pointer"
+                          className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-brand hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors cursor-pointer"
                         >
                           +
                         </button>
@@ -696,7 +696,7 @@ const BookingPageInner: React.FC = () => {
                       onChange={handleFormChange}
                       placeholder="Contoh: Makanan halal, vegetarian, ranjang double bed, penjemputan bandara..."
                       rows={3}
-                      className="w-full border border-neutral-200 rounded-xl px-4 py-3 text-xs font-jakarta font-medium text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 resize-none"
+                      className="w-full border border-neutral-200 rounded-xl px-4 py-3 text-xs font-jakarta font-medium text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 resize-none"
                     />
                   </div>
                 </div>
@@ -704,7 +704,7 @@ const BookingPageInner: React.FC = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-neutral-950 text-white font-jakarta font-extrabold py-4 rounded-2xl hover:bg-black disabled:opacity-50 transition-all text-sm flex items-center justify-center gap-2 shadow-xl shadow-neutral-950/15 active:scale-[0.99] cursor-pointer"
+                  className="w-full bg-brand text-white font-jakarta font-extrabold py-4 rounded-2xl hover:bg-brand-dark disabled:opacity-50 transition-all text-sm flex items-center justify-center gap-2 shadow-xl shadow-brand/30 active:scale-[0.99] cursor-pointer"
                 >
                   <CreditCard size={18} className="text-amber-400" />
                   <span>{submitting ? 'Memproses Pesanan...' : 'Lanjut ke Pembayaran'}</span>
@@ -764,13 +764,13 @@ const BookingPageInner: React.FC = () => {
                             }
                           }}
                           placeholder="KODE PROMO"
-                          className="flex-1 border border-neutral-200 rounded-xl px-3 py-2 text-xs font-jakarta font-bold text-neutral-950 uppercase placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-950/20 bg-neutral-50"
+                          className="flex-1 border border-neutral-200 rounded-xl px-3 py-2 text-xs font-jakarta font-bold text-neutral-950 uppercase placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 bg-neutral-50"
                         />
                         <button
                           type="button"
                           onClick={handleVoucherApply}
                           disabled={voucherLoading || !voucherCode.trim()}
-                          className="px-4 py-2 bg-neutral-950 text-white text-xs font-jakarta font-bold rounded-xl disabled:opacity-40 hover:bg-black transition-all shrink-0 cursor-pointer"
+                          className="px-4 py-2 bg-brand text-white text-xs font-jakarta font-bold rounded-xl disabled:opacity-40 hover:bg-brand-dark transition-all shrink-0 cursor-pointer"
                         >
                           {voucherLoading ? '...' : 'Gunakan'}
                         </button>

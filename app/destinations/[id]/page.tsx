@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Clock, Star, ArrowLeft, Calendar, ShieldCheck, Sparkles, Check } from 'lucide-react'
+import { MapPin, Clock, Star, ArrowLeft, Calendar, ShieldCheck, Sparkles, Check, Landmark, Trees, UtensilsCrossed } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { readFile } from 'fs/promises'
 import path from 'path'
@@ -38,6 +38,14 @@ async function getDestination(id: string): Promise<Destination | null> {
   }
 }
 
+function sightIcon(name: string) {
+  const n = name.toLowerCase()
+  if (/nature|park|green|garden/.test(n)) return Trees
+  if (/food|cafe|culinar|restaurant/.test(n)) return UtensilsCrossed
+  if (/landmark|scenic|architecture|museum|temple|historic|sight/.test(n)) return Landmark
+  return MapPin
+}
+
 export default async function DestinationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const destination = await getDestination(id)
@@ -71,7 +79,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
           </Link>
 
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-black text-white">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-brand text-white">
               <MapPin className="w-3 h-3" />
               {dest.country}
             </span>
@@ -126,15 +134,26 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                 <div className="grid sm:grid-cols-2 gap-6">
                   {attractions.map((a, i) => (
                     <div key={i} className="group bg-white border border-black/[0.05] rounded-2xl overflow-hidden hover:shadow-md transition-all duration-300">
-                      <div className="relative h-48 overflow-hidden bg-neutral-100">
-                        <img 
-                          src={a.image} 
-                          alt={a.name} 
-                          className="w-full h-full object-cover img-smooth-zoom" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        <span className="absolute bottom-4 left-4 text-sm font-semibold text-white">{a.name}</span>
-                      </div>
+                      {a.image && !a.image.includes('/api/geo/map-image') ? (
+                        <div className="relative h-48 overflow-hidden bg-neutral-100">
+                          <img
+                            src={a.image}
+                            alt={a.name}
+                            className="w-full h-full object-cover img-smooth-zoom"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                          <span className="absolute bottom-4 left-4 text-sm font-semibold text-white">{a.name}</span>
+                        </div>
+                      ) : (
+                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-brand via-brand to-brand-dark flex items-center justify-center">
+                          <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full border-[12px] border-white/10" />
+                          <div className="absolute -bottom-16 -left-10 w-48 h-48 rounded-full bg-white/10" />
+                          <div className="absolute top-5 right-6 w-2 h-2 rounded-full bg-white/40" />
+                          <div className="absolute top-9 right-16 w-1.5 h-1.5 rounded-full bg-white/30" />
+                          {(() => { const Icon = sightIcon(a.name); return <Icon className="w-14 h-14 text-white/90" strokeWidth={1.25} /> })()}
+                          <span className="absolute bottom-4 left-4 text-sm font-semibold text-white">{a.name}</span>
+                        </div>
+                      )}
                       <div className="p-4">
                         <p className="text-xs text-neutral-500 leading-relaxed font-light">{a.description || 'Famous landmark offering scenic views and beautiful photography spots.'}</p>
                       </div>
@@ -192,7 +211,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
               <div className="pt-2 space-y-2.5">
                 <Link
                   href={`/booking?destination=${encodeURIComponent(dest.city)}`}
-                  className="block w-full text-center bg-black hover:bg-neutral-800 active:bg-neutral-950 text-white font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
+                  className="block w-full text-center bg-brand hover:bg-brand-dark active:bg-brand-darker text-white font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
                 >
                   Book This Destination
                 </Link>

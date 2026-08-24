@@ -65,14 +65,14 @@ export function getAttractionsForDestination(destination: string, apiAttractions
     return apiAttractions.map((attr) => ({
       name: attr.name,
       description: attr.description,
-      image: `/api/geo/map-image?query=${encodeURIComponent(attr.name + ' ' + destination)}`
+      image: ''
     }))
   }
 
   return [
-    { name: 'Scenic Landmarks', description: 'Explore the local architecture, historic squares, and iconic neighborhood views.', image: `/api/geo/map-image?query=${encodeURIComponent('Scenic Landmarks ' + destination)}` },
-    { name: 'Nature & Parks', description: 'Relax in local green spaces, scenic view points, and beautiful natural areas.', image: `/api/geo/map-image?query=${encodeURIComponent('Nature Parks ' + destination)}` },
-    { name: 'Local Food & Cafes', description: 'Experience the local culinary scene, street food markets, and cozy cafes.', image: `/api/geo/map-image?query=${encodeURIComponent('Local Food ' + destination)}` },
+    { name: 'Scenic Landmarks', description: 'Explore the local architecture, historic squares, and iconic neighborhood views.', image: ''},
+    { name: 'Nature & Parks', description: 'Relax in local green spaces, scenic view points, and beautiful natural areas.', image: ''},
+    { name: 'Local Food & Cafes', description: 'Experience the local culinary scene, street food markets, and cozy cafes.', image: ''},
   ]
 }
 
@@ -95,7 +95,7 @@ export function mergePlacesIntoAttractions(places: GeoapifyPlace[]): Attraction[
     ]
       .filter(Boolean)
       .join(' · '),
-    image: `/api/geo/map-image?lat=${place.lat}&lon=${place.lon}&query=${encodeURIComponent(place.name)}`,
+    image: '',
     lat: place.lat,
     lon: place.lon,
   }))

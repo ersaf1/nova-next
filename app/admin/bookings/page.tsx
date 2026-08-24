@@ -217,7 +217,7 @@ export default function BookingsAdmin() {
                             {item.name.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-bold text-neutral-900 text-xs group-hover:text-neutral-950 transition-colors">
+                            <p className="font-bold text-neutral-900 text-xs group-hover:text-brand-darker transition-colors">
                               {item.name}
                             </p>
                             <p className="text-[10px] text-neutral-400 mt-0.5">
@@ -307,7 +307,7 @@ export default function BookingsAdmin() {
       {/* User Booking Detail Modal */}
       {selectedBooking && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/60 backdrop-blur-xs animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#052a2f]/60 backdrop-blur-xs animate-fade-in"
           onClick={() => setSelectedBooking(null)}
         >
           <div
@@ -315,7 +315,7 @@ export default function BookingsAdmin() {
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="px-6 py-5 bg-neutral-950 text-white flex items-center justify-between border-b border-neutral-800">
+            <div className="px-6 py-5 bg-brand text-white flex items-center justify-between border-b border-neutral-800">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/10 text-white border border-white/20 flex items-center justify-center font-bold text-sm">
                   {selectedBooking.name.charAt(0).toUpperCase()}
@@ -472,7 +472,7 @@ export default function BookingsAdmin() {
                     onClick={() => handleStatusChange(selectedBooking.id, st)}
                     className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all capitalize ${
                       selectedBooking.status === st
-                        ? 'bg-neutral-950 text-white'
+                        ? 'bg-brand text-white'
                         : 'bg-white text-neutral-600 border border-neutral-200 hover:bg-neutral-100'
                     }`}
                   >

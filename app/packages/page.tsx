@@ -286,7 +286,7 @@ export default function PackagesPage() {
                   onClick={() => setActiveFilter(f)}
                   className={`px-4 py-2.5 text-xs font-bold rounded-full shrink-0 transition-all duration-200 ${
                     activeFilter === f
-                      ? 'bg-neutral-950 text-white shadow-xs'
+                      ? 'bg-brand text-white shadow-xs'
                       : 'bg-white text-neutral-500 hover:text-neutral-900 border border-neutral-200/80 hover:border-neutral-300'
                   }`}
                 >
@@ -426,7 +426,7 @@ export default function PackagesPage() {
                               </p>
                             </div>
 
-                            <span className="px-4 py-2.5 rounded-xl bg-neutral-950 text-white text-xs font-bold group-hover:bg-neutral-800 transition-colors flex items-center gap-1.5 shrink-0 shadow-xs">
+                            <span className="px-4 py-2.5 rounded-xl bg-brand text-white text-xs font-bold group-hover:bg-brand-dark transition-colors flex items-center gap-1.5 shrink-0 shadow-xs">
                               <span>Detail</span>
                               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                             </span>
@@ -441,7 +441,7 @@ export default function PackagesPage() {
           )}
 
           {/* Guarantee Banner Footer */}
-          <div className="p-8 bg-neutral-950 text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="p-8 bg-brand text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div className="space-y-1 text-center md:text-left">
               <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">NOVA Travel Assurance</span>
               <h3 className="text-xl font-bold">Butuh Rencana Perjalanan Custom Sesuai Keinginan?</h3>

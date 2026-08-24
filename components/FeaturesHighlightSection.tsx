@@ -70,7 +70,7 @@ const FeaturesHighlightSection: React.FC = () => {
             </div>
 
             {/* Floating Card 3: Rating / Reviews */}
-            <div className="absolute bottom-[20%] right-[6%] bg-black text-white rounded-2xl p-4 shadow-xl z-20 -rotate-6 hover:rotate-0 hover:scale-105 transition-all duration-300 flex flex-col gap-0.5">
+            <div className="absolute bottom-[20%] right-[6%] bg-brand text-white rounded-2xl p-4 shadow-xl shadow-brand/30 z-20 -rotate-6 hover:rotate-0 hover:scale-105 transition-all duration-300 flex flex-col gap-0.5">
               <div className="flex items-center gap-1.5">
                 <span className="text-amber-400 text-sm">★</span>
                 <span className="font-bold text-xs">4.95 Rating</span>
@@ -85,7 +85,7 @@ const FeaturesHighlightSection: React.FC = () => {
                 const Icon = h.icon
                 return (
                   <div key={h.title} className="bg-white rounded-2xl p-5 flex items-center gap-4 border border-black/[0.04]">
-                    <div className="w-10 h-10 rounded-xl bg-black flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-brand-dark text-white flex items-center justify-center shrink-0">
                       <Icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -96,7 +96,7 @@ const FeaturesHighlightSection: React.FC = () => {
                 )
               })}
             </div>
-            <a href="/how-it-works" className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-6 py-3 rounded-full hover:bg-neutral-800 transition-colors duration-200">Explore features</a>
+            <a href="/how-it-works" className="inline-flex items-center gap-2 bg-brand text-white text-sm font-medium px-6 py-3 rounded-full hover:bg-brand-dark transition-colors duration-200">Explore features</a>
           </div>
         </div>
       </div>

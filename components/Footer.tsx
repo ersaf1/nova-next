@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
   }
 
   return (
-    <footer className="bg-[#050505] overflow-hidden">
+    <footer className="bg-[#052a2f] overflow-hidden">
       {/* Top section */}
       <div className="max-w-[1600px] mx-auto px-[clamp(20px,4vw,64px)] pt-20 pb-12">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-x-8 gap-y-12">
@@ -42,12 +42,12 @@ const Footer: React.FC = () => {
                 NOVA
               </span>
             </div>
-            <p className="text-white/40 text-sm leading-relaxed max-w-[240px]">
+            <p className="text-white/50 text-sm leading-relaxed max-w-[240px]">
               Platform perjalanan modern untuk pengalaman yang dirancang dengan cermat.
             </p>
             <Link
               href="/search"
-              className="inline-flex items-center gap-2 mt-6 text-sm font-semibold px-5 py-2.5 rounded-full bg-[#175cff] hover:bg-[#0f47cc] text-white transition-colors duration-200"
+              className="inline-flex items-center gap-2 mt-6 text-sm font-semibold px-5 py-2.5 rounded-full bg-brand hover:bg-brand-light text-white transition-colors duration-200 shadow-lg shadow-brand/30"
             >
               Mulai Perjalanan
             </Link>
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
           {/* Nav cols */}
           {Object.entries(links).map(([category, items]) => (
             <div key={category}>
-              <h4 className="text-white/40 text-[10px] font-semibold tracking-[0.14em] uppercase mb-5">
+              <h4 className="text-brand-light/70 text-[10px] font-semibold tracking-[0.14em] uppercase mb-5">
                 {category}
               </h4>
               <ul className="flex flex-col gap-3">
@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-white/50 text-sm hover:text-white transition-colors duration-200"
+                      className="text-white/60 text-sm hover:text-brand-light transition-colors duration-200"
                     >
                       {label}
                     </Link>
@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
       {/* NOVA wordmark — big editorial element */}
       <div className="max-w-[1600px] mx-auto px-[clamp(20px,4vw,64px)] pb-4 overflow-hidden">
         <div
-          className="font-semibold text-white/[0.04] select-none leading-none"
+          className="font-semibold text-white/[0.05] select-none leading-none"
           style={{
             fontSize: 'clamp(8rem, 22vw, 22rem)',
             letterSpacing: '-0.07em',
@@ -92,13 +92,13 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/[0.06]">
+      <div className="border-t border-brand/20">
         <div className="max-w-[1600px] mx-auto px-[clamp(20px,4vw,64px)] py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-white/20 text-xs">© 2026 NOVA. All rights reserved.</p>
+          <p className="text-white/30 text-xs">© 2026 NOVA. All rights reserved.</p>
           <div className="flex items-center gap-5">
-            <Link href="/privacy" className="text-white/20 text-xs hover:text-white/50 transition-colors">Privacy</Link>
-            <Link href="/terms" className="text-white/20 text-xs hover:text-white/50 transition-colors">Terms</Link>
-            <Link href="/cookies" className="text-white/20 text-xs hover:text-white/50 transition-colors">Cookies</Link>
+            <Link href="/privacy" className="text-white/30 text-xs hover:text-brand-light transition-colors">Privacy</Link>
+            <Link href="/terms" className="text-white/30 text-xs hover:text-brand-light transition-colors">Terms</Link>
+            <Link href="/cookies" className="text-white/30 text-xs hover:text-brand-light transition-colors">Cookies</Link>
           </div>
         </div>
       </div>

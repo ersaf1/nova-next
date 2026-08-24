@@ -118,7 +118,7 @@ export default function WishlistPage() {
               </p>
               <Link
                 href="/login?redirect=/wishlist"
-                className="inline-block bg-black text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+                className="inline-block bg-brand text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-brand-dark transition-colors"
               >
                 Sign In Now
               </Link>
@@ -136,7 +136,7 @@ export default function WishlistPage() {
               </p>
               <Link
                 href="/destinations"
-                className="inline-block bg-black text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
+                className="inline-block bg-brand text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-brand-dark transition-colors"
               >
                 Explore Destinations
               </Link>
@@ -197,7 +197,7 @@ export default function WishlistPage() {
                       </Link>
                       <Link
                         href={`/booking?destination=${encodeURIComponent(dest.city)}`}
-                        className="bg-black text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
+                        className="bg-brand text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-brand-dark transition-colors"
                       >
                         Book Now
                       </Link>

@@ -99,7 +99,7 @@ export default function ReviewForm({ entityType, entityId, onSuccess }: ReviewFo
       <button
         type="submit"
         disabled={loading}
-        className="flex items-center gap-2 bg-black hover:bg-neutral-800 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200"
+        className="flex items-center gap-2 bg-black hover:bg-brand-dark disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200"
       >
         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         {loading ? 'Mengirim...' : 'Kirim Ulasan'}

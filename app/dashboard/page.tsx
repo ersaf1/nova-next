@@ -197,7 +197,7 @@ export default function DashboardPage() {
               </p>
               <Link
                 href="/search"
-                className="bg-black text-white text-sm font-medium rounded-full px-5 py-2.5 hover:bg-neutral-800 transition-colors"
+                className="bg-brand text-white text-sm font-medium rounded-full px-5 py-2.5 hover:bg-brand-dark transition-colors"
               >
                 Start Planning
               </Link>

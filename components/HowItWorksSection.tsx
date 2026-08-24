@@ -91,7 +91,7 @@ const HowItWorksSection: React.FC = () => {
         {/* Maximal Editorial Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-8 border-b border-neutral-200/80">
           <div className="space-y-4 max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-neutral-950 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-xs">
+            <div className="inline-flex items-center gap-2 bg-brand text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-xs">
               <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
               <span>Seamless AI Travel Experience</span>
             </div>
@@ -106,7 +106,7 @@ const HowItWorksSection: React.FC = () => {
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => router.push('/ai-planner')}
-              className="bg-neutral-950 text-white text-xs font-bold px-6 py-3.5 rounded-2xl hover:bg-neutral-800 transition-all shadow-md flex items-center gap-2"
+              className="bg-brand text-white text-xs font-bold px-6 py-3.5 rounded-2xl hover:bg-brand-dark transition-all shadow-md flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-amber-400" />
               <span>Coba AI Planner</span>
@@ -129,7 +129,7 @@ const HowItWorksSection: React.FC = () => {
                   onClick={() => setActiveStep(index)}
                   className={`p-6 rounded-3xl cursor-pointer transition-all duration-500 border relative overflow-hidden group ${
                     isActive
-                      ? 'bg-white border-neutral-950 shadow-xl scale-[1.02] ring-1 ring-neutral-950/10'
+                      ? 'bg-white border-brand-dark shadow-xl scale-[1.02] ring-1 ring-neutral-950/10'
                       : 'bg-white/60 hover:bg-white border-neutral-200/80 hover:border-neutral-300'
                   }`}
                 >
@@ -153,7 +153,7 @@ const HowItWorksSection: React.FC = () => {
                     </div>
 
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all ${
-                      isActive ? 'bg-neutral-950 text-white shadow-xs' : 'bg-neutral-100 text-neutral-500 group-hover:bg-neutral-200'
+                      isActive ? 'bg-brand text-white shadow-xs' : 'bg-neutral-100 text-neutral-500 group-hover:bg-neutral-200'
                     }`}>
                       <StepIcon className="w-4.5 h-4.5" />
                     </div>
@@ -173,7 +173,7 @@ const HowItWorksSection: React.FC = () => {
           </div>
 
           {/* Right Column: Animated Live Visual Showcase Card (7 cols) */}
-          <div className="lg:col-span-7 bg-neutral-950 rounded-3xl overflow-hidden relative min-h-[480px] lg:min-h-[560px] flex flex-col justify-between p-8 sm:p-10 shadow-2xl text-white group">
+          <div className="lg:col-span-7 bg-gradient-to-br from-[#052a2f] to-[#08454d] rounded-3xl overflow-hidden relative min-h-[480px] lg:min-h-[560px] flex flex-col justify-between p-8 sm:p-10 shadow-2xl text-white group">
             {/* Background Image with Smooth Transitions */}
             <img
               key={current.number}

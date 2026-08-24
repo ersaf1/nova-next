@@ -81,7 +81,7 @@ export default function FAQPage() {
             <p className="text-black/40 text-sm mb-6">Can't find the answer you're looking for? Reach out to our concierge team.</p>
             <a
               href="mailto:support@nova.travel"
-              className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-6 py-3 rounded-full hover:bg-black/80 transition-colors"
+              className="inline-flex items-center gap-2 bg-brand text-white text-sm font-medium px-6 py-3 rounded-full hover:bg-brand-dark transition-colors"
             >
               Contact Support
             </a>

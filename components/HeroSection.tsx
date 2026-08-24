@@ -231,7 +231,7 @@ const HeroSection: React.FC = () => {
           <div ref={searchRef} className="flex flex-wrap items-center gap-3">
             <Link
               href="/search"
-              className="inline-flex items-center gap-2 bg-[#175cff] hover:bg-[#0f47cc] text-white text-sm font-semibold px-7 py-3.5 rounded-full transition-all duration-200"
+              className="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-7 py-3.5 rounded-full transition-all duration-200"
             >
               Explore Packages
               <ArrowRight className="w-4 h-4" />

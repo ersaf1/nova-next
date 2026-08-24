@@ -163,7 +163,7 @@ function LoginForm() {
                   onClick={() => switchTab(t)}
                   className={`flex-1 py-2 rounded-full text-sm font-medium transition-colors ${
                     tab === t
-                      ? 'bg-black text-white'
+                      ? 'bg-brand text-white'
                       : 'text-neutral-500 hover:text-black'
                   }`}
                 >
@@ -287,7 +287,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 w-full bg-black text-white rounded-full py-3 text-sm font-medium hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="mt-6 w-full bg-brand text-white rounded-full py-3 text-sm font-medium hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               {loading
                 ? tab === 'signin' ? 'Signing in…' : 'Creating account…'

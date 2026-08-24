@@ -46,7 +46,7 @@ const FAQSection: React.FC = () => {
             <p data-gsap="fade-up" className="text-black/40 text-xs font-medium tracking-widest uppercase mb-8">Got questions?</p>
             <h2 ref={headingRef} data-gsap="fade-up" className="heading-animate text-black text-4xl md:text-5xl font-medium leading-tight mb-10" style={{ letterSpacing: '-0.03em' }}>Frequently<br />asked questions.</h2>
             <p data-gsap="fade-up" className="text-black/50 text-base leading-relaxed mb-12 max-w-sm">Everything you need to know about booking with NOVA. Can&apos;t find an answer? Our concierge team is available 24/7.</p>
-            <a href="mailto:support@nova.travel" className="inline-flex items-center gap-3 bg-black text-white text-sm font-medium pl-6 pr-2 py-2 rounded-full hover:bg-gray-800 transition-colors duration-200">
+            <a href="mailto:support@nova.travel" className="inline-flex items-center gap-3 bg-brand text-white text-sm font-medium pl-6 pr-2 py-2 rounded-full hover:bg-brand-dark transition-colors duration-200">
               Talk to support
               <span className="bg-white rounded-full p-2"><ChevronDown className="w-4 h-4 text-black rotate-[-90deg]" /></span>
             </a>

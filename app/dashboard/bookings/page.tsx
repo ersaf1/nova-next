@@ -86,7 +86,7 @@ export default function DashboardBookingsPage() {
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
-                  className={`text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition-all ${filter === f ? 'bg-black text-white' : 'bg-white border border-black/10 text-neutral-500 hover:border-black/20'}`}
+                  className={`text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition-all ${filter === f ? 'bg-brand text-white' : 'bg-white border border-black/10 text-neutral-500 hover:border-black/20'}`}
                 >
                   {f === 'all' ? 'Semua' : f === 'active' ? 'Aktif' : f === 'completed' ? 'Selesai' : 'Dibatalkan'}
                 </button>

@@ -270,7 +270,7 @@ const DestinationsSection: React.FC = () => {
             </div>
 
           <div className="mt-10 flex justify-center">
-            <Link href="/destinations" className="inline-flex items-center gap-2 bg-black text-white text-sm font-medium px-7 py-3.5 rounded-full hover:bg-neutral-800 transition-colors duration-200">
+            <Link href="/destinations" className="inline-flex items-center gap-2 bg-brand text-white text-sm font-medium px-7 py-3.5 rounded-full hover:bg-brand-dark transition-colors duration-200">
               <span>All destinations</span>
               <ArrowRight className="w-4 h-4" />
             </Link>

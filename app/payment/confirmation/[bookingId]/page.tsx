@@ -42,7 +42,7 @@ function QRPlaceholder({ seed }: { seed: string }) {
       {cells.map((filled, i) => (
         <div
           key={i}
-          className={`w-3 h-3 rounded-[1px] ${filled ? 'bg-black' : 'bg-white'}`}
+          className={`w-3 h-3 rounded-[1px] ${filled ? 'bg-brand' : 'bg-white'}`}
         />
       ))}
     </div>
@@ -283,7 +283,7 @@ export default function ConfirmationPage() {
           )}
           <button
             onClick={() => window.print()}
-            className="w-full bg-black text-white rounded-full px-6 py-3 font-medium hover:bg-black/80 transition-colors text-sm"
+            className="w-full bg-brand text-white rounded-full px-6 py-3 font-medium hover:bg-brand-dark transition-colors text-sm"
           >
             Print E-Ticket
           </button>

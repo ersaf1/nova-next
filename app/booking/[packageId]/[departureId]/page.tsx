@@ -132,7 +132,7 @@ export default function BookingFlowPage({
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
           <p className="text-lg font-semibold text-black mb-2">Terjadi Kesalahan</p>
           <p className="text-sm text-neutral-500 mb-6">{error ?? 'Paket atau jadwal tidak ditemukan'}</p>
-          <button onClick={() => router.back()} className="bg-black text-white px-6 py-2.5 rounded-xl text-sm font-medium">
+          <button onClick={() => router.back()} className="bg-brand text-white px-6 py-2.5 rounded-xl text-sm font-medium">
             Kembali
           </button>
         </div>

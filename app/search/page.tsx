@@ -105,7 +105,7 @@ function PackageCard({ pkg }: { pkg: TravelPackage }) {
               </div>
             </div>
           </div>
-          <span className="text-sm font-medium bg-black text-white px-4 py-2 rounded-full hover:bg-black/80 transition-colors duration-200 shrink-0">
+          <span className="text-sm font-medium bg-brand text-white px-4 py-2 rounded-full hover:bg-brand-dark transition-colors duration-200 shrink-0">
             Lihat Detail
           </span>
         </div>
@@ -146,7 +146,7 @@ function DestinationCard({ dest }: { dest: Destination }) {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-lg font-bold text-black" style={{ letterSpacing: '-0.02em' }}>{dest.price}</span>
-          <span className="text-sm font-medium bg-black text-white px-4 py-2 rounded-full">Explore</span>
+          <span className="text-sm font-medium bg-brand text-white px-4 py-2 rounded-full">Explore</span>
         </div>
       </div>
     </Link>
@@ -372,7 +372,7 @@ function SearchContent() {
           {/* Disabled tabs — Flights, Hotels, Experiences */}
           <div className="flex items-center gap-2 mt-4 flex-wrap">
             {/* Active tab: Packages */}
-            <span className="text-sm font-medium px-4 py-1.5 rounded-full bg-black text-white">
+            <span className="text-sm font-medium px-4 py-1.5 rounded-full bg-brand text-white">
               Paket Wisata
             </span>
             {DISABLED_TABS.map((tab) => (
@@ -499,7 +499,7 @@ function SearchContent() {
                         onClick={() => setParams({ mode: mode === 'All' ? null : mode.toLowerCase() })}
                         className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-200 ${
                           (mode === 'All' && selectedMode === 'All') || selectedMode === mode.toLowerCase()
-                            ? 'bg-black text-white border-black'
+                            ? 'bg-brand text-white border-black'
                             : 'bg-white text-black/60 border-black/10 hover:border-black/30 hover:text-black'
                         }`}
                       >
@@ -527,7 +527,7 @@ function SearchContent() {
               <div className="flex items-center gap-3 mb-6 lg:hidden">
                 <button
                   onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="flex items-center gap-2 bg-black text-white text-sm px-4 py-2 rounded-full"
+                  className="flex items-center gap-2 bg-brand text-white text-sm px-4 py-2 rounded-full"
                 >
                   <SlidersHorizontal size={14} />
                   Filters
@@ -539,7 +539,7 @@ function SearchContent() {
                       onClick={() => setParams({ category: selectedCategory === cat ? null : cat })}
                       className={`text-xs px-3 py-1.5 rounded-full whitespace-nowrap border transition-colors duration-200 ${
                         selectedCategory === cat
-                          ? 'bg-black text-white border-black'
+                          ? 'bg-brand text-white border-black'
                           : 'bg-white text-black/60 border-black/10 hover:border-black/30'
                       }`}
                     >
@@ -559,7 +559,7 @@ function SearchContent() {
                     onClick={() => setParams({ category: cat === 'All' ? null : cat })}
                     className={`text-sm px-4 py-1.5 rounded-full border transition-all duration-200 ${
                       selectedCategory === cat
-                        ? 'bg-black text-white border-black'
+                        ? 'bg-brand text-white border-black'
                         : 'bg-white text-black/60 border-black/10 hover:border-black/40'
                     }`}
                   >
@@ -575,7 +575,7 @@ function SearchContent() {
                 {activeChips.map((chip) => (
                   <span
                     key={chip.label}
-                    className="flex items-center gap-1.5 text-xs bg-black text-white px-3 py-1.5 rounded-full"
+                    className="flex items-center gap-1.5 text-xs bg-brand text-white px-3 py-1.5 rounded-full"
                   >
                     {chip.label}
                     <button
@@ -657,7 +657,7 @@ function SearchContent() {
                 </p>
                 <button
                   onClick={clearAllFilters}
-                  className="bg-black text-white text-sm px-6 py-2.5 rounded-full hover:bg-black/80 transition-colors duration-200"
+                  className="bg-brand text-white text-sm px-6 py-2.5 rounded-full hover:bg-brand-dark transition-colors duration-200"
                 >
                   Hapus semua filter
                 </button>
@@ -673,7 +673,7 @@ function SearchContent() {
                   <div className="flex justify-center mt-8">
                     <button
                       onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                      className="bg-white border border-black/10 text-black text-sm px-8 py-3 rounded-full hover:bg-black hover:text-white hover:border-black transition-all duration-200"
+                      className="bg-white border border-black/10 text-black text-sm px-8 py-3 rounded-full hover:bg-brand hover:text-white hover:border-brand transition-all duration-200"
                     >
                       Muat lebih banyak
                     </button>

@@ -15,7 +15,7 @@ export default async function PromoPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-[#052a2f] text-white">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 py-16">
         <div className="mb-12 text-center">

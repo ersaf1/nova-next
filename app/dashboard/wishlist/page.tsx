@@ -85,7 +85,7 @@ export default function DashboardWishlistPage() {
                 <Heart className="w-10 h-10 text-neutral-200 mx-auto mb-3" />
                 <p className="font-semibold text-black mb-1">Wishlist masih kosong</p>
                 <p className="text-sm text-neutral-400 mb-6">Temukan paket wisata yang kamu suka dan simpan ke sini.</p>
-                <Link href="/search" className="bg-black text-white text-sm font-medium px-6 py-2.5 rounded-xl hover:bg-neutral-800 transition-colors">
+                <Link href="/search" className="bg-brand text-white text-sm font-medium px-6 py-2.5 rounded-xl hover:bg-brand-dark transition-colors">
                   Cari Paket
                 </Link>
               </div>
@@ -125,7 +125,7 @@ export default function DashboardWishlistPage() {
                           </Link>
                           <Link
                             href={`/packages/${pkg.slug ?? pkg.id}`}
-                            className="flex-1 text-center text-xs font-semibold bg-black text-white px-3 py-2 rounded-xl hover:bg-neutral-800 transition-colors"
+                            className="flex-1 text-center text-xs font-semibold bg-brand text-white px-3 py-2 rounded-xl hover:bg-brand-dark transition-colors"
                           >
                             Booking
                           </Link>

@@ -70,14 +70,14 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className="min-h-screen bg-[#052a2f] flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-white/30 animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-[#052a2f] text-white">
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Header */}
@@ -144,9 +144,9 @@ export default function ProfilePage() {
                 onChange={(e) => setTravelStyle(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500/50 transition-colors appearance-none"
               >
-                <option value="" className="bg-[#0a0a0a]">Pilih gaya perjalanan</option>
+                <option value="" className="bg-[#052a2f]">Pilih gaya perjalanan</option>
                 {TRAVEL_STYLES.map((s) => (
-                  <option key={s} value={s} className="bg-[#0a0a0a]">{s}</option>
+                  <option key={s} value={s} className="bg-[#052a2f]">{s}</option>
                 ))}
               </select>
             </div>

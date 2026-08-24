@@ -18,7 +18,7 @@ const MeetNovaSection: React.FC = () => {
             <h2 className="text-black text-4xl md:text-5xl font-bold leading-tight" style={{ letterSpacing: '-0.04em' }}>Meet NOVA.</h2>
             <div className="flex items-center gap-4">
               <p className="text-black/50 text-base max-w-xs leading-relaxed hidden md:block">A global travel platform for extraordinary destinations.</p>
-              <a href="/destinations" className="inline-flex items-center gap-3 bg-black text-white text-sm font-semibold pl-6 pr-2 py-2 rounded-full hover:bg-neutral-800 transition-colors duration-300 shrink-0">
+              <a href="/destinations" className="inline-flex items-center gap-3 bg-brand text-white text-sm font-semibold pl-6 pr-2 py-2 rounded-full hover:bg-brand-dark transition-colors duration-300 shrink-0">
                 Discover
                 <span className="bg-white rounded-full p-2.5"><ArrowRight className="w-3.5 h-3.5 text-black" /></span>
               </a>

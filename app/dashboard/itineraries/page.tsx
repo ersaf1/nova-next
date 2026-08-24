@@ -124,7 +124,7 @@ export default function DashboardItinerariesPage() {
                 <Map className="w-10 h-10 text-neutral-200 mx-auto mb-3" />
                 <p className="font-semibold text-black mb-1">Belum ada itinerary tersimpan</p>
                 <p className="text-sm text-neutral-400 mb-6">Buat itinerary dengan AI dan simpan untuk digunakan nanti.</p>
-                <Link href="/itinerary" className="bg-black text-white text-sm font-medium px-6 py-2.5 rounded-xl hover:bg-neutral-800 transition-colors">
+                <Link href="/itinerary" className="bg-brand text-white text-sm font-medium px-6 py-2.5 rounded-xl hover:bg-brand-dark transition-colors">
                   Buat Itinerary
                 </Link>
               </div>
@@ -144,7 +144,7 @@ export default function DashboardItinerariesPage() {
                               autoFocus
                               className="flex-1 border border-black/10 rounded-lg px-3 py-1.5 text-sm font-semibold outline-none focus:border-black"
                             />
-                            <button onClick={() => handleRename(item.id)} className="text-xs bg-black text-white px-3 py-1.5 rounded-lg">Simpan</button>
+                            <button onClick={() => handleRename(item.id)} className="text-xs bg-brand text-white px-3 py-1.5 rounded-lg">Simpan</button>
                             <button onClick={() => { setEditingId(null); setEditTitle('') }} className="text-xs border border-black/10 px-3 py-1.5 rounded-lg">Batal</button>
                           </div>
                         ) : (
@@ -159,7 +159,7 @@ export default function DashboardItinerariesPage() {
                           <span>·</span>
                           <span>{formatDate(item.createdAt)}</span>
                           {item.visibility === 'shared' && (
-                            <span className="text-[#175cff] font-medium">Dibagikan</span>
+                            <span className="text-brand-dark font-medium">Dibagikan</span>
                           )}
                         </div>
                       </div>
@@ -175,7 +175,7 @@ export default function DashboardItinerariesPage() {
                         <button
                           onClick={() => handleShare(item)}
                           title={copied === item.id ? 'Link disalin!' : 'Bagikan'}
-                          className="w-8 h-8 rounded-xl flex items-center justify-center text-neutral-400 hover:text-[#175cff] hover:bg-blue-50 transition-colors"
+                          className="w-8 h-8 rounded-xl flex items-center justify-center text-neutral-400 hover:text-brand-dark hover:bg-brand-faint transition-colors"
                         >
                           {copied === item.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Share2 className="w-3.5 h-3.5" />}
                         </button>
@@ -200,7 +200,7 @@ export default function DashboardItinerariesPage() {
                     <div className="mt-3 pt-3 border-t border-black/[0.04] flex items-center justify-between">
                       <Link
                         href={`/search?q=${encodeURIComponent(item.destination)}`}
-                        className="text-xs font-semibold text-[#175cff] hover:text-[#0f47cc] transition-colors"
+                        className="text-xs font-semibold text-brand-dark hover:text-brand-darker transition-colors"
                       >
                         Cari Paket yang Sesuai →
                       </Link>

@@ -138,7 +138,7 @@ function DayAccordionItem({
   return (
     <div
       className={`rounded-2xl overflow-hidden border transition-all duration-300 ${
-        isActive ? 'border-neutral-950/20 bg-white shadow-md ring-2 ring-neutral-950/5' : 'border-neutral-200/80 bg-white/80 hover:bg-white'
+        isActive ? 'border-brand-dark/20 bg-white shadow-md ring-2 ring-neutral-950/5' : 'border-neutral-200/80 bg-white/80 hover:bg-white'
       }`}
     >
       <button
@@ -149,7 +149,7 @@ function DayAccordionItem({
         <div className="flex items-center gap-3.5 sm:gap-4">
           <span
             className={`w-9 h-9 rounded-xl text-xs font-jakarta font-extrabold flex items-center justify-center shrink-0 transition-all ${
-              isActive ? 'bg-neutral-950 text-white shadow-xs scale-105' : 'bg-neutral-100 text-neutral-700'
+              isActive ? 'bg-brand text-white shadow-xs scale-105' : 'bg-neutral-100 text-neutral-700'
             }`}
           >
             H-{day.day}
@@ -168,7 +168,7 @@ function DayAccordionItem({
           <ChevronDown
             size={16}
             className={`text-neutral-400 shrink-0 transition-transform duration-300 ${
-              isActive ? 'rotate-180 text-neutral-950' : ''
+              isActive ? 'rotate-180 text-brand-dark' : ''
             }`}
           />
         </div>
@@ -492,7 +492,7 @@ function FinalBossAiPlannerInner() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-neutral-900 font-sans selection:bg-neutral-950 selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] text-neutral-900 font-sans selection:bg-brand selection:text-white">
       <div className="pt-24 pb-24 px-4 sm:px-6 max-w-[90rem] mx-auto space-y-12">
         {/* ─── Hero Header & Command Bar ─── */}
         <section className="text-center space-y-5 max-w-4xl mx-auto pt-2">
@@ -519,7 +519,7 @@ function FinalBossAiPlannerInner() {
                   setDestination(dest.query)
                   handleGenerate(dest.query)
                 }}
-                className="text-xs font-jakarta font-bold px-3 py-1.5 rounded-full bg-white hover:bg-neutral-950 hover:text-white border border-neutral-200/90 text-neutral-800 transition-all active:scale-95 shadow-2xs flex items-center gap-1.5"
+                className="text-xs font-jakarta font-bold px-3 py-1.5 rounded-full bg-white hover:bg-brand hover:text-white border border-neutral-200/90 text-neutral-800 transition-all active:scale-95 shadow-2xs flex items-center gap-1.5"
               >
                 <span>{dest.flag}</span>
                 <span>{dest.name}</span>
@@ -534,7 +534,7 @@ function FinalBossAiPlannerInner() {
             /* Loading State */
             <div className="py-16 flex flex-col items-center text-center space-y-6">
               <div className="relative">
-                <div className="w-16 h-16 rounded-3xl bg-neutral-950 flex items-center justify-center text-amber-400 shadow-xl animate-bounce">
+                <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center text-white shadow-xl shadow-brand/40 animate-bounce">
                   <Sparkles size={24} />
                 </div>
                 <div className="absolute -inset-2 rounded-3xl border-2 border-amber-400/40 animate-ping pointer-events-none" />
@@ -598,7 +598,7 @@ function FinalBossAiPlannerInner() {
                         onClick={() => setSelectedVibe(v.id)}
                         className={`p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer active:scale-95 flex flex-col justify-between ${
                           isSelected
-                            ? 'bg-neutral-950 text-white border-neutral-950 shadow-md ring-2 ring-neutral-950/20'
+                            ? 'bg-brand text-white border-brand-dark shadow-md ring-2 ring-brand/25'
                             : 'bg-neutral-50/80 hover:bg-neutral-100/80 border-neutral-200/80 text-neutral-800'
                         }`}
                       >
@@ -652,7 +652,7 @@ function FinalBossAiPlannerInner() {
                     <button
                       type="button"
                       onClick={() => setTravelers(Math.max(1, travelers - 1))}
-                      className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-950 hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors"
+                      className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-brand hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors"
                     >
                       −
                     </button>
@@ -660,7 +660,7 @@ function FinalBossAiPlannerInner() {
                     <button
                       type="button"
                       onClick={() => setTravelers(Math.min(20, travelers + 1))}
-                      className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-950 hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors"
+                      className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-brand hover:text-white border border-neutral-200 flex items-center justify-center text-neutral-900 font-bold text-xs transition-colors"
                     >
                       +
                     </button>
@@ -690,7 +690,7 @@ function FinalBossAiPlannerInner() {
               <button
                 onClick={() => handleGenerate()}
                 disabled={loading || !destination.trim()}
-                className="w-full bg-neutral-950 text-white text-sm sm:text-base font-jakarta font-extrabold py-4 sm:py-4.5 rounded-2xl hover:bg-black transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl shadow-neutral-950/15 active:scale-[0.99] border border-neutral-800 cursor-pointer"
+                className="w-full bg-brand text-white text-sm sm:text-base font-jakarta font-extrabold py-4 sm:py-4.5 rounded-2xl hover:bg-brand-dark transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl shadow-brand/30 active:scale-[0.99] border border-neutral-800 cursor-pointer"
               >
                 <Sparkles size={18} className="text-amber-400" />
                 <span>Rancang Itinerary Final Boss Sekarang</span>
@@ -990,7 +990,7 @@ function FinalBossAiPlannerInner() {
                           </span>
                         </div>
                       ) : (
-                        <div className="p-4 bg-gradient-to-r from-neutral-900 to-neutral-800 border-b border-neutral-700 flex items-center justify-between text-white">
+                        <div className="p-4 bg-gradient-to-r from-[#052a2f] to-[#08454d] border-b border-white/10 flex items-center justify-between text-white">
                           <span className="text-xs font-jakarta font-bold leading-tight truncate">
                             {item.name}
                           </span>

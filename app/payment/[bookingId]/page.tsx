@@ -116,7 +116,7 @@ export default function PaymentPage() {
       <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
         <div className="text-center">
           <p className="text-sm text-black/40 mb-4">Booking tidak ditemukan.</p>
-          <button onClick={() => router.push('/')} className="bg-black text-white rounded-full px-6 py-3 text-sm font-medium hover:bg-black/80 transition-colors">
+          <button onClick={() => router.push('/')} className="bg-brand text-white rounded-full px-6 py-3 text-sm font-medium hover:bg-brand-dark transition-colors">
             Kembali ke Beranda
           </button>
         </div>
@@ -226,7 +226,7 @@ export default function PaymentPage() {
                   className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all duration-200 text-left ${
                     isSelected
                       ? `${method.border} ${method.bg}`
-                      : 'border-black/[0.06] hover:border-black/20 hover:bg-black/[0.02]'
+                      : 'border-brand/20 hover:border-brand/40 hover:bg-brand/[0.04]'
                   }`}
                 >
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? method.bg : 'bg-black/[0.04]'}`}>
@@ -257,7 +257,7 @@ export default function PaymentPage() {
         <div className="space-y-3">
           <button
             onClick={handlePay}
-            className="w-full bg-black text-white rounded-full px-6 py-3.5 font-semibold hover:bg-black/80 transition-colors text-sm flex items-center justify-center gap-2"
+            className="w-full bg-brand text-white rounded-full px-6 py-3.5 font-semibold hover:bg-brand-dark transition-colors text-sm flex items-center justify-center gap-2"
           >
             <Lock className="w-3.5 h-3.5" />
             Bayar {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalAmount)}

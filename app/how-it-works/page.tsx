@@ -92,7 +92,7 @@ export default function HowItWorksPage() {
 
           {/* Maximal Editorial Hero Header */}
           <div className="pt-12 pb-6 border-b border-neutral-200/80 text-center max-w-4xl mx-auto space-y-4">
-            <div className="inline-flex items-center gap-2 bg-neutral-950 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-2xs">
+            <div className="inline-flex items-center gap-2 bg-brand text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>Step-by-Step Travel Guide</span>
             </div>
@@ -171,7 +171,7 @@ export default function HowItWorksPage() {
           </div>
 
           {/* Interactive Feature Sandbox Showcase */}
-          <div className="bg-neutral-950 text-white rounded-3xl p-8 sm:p-12 space-y-8 shadow-2xl overflow-hidden relative">
+          <div className="bg-brand text-white rounded-3xl p-8 sm:p-12 space-y-8 shadow-2xl overflow-hidden relative">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/15 pb-6">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block mb-1">
@@ -286,7 +286,7 @@ export default function HowItWorksPage() {
                       className="w-full p-5 text-left font-bold text-neutral-900 text-sm flex items-center justify-between gap-4 hover:bg-neutral-50"
                     >
                       <span>{faq.question}</span>
-                      <ChevronDown className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-neutral-950' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-brand-dark' : ''}`} />
                     </button>
 
                     {isOpen && (
@@ -301,7 +301,7 @@ export default function HowItWorksPage() {
           </div>
 
           {/* Conversion CTA Footer Banner */}
-          <div className="p-8 sm:p-12 bg-neutral-950 text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+          <div className="p-8 sm:p-12 bg-brand text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
             <div className="space-y-2 text-center md:text-left">
               <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400">Siap Memulai Liburan?</span>
               <h3 className="text-2xl font-extrabold tracking-tight">Mulai Perjalanan Anda Bersama NOVA Today</h3>

@@ -146,7 +146,7 @@ export default function PaymentPendingPage() {
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
           <p className="text-lg font-semibold text-black mb-2">Booking Tidak Ditemukan</p>
           <p className="text-sm text-neutral-500 mb-6">{error}</p>
-          <Link href="/dashboard" className="bg-black text-white px-6 py-2.5 rounded-xl text-sm font-medium">
+          <Link href="/dashboard" className="bg-brand text-white px-6 py-2.5 rounded-xl text-sm font-medium">
             Ke Dashboard
           </Link>
         </div>
@@ -214,7 +214,7 @@ export default function PaymentPendingPage() {
           <button
             onClick={handlePay}
             disabled={paying}
-            className="w-full bg-black text-white font-semibold py-3.5 rounded-xl hover:bg-neutral-800 disabled:opacity-50 transition-colors text-sm"
+            className="w-full bg-brand text-white font-semibold py-3.5 rounded-xl hover:bg-brand-dark disabled:opacity-50 transition-colors text-sm"
           >
             {paying ? 'Memuat pembayaran…' : 'Lanjutkan Pembayaran'}
           </button>

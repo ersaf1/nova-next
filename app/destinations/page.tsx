@@ -177,7 +177,7 @@ export default function DestinationsPage() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-4 py-2.5 text-xs font-semibold rounded-full shrink-0 transition-all duration-200 ${
                     selectedCategory === cat
-                      ? 'bg-black text-white shadow-xs'
+                      ? 'bg-brand text-white shadow-xs'
                       : 'bg-white text-black/50 hover:text-black border border-black/[0.08]'
                   }`}
                 >
@@ -282,7 +282,7 @@ export default function DestinationsPage() {
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-black/10 bg-white hover:bg-black hover:text-white text-black text-xs font-semibold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-brand/25 bg-white hover:bg-brand hover:text-white text-black text-xs font-semibold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     <span>Halaman Sebelumnya</span>
@@ -297,7 +297,7 @@ export default function DestinationsPage() {
                             onClick={() => handlePageChange(p)}
                             className={`w-9 h-9 rounded-full text-xs font-bold transition-all ${
                               currentPage === p
-                                ? 'bg-black text-white shadow-xs scale-105'
+                                ? 'bg-brand text-white shadow-xs scale-105'
                                 : 'bg-white text-black/60 hover:text-black border border-black/10 hover:border-black/30'
                             }`}
                           >
@@ -313,7 +313,7 @@ export default function DestinationsPage() {
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-black/10 bg-white hover:bg-black hover:text-white text-black text-xs font-semibold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-brand/25 bg-white hover:bg-brand hover:text-white text-black text-xs font-semibold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
                   >
                     <span>Halaman Selanjutnya</span>
                     <ChevronRight className="w-4 h-4" />

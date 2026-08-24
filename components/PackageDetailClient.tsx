@@ -55,7 +55,7 @@ export default function PackageDetailClient({ packageId, departures, basePrice }
                   className={[
                     'w-full text-left rounded-xl border px-4 py-3 transition-all duration-150',
                     isSelected
-                      ? 'border-black bg-black/[0.03] ring-1 ring-black'
+                      ? 'border-brand bg-brand/[0.04] ring-1 ring-brand'
                       : 'border-black/[0.08] hover:border-black/20',
                     !isSelectable ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
                   ].join(' ')}
@@ -105,7 +105,7 @@ export default function PackageDetailClient({ packageId, departures, basePrice }
       {selected ? (
         <Link
           href={bookingHref}
-          className="block w-full text-center bg-black hover:bg-neutral-800 active:bg-neutral-950 text-white font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
+          className="block w-full text-center bg-brand hover:bg-brand-dark active:bg-brand-darker text-white font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
         >
           Booking Sekarang
         </Link>

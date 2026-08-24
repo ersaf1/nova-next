@@ -69,7 +69,7 @@ export default function BookingStepPayment({ bookingId, bookingCode, totalAmount
         <button
           onClick={handlePay}
           disabled={loading}
-          className="w-full bg-black hover:bg-neutral-800 text-white font-semibold py-3.5 rounded-xl transition-colors text-sm disabled:opacity-50"
+          className="w-full bg-black hover:bg-brand-dark text-white font-semibold py-3.5 rounded-xl transition-colors text-sm disabled:opacity-50"
         >
           {loading ? 'Memproses…' : 'Bayar Sekarang'}
         </button>

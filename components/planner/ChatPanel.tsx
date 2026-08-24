@@ -155,7 +155,7 @@ export default function ChatPanel({ onPlacesFound, activeLocation, setActiveLoca
   return (
     <div className="flex flex-col h-full min-h-0 relative">
       {/* Header Actions */}
-      <div className="px-6 py-2 border-b border-white/[0.06] flex items-center justify-between gap-2 shrink-0 bg-neutral-950/40">
+      <div className="px-6 py-2 border-b border-white/[0.06] flex items-center justify-between gap-2 shrink-0 bg-[#052a2f]/45">
         <div className="flex items-center gap-1.5 text-xs text-white/50 font-medium">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           <span>Gemini 2.0 AI Agent</span>

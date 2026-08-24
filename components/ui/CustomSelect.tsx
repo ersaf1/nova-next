@@ -119,7 +119,7 @@ export default function CustomSelect({
                   }}
                   className={`w-full text-left px-3 py-2 rounded-xl text-xs font-jakarta flex items-center justify-between gap-2.5 transition-all duration-150 cursor-pointer active:scale-[0.99] ${
                     isSelected
-                      ? 'bg-neutral-950 text-white font-bold shadow-2xs'
+                      ? 'bg-brand text-white font-bold shadow-2xs'
                       : 'text-neutral-700 hover:bg-neutral-100/80 hover:text-neutral-950 font-medium'
                   }`}
                 >

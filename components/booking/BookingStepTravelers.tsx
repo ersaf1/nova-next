@@ -112,7 +112,7 @@ export default function BookingStepTravelers({ count, travelers, onChange, onNex
         <button
           onClick={handleNext}
           disabled={!rows.every(t => t.fullName.trim().length >= 2)}
-          className="flex-1 bg-black text-white font-semibold py-3.5 rounded-xl hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-sm"
+          className="flex-1 bg-brand text-white font-semibold py-3.5 rounded-xl hover:bg-brand-dark disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-sm"
         >
           Lanjut ke Review
         </button>

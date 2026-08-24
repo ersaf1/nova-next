@@ -107,7 +107,7 @@ function RefundModal({
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="flex-1 bg-black text-white text-sm font-semibold py-3 rounded-xl hover:bg-neutral-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 bg-brand text-white text-sm font-semibold py-3 rounded-xl hover:bg-brand-dark transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {submitting ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -167,7 +167,7 @@ export default function BookingDetailPage() {
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
         <p className="font-semibold text-black mb-2">Booking Tidak Ditemukan</p>
         <p className="text-sm text-neutral-400 mb-6">{error}</p>
-        <Link href="/dashboard/bookings" className="bg-black text-white px-6 py-2.5 rounded-xl text-sm">Kembali</Link>
+        <Link href="/dashboard/bookings" className="bg-brand text-white px-6 py-2.5 rounded-xl text-sm">Kembali</Link>
       </div>
     </div>
   )
@@ -278,7 +278,7 @@ export default function BookingDetailPage() {
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
               {needsPayment && (
-                <Link href={`/payment/pending/${booking.id}`} className="bg-black text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-neutral-800 transition-colors">
+                <Link href={`/payment/pending/${booking.id}`} className="bg-brand text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-brand-dark transition-colors">
                   Lanjutkan Pembayaran
                 </Link>
               )}

@@ -116,7 +116,7 @@ export default function HowItWorksAdmin() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => saveStep(step)} disabled={saving === step.id} className="bg-black text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-colors">
+              <button onClick={() => saveStep(step)} disabled={saving === step.id} className="bg-brand text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-brand-dark disabled:opacity-50 transition-colors">
                 {saving === step.id ? 'Saving...' : 'Save'}
               </button>
               {success === step.id && <span className="text-emerald-600 text-xs font-medium">Saved!</span>}
@@ -142,7 +142,7 @@ export default function HowItWorksAdmin() {
             </select>
           </div>
         </div>
-        <button onClick={addStep} disabled={adding || !newForm.title} className="bg-black text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-colors w-fit">
+        <button onClick={addStep} disabled={adding || !newForm.title} className="bg-brand text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-brand-dark disabled:opacity-50 transition-colors w-fit">
           {adding ? 'Adding...' : '+ Add Step'}
         </button>
       </div>

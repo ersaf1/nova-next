@@ -46,7 +46,7 @@ export default function DestinationsAdmin() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div><h1 className="text-2xl font-bold text-gray-900 mb-1">Destinations</h1><p className="text-gray-500 text-sm">{items.length} destinations</p></div>
-        <button onClick={openCreate} className="bg-black text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-gray-800 transition-colors">+ Add Destination</button>
+        <button onClick={openCreate} className="bg-brand text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-brand-dark transition-colors">+ Add Destination</button>
       </div>
       {loading ? <p className="text-gray-400 text-sm">Loading...</p> : (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -91,7 +91,7 @@ export default function DestinationsAdmin() {
                 <input name="rating" type="number" step="0.1" min="0" max="5" value={form.rating} onChange={handleChange} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" />
               </div>
               <div className="flex gap-3 pt-2">
-                <button type="submit" disabled={saving} className="flex-1 bg-black text-white text-sm font-medium py-2.5 rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-colors">{saving ? 'Saving...' : editing ? 'Save Changes' : 'Add Destination'}</button>
+                <button type="submit" disabled={saving} className="flex-1 bg-brand text-white text-sm font-medium py-2.5 rounded-lg hover:bg-brand-dark disabled:opacity-50 transition-colors">{saving ? 'Saving...' : editing ? 'Save Changes' : 'Add Destination'}</button>
                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 border border-gray-200 text-sm font-medium py-2.5 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
               </div>
             </form>

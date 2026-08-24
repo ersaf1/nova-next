@@ -289,7 +289,7 @@ export default function HeroAdmin() {
 
             {/* Video Preview */}
             {form.videoUrl && showPreview && (
-              <div className="relative rounded-xl overflow-hidden border border-neutral-200 bg-neutral-950 aspect-video">
+              <div className="relative rounded-xl overflow-hidden border border-neutral-200 bg-[#06333a] aspect-video">
                 <video
                   key={form.videoUrl}
                   src={form.videoUrl}
@@ -301,7 +301,7 @@ export default function HeroAdmin() {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-2.5 left-2.5">
-                  <span className="inline-flex items-center gap-1.5 bg-neutral-950/80 backdrop-blur-sm text-white text-[10px] font-semibold px-2.5 py-1 rounded-md tracking-wide uppercase">
+                  <span className="inline-flex items-center gap-1.5 bg-[#06333a]/85 backdrop-blur-sm text-white text-[10px] font-semibold px-2.5 py-1 rounded-md tracking-wide uppercase">
                     <Film className="w-3 h-3" />
                     Live Preview
                   </span>

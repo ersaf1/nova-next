@@ -92,7 +92,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
         </div>
         <Link
           href={`/packages/${(pkg as { slug?: string }).slug ?? pkg.id}`}
-          className="bg-neutral-50 hover:bg-black hover:text-white text-black text-xs font-bold px-3 py-2 md:px-4 md:py-2.5 rounded-full transition-colors duration-300 flex items-center gap-1 md:gap-1.5 border border-black/[0.04] shrink-0"
+          className="bg-brand-faint hover:bg-brand hover:text-white text-black text-xs font-bold px-3 py-2 md:px-4 md:py-2.5 rounded-full transition-colors duration-300 flex items-center gap-1 md:gap-1.5 border border-black/[0.04] shrink-0"
         >
           Lihat detail<ArrowRight className="w-3 h-3 md:w-3.5 md:h-3.5" />
         </Link>
@@ -162,7 +162,7 @@ const PackagesSection: React.FC = () => {
             <ScrollReveal animation="slide-up" delay={0.1}>
               <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0">
                 {filters.map((filter) => (
-                  <button key={filter} onClick={() => setActiveFilter(filter)} className={`text-left text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-300 w-auto lg:w-48 border shrink-0 flex items-center justify-between ${activeFilter === filter ? 'bg-black text-white border-black shadow-md lg:translate-x-2' : 'bg-transparent text-black/55 border-transparent hover:bg-neutral-50 hover:text-black'}`}>
+                  <button key={filter} onClick={() => setActiveFilter(filter)} className={`text-left text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-300 w-auto lg:w-48 border shrink-0 flex items-center justify-between ${activeFilter === filter ? 'bg-brand text-white border-black shadow-md lg:translate-x-2' : 'bg-transparent text-black/55 border-transparent hover:bg-neutral-50 hover:text-black'}`}>
                     <span>{filter}{filter === 'All' ? ' Trips' : ''}</span>
                     {activeFilter === filter && <span className="w-1.5 h-1.5 rounded-full bg-white hidden lg:block" />}
                   </button>
@@ -170,8 +170,8 @@ const PackagesSection: React.FC = () => {
               </div>
             </ScrollReveal>
             <div className="hidden lg:flex items-center gap-3 pt-4">
-              <button onClick={() => scroll('left')} className="w-11 h-11 rounded-full border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition-all duration-300" aria-label="Previous trip"><ChevronLeft className="w-5 h-5" /></button>
-              <button onClick={() => scroll('right')} className="w-11 h-11 rounded-full border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition-all duration-300" aria-label="Next trip"><ChevronRight className="w-5 h-5" /></button>
+              <button onClick={() => scroll('left')} className="w-11 h-11 rounded-full border border-brand/25 flex items-center justify-center hover:bg-brand hover:text-white transition-all duration-300" aria-label="Previous trip"><ChevronLeft className="w-5 h-5" /></button>
+              <button onClick={() => scroll('right')} className="w-11 h-11 rounded-full border border-brand/25 flex items-center justify-center hover:bg-brand hover:text-white transition-all duration-300" aria-label="Next trip"><ChevronRight className="w-5 h-5" /></button>
             </div>
           </div>
           <div className="lg:col-span-8 w-full overflow-hidden relative">

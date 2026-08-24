@@ -150,7 +150,7 @@ export default function SettingsAdmin() {
                 <button
                   onClick={() => saveStat(stat)}
                   disabled={saving === stat.statKey}
-                  className="bg-black text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                  className="bg-brand text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-brand-dark disabled:opacity-50 transition-colors"
                 >
                   {saving === stat.statKey ? 'Saving...' : 'Save'}
                 </button>
@@ -194,7 +194,7 @@ export default function SettingsAdmin() {
                 <button
                   onClick={() => savePartner(partner)}
                   disabled={saving === `partner-${partner.id}`}
-                  className="bg-black text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                  className="bg-brand text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-brand-dark disabled:opacity-50 transition-colors"
                 >
                   {saving === `partner-${partner.id}` ? 'Saving...' : 'Save'}
                 </button>
@@ -238,7 +238,7 @@ export default function SettingsAdmin() {
                 <button
                   onClick={() => saveBacker(backer)}
                   disabled={saving === `backer-${backer.id}`}
-                  className="bg-black text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                  className="bg-brand text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-brand-dark disabled:opacity-50 transition-colors"
                 >
                   {saving === `backer-${backer.id}` ? 'Saving...' : 'Save'}
                 </button>

@@ -144,7 +144,7 @@ export default function BookingStepReview({ pkg, departure, contact, travelers, 
             <button
               onClick={handleApplyPromo}
               disabled={!promoInput.trim() || promoLoading}
-              className="px-4 py-2.5 bg-black text-white text-sm font-medium rounded-xl hover:bg-neutral-800 disabled:opacity-40 transition-colors"
+              className="px-4 py-2.5 bg-brand text-white text-sm font-medium rounded-xl hover:bg-brand-dark disabled:opacity-40 transition-colors"
             >
               {promoLoading ? '…' : 'Terapkan'}
             </button>
@@ -216,7 +216,7 @@ export default function BookingStepReview({ pkg, departure, contact, travelers, 
         <button
           onClick={() => onNext(promoResult?.valid ? promoResult.code : undefined, discount)}
           disabled={!agreed || submitting}
-          className="flex-1 bg-black text-white font-semibold py-3.5 rounded-xl hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-sm"
+          className="flex-1 bg-brand text-white font-semibold py-3.5 rounded-xl hover:bg-brand-dark disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-sm"
         >
           {submitting ? 'Membuat booking…' : 'Lanjutkan ke Pembayaran'}
         </button>

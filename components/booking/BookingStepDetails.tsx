@@ -178,7 +178,7 @@ export default function BookingStepDetails({ pkg, departure, onNext }: Props) {
 
         <button
           type="submit"
-          className="w-full bg-black text-white font-semibold py-3.5 rounded-xl hover:bg-neutral-800 active:bg-neutral-950 transition-colors text-sm"
+          className="w-full bg-brand text-white font-semibold py-3.5 rounded-xl hover:bg-brand-dark active:bg-brand-darker transition-colors text-sm"
         >
           Lanjutkan ke Review
         </button>

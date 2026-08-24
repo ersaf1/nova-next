@@ -61,8 +61,6 @@ const Navbar: React.FC = () => {
 
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
-  const isDark = false
-
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
     return pathname === href || pathname.startsWith(href + '/')
@@ -71,7 +69,7 @@ const Navbar: React.FC = () => {
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 opacity-0 bg-white border-b border-black/[0.06] py-0 text-neutral-900`}
+      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 transition-all duration-300 opacity-0 bg-white/95 backdrop-blur-md border-b border-brand/15 py-0 text-[#12333a]`}
     >
       <div className="max-w-[88rem] mx-auto flex items-center justify-between gap-8">
         {/* Logo -> Navigasi ke Halaman Utama (/) */}
@@ -89,12 +87,12 @@ const Navbar: React.FC = () => {
                 href={href}
                 className={`text-xs sm:text-sm px-4 py-2 rounded-full font-jakarta font-semibold transition-all duration-200 flex items-center gap-1.5 ${
                   active
-                    ? 'text-black font-extrabold bg-black/5'
-                    : 'text-black/60 hover:text-black hover:bg-black/[0.04]'
+                    ? 'text-brand-darker font-extrabold bg-brand/10'
+                    : 'text-[#3d5a5e]/80 hover:text-brand-dark hover:bg-brand/[0.07]'
                 }`}
               >
-                {label === 'Home' && <Home size={13} className={active ? 'text-black' : 'text-black/50'} />}
-                {highlight && <Sparkles size={12} className={active ? 'text-amber-500' : 'text-amber-400'} />}
+                {label === 'Home' && <Home size={13} className={active ? 'text-brand-dark' : 'text-[#3d5a5e]/60'} />}
+                {highlight && <Sparkles size={12} className={active ? 'text-brand' : 'text-brand/70'} />}
                 {label}
               </Link>
             )
@@ -107,20 +105,20 @@ const Navbar: React.FC = () => {
             <>
               <Link
                 href="/dashboard/notifications"
-                className="p-2 rounded-full text-black/50 hover:text-black hover:bg-black/[0.04] transition-all"
+                className="p-2 rounded-full text-[#3d5a5e]/70 hover:text-brand-dark hover:bg-brand/[0.08] transition-all"
                 title="Notifikasi"
               >
                 <Bell size={16} />
               </Link>
               <button
                 onClick={() => router.push('/dashboard')}
-                className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all"
+                className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-[#3d5a5e]/90 hover:text-brand-dark hover:bg-brand/[0.07] transition-all"
               >
                 Dashboard
               </button>
               <button
                 onClick={handleSignOut}
-                className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all flex items-center gap-1.5"
+                className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-[#3d5a5e]/90 hover:text-red-600 hover:bg-red-500/[0.07] transition-all flex items-center gap-1.5"
               >
                 <LogOut size={13} />
                 Keluar
@@ -129,14 +127,14 @@ const Navbar: React.FC = () => {
           ) : (
             <button
               onClick={() => router.push('/login')}
-              className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-black/70 hover:text-black hover:bg-black/[0.04] transition-all"
+              className="text-xs sm:text-sm font-jakarta font-semibold px-4 py-2 rounded-full text-[#3d5a5e]/90 hover:text-brand-dark hover:bg-brand/[0.07] transition-all"
             >
               Masuk
             </button>
           )}
           <button
             onClick={() => router.push('/search')}
-            className="text-xs sm:text-sm font-jakarta font-bold px-5 py-2.5 rounded-full bg-neutral-950 hover:bg-black text-white transition-all shadow-xs"
+            className="text-xs sm:text-sm font-jakarta font-bold px-5 py-2.5 rounded-full bg-brand hover:bg-brand-dark text-white transition-all shadow-sm shadow-brand/40"
           >
             Cari Paket
           </button>
@@ -145,7 +143,7 @@ const Navbar: React.FC = () => {
         {/* Mobile Hamburger Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 rounded-xl text-black hover:bg-black/[0.06] transition-colors"
+          className="md:hidden p-2 rounded-xl text-brand-darker hover:bg-brand/10 transition-colors"
           aria-label="Toggle menu"
         >
           {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -154,7 +152,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? 'max-h-[600px] opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
-        <div className="bg-white/98 backdrop-blur-xl rounded-2xl p-5 shadow-xl border border-black/[0.06] text-black space-y-3">
+        <div className="bg-white/98 backdrop-blur-xl rounded-2xl p-5 shadow-xl shadow-brand/10 border border-brand/20 text-[#12333a] space-y-3">
           <div className="flex flex-col gap-1">
             {NAV_LINKS.map(({ label, href, highlight }) => (
               <Link
@@ -163,36 +161,36 @@ const Navbar: React.FC = () => {
                 onClick={() => setMenuOpen(false)}
                 className={`text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2 ${
                   isActive(href)
-                    ? 'text-black font-extrabold bg-black/[0.06]'
-                    : 'text-black/70 hover:text-black hover:bg-black/[0.03]'
+                    ? 'text-brand-darker font-extrabold bg-brand/10'
+                    : 'text-[#3d5a5e]/80 hover:text-brand-dark hover:bg-brand/[0.05]'
                 }`}
               >
-                {label === 'Home' && <Home size={14} className="text-black/60" />}
-                {highlight && <Sparkles size={13} className="text-amber-500" />}
+                {label === 'Home' && <Home size={14} className="text-[#3d5a5e]/60" />}
+                {highlight && <Sparkles size={13} className="text-brand" />}
                 {label}
               </Link>
             ))}
           </div>
 
-          <div className="flex flex-col gap-2 pt-3 border-t border-black/[0.06]">
+          <div className="flex flex-col gap-2 pt-3 border-t border-brand/15">
             {user ? (
               <>
                 <button
                   onClick={() => { router.push('/dashboard'); setMenuOpen(false) }}
-                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl text-black/70 hover:text-black hover:bg-black/[0.04] transition-colors text-left"
+                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl text-[#3d5a5e]/90 hover:text-brand-dark hover:bg-brand/[0.06] transition-colors text-left"
                 >
                   Dashboard
                 </button>
                 <button
                   onClick={() => { router.push('/dashboard/notifications'); setMenuOpen(false) }}
-                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl text-black/70 hover:text-black hover:bg-black/[0.04] transition-colors text-left flex items-center gap-2"
+                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl text-[#3d5a5e]/90 hover:text-brand-dark hover:bg-brand/[0.06] transition-colors text-left flex items-center gap-2"
                 >
                   <Bell size={13} />
                   Notifikasi
                 </button>
                 <button
                   onClick={handleSignOut}
-                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl bg-black/[0.04] text-black hover:bg-black/[0.08] transition-colors text-center flex items-center justify-center gap-1.5"
+                  className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl bg-brand-faint text-brand-darker hover:bg-brand-lighter transition-colors text-center flex items-center justify-center gap-1.5"
                 >
                   <LogOut size={13} />
                   Keluar
@@ -201,14 +199,14 @@ const Navbar: React.FC = () => {
             ) : (
               <button
                 onClick={() => { router.push('/login'); setMenuOpen(false) }}
-                className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl bg-black/[0.04] text-black hover:bg-black/[0.08] transition-colors text-center"
+                className="w-full text-sm font-jakarta font-semibold px-4 py-2.5 rounded-xl bg-brand-faint text-brand-darker hover:bg-brand-lighter transition-colors text-center"
               >
                 Masuk
               </button>
             )}
             <button
               onClick={() => { router.push('/search'); setMenuOpen(false) }}
-              className="w-full text-sm font-jakarta font-bold px-4 py-2.5 rounded-xl bg-neutral-950 text-white hover:bg-black transition-colors text-center"
+              className="w-full text-sm font-jakarta font-bold px-4 py-2.5 rounded-xl bg-brand text-white hover:bg-brand-dark transition-colors text-center shadow-sm shadow-brand/40"
             >
               Cari Paket
             </button>
