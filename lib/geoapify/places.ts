@@ -28,19 +28,44 @@ export async function searchPlaces(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return ((data.features ?? []) as any[])
-      .filter((f) => f.properties?.name)
-      .map((f): GeoapifyPlace => ({
-        placeId: f.properties.place_id,
-        name: f.properties.name,
-        categories: f.properties.categories ?? [],
-        lat: f.properties.lat,
-        lon: f.properties.lon,
-        address: f.properties.formatted ?? '',
-        city: f.properties.city,
-        distance: f.properties.distance,
-        website: f.properties.datasource?.raw?.website,
-        openingHours: f.properties.datasource?.raw?.opening_hours,
-      }))
+      .filter((f) => {
+        const name = f.properties?.name?.trim()
+        if (!name || name.length < 3) return false
+        const lower = name.toLowerCase()
+        if (
+          lower.startsWith('sdn ') ||
+          lower.startsWith('smpn ') ||
+          lower.startsWith('sman ') ||
+          lower.startsWith('tk ') ||
+          lower.startsWith('pos ronda') ||
+          lower.startsWith('kantor desa') ||
+          lower.startsWith('balai desa') ||
+          lower.startsWith('puskesmas') ||
+          lower.startsWith('klinik') ||
+          lower.startsWith('apotek')
+        ) {
+          return false
+        }
+        return true
+      })
+      .map((f): GeoapifyPlace => {
+        let cleanName = f.properties.name.trim()
+        // Clean prefixes like "Eks taman " -> "Taman "
+        cleanName = cleanName.replace(/^Eks\s+taman\s+/i, 'Taman ').replace(/^Bekas\s+/i, '')
+
+        return {
+          placeId: f.properties.place_id,
+          name: cleanName,
+          categories: f.properties.categories ?? [],
+          lat: f.properties.lat,
+          lon: f.properties.lon,
+          address: f.properties.formatted ?? '',
+          city: f.properties.city,
+          distance: f.properties.distance,
+          website: f.properties.datasource?.raw?.website,
+          openingHours: f.properties.datasource?.raw?.opening_hours,
+        }
+      })
   } catch {
     return []
   }

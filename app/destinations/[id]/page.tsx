@@ -65,6 +65,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
           src={dest.image || ''}
           alt={dest.city}
           fill
+          sizes="100vw"
           className="object-cover transition-transform duration-[10000ms] ease-out hover:scale-105"
           priority
         />
@@ -145,7 +146,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                           <span className="absolute bottom-4 left-4 text-sm font-semibold text-white">{a.name}</span>
                         </div>
                       ) : (
-                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-brand via-brand to-brand-dark flex items-center justify-center">
+                        <div className="relative h-48 overflow-hidden bg-brand flex items-center justify-center">
                           <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full border-[12px] border-white/10" />
                           <div className="absolute -bottom-16 -left-10 w-48 h-48 rounded-full bg-white/10" />
                           <div className="absolute top-5 right-6 w-2 h-2 rounded-full bg-white/40" />

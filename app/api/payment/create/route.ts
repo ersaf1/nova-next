@@ -45,7 +45,7 @@ export async function POST(request: Request) {
         orderId,
         bookingCode: booking.bookingCode,
         totalAmount: booking.totalAmount,
-        redirect_url: `/payment/pending/${booking.id}`,
+        redirect_url: `/payment/${booking.id}`,
       })
     }
 

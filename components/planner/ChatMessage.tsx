@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Sparkles, Copy, Check, MapPin, CalendarCheck } from 'lucide-react'
+import { Compass, Copy, Check, MapPin, CalendarCheck } from 'lucide-react'
 import type { ChatMessage as ChatMessageType } from '@/lib/ai-agent/types'
 import PlacesCard from './PlacesCard'
 
@@ -104,19 +104,19 @@ export default function ChatMessage({ message, onOpenMap, onOpenBooking }: Props
     <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} mb-6 group`}>
       <div className={`flex gap-3 max-w-[92%] sm:max-w-[85%] ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
         {/* Avatar */}
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 border shadow-sm ${
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 border shadow-xs ${
           isUser 
             ? 'bg-neutral-800 border-white/20 text-white text-xs font-bold' 
-            : 'bg-gradient-to-tr from-amber-500 via-orange-500 to-indigo-600 border-amber-400/30 text-white'
+            : 'bg-brand border-white/20 text-white'
         }`}>
-          {isUser ? 'U' : <Sparkles size={14} className="text-white animate-pulse" />}
+          {isUser ? 'U' : <Compass size={14} className="text-white" />}
         </div>
 
         {/* Content Container */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs font-semibold text-white/70">
-              {isUser ? 'Anda' : 'Nova Travel GPT'}
+              {isUser ? 'Anda' : 'Nova Assistant'}
             </span>
             <span className="text-[10px] text-white/30" suppressHydrationWarning>
               {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

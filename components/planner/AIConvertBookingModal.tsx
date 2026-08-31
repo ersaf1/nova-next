@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Sparkles, MapPin, X, CheckCircle2, ArrowRight } from 'lucide-react'
+import { CalendarCheck, MapPin, X, CheckCircle2, ArrowRight } from 'lucide-react'
 
 interface AIConvertBookingModalProps {
   itineraryTitle: string
@@ -80,8 +80,8 @@ export default function AIConvertBookingModal({
         {/* Modal Header */}
         <div className="px-6 py-4 bg-zinc-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
-            <h3 className="font-bold text-sm text-white">Konversi AI Itinerary ke Booking Live</h3>
+            <CalendarCheck className="w-4 h-4 text-emerald-400" />
+            <h3 className="font-bold text-sm text-white">Konfirmasi Pemesanan Rencana Perjalanan</h3>
           </div>
           <button onClick={onClose} className="text-zinc-400 hover:text-white">
             <X className="w-4 h-4" />

@@ -278,7 +278,7 @@ export default function BookingDetailPage() {
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
               {needsPayment && (
-                <Link href={`/payment/pending/${booking.id}`} className="bg-brand text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-brand-dark transition-colors">
+                <Link href={`/payment/${booking.id}`} className="bg-brand text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-brand-dark transition-colors">
                   Lanjutkan Pembayaran
                 </Link>
               )}

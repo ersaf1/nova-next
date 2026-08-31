@@ -1,0 +1,46 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "9router": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://127.0.0.1:20128/v1",
+        "apiKey": "sk-dfa7c678352b01f2-746dlo-ff930955"
+      },
+      "models": {
+        "ex/claude-sonnet-4.6": {
+          "name": "ex/claude-sonnet-4.6",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "ipenk/ipeenkclaude/claude-opus-4.8": {
+          "name": "ipenk/ipeenkclaude/claude-opus-4.8",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "model": "9router/ex/claude-sonnet-4.6",
+  "agent": {
+    "explorer": {
+      "description": "Fast explorer subagent for codebase exploration",
+      "mode": "subagent",
+      "model": "9router/sc/ipeenkclaude/claude-opus-4.8"
+    }
+  }
+}

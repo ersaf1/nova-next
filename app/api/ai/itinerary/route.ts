@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { getAttractionsForDestination, mergePlacesIntoAttractions } from '@/lib/attractions'
 import { getOrFetchPlaces } from '@/lib/geoapify/places-cache'
+import { resolveGroundingForDestination } from '@/lib/search-grounding'
+import { fetchRealPlacePhotoWithScore } from '@/lib/real-photos'
 import { readFile } from 'fs/promises'
 import path from 'path'
 
@@ -492,29 +494,21 @@ function getMockDayData(dayNum: number, destName: string, realPlaces: string[]) 
   const p = (idx: number, fallback: string) =>
     realPlaces.length > 0 ? realPlaces[idx % realPlaces.length] : fallback
 
-  const dayTitles = [
-    `Hari ${dayNum} — Selamat Datang & Eksplorasi Ikonik ${destName}`,
-    `Hari ${dayNum} — Pesona Alam, Spot Foto & Jelajah Hidden Gems`,
-    `Hari ${dayNum} — Kuliner Legendaris, Budaya & Kehidupan Lokal`,
-    `Hari ${dayNum} — Relaksasi, Kafe Tepi Alam & Sunset Panorama`,
-    `Hari ${dayNum} — Petualangan Seru & Belanja Cinderamata Khas`,
-  ]
-
-  const spot1 = p((dayNum - 1) * 3, `${destName} Landmark`)
-  const spot2 = p((dayNum - 1) * 3 + 1, `${destName} Local Spot`)
-  const spot3 = p((dayNum - 1) * 3 + 2, `${destName} Night Area`)
+  const spot1 = p((dayNum - 1) * 3, `Pusat Wisata & Ikon ${destName}`)
+  const spot2 = p((dayNum - 1) * 3 + 1, `Kawasan Wisata Alam & Budaya ${destName}`)
+  const spot3 = p((dayNum - 1) * 3 + 2, `Pusat Kuliner Malam & Alun-Alun ${destName}`)
 
   return {
-    title: dayTitles[(dayNum - 1) % dayTitles.length],
+    title: `Hari ${dayNum} — Eksplorasi ${spot1} & Keindahan ${destName}`,
     activities: [
       buildDynamicActivity('08:30', spot1, destName, 'morning', dayNum),
-      buildDynamicActivity('12:30', `${spot1} Area`, destName, 'lunch', dayNum + 1),
+      buildDynamicActivity('12:30', `Sentra Kuliner Khas ${destName}`, destName, 'lunch', dayNum + 1),
       buildDynamicActivity('15:00', spot2, destName, 'afternoon', dayNum + 2),
       buildDynamicActivity('19:00', spot3, destName, 'evening', dayNum + 3),
     ],
     meals: {
       breakfast: `Sarapan Khas Pagi di Sekitar ${spot1}`,
-      lunch: `Makan Siang Menu Andalan Lokal ${destName}`,
+      lunch: `Makan Siang Menu Andalan Khas ${destName}`,
       dinner: `Kuliner Malam & Santap Santai di ${spot3}`,
     },
     accommodation: `Resort / Boutique Homestay Nyaman di ${destName}`,
@@ -564,11 +558,16 @@ function generateMockItinerary(destination: string, duration: number, countryDat
       return {
         day: dayNum,
         title: localGrounding ? `Hari ${dayNum} — Eksplorasi ${localGrounding.spots[i % localGrounding.spots.length]}` : dayData.title,
-        activities: dayData.activities.map((act, aIdx) => ({
-          ...act,
-          location: localGrounding ? localGrounding.spots[(i * 2 + aIdx) % localGrounding.spots.length] : act.location,
-          cost: localGrounding ? 'Rp 10.000 - Rp 25.000' : act.cost,
-        })),
+        activities: dayData.activities.map((act, aIdx) => {
+          const spotLocation = localGrounding
+            ? localGrounding.spots[(i * 4 + aIdx) % localGrounding.spots.length]
+            : (realPlaces.length > 0 ? realPlaces[(i * 4 + aIdx) % realPlaces.length] : act.location)
+          return {
+            ...act,
+            location: spotLocation,
+            cost: localGrounding ? 'Rp 10.000 - Rp 35.000' : act.cost,
+          }
+        }),
         meals: localGrounding ? localGrounding.culinary : dayData.meals,
         accommodation: localGrounding ? localGrounding.accommodation : dayData.accommodation,
         estimatedDailyCost: localGrounding ? 'Rp 250.000 - Rp 450.000' : 'Rp 350.000 - Rp 700.000',
@@ -602,27 +601,35 @@ export async function POST(request: Request) {
 
     const countryData = await findCountryData(destination)
 
-    // Ambil tempat asli Geoapify lebih dulu — dipakai untuk grounding prompt & galeri
+    // 1. Resolve hyper-local search grounding & verified active places
+    const groundedData = await resolveGroundingForDestination(destination)
     const realPlaces = await getOrFetchPlaces(destination)
+    const placeNames = realPlaces.length > 0 ? realPlaces.map((p) => p.name) : groundedData.spots.map((s) => s.name)
     const shuffledPlaces = shuffle(realPlaces)
 
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey || apiKey === 'placeholder' || apiKey.startsWith('AQ.')) {
-      const mockResult = generateMockItinerary(destination, duration, countryData, shuffledPlaces.map(p => p.name))
-      
-      // Resolve authentic real photos for mock result
-      mockResult.heroImage = await fetchRealPlacePhoto(destination, countryData?.country || '')
-      
+      const mockResult = generateMockItinerary(destination, duration, countryData, placeNames)
+      mockResult.destination = groundedData.destinationName || mockResult.destination
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const actPromises = mockResult.days.flatMap((day: any) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         day.activities.map(async (act: any) => {
-          act.image = await fetchRealPlacePhoto(act.location, destination, 'spot')
+          const photoData = await fetchRealPlacePhotoWithScore(act.location, destination)
+          if (photoData) {
+            act.image = photoData.url
+            act.accuracy = photoData.accuracy
+          }
         })
       )
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const attrPromises = mockResult.attractions.map(async (attr: any) => {
-        attr.image = await fetchRealPlacePhoto(attr.name, destination, 'spot')
+        const photoData = await fetchRealPlacePhotoWithScore(attr.name, destination)
+        if (photoData) {
+          attr.image = photoData.url
+          attr.accuracy = photoData.accuracy
+        }
       })
       await Promise.all([...actPromises, ...attrPromises])
 
@@ -632,11 +639,12 @@ export async function POST(request: Request) {
     const genAI = new GoogleGenerativeAI(apiKey)
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.0-flash',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tools: [{ googleSearch: {} } as any],
       generationConfig: {
-        temperature: 0.95,
+        temperature: 0.7,
         topP: 0.9,
         maxOutputTokens: 8192,
-        responseMimeType: 'application/json',
       },
     })
 
@@ -727,27 +735,27 @@ Return a JSON object with this exact structure:
     } else {
       itinerary.attractions = getAttractionsForDestination(destination, itinerary.attractions)
     }
-    
-    // Resolve authentic real photos
-    itinerary.heroImage = await fetchRealPlacePhoto(destination, countryData?.country || '')
 
-    // Resolve dynamic photos for activities and attractions
-    try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const photoPromises = itinerary.days.flatMap((day: any) =>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const photoPromises = itinerary.days.flatMap((day: any) => 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        day.activities.map(async (act: any) => {
-          act.image = await fetchRealPlacePhoto(act.location || act.activity, destination, 'spot')
-        })
-      )
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const attrPromises = itinerary.attractions.map(async (attr: any) => {
-        attr.image = await fetchRealPlacePhoto(attr.name, destination, 'spot')
+      day.activities.map(async (act: any) => {
+        const photoData = await fetchRealPlacePhotoWithScore(act.location || act.activity, destination)
+        if (photoData) {
+          act.image = photoData.url
+          act.accuracy = photoData.accuracy
+        }
       })
-      await Promise.all([...photoPromises, ...attrPromises])
-    } catch (err) {
-      console.error('Error resolving activity photos:', err)
-    }
+    )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const attrPromises = itinerary.attractions.map(async (attr: any) => {
+      const photoData = await fetchRealPlacePhotoWithScore(attr.name, destination)
+      if (photoData) {
+        attr.image = photoData.url
+        attr.accuracy = photoData.accuracy
+      }
+    })
+    await Promise.all([...photoPromises, ...attrPromises])
 
     return NextResponse.json(itinerary)
   } catch (error) {
@@ -764,25 +772,26 @@ Return a JSON object with this exact structure:
       mock.attractions = mergePlacesIntoAttractions(shuffle(realPlaces))
     }
 
-    mock.heroImage = await fetchRealPlacePhoto(dest, countryData?.country || '')
-
-    // Resolve dynamic photos for activities in mock itinerary
-    try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mockPhotoPromises = mock.days.flatMap((day: any) =>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockPhotoPromises = mock.days.flatMap((day: any) => 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        day.activities.map(async (act: any) => {
-          act.image = await fetchRealPlacePhoto(act.location || act.activity, dest, 'spot')
-        })
-      )
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockAttrPromises = mock.attractions.map(async (attr: any) => {
-        attr.image = await fetchRealPlacePhoto(attr.name, dest, 'spot')
+      day.activities.map(async (act: any) => {
+        const photoData = await fetchRealPlacePhotoWithScore(act.location || act.activity, dest)
+        if (photoData) {
+          act.image = photoData.url
+          act.accuracy = photoData.accuracy
+        }
       })
-      await Promise.all([...mockPhotoPromises, ...mockAttrPromises])
-    } catch (err) {
-      console.error('Error resolving mock activity photos:', err)
-    }
+    )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mockAttrPromises = mock.attractions.map(async (attr: any) => {
+      const photoData = await fetchRealPlacePhotoWithScore(attr.name, dest)
+      if (photoData) {
+        attr.image = photoData.url
+        attr.accuracy = photoData.accuracy
+      }
+    })
+    await Promise.all([...mockPhotoPromises, ...mockAttrPromises])
 
     return NextResponse.json(mock, { status: 200 })
   }

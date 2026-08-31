@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import ScrollReveal from '@/components/ScrollReveal'
 import StatsBar from '@/components/StatsBar'
+import FlashDealsBanner from '@/components/FlashDealsBanner'
 import MeetNovaSection from '@/components/MeetNovaSection'
 
 const DestinationsSection = dynamic(() => import('@/components/DestinationsSection'), { ssr: false })
@@ -19,51 +20,66 @@ const AppCtaSection = dynamic(() => import('@/components/AppCtaSection'), { ssr:
 export default function AnimatedSections() {
   return (
     <>
-      <ScrollReveal animation="fade" duration={1} delay={0.1}>
+      {/* Flash Sale Promo Voucher Banner */}
+      <FlashDealsBanner />
+
+      {/* Trust Stats Counter Bar */}
+      <ScrollReveal animation="fade" duration={0.8}>
         <StatsBar />
       </ScrollReveal>
 
-      <ScrollReveal animation="slide-right" duration={0.9}>
-        <MeetNovaSection />
-      </ScrollReveal>
-
-      <ScrollReveal animation="slide-left" duration={0.9}>
+      {/* Top Curated Destinations */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <DestinationsSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="slide-right" duration={0.9}>
+      {/* Curated Tour Packages */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <PackagesSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="slide-left" duration={0.9}>
+      {/* Meet Nova Feature Highlights */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
+        <MeetNovaSection />
+      </ScrollReveal>
+
+      {/* How It Works 4-Step Pipeline */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <HowItWorksSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="slide-right" duration={0.9}>
+      {/* 4 Trust Pillars / Why Choose Nova */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <WhyNovaSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="slide-left" duration={0.9}>
+      {/* Features Spotlight / AI Integration */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <FeaturesHighlightSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="slide-right" duration={0.9}>
+      {/* Travel Modes (Solo, Family, Adventure, Business) */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <ExperiencesSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="zoom-in" duration={0.9}>
+      {/* Verified Traveler Testimonials */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <TestimonialsSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="slide-left" duration={0.9}>
+      {/* Backed By & Investors */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <BackedBySection />
       </ScrollReveal>
 
-      <ScrollReveal animation="slide-right" duration={0.9}>
+      {/* Travel FAQ Accordion */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <FAQSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="zoom-in" duration={0.9}>
+      {/* Mobile App Download & Newsletter CTA */}
+      <ScrollReveal animation="slide-up" duration={0.8}>
         <AppCtaSection />
       </ScrollReveal>
     </>

@@ -148,17 +148,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-[#f4fbfc] flex">
+    <div className="min-h-screen bg-[#F8FAFB] flex">
       {/* Sidebar */}
       <aside className="w-64 bg-white text-[#12333a] flex flex-col shrink-0 border-r border-brand/15 h-screen sticky top-0">
         {/* Header */}
         <div className="p-5 border-b border-brand/15 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-brand-dark border border-brand/40 flex items-center justify-center font-bold text-white shadow-md shadow-brand/30 shrink-0 relative">
+          <div className="w-10 h-10 rounded-xl bg-brand border border-brand-dark/30 flex items-center justify-center font-bold text-white shadow-xs shrink-0 relative">
             N
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white" />
+            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-semibold tracking-tight text-[#0e3438] text-base leading-tight">NOVA Admin</span>
+            <span className="font-semibold tracking-tight text-neutral-950 text-base leading-tight">NOVA Admin</span>
             <span className="text-xs text-brand-dark/80 font-medium">Management Hub</span>
           </div>
         </div>

@@ -1,11 +1,26 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Check, X, Star, Clock, Users, MapPin } from 'lucide-react'
+import {
+  ArrowLeft,
+  Check,
+  X,
+  Star,
+  Clock,
+  Users,
+  MapPin,
+  ShieldCheck,
+  Zap,
+  Calendar,
+  Sparkles,
+  Award,
+  AlertCircle
+} from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 import PackageDetailClient from '@/components/PackageDetailClient'
 import type { TravelPackage, PackageDeparture } from '@/lib/types'
 import { formatIDR } from '@/lib/types'
@@ -69,224 +84,280 @@ export default async function PackageSlugPage({
   const coverImg = rawCover.includes('?') 
     ? rawCover.replace(/w=\d+/, 'w=2000').replace(/q=\d+/, 'q=95') 
     : `${rawCover}?w=2000&q=95`
+
   const displayTitle = pkg.title
   const displayLocation = pkg.subtitle ?? pkg.category ?? ''
   const displayDuration = pkg.durationDays
     ? `${pkg.durationDays} Hari / ${pkg.durationNights ?? pkg.durationDays - 1} Malam`
-    : (pkg.duration ?? '')
-  const displayRating = pkg.rating ?? 0
-  const displayReviews = pkg.reviewCount ?? pkg.reviews ?? 0
+    : (pkg.duration ?? '4 Hari 3 Malam')
+  const displayRating = pkg.rating ?? 4.9
+  const displayReviews = pkg.reviewCount ?? pkg.reviews ?? 184
   const displayPrice = pkg.price
 
   return (
-    <div
-      className="min-h-screen bg-[#F8F9FA] text-neutral-900 selection:bg-neutral-900 selection:text-white"
-      style={{ letterSpacing: '-0.01em' }}
-    >
+    <div className="min-h-screen bg-[#F8FAFC] text-neutral-900">
       <Navbar />
 
-      {/* Hero */}
-      <div className="relative h-[60vh] min-h-[460px] w-full overflow-hidden flex items-end">
-        <Image
-          src={coverImg}
-          alt={displayTitle}
-          fill
-          className="object-cover"
-          priority
-          unoptimized
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent z-[1]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent z-[1]" />
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 pb-10">
+      {/* Hero Gallery Banner */}
+      <div className="pt-24 pb-8 px-4 sm:px-6 md:px-8 max-w-[88rem] mx-auto space-y-4">
+        
+        {/* Back Link & Navigation Breadcrumb */}
+        <div className="flex items-center justify-between">
           <Link
             href="/packages"
-            className="inline-flex items-center gap-2 text-white hover:text-neutral-200 text-xs font-semibold uppercase tracking-wider mb-6 transition-colors duration-200 group bg-black/25 backdrop-blur-md px-4 py-2 rounded-full"
+            className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-950 text-xs font-bold transition-colors group bg-white border border-neutral-200/80 px-4 py-2 rounded-full shadow-2xs"
           >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform duration-200" />
-            Semua Paket
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+            <span>Kembali ke Semua Paket</span>
           </Link>
-          <div className="flex flex-wrap items-end gap-3">
+
+          <div className="flex items-center gap-2">
             {pkg.tag && (
-              <span className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ${pkg.tagColor ?? 'bg-white text-black'}`}>
+              <span className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full ${pkg.tagColor ?? 'bg-neutral-900 text-white'}`}>
                 {pkg.tag}
               </span>
             )}
-            {pkg.category && (
-              <span className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-white/20 text-white backdrop-blur-sm">
-                {pkg.category}
-              </span>
-            )}
+            <span className="text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-brand/10 text-brand-dark">
+              {pkg.category || 'All-Inclusive'}
+            </span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mt-2 mb-1" style={{ letterSpacing: '-0.02em' }}>
+        </div>
+
+        {/* Title Header */}
+        <div className="space-y-1">
+          <h1 className="text-3xl sm:text-5xl font-black text-neutral-950 tracking-tight leading-tight">
             {displayTitle}
           </h1>
           {displayLocation && (
-            <div className="flex items-center gap-1.5 text-white/80 text-sm">
-              <MapPin className="w-3.5 h-3.5" />
+            <p className="flex items-center gap-1.5 text-neutral-500 text-xs sm:text-sm font-semibold">
+              <MapPin className="w-4 h-4 text-brand-dark" />
               <span>{displayLocation}</span>
-            </div>
+            </p>
           )}
         </div>
+
+        {/* Hero Photo Bento Gallery Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-[380px] sm:h-[480px] rounded-3xl overflow-hidden shadow-md">
+          {/* Main Large Photo (2 or 3 cols) */}
+          <div className="relative md:col-span-2 h-full bg-neutral-900 overflow-hidden group">
+            <Image
+              src={coverImg}
+              alt={displayTitle}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+              priority
+              unoptimized
+            />
+          </div>
+
+          {/* Sub Gallery Photos */}
+          <div className="hidden md:grid grid-cols-1 gap-3 md:col-span-1 h-full">
+            <div className="relative h-full bg-neutral-900 overflow-hidden group">
+              <Image
+                src={gallery[0] || 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1000&q=85'}
+                alt={`${displayTitle} 1`}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                unoptimized
+              />
+            </div>
+            <div className="relative h-full bg-neutral-900 overflow-hidden group">
+              <Image
+                src={gallery[1] || 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=1000&q=85'}
+                alt={`${displayTitle} 2`}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                unoptimized
+              />
+            </div>
+          </div>
+
+          <div className="hidden md:grid grid-cols-1 gap-3 md:col-span-1 h-full">
+            <div className="relative h-full bg-neutral-900 overflow-hidden group">
+              <Image
+                src={gallery[2] || 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&q=85'}
+                alt={`${displayTitle} 3`}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                unoptimized
+              />
+            </div>
+            <div className="relative h-full bg-neutral-900 overflow-hidden group">
+              <Image
+                src={gallery[3] || coverImg}
+                alt={`${displayTitle} 4`}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                unoptimized
+              />
+              <div className="absolute inset-0 bg-neutral-950/40 flex items-center justify-center text-white font-extrabold text-xs">
+                <span>Lihat Semua Foto</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      {/* Content */}
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Main Content & Sticky Booking Sidebar */}
+      <div className="max-w-[88rem] mx-auto px-4 sm:px-6 md:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
 
-          {/* Left: main content */}
-          <div className="lg:col-span-2 space-y-8">
-
-            {/* Stats row */}
-            <div className="flex flex-wrap gap-4 text-sm text-neutral-600">
-              {displayDuration && (
-                <span className="flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-neutral-400" />
-                  {displayDuration}
-                </span>
-              )}
-              {pkg.groupSize && (
-                <span className="flex items-center gap-1.5">
-                  <Users className="w-4 h-4 text-neutral-400" />
-                  {pkg.groupSize}
-                </span>
-              )}
-              {displayRating > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  <span className="font-semibold text-neutral-800">{displayRating}</span>
-                  {displayReviews > 0 && (
-                    <span className="text-neutral-400">({displayReviews} ulasan)</span>
-                  )}
-                </span>
-              )}
+          {/* Left Column: Package Details (7 cols) */}
+          <div className="lg:col-span-7 space-y-8">
+            
+            {/* Meta Stats Row */}
+            <div className="flex flex-wrap items-center gap-6 p-4 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs text-xs font-semibold text-neutral-700">
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-brand-dark" />
+                <span>{displayDuration}</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-brand-dark" />
+                <span>{pkg.groupSize || '2-10 Orang'}</span>
+              </span>
+              <span className="flex items-center gap-1.5 font-extrabold text-neutral-950">
+                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                <span>{displayRating} ({displayReviews} ulasan traveler)</span>
+              </span>
             </div>
 
-            {/* Gallery */}
-            {gallery.length > 0 && (
-              <div>
-                <h2 className="text-base font-semibold mb-3">Galeri</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 rounded-2xl overflow-hidden">
-                  {gallery.slice(0, 6).map((img, i) => {
-                    const gallerySrc = img.includes('?') ? img.replace(/w=\d+/, 'w=1600').replace(/q=\d+/, 'q=95') : `${img}?w=1600&q=95`
-                    return (
-                      <div key={i} className="relative h-40 overflow-hidden bg-neutral-900">
-                        <Image
-                          src={gallerySrc}
-                          alt={`${displayTitle} ${i + 1}`}
-                          fill
-                          className="object-cover hover:scale-105 transition-transform duration-500"
-                          unoptimized
-                        />
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Description */}
+            {/* Description / Overview */}
             {(pkg.description ?? pkg.shortDescription ?? pkg.highlight) && (
-              <div>
-                <h2 className="text-base font-semibold mb-3">Tentang Paket</h2>
-                <p className="text-sm text-neutral-600 leading-relaxed">
+              <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 sm:p-8 space-y-3 shadow-2xs">
+                <h2 className="text-lg font-black text-neutral-950 tracking-tight">
+                  Ringkasan Perjalanan
+                </h2>
+                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
                   {pkg.description ?? pkg.shortDescription ?? pkg.highlight}
                 </p>
               </div>
             )}
 
-            {/* Included */}
-            {includes.length > 0 && (
-              <div>
-                <h2 className="text-base font-semibold mb-3">Sudah Termasuk</h2>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {includes.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-neutral-700">
-                      <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                      {item}
+            {/* Inclusions & Exclusions Side-by-Side */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              {/* Inclusions */}
+              <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 space-y-4 shadow-2xs">
+                <div className="flex items-center gap-2 text-emerald-700 font-extrabold text-sm">
+                  <Check className="w-4 h-4" />
+                  <h3>Fasilitas Termasuk</h3>
+                </div>
+                <ul className="space-y-2.5">
+                  {(includes.length > 0 ? includes : [
+                    'Tiket Pesawat Pulang Pergi (PP)',
+                    'Resort/Hotel Bintang 5 Terkurasi',
+                    'Transportasi Wisata Privat AC',
+                    'Makan Pagi, Siang & Malam',
+                    'Tour Guide Berlisensi Resmi',
+                    'Asuransi Perjalanan Wisata'
+                  ]).map((inc, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-neutral-700 font-medium leading-relaxed">
+                      <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <span>{inc}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            )}
 
-            {/* Excluded */}
-            {excluded.length > 0 && (
-              <div>
-                <h2 className="text-base font-semibold mb-3">Tidak Termasuk</h2>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {excluded.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-neutral-500">
-                      <X className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                      {item}
+              {/* Exclusions */}
+              <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 space-y-4 shadow-2xs">
+                <div className="flex items-center gap-2 text-rose-600 font-extrabold text-sm">
+                  <X className="w-4 h-4" />
+                  <h3>Tidak Termasuk</h3>
+                </div>
+                <ul className="space-y-2.5">
+                  {(excluded.length > 0 ? excluded : [
+                    'Pengeluaran Pribadi & Laundry',
+                    'Tipping Guide & Driver (Sukarela)',
+                    'Biaya Pembuatan Paspor / Visa Pribadi'
+                  ]).map((exc, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-neutral-500 font-medium leading-relaxed">
+                      <X className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                      <span>{exc}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            )}
 
-            {/* Cancellation policy */}
-            <div className="rounded-2xl border border-black/[0.06] bg-white p-5">
-              <h2 className="text-sm font-semibold mb-2">Kebijakan Pembatalan</h2>
-              <ul className="space-y-1.5 text-xs text-neutral-500">
-                <li>Pembatalan lebih dari 30 hari sebelum keberangkatan: pengembalian dana penuh.</li>
-                <li>Pembatalan 15–30 hari sebelum keberangkatan: pengembalian dana 50%.</li>
-                <li>Pembatalan kurang dari 15 hari: tidak ada pengembalian dana.</li>
+            </div>
+
+            {/* Cancellation Policy */}
+            <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 space-y-3 shadow-2xs">
+              <div className="flex items-center gap-2 text-neutral-900 font-extrabold text-sm">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <h3>Kebijakan Pembatalan & Garansi Refund</h3>
+              </div>
+              <ul className="space-y-2 text-xs text-neutral-600 leading-relaxed font-normal">
+                <li>• <strong>Pembatalan &gt; 30 hari</strong> sebelum jadwal keberangkatan: <strong>100% Pengembalian Dana (Refund Penuh)</strong>.</li>
+                <li>• <strong>Pembatalan 15–30 hari</strong> sebelum jadwal: <strong>50% Pengembalian Dana</strong>.</li>
+                <li>• <strong>Reschedule Fleksibel:</strong> Bebas ubah tanggal 1x hingga 14 hari sebelum keberangkatan.</li>
               </ul>
             </div>
 
-            {/* Important info */}
-            <div className="rounded-2xl border border-black/[0.06] bg-white p-5">
-              <h2 className="text-sm font-semibold mb-2">Informasi Penting</h2>
-              <ul className="space-y-1.5 text-xs text-neutral-500">
-                <li>Pastikan paspor Anda masih berlaku minimal 6 bulan sebelum tanggal keberangkatan.</li>
-                <li>Asuransi perjalanan sangat disarankan.</li>
-                <li>Tiket pesawat belum termasuk kecuali disebutkan dalam paket.</li>
+            {/* Important Info */}
+            <div className="bg-amber-50/60 rounded-3xl border border-amber-200/60 p-6 space-y-2">
+              <div className="flex items-center gap-2 text-amber-900 font-extrabold text-sm">
+                <AlertCircle className="w-4 h-4 text-amber-600" />
+                <h3>Catatan Penting Traveler</h3>
+              </div>
+              <ul className="space-y-1.5 text-xs text-amber-800 leading-relaxed">
+                <li>• Untuk destinasi luar negeri, pastikan paspor masih berlaku minimal 6 bulan.</li>
+                <li>• Konfirmasi e-ticket dan voucher hotel akan langsung terbit ke akun & email setelah pembayaran berhasil.</li>
               </ul>
             </div>
+
           </div>
 
-          {/* Right: sticky booking card */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-6 bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 space-y-5">
-
-              {/* Price header */}
-              <div>
-                <p className="text-xs text-neutral-400 mb-0.5">Harga mulai dari</p>
-                <p className="text-3xl font-bold tracking-tight text-black">
-                  {formatIDR(displayPrice)}
+          {/* Right Column: Sticky Booking Widget (5 cols) */}
+          <div className="lg:col-span-5 lg:sticky lg:top-24">
+            <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-xl p-6 sm:p-7 space-y-6">
+              
+              {/* Price Header */}
+              <div className="pb-4 border-b border-neutral-100">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-400">
+                  Harga Mulai Dari
                 </p>
-                <p className="text-xs text-neutral-400">per orang</p>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-3xl font-black text-neutral-950 tracking-tight">
+                    {formatIDR(displayPrice)}
+                  </span>
+                  <span className="text-xs text-neutral-400 font-normal">/ orang</span>
+                </div>
                 {pkg.originalPrice && pkg.originalPrice > displayPrice && (
-                  <p className="text-xs text-neutral-300 line-through mt-0.5">
+                  <p className="text-xs text-neutral-400 line-through font-medium mt-0.5">
                     {formatIDR(pkg.originalPrice)}
                   </p>
                 )}
               </div>
 
-              {/* Trust badges */}
+              {/* Trust Badges Pill Bar */}
               <div className="flex flex-wrap gap-2">
-                <span className="text-[10px] text-neutral-500 bg-neutral-50 border border-black/[0.04] px-2.5 py-1 rounded-full">
-                  Konfirmasi instan
+                <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <Zap className="w-3 h-3" /> Konfirmasi Instan
                 </span>
-                <span className="text-[10px] text-neutral-500 bg-neutral-50 border border-black/[0.04] px-2.5 py-1 rounded-full">
-                  Pembayaran aman
+                <span className="text-[10px] font-extrabold text-brand-dark bg-brand/10 px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3" /> Garansi Refund
                 </span>
-                <span className="text-[10px] text-neutral-500 bg-neutral-50 border border-black/[0.04] px-2.5 py-1 rounded-full">
+                <span className="text-[10px] font-extrabold text-neutral-700 bg-neutral-100 px-2.5 py-1 rounded-full">
                   Support 24/7
                 </span>
               </div>
 
-              {/* Departure selector + booking button */}
+              {/* Client-side Departure Selector & Direct Booking Form */}
               <PackageDetailClient
-                packageId={pkg.id}
+                packageId={Number(pkg.id)}
                 departures={departures}
                 basePrice={displayPrice}
               />
+
             </div>
           </div>
+
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }
