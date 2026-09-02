@@ -211,23 +211,26 @@ function DayAccordionItem({
                     )}
 
                     <div className="p-5 space-y-3">
-                      {!act.image && (
-                        <div className="flex items-center justify-between gap-2 border-b border-neutral-100 pb-2.5">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className="w-2 h-2 rounded-full bg-brand shrink-0" />
-                            <span className="font-jakarta text-neutral-900 text-xs font-bold truncate">
-                              {act.location}
-                            </span>
-                          </div>
-                          <span className="text-[10px] font-jakarta font-semibold text-neutral-600 bg-neutral-100 px-2.5 py-0.5 rounded-full shrink-0">
+                      {/* Primary Header: Location Name + Cost */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <h4 className="font-jakarta text-base font-bold text-neutral-900 leading-snug">
+                            {act.location || act.activity}
+                          </h4>
+                        </div>
+                        {act.cost && (
+                          <span className="text-[11px] font-jakarta font-semibold text-brand bg-brand/10 px-2.5 py-0.5 rounded-full shrink-0">
                             {act.cost}
                           </span>
-                        </div>
-                      )}
+                        )}
+                      </div>
 
-                      <h4 className="font-jakarta text-sm font-bold text-neutral-900 leading-snug">
-                        {act.activity}
-                      </h4>
+                      {/* Activity / Action Description */}
+                      {act.activity && act.activity.toLowerCase() !== (act.location || '').toLowerCase() && (
+                        <p className="font-jakarta text-xs text-neutral-600 leading-relaxed font-normal">
+                          {act.activity}
+                        </p>
+                      )}
 
                       <div className="flex flex-wrap items-center gap-3 text-xs font-jakarta text-neutral-500">
                         <a

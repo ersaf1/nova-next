@@ -4,6 +4,7 @@ import { getAttractionsForDestination, mergePlacesIntoAttractions } from '@/lib/
 import { getOrFetchPlaces } from '@/lib/geoapify/places-cache'
 import { resolveGroundingForDestination } from '@/lib/search-grounding'
 import { fetchRealPlacePhotoWithScore } from '@/lib/real-photos'
+import { findDestinationKnowledge } from '@/lib/travel-knowledge'
 import { readFile } from 'fs/promises'
 import path from 'path'
 
@@ -377,6 +378,9 @@ const INDONESIAN_LOCAL_KNOWLEDGE: Record<string, {
 }
 
 function resolveLocalGrounding(destination: string) {
+  const knowledge = findDestinationKnowledge(destination)
+  if (knowledge) return knowledge
+
   const norm = destination.toLowerCase().trim()
   // 1. Direct key match
   for (const [key, data] of Object.entries(INDONESIAN_LOCAL_KNOWLEDGE)) {
@@ -426,28 +430,28 @@ function buildDynamicActivity(
   index: number
 ) {
   const morningVerbs = [
-    `Menikmati udara sejuk & jalan pagi santai di ${placeName}`,
-    `Hunting foto pemandangan & menjelajahi keindahan ${placeName}`,
-    `Eksplorasi spot ikonik & panorama segar ${placeName}`,
-    `Menyusuri rimbunnya alam & sudut estetik di ${placeName}`,
+    'Jalan pagi santai menikmati udara sejuk & suasana segar',
+    'Hunting foto panorama alam & eksplorasi spot ikonik',
+    'Eksplorasi keindahan daya tarik utama & sudut pemandangan estetik',
+    'Menyusuri rimbunnya lanskap alam & menikmati udara terbuka',
   ]
   const lunchVerbs = [
-    `Mencicipi kuliner otentik & makan siang lezat khas ${destName}`,
-    `Wisata gastronomi lokal & santap siang favorit warga sekitar`,
-    `Istirahat santai & menikmati hidangan tradisional khas daerah`,
-    `Makan siang dengan cita rasa legendaris di sekitar ${placeName}`,
+    `Wisata gastronomi & santap siang menu otentik khas ${destName.split(',')[0]}`,
+    'Makan siang santai mencicipi hidangan tradisional favorit warga lokal',
+    'Istirahat siang & menikmati santapan lezat dengan cita rasa khas',
+    'Makan siang menu pilihan di tempat makan populer sekitar area',
   ]
   const afternoonVerbs = [
-    `Menjelajahi warisan budaya & keunikan arsitektur di ${placeName}`,
-    `Berburu golden hour, bersantai & hunting foto estetik di ${placeName}`,
-    `Mengunjungi pusat kerajinan, spot foto viral & daya tarik ${placeName}`,
-    `Menikmati suasana sore yang teduh sambil melihat aktivitas lokal di ${placeName}`,
+    'Menjelajahi warisan budaya, keunikan arsitektur & pusat kerajinan',
+    'Berburu golden hour senja & hunting foto estetik di sudut terbaik',
+    'Mengunjungi spot populer & menikmati rekreasi sore hari',
+    'Menikmati suasana sore yang teduh sambil melihat aktivitas warga lokal',
   ]
   const eveningVerbs = [
-    `Menikmati kuliner malam, street food & suasana hangat ${placeName}`,
-    `Santap malam istimewa sambil menikmati kerlap-kerlip lampu kota di ${placeName}`,
-    `Nongkrong santai, ngopi lokal & mencicipi jajanan malam khas ${destName}`,
-    `Makan malam santai penutup hari & refleksi liburan menyenangkan di ${placeName}`,
+    `Menikmati kuliner malam, street food & suasana hangat ${destName.split(',')[0]}`,
+    'Santap malam istimewa sambil menikmati kerlap-kerlip lampu kota',
+    'Nongkrong santai, ngopi lokal & mencicipi jajanan malam legendaris',
+    'Makan malam santai penutup hari & refleksi perjalanan menyenangkan',
   ]
 
   const tipsList = [
@@ -529,18 +533,66 @@ const MOCK_INTROS = [
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function generateMockItinerary(destination: string, duration: number, countryData: any = null, realPlaces: string[] = []) {
-  const localGrounding = resolveLocalGrounding(destination)
-  const destName = localGrounding ? localGrounding.canonicalName : (countryData ? `${countryData.city}, ${countryData.country}` : destination)
+  const knowledge = findDestinationKnowledge(destination)
+  const localGrounding = knowledge || resolveLocalGrounding(destination)
   
+  let destName = destination
+  if (localGrounding) {
+    destName = localGrounding.canonicalName
+  } else if (countryData) {
+    const isMulti = countryData.city.includes('&') || countryData.city.includes(',')
+    destName = isMulti ? `${destination.trim()}, ${countryData.country}` : `${countryData.city}, ${countryData.country}`
+  }
+
+  // 1. If knowledge has curated dayTemplates, use them for clean, authentic, high-quality results
+  if (knowledge && knowledge.dayTemplates && knowledge.dayTemplates.length > 0) {
+    const intro = MOCK_INTROS[Math.floor(Math.random() * MOCK_INTROS.length)]
+    const defaultAttractions = knowledge.spots.slice(0, 4).map((name) => ({
+      name,
+      description: `Spot ikonik unggulan dan favorit wajib kunjung di ${knowledge.parentRegion}.`,
+      image: '',
+    }))
+
+    return {
+      isMock: true,
+      destination: destName,
+      duration,
+      totalEstimatedCost: knowledge.totalEstimatedCost || 'Rp 1.800.000 - Rp 4.500.000',
+      heroImage: countryData ? countryData.image : null,
+      days: Array.from({ length: duration }, (_, i) => {
+        const dayNum = i + 1
+        const template = knowledge.dayTemplates[i % knowledge.dayTemplates.length]
+        return {
+          day: dayNum,
+          title: template.title.replace(/^Hari\s+\d+/, `Hari ${dayNum}`),
+          activities: template.activities.map((act) => ({ ...act })),
+          meals: template.meals,
+          accommodation: template.accommodation,
+          estimatedDailyCost: template.estimatedDailyCost,
+        }
+      }),
+      attractions: defaultAttractions,
+      travelTips: knowledge.tips,
+      bestTimeToVisit: knowledge.bestSeason,
+      localPhrases: knowledge.localPhrases || [
+        { phrase: 'Matur Nuwun / Terima kasih', meaning: 'Ungkapan rasa terima kasih' },
+        { phrase: 'Pinten nggih? / Berapa harganya?', meaning: 'Menanyakan harga ke penjual' },
+        { phrase: 'Nyuwun sewu / Permisi', meaning: 'Ungkapan sopan santun' }
+      ],
+      aiIntro: intro(destName, duration),
+    }
+  }
+
+  // 2. Fallback for uncatalogued custom locations
   const allPlaces = localGrounding ? [...localGrounding.spots, ...realPlaces] : realPlaces
   const defaultAttractions = localGrounding ? localGrounding.spots.slice(0, 3).map((name) => ({
     name,
     description: `Destinasi ikonik dan spot favorit wajib kunjung di ${localGrounding.parentRegion}.`,
     image: '',
   })) : (countryData ? [
-    { name: `Pemandangan & Landmark Utama ${countryData.city}`, description: countryData.tagline || countryData.description, image: countryData.image },
+    { name: `Pemandangan & Landmark Utama ${countryData.city.split(',')[0]}`, description: countryData.tagline || countryData.description, image: countryData.image },
     { name: `Kawasan Wisata Khas ${countryData.country}`, description: `Nikmati pesona alam, kebudayaan, dan daya tarik lokal ${countryData.country}.`, image: countryData.image },
-    { name: `Pusat Kuliner & Seni ${countryData.city}`, description: `Cicipi hidangan otentik dan jelajahi pusat kerajinan lokal.`, image: countryData.image }
+    { name: `Pusat Kuliner & Seni ${countryData.city.split(',')[0]}`, description: `Cicipi hidangan otentik dan jelajahi pusat kerajinan lokal.`, image: countryData.image }
   ] : getAttractionsForDestination(destination))
 
   const shuffledPlaces = shuffle(allPlaces)
@@ -550,7 +602,7 @@ function generateMockItinerary(destination: string, duration: number, countryDat
     isMock: true,
     destination: destName,
     duration,
-    totalEstimatedCost: localGrounding ? 'Rp 1.200.000 - Rp 2.800.000' : (countryData ? countryData.price : 'Rp 2.500.000 - Rp 5.000.000'),
+    totalEstimatedCost: localGrounding && 'totalEstimatedCost' in localGrounding ? (localGrounding as any).totalEstimatedCost : (countryData ? countryData.price : 'Rp 2.500.000 - Rp 5.000.000'),
     heroImage: countryData ? countryData.image : null,
     days: Array.from({ length: duration }, (_, i) => {
       const dayNum = i + 1
@@ -580,11 +632,13 @@ function generateMockItinerary(destination: string, duration: number, countryDat
       'Gunakan pakaian yang nyaman sesuai cuaca setempat.'
     ],
     bestTimeToVisit: localGrounding ? localGrounding.bestSeason : (countryData ? 'Sepanjang Tahun (Kondisi Terbaik)' : 'April hingga Oktober'),
-    localPhrases: [
-      { phrase: 'Matur Nuwun / Terima kasih', meaning: 'Ungkapan rasa terima kasih' },
-      { phrase: 'Pinten nggih? / Berapa harganya?', meaning: 'Menanyakan harga ke penjual' },
-      { phrase: 'Nyuwun sewu / Permisi', meaning: 'Ungkapan sopan santun' }
-    ],
+    localPhrases: localGrounding && 'localPhrases' in localGrounding && Array.isArray((localGrounding as any).localPhrases)
+      ? (localGrounding as any).localPhrases
+      : [
+          { phrase: 'Matur Nuwun / Terima kasih', meaning: 'Ungkapan rasa terima kasih' },
+          { phrase: 'Pinten nggih? / Berapa harganya?', meaning: 'Menanyakan harga ke penjual' },
+          { phrase: 'Nyuwun sewu / Permisi', meaning: 'Ungkapan sopan santun' }
+        ],
     aiIntro: intro(destName, duration),
   }
 }

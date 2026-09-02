@@ -35,54 +35,55 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
   },
 });
 
-const TEST_EMAIL = 'testadmin_qa@example.com';
-const TEST_PASSWORD = 'TestAdmin123!';
+const ADMIN_ACCOUNTS = [
+  { email: 'admin@nova.com', password: 'Admin123456!', role: 'super_admin' },
+  { email: 'testadmin_qa@example.com', password: 'TestAdmin123!', role: 'super_admin' },
+  { email: 'ersaf@gmail.com', password: '11111111', role: 'super_admin' },
+];
 
 async function createAndPromote() {
-  console.log('--- Creating Test Admin ---');
+  console.log('--- Setting Up Admin Accounts ---');
   
-  // 1. List users to see if already exists
   const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers();
   if (listError) {
     console.error('Failed to list users:', listError.message);
     process.exit(1);
   }
   
-  let user = users.find(u => u.email === TEST_EMAIL);
-  
-  if (!user) {
-    console.log(`Creating user: ${TEST_EMAIL}`);
-    const { data: { user: newUser }, error: createError } = await supabaseAdmin.auth.admin.createUser({
-      email: TEST_EMAIL,
-      password: TEST_PASSWORD,
-      email_confirm: true
-    });
+  for (const acc of ADMIN_ACCOUNTS) {
+    let user = users.find(u => u.email === acc.email);
     
-    if (createError) {
-      console.error('Failed to create user:', createError.message);
-      process.exit(1);
+    if (!user) {
+      console.log(`Creating user: ${acc.email}`);
+      const { data: { user: newUser }, error: createError } = await supabaseAdmin.auth.admin.createUser({
+        email: acc.email,
+        password: acc.password,
+        email_confirm: true
+      });
+      
+      if (createError) {
+        console.error(`Failed to create ${acc.email}:`, createError.message);
+        continue;
+      }
+      user = newUser;
+    } else {
+      console.log(`Updating password & confirming email for: ${acc.email}`);
+      await supabaseAdmin.auth.admin.updateUserById(user.id, {
+        password: acc.password,
+        email_confirm: true,
+      });
     }
-    user = newUser;
-    console.log(`Created user: ${user.id}`);
-  } else {
-    console.log(`User already exists: ${user.id}`);
-  }
-  
-  // 2. Promote to super_admin in user_roles
-  console.log(`Promoting ${TEST_EMAIL} to super_admin...`);
-  const { error: roleError } = await supabaseAdmin
-    .from('user_roles')
-    .upsert(
-      { user_id: user.id, role: 'super_admin' },
-      { onConflict: 'user_id' }
-    );
     
-  if (roleError) {
-    console.error('Failed to set role:', roleError.message);
-    process.exit(1);
+    // Assign role
+    await supabaseAdmin
+      .from('user_roles')
+      .upsert(
+        { user_id: user.id, role: acc.role },
+        { onConflict: 'user_id' }
+      );
+      
+    console.log(`✓ ${acc.email} is active as ${acc.role}!`);
   }
-  
-  console.log('SUCCESS: testadmin_qa@example.com is now super_admin!');
 }
 
 createAndPromote().catch(console.error);

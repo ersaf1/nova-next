@@ -29,29 +29,76 @@ export async function searchPlaces(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return ((data.features ?? []) as any[])
       .filter((f) => {
-        const name = f.properties?.name?.trim()
-        if (!name || name.length < 3) return false
-        const lower = name.toLowerCase()
+        const rawName = f.properties?.name?.trim()
+        if (!rawName || rawName.length < 3 || rawName.length > 70) return false
+        const lower = rawName.toLowerCase()
+
+        // Filter out spam, OSM rants, ticket notes, generic markers, government/administrative offices
         if (
+          lower.includes('scam') ||
+          lower.includes('free entrance') ||
+          lower.includes('entrance!') ||
+          lower.includes('above sky') ||
+          lower.includes('view only') ||
+          lower.includes('water slide') ||
+          lower.includes('200k') ||
+          lower.includes('!') ||
+          lower.includes('?') ||
+          lower.includes('badan pertanahan') ||
+          lower.includes('bpn ') ||
+          lower.includes('kementerian') ||
+          lower.includes('kantor dinas') ||
+          lower.includes('dinas ') ||
+          lower.includes('samsat') ||
+          lower.includes('polres') ||
+          lower.includes('polsek') ||
+          lower.includes('koramil') ||
+          lower.includes('kodim') ||
+          lower.includes('pengadilan') ||
+          lower.includes('kejaksaan') ||
+          lower.includes('kantor pajak') ||
+          lower.includes('kpp pratama') ||
+          lower.includes('bpjs') ||
+          lower.includes('pdam') ||
+          lower.includes('pln ') ||
+          lower.includes('notaris') ||
+          lower.includes('ppat') ||
+          lower.includes('kantor lurah') ||
+          lower.includes('kantor camat') ||
+          lower.startsWith('kantor ') ||
+          lower.startsWith('balai ') ||
           lower.startsWith('sdn ') ||
           lower.startsWith('smpn ') ||
           lower.startsWith('sman ') ||
+          lower.startsWith('smkn ') ||
           lower.startsWith('tk ') ||
           lower.startsWith('pos ronda') ||
-          lower.startsWith('kantor desa') ||
-          lower.startsWith('balai desa') ||
           lower.startsWith('puskesmas') ||
           lower.startsWith('klinik') ||
-          lower.startsWith('apotek')
+          lower.startsWith('apotek') ||
+          lower.startsWith('toilet') ||
+          lower.startsWith('parkir') ||
+          lower.startsWith('spbu') ||
+          lower.startsWith('pom bensin') ||
+          lower.startsWith('indomaret') ||
+          lower.startsWith('alfamart') ||
+          lower.startsWith('alfamidi') ||
+          lower.startsWith('bengkel') ||
+          lower.startsWith('laundry')
         ) {
           return false
         }
+
+        const genericList = ['natural water slide', 'view only area', 'above sky view', 'photo spot', 'view point']
+        if (genericList.includes(lower)) return false
+
         return true
       })
       .map((f): GeoapifyPlace => {
         let cleanName = f.properties.name.trim()
-        // Clean prefixes like "Eks taman " -> "Taman "
         cleanName = cleanName.replace(/^Eks\s+taman\s+/i, 'Taman ').replace(/^Bekas\s+/i, '')
+        cleanName = cleanName.replace(/\s*\([^)]*\)\s*/g, ' ').trim()
+        cleanName = cleanName.replace(/[!?,;]+$/g, '').trim()
 
         return {
           placeId: f.properties.place_id,

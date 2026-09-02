@@ -209,13 +209,35 @@ const INDONESIAN_REGIONAL_DATABASE: Record<
   },
 }
 
+import { findDestinationKnowledge } from './travel-knowledge'
+
 /**
- * Searches and grounds a destination query to verified, active spots using Geoapify + Regional Database
+ * Searches and grounds a destination query to verified, active spots using Travel Knowledge Base + Map APIs
  */
 export async function resolveGroundingForDestination(destination: string): Promise<GroundingResult> {
   const norm = destination.toLowerCase().trim()
 
-  // 1. Check exact match in Regional Database
+  // 1. Check central Travel Knowledge Base (Bali, Jogja, Bandung, Tokyo, Paris, etc.)
+  const knowledge = findDestinationKnowledge(destination)
+  if (knowledge) {
+    const groundedSpots: GroundedSpot[] = knowledge.spots.map((name) => ({
+      name,
+      category: 'sightseeing',
+      address: `${name}, ${knowledge.parentRegion}`,
+    }))
+
+    return {
+      destinationName: knowledge.canonicalName,
+      parentRegion: knowledge.parentRegion,
+      spots: groundedSpots,
+      culinary: knowledge.culinary,
+      accommodation: knowledge.accommodation,
+      bestSeason: knowledge.bestSeason,
+      tips: knowledge.tips,
+    }
+  }
+
+  // 2. Check exact match in Regional Database
   for (const [key, data] of Object.entries(INDONESIAN_REGIONAL_DATABASE)) {
     if (norm === key || norm.includes(key) || key.includes(norm)) {
       const groundedSpots: GroundedSpot[] = data.spots.map((name) => ({
