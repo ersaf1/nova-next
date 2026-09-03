@@ -228,16 +228,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }`}
       >
         {/* Brand Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-3 shrink-0 h-16">
+        <div className="p-4 border-b border-neutral-100 flex items-center justify-between gap-3 shrink-0 h-16">
           <Link href="/admin" className="flex items-center gap-3 min-w-0">
             <LogoIcon className="w-8 h-8 shrink-0" />
             {!collapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="font-black tracking-tight text-blue-950 text-base leading-tight truncate">
-                  NOVA Admin
+                <span className="font-black tracking-tight text-neutral-950 text-sm leading-tight truncate">
+                  NOVA CORE
                 </span>
-                <span className="text-[10px] text-blue-600 font-extrabold uppercase tracking-wider">
-                  Aegean Hub
+                <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider">
+                  Admin Console
                 </span>
               </div>
             )}
@@ -246,7 +246,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Desktop Collapse Toggle */}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex w-7 h-7 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 items-center justify-center cursor-pointer transition-colors"
+            className="hidden lg:flex w-7 h-7 rounded-lg border border-neutral-200 hover:bg-neutral-50 text-neutral-500 items-center justify-center cursor-pointer transition-colors"
             title={collapsed ? 'Perluas Menu' : 'Sederhanakan Menu'}
           >
             <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
@@ -255,7 +255,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Mobile Close Button */}
           <button
             onClick={() => setMobileMenuOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-100"
+            className="lg:hidden p-1.5 rounded-lg text-neutral-500 hover:bg-neutral-100"
           >
             <X size={18} />
           </button>
@@ -265,14 +265,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {!collapsed && (
           <div className="px-3 pt-3 pb-1 shrink-0">
             <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-neutral-400" />
               <input
                 type="text"
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
                 placeholder="Cari menu admin..."
-                className="w-full pl-8 pr-2.5 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                className="w-full pl-8 pr-8 py-1.5 bg-neutral-50 border border-neutral-200/90 rounded-xl text-xs font-medium text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-neutral-900 transition-all"
               />
+              <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-mono text-neutral-400 bg-neutral-200/60 px-1 py-0.2 rounded">
+                ⌘K
+              </span>
             </div>
           </div>
         )}
@@ -378,8 +381,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Topbar Header */}
-        <header className="h-16 bg-white/95 backdrop-blur-md border-b border-neutral-200/70 px-6 sm:px-10 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center gap-3">
+        <header className="h-16 bg-white/80 backdrop-blur-xl border-b border-neutral-200/80 px-6 sm:px-10 flex items-center justify-between sticky top-0 z-30 shadow-2xs">
+          <div className="flex items-center gap-4">
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(true)}
@@ -389,22 +392,41 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Menu size={20} />
             </button>
 
-            <div className="flex items-center gap-2 text-xs font-semibold text-neutral-500">
-              <span className="text-neutral-400">Admin</span>
+            {/* Breadcrumbs */}
+            <div className="flex items-center gap-2 text-xs font-semibold text-neutral-400">
+              <span className="text-neutral-500 hover:text-neutral-800 transition-colors">Admin</span>
               <span>/</span>
-              <span className="text-neutral-900 font-bold">{currentPageLabel}</span>
+              <span className="text-neutral-950 font-bold bg-neutral-100/90 border border-neutral-200/70 px-2.5 py-1 rounded-lg">
+                {currentPageLabel}
+              </span>
+            </div>
+
+            {/* Live Operational Status Badge */}
+            <div className="hidden sm:flex items-center gap-2 bg-emerald-50/80 border border-emerald-200/80 px-3 py-1 rounded-full text-[11px] font-semibold text-emerald-800">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>System Operational</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              target="_blank"
+              className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-neutral-600 hover:text-neutral-900 bg-neutral-100/80 hover:bg-neutral-200/70 border border-neutral-200/70 px-3 py-1.5 rounded-xl transition-all"
+            >
+              <ExternalLink size={13} className="text-neutral-500" />
+              <span>Buka Web Publik</span>
+            </Link>
+
             {user && (
-              <div className="flex items-center gap-2 bg-neutral-100 border border-neutral-200 px-3 py-1.5 rounded-full text-xs font-semibold text-neutral-800">
-                {user.role === 'super_admin' ? (
-                  <Crown size={14} className="text-amber-600" />
-                ) : (
-                  <ShieldCheck size={14} className="text-neutral-600" />
-                )}
-                <span>{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</span>
+              <div className="flex items-center gap-2.5 bg-white border border-neutral-200/90 shadow-2xs pl-2 pr-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-900">
+                <div className="w-6 h-6 rounded-full bg-neutral-900 text-white font-bold flex items-center justify-center text-[10px]">
+                  {user.name ? user.name.slice(0, 2).toUpperCase() : 'AD'}
+                </div>
+                <span className="truncate max-w-[120px]">{user.name || user.email.split('@')[0]}</span>
+                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider bg-neutral-100 px-2 py-0.5 rounded-md">
+                  {user.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                </span>
               </div>
             )}
           </div>
