@@ -13,7 +13,10 @@
     "start": "next start",
     "lint": "eslint",
     "render:diagrams": "node scripts/render-mermaid.mjs",
-    "test:e2e": "node scripts/run-e2e-tests.mjs"
+    "test:e2e": "node scripts/run-e2e-tests.mjs",
+    "test:puppeteer": "node tests/puppeteer/full-test.js",
+    "test:puppeteer:user": "node tests/puppeteer/user-test.js",
+    "test:admin:create": "node scripts/create-admin-test.js"
   },
   "dependencies": {
     "@google/generative-ai": "0.21.0",

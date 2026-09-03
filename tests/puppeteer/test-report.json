@@ -1,0 +1,557 @@
+{
+  "timestamp": "2026-09-03T00:37:50.840Z",
+  "summary": {
+    "passed": 101,
+    "failed": 0,
+    "skipped": 8,
+    "total": 109
+  },
+  "results": [
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Homepage loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Homepage content detected"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Navbar present"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Destinations page loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "12 destinations found"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Destination detail opened"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Packages page loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "192 packages found"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Package detail opened"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Search page loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Search URL correct"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Search destinations filter works"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Search packages filter works"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "FAQ page loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "FAQ accordion clicked"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Promo page loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Promo content detected"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "How It Works page loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "How It Works content detected"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "Reviews page loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "SKIP",
+      "test": "Review form not found"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "AI Planner page loaded"
+    },
+    {
+      "part": "A · Public Pages",
+      "status": "PASS",
+      "test": "AI Planner input found"
+    },
+    {
+      "part": "B · Auth Flow",
+      "status": "PASS",
+      "test": "Login form fields present"
+    },
+    {
+      "part": "B · Auth Flow",
+      "status": "PASS",
+      "test": "Login submit button present"
+    },
+    {
+      "part": "B · Auth Flow",
+      "status": "PASS",
+      "test": "User login successful (after submit click)"
+    },
+    {
+      "part": "B · Auth Flow",
+      "status": "PASS",
+      "test": "Session valid — /api/auth/me returns user data"
+    },
+    {
+      "part": "B · Auth Flow",
+      "status": "PASS",
+      "test": "Admin login successful — redirected away from /login"
+    },
+    {
+      "part": "B · Auth Flow",
+      "status": "PASS",
+      "test": "Admin session valid — role confirmed"
+    },
+    {
+      "part": "B · Auth Flow",
+      "status": "PASS",
+      "test": "Register page accessible"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Dashboard accessible"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Dashboard booking content detected"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Dashboard bookings accessible"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Bookings list content present"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Dashboard wishlist accessible"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Dashboard itineraries accessible"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Dashboard notifications accessible"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Profile page accessible"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Profile name input found"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Profile name edited"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Profile phone edited"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Profile save button clicked"
+    },
+    {
+      "part": "C · User Dashboard",
+      "status": "PASS",
+      "test": "Itinerary redirects to AI Planner"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "PASS",
+      "test": "Package detail page opened"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "PASS",
+      "test": "Booking CTA found on package detail"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "PASS",
+      "test": "Booking page loaded"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "PASS",
+      "test": "Booking form has input fields"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "PASS",
+      "test": "Booking page shows destination search step"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "SKIP",
+      "test": "Booking form requires destination selection first"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "PASS",
+      "test": "Payment page loaded (may show error for invalid ID)"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "PASS",
+      "test": "Payment confirmation page loaded"
+    },
+    {
+      "part": "D · Booking Flow",
+      "status": "SKIP",
+      "test": "Wishlist toggle button not found"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin dashboard accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin dashboard content detected"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin bookings page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin bookings content detected"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin users page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin users content detected"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin refunds page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin reports page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin coupons page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Create coupon button found"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin destinations page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin packages page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin testimonials page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Admin hero page accessible"
+    },
+    {
+      "part": "E · Admin Dashboard",
+      "status": "PASS",
+      "test": "Hero editor form found"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Destinations: Create modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Destinations: Create submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Destinations: Items listed (656 found)"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Destinations: Edit modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Destinations: Edit submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "SKIP",
+      "test": "Destinations: Delete timed out"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Packages: Create modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Packages: Create submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Packages: Items listed (235 found)"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Packages: Edit modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Packages: Edit submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "SKIP",
+      "test": "Packages: Delete timed out"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Create modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Create submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Items listed (49 found)"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Edit modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Edit submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "SKIP",
+      "test": "Coupons: Delete timed out"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "FAQs: Create modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "FAQs: Create submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "FAQs: Items listed (69 found)"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "FAQs: Edit modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "FAQs: Edit submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "SKIP",
+      "test": "FAQs: Delete timed out"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Create modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Create submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Items listed (49 found)"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Edit modal opened"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Coupons: Edit submitted"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "SKIP",
+      "test": "Coupons: Delete timed out"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Hero headline edited"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Hero saved"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Settings page accessible"
+    },
+    {
+      "part": "F · Admin CRUD Operations",
+      "status": "PASS",
+      "test": "Settings form has inputs"
+    },
+    {
+      "part": "G · Security & Access Control",
+      "status": "PASS",
+      "test": "Unauthenticated /admin → redirected to /login"
+    },
+    {
+      "part": "G · Security & Access Control",
+      "status": "PASS",
+      "test": "Unauthenticated /api/admin/users → 401 (correct)"
+    },
+    {
+      "part": "G · Security & Access Control",
+      "status": "PASS",
+      "test": "Unauthenticated PATCH /api/admin/users/role → 401 (correct)"
+    },
+    {
+      "part": "G · Security & Access Control",
+      "status": "PASS",
+      "test": "Unauthenticated /api/admin/audit-logs → 401 (correct)"
+    },
+    {
+      "part": "G · Security & Access Control",
+      "status": "PASS",
+      "test": "Public /api/destinations → 200 (accessible)"
+    },
+    {
+      "part": "G · Security & Access Control",
+      "status": "PASS",
+      "test": "Public /api/packages → 200 (accessible)"
+    },
+    {
+      "part": "G · Security & Access Control",
+      "status": "PASS",
+      "test": "GET /api/bookings unauthenticated → 401"
+    },
+    {
+      "part": "G · Security & Access Control",
+      "status": "PASS",
+      "test": "Unauthenticated POST /api/upload → 401 (correct)"
+    }
+  ],
+  "failures": []
+}
