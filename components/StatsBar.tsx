@@ -40,9 +40,9 @@ const StatsBar: React.FC = () => {
   }, [])
 
   return (
-    <section className="bg-white px-4 sm:px-6 md:px-8 py-12 border-b border-neutral-200/70">
+    <section className="bg-white px-4 sm:px-6 md:px-8 py-12 border-b border-slate-200/70">
       <div className="max-w-[88rem] mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x md:divide-neutral-200">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x md:divide-slate-200/80">
           {stats.map(({ statKey, value, label, iconName }, idx) => {
             const Icon = iconName ? (ICON_MAP[iconName] ?? Globe) : Globe
             return (
@@ -51,17 +51,17 @@ const StatsBar: React.FC = () => {
                 className="flex flex-col items-center md:items-start md:px-10 first:md:pl-0 last:md:pr-0 text-center md:text-left"
               >
                 <div className="flex items-center gap-3 mb-1.5">
-                  <div className="w-8 h-8 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100/80 flex items-center justify-center shrink-0">
                     <Icon className="w-4 h-4" />
                   </div>
                   <span
-                    className="text-3xl sm:text-4xl font-black text-neutral-950 tracking-tight"
+                    className="text-3xl sm:text-4xl font-black text-blue-950 tracking-tight"
                     style={{ letterSpacing: '-0.03em' }}
                   >
                     {value}
                   </span>
                 </div>
-                <span className="text-xs text-neutral-500 font-bold uppercase tracking-wider">
+                <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">
                   {label}
                 </span>
               </div>

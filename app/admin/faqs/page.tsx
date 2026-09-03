@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { adminFetch } from '@/lib/admin-client'
 
 interface FAQ { id: number; q: string; a: string }
 const empty: Omit<FAQ, 'id'> = { q: '', a: '' }
@@ -22,17 +23,38 @@ export default function FAQAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true)
-    if (editing) {
-      await fetch(`/api/faqs/${editing.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
-    } else {
-      await fetch('/api/faqs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+    try {
+      const res = editing
+        ? await adminFetch(`/api/faqs/${editing.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+        : await adminFetch('/api/faqs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menyimpan FAQ: ' + (err.error || err.message || res.statusText))
+        setSaving(false)
+        return
+      }
+      setShowModal(false)
+      load()
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setSaving(false)
     }
-    setSaving(false); setShowModal(false); load()
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Delete this FAQ?')) return
-    await fetch(`/api/faqs/${id}`, { method: 'DELETE' }); load()
+    if (!confirm('Yakin ingin menghapus FAQ ini?')) return
+    try {
+      const res = await adminFetch(`/api/faqs/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menghapus FAQ: ' + (err.error || err.message || res.statusText))
+        return
+      }
+      load()
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   return (

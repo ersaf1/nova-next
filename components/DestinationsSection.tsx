@@ -23,7 +23,7 @@ interface Destination {
 }
 
 const tagColors: Record<string, string> = {
-  Popular: 'bg-neutral-900 text-white',
+  Popular: 'bg-blue-600 text-white',
   Trending: 'bg-rose-500 text-white',
   "Editor's Pick": 'bg-amber-500 text-white',
   New: 'bg-emerald-600 text-white',
@@ -204,28 +204,29 @@ const DestinationsSection: React.FC = () => {
 
   return (
     <>
-      <section id="destinations" className="bg-[#F8FAFC] px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-neutral-200/70">
+      <section id="destinations" className="bg-[#F8FAFD] px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-slate-200/70">
         <div className="max-w-[88rem] mx-auto space-y-12">
           
           {/* Header */}
           <ScrollReveal animation="slide-up">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-neutral-200/70">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200/70">
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-brand-dark bg-brand/10 px-3 py-1 rounded-full">
-                  <Compass className="w-3.5 h-3.5" />
-                  <span>Destinasi Terpopuler Dunia</span>
+                <div className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-neutral-600 bg-neutral-100 px-3.5 py-1.5 rounded-full border border-neutral-200/80">
+                  <Compass className="w-3.5 h-3.5 text-neutral-400" />
+                  <span>01 / Destinasi Pilihan Dunia</span>
                 </div>
-                <h2 className="text-3xl sm:text-5xl font-black text-neutral-950 tracking-tight leading-tight">
-                  Pilihan Favorit Wisatawan
+                <h2 className="text-3xl sm:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
+                  <span>Pilihan Favorit </span>
+                  <span className="font-serif-luxury italic font-normal text-neutral-900">Wisatawan Dunia</span>
                 </h2>
-                <p className="text-xs sm:text-sm text-neutral-600 max-w-xl font-normal">
-                  Koleksi destinasi impian dengan jaminan pengalaman terbaik, rute terlengkap, dan harga terjangkau.
+                <p className="text-xs sm:text-sm text-neutral-500 max-w-xl font-normal leading-relaxed">
+                  Koleksi destinasi impian dengan jaminan pengalaman terbaik, rute terlengkap, dan transparansi harga.
                 </p>
               </div>
 
               <Link
                 href="/destinations"
-                className="inline-flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-extrabold px-5 py-3 rounded-full transition-all shrink-0 shadow-xs group"
+                className="inline-flex items-center gap-2 bg-neutral-900 hover:bg-black text-white text-xs font-semibold px-5 py-3 rounded-full transition-all shrink-0 shadow-xs group"
               >
                 <span>Lihat Semua Destinasi</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -234,7 +235,7 @@ const DestinationsSection: React.FC = () => {
           </ScrollReveal>
 
           {/* Destinations Bento Grid */}
-          <div ref={destGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div ref={destGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {destinations.slice(0, 6).map((dest, i) => {
               const imageUrl = dest.image || DEFAULT_IMAGES[dest.city] || staticDestinations[0].image
               const isSaved = saved.has(dest.city)
@@ -243,7 +244,7 @@ const DestinationsSection: React.FC = () => {
                 <div
                   key={dest.id || i}
                   onClick={() => setLightboxIndex(i)}
-                  className="group relative rounded-3xl overflow-hidden cursor-pointer bg-neutral-900 h-80 sm:h-96 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 border border-neutral-200/40"
+                  className="group relative rounded-3xl overflow-hidden cursor-pointer bg-sky-900 h-80 sm:h-96 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/15 hover:-translate-y-1.5 border border-slate-200/60 hover:border-sky-300"
                 >
                   {/* Background Image */}
                   <img
@@ -254,13 +255,13 @@ const DestinationsSection: React.FC = () => {
                   />
 
                   {/* Gradient Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/30 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/40 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-sky-950/85 via-sky-900/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-sky-950/30 via-transparent to-transparent" />
 
                   {/* Top Badges */}
                   <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
                     {dest.tag ? (
-                      <span className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs ${tagColors[dest.tag] || 'bg-neutral-900 text-white'}`}>
+                      <span className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs ${tagColors[dest.tag] || 'bg-blue-600 text-white'}`}>
                         {dest.tag}
                       </span>
                     ) : <span />}
@@ -277,15 +278,15 @@ const DestinationsSection: React.FC = () => {
                   {/* Card Bottom Info */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 z-10 space-y-3">
                     <div>
-                      <div className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-white/75 mb-0.5">
-                        <MapPin className="w-3 h-3 text-brand" />
+                      <div className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-white/85 mb-0.5">
+                        <MapPin className="w-3 h-3 text-sky-300" />
                         <span>{dest.country}</span>
                         {dest.weather && <span>• {dest.weather}</span>}
                       </div>
                       <h3 className="text-2xl font-black text-white tracking-tight leading-tight">
                         {dest.city}
                       </h3>
-                      <p className="text-xs text-white/70 line-clamp-1 font-normal mt-0.5">
+                      <p className="text-xs text-white/75 line-clamp-1 font-normal mt-0.5">
                         {dest.tagline}
                       </p>
                     </div>
@@ -296,7 +297,7 @@ const DestinationsSection: React.FC = () => {
                         <p className="text-sm font-extrabold text-white">{dest.price}</p>
                       </div>
 
-                      <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white border border-white/20 group-hover:bg-brand group-hover:border-brand transition-colors flex items-center gap-1">
+                      <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white border border-white/20 group-hover:bg-blue-600 group-hover:border-blue-600 transition-colors flex items-center gap-1">
                         <span>Lihat Paket</span>
                         <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                       </span>

@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Tag, Sparkles, Clock, Copy, Check, ArrowRight, Zap, Flame } from 'lucide-react'
+import { Tag, Clock, Copy, Check, ArrowRight, Flame } from 'lucide-react'
+import { useCurrency } from '@/context/CurrencyContext'
 
 interface Coupon {
   id?: number
@@ -43,6 +44,7 @@ const DEFAULT_DEALS: Coupon[] = [
 ]
 
 export default function FlashDealsBanner() {
+  const { formatPrice } = useCurrency()
   const [coupons, setCoupons] = useState<Coupon[]>(DEFAULT_DEALS)
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [timeLeft, setTimeLeft] = useState({ hours: 14, minutes: 32, seconds: 45 })
@@ -82,7 +84,7 @@ export default function FlashDealsBanner() {
   }
 
   return (
-    <section className="bg-white py-10 px-4 sm:px-6 md:px-8 border-b border-neutral-200/70">
+    <section className="bg-white py-10 px-4 sm:px-6 md:px-8 border-b border-slate-200/70">
       <div className="max-w-[88rem] mx-auto space-y-6">
         
         {/* Section Top Header & Countdown Timer */}
@@ -96,21 +98,21 @@ export default function FlashDealsBanner() {
                 <span className="text-[10px] font-extrabold uppercase tracking-wider bg-rose-500 text-white px-2 py-0.5 rounded-full">
                   FLASH SALE
                 </span>
-                <h3 className="text-lg sm:text-xl font-extrabold text-neutral-950 tracking-tight">
+                <h3 className="text-lg sm:text-xl font-black text-blue-950 tracking-tight">
                   Kupon Promo Terbatas
                 </h3>
               </div>
-              <p className="text-xs text-neutral-500 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Klaim kode kupon berikut untuk diskon instan saat checkout!
               </p>
             </div>
           </div>
 
           {/* Live Countdown Badge */}
-          <div className="flex items-center gap-2 bg-neutral-900 text-white px-4 py-2 rounded-2xl shrink-0 shadow-xs">
-            <Clock className="w-4 h-4 text-amber-400" />
-            <span className="text-xs text-neutral-300 font-medium">Berakhir dalam:</span>
-            <span className="font-mono font-bold text-xs text-amber-400">
+          <div className="flex items-center gap-2 bg-blue-950 text-white px-4 py-2 rounded-2xl shrink-0 shadow-xs border border-blue-900/50">
+            <Clock className="w-4 h-4 text-amber-300" />
+            <span className="text-xs text-slate-300 font-medium">Berakhir dalam:</span>
+            <span className="font-mono font-bold text-xs text-amber-300">
               {String(timeLeft.hours).padStart(2, '0')}j : {String(timeLeft.minutes).padStart(2, '0')}m : {String(timeLeft.seconds).padStart(2, '0')}d
             </span>
           </div>
@@ -123,40 +125,40 @@ export default function FlashDealsBanner() {
             const discountText =
               coupon.discount_type === 'percent'
                 ? `DISKON ${coupon.discount_value}%`
-                : `DISKON Rp ${Number(coupon.discount_value).toLocaleString('id-ID')}`
+                : `DISKON ${formatPrice(coupon.discount_value)}`
 
             return (
               <div
                 key={coupon.code || idx}
-                className="bg-neutral-50 hover:bg-neutral-100/80 border border-neutral-200/90 rounded-3xl p-5 transition-all duration-300 flex flex-col justify-between hover:shadow-lg hover:-translate-y-0.5 group relative overflow-hidden"
+                className="bg-slate-50/70 hover:bg-white border border-slate-200/90 rounded-3xl p-5 transition-all duration-300 flex flex-col justify-between hover:shadow-lg hover:-translate-y-0.5 group relative overflow-hidden"
               >
-                {/* Decorative Side Notch like a real flight / travel coupon ticket */}
-                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border-r border-neutral-200" />
-                <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border-l border-neutral-200" />
+                {/* Decorative Side Notch like a luxury flight coupon ticket */}
+                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border-r border-slate-200" />
+                <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border-l border-slate-200" />
 
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-[11px] font-black uppercase tracking-wider bg-brand text-white px-3 py-1 rounded-full shadow-2xs">
+                    <span className="text-[11px] font-black uppercase tracking-wider bg-blue-600 text-white px-3 py-1 rounded-full shadow-2xs">
                       {discountText}
                     </span>
-                    <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                       Semua Paket
                     </span>
                   </div>
 
                   <div>
-                    <h4 className="font-extrabold text-sm text-neutral-900 leading-tight">
+                    <h4 className="font-extrabold text-sm text-blue-950 leading-tight">
                       {coupon.title || 'Penawaran Spesial Liburan'}
                     </h4>
-                    <p className="text-xs text-neutral-500 mt-1 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-slate-500 mt-1 leading-relaxed line-clamp-2">
                       {coupon.description || 'Gunakan kode promo saat pemesanan paket wisata impian Anda.'}
                     </p>
                   </div>
                 </div>
 
                 {/* Coupon Code Pill & 1-Click Copy */}
-                <div className="mt-4 pt-3 border-t border-dashed border-neutral-200/80 flex items-center justify-between gap-3">
-                  <div className="font-mono text-xs font-black text-neutral-900 bg-white border border-neutral-200 px-3 py-1.5 rounded-xl shadow-2xs">
+                <div className="mt-4 pt-3 border-t border-dashed border-slate-200 flex items-center justify-between gap-3">
+                  <div className="font-mono text-xs font-black text-blue-950 bg-white border border-blue-100 px-3 py-1.5 rounded-xl shadow-2xs">
                     {coupon.code}
                   </div>
 
@@ -165,7 +167,7 @@ export default function FlashDealsBanner() {
                     className={`text-xs font-bold px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shadow-2xs ${
                       isCopied
                         ? 'bg-emerald-600 text-white'
-                        : 'bg-neutral-900 hover:bg-brand text-white'
+                        : 'bg-blue-600 hover:bg-blue-700 text-white'
                     }`}
                   >
                     {isCopied ? (
@@ -190,7 +192,7 @@ export default function FlashDealsBanner() {
         <div className="text-center pt-1">
           <Link
             href="/promo"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-dark hover:text-brand-darker transition-colors group"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors group"
           >
             <span>Lihat Semua Voucher & Syarat Ketentuan Promo</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />

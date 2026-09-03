@@ -23,6 +23,7 @@ import Footer from '@/components/Footer'
 import CustomSelect from '@/components/ui/CustomSelect'
 import type { TravelPackage, Destination } from '@/lib/types'
 import { formatIDR } from '@/lib/types'
+import { useCurrency } from '@/context/CurrencyContext'
 
 const CATEGORIES = ['All', 'Beach', 'Adventure', 'Culture', 'City', 'Mountain', 'Luxury']
 const DURATIONS = ['Any', '1-3 days', '4-7 days', '8-14 days', '15+ days']
@@ -54,6 +55,7 @@ function SkeletonCard() {
 }
 
 function PackageCard({ pkg }: { pkg: TravelPackage }) {
+  const { formatPrice } = useCurrency()
   const savings = (pkg.originalPrice || 0) - (pkg.price || 0)
 
   return (
@@ -85,7 +87,7 @@ function PackageCard({ pkg }: { pkg: TravelPackage }) {
 
         {savings > 0 && (
           <span className="absolute top-3.5 right-3.5 bg-white/95 text-neutral-950 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
-            Hemat {formatIDR(savings)}
+            Hemat {formatPrice(savings)}
           </span>
         )}
 
@@ -123,12 +125,12 @@ function PackageCard({ pkg }: { pkg: TravelPackage }) {
           <div>
             {(pkg.originalPrice ?? 0) > pkg.price && (
               <span className="text-[11px] text-neutral-400 line-through leading-none block">
-                {formatIDR(pkg.originalPrice ?? 0)}
+                {formatPrice(pkg.originalPrice ?? 0)}
               </span>
             )}
             <div className="flex items-baseline">
               <span className="text-lg font-black text-neutral-950 tracking-tight">
-                {formatIDR(pkg.price)}
+                {formatPrice(pkg.price)}
               </span>
               <span className="text-[10px] text-neutral-400 font-normal ml-1">/org</span>
             </div>

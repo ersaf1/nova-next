@@ -61,23 +61,24 @@ export default async function PromoPage() {
         <div className="max-w-[88rem] mx-auto space-y-12">
           
           {/* Header */}
-          <div className="pt-8 pb-6 border-b border-neutral-200/80 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="pt-8 pb-6 border-b border-slate-200/80 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-3 max-w-2xl">
-              <div className="inline-flex items-center gap-2 bg-brand/10 text-brand-dark text-[10px] font-extrabold uppercase tracking-widest px-3.5 py-1.5 rounded-full">
+              <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-extrabold uppercase tracking-widest px-3.5 py-1.5 rounded-full">
                 <Tag className="w-3.5 h-3.5" />
                 <span>Promo & Diskon Eksklusif</span>
               </div>
-              <h1 className="text-4xl sm:text-6xl font-black text-neutral-950 tracking-tight leading-tight">
-                Kupon Penawaran Spesial
+              <h1 className="text-4xl sm:text-6xl font-black text-blue-950 tracking-tight leading-tight">
+                <span>Kupon & Penawaran </span>
+                <span className="font-serif-luxury italic font-normal text-blue-600">Spesial Liburan</span>
               </h1>
-              <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                 Salin kode kupon di bawah ini dan masukkan pada formulir pemesanan saat checkout untuk menikmati potongan harga langsung.
               </p>
             </div>
 
             <Link
               href="/packages"
-              className="bg-brand hover:bg-brand-dark text-white text-xs font-extrabold px-6 py-3.5 rounded-2xl transition-all shadow-md shadow-brand/30 flex items-center gap-2 shrink-0 self-start md:self-auto"
+              className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-6 py-3.5 rounded-2xl transition-all shadow-md shadow-blue-600/30 flex items-center gap-2 shrink-0 self-start md:self-auto"
             >
               <span>Eksplor Semua Paket</span>
               <ArrowRight className="w-4 h-4" />

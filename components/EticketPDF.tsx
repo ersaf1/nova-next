@@ -121,6 +121,7 @@ export type EticketBooking = {
   status: string
   midtrans_order_id?: string
   created_at: string
+  passengers?: Array<{ title: string; name: string; idType?: string; idNumber?: string }>
 }
 
 type EticketProps = {
@@ -194,6 +195,24 @@ export default function EticketPDF({ booking }: EticketProps) {
             <Text style={styles.value}>{booking.participants} orang</Text>
           </View>
         </View>
+
+        {/* Passenger Manifest */}
+        {booking.passengers && booking.passengers.length > 0 && (
+          <>
+            <View style={styles.divider} />
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Daftar Penumpang / Guest Manifest</Text>
+              {booking.passengers.map((p, idx) => (
+                <View key={idx} style={styles.row}>
+                  <Text style={styles.label}>Tamu {idx + 1}:</Text>
+                  <Text style={styles.value}>
+                    {p.title} {p.name} {p.idNumber ? `(${p.idType || 'ID'}: ${p.idNumber})` : ''}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </>
+        )}
 
         <View style={styles.divider} />
 

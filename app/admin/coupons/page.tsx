@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { adminFetch } from '@/lib/admin-client'
 
 interface Coupon {
   id: number
@@ -120,13 +121,13 @@ export default function CouponAdmin() {
     try {
       let res
       if (editing) {
-        res = await fetch(`/api/coupons/${editing.id}`, {
+        res = await adminFetch(`/api/coupons/${editing.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         })
       } else {
-        res = await fetch('/api/coupons', {
+        res = await adminFetch('/api/coupons', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -140,8 +141,8 @@ export default function CouponAdmin() {
 
       setShowModal(false)
       load()
-    } catch (err: any) {
-      setErrorMsg(err.message || 'An error occurred')
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setSaving(false)
     }
@@ -150,13 +151,13 @@ export default function CouponAdmin() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this coupon?')) return
     try {
-      const res = await fetch(`/api/coupons/${id}`, { method: 'DELETE' })
+      const res = await adminFetch(`/api/coupons/${id}`, { method: 'DELETE' })
       if (!res.ok) {
         throw new Error('Failed to delete coupon')
       }
       load()
-    } catch (err: any) {
-      alert(err.message)
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : String(err))
     }
   }
 

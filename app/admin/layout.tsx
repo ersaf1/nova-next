@@ -1,9 +1,11 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { supabaseClient } from '@/lib/supabase-client'
+import LogoIcon from '@/components/LogoIcon'
+import SwipeNavigation from '@/components/SwipeNavigation'
 import {
   LayoutDashboard,
   Sparkles,
@@ -25,6 +27,10 @@ import {
   ReceiptText,
   Users,
   FileSpreadsheet,
+  Menu,
+  X,
+  ChevronLeft,
+  Search,
 } from 'lucide-react'
 
 interface MeResponse {
@@ -48,40 +54,51 @@ interface NavCategory {
 
 const navCategories: NavCategory[] = [
   {
-    category: 'Overview',
+    category: 'Utama',
     items: [
-      { path: '/admin', label: 'Dashboard', exact: true, icon: LayoutDashboard },
+      { path: '/admin', label: 'Ringkasan Dashboard', exact: true, icon: LayoutDashboard },
     ],
   },
   {
-    category: 'Content Management',
+    category: 'Operasional',
     items: [
-      { path: '/admin/hero', label: 'Hero Section', icon: Sparkles },
-      { path: '/admin/destinations', label: 'Destinations', icon: MapPin },
-      { path: '/admin/packages', label: 'Packages', icon: Package },
-      { path: '/admin/testimonials', label: 'Testimonials', icon: MessageSquare },
-      { path: '/admin/faqs', label: 'FAQ', icon: HelpCircle },
-      { path: '/admin/features', label: 'Features', icon: Layers },
-      { path: '/admin/how-it-works', label: 'How It Works', icon: ListOrdered },
+      { path: '/admin/bookings', label: 'Pemesanan (Bookings)', icon: Calendar },
+      { path: '/admin/users', label: 'Manajemen Pengguna', icon: Users },
+      { path: '/admin/reports', label: 'Laporan & Finansial', icon: FileSpreadsheet },
+      { path: '/admin/refunds', label: 'Pengembalian Dana', icon: ReceiptText },
+      { path: '/admin/coupons', label: 'Kupon & Promo', icon: Ticket },
     ],
   },
   {
-    category: 'Operations',
+    category: 'Konten Web',
     items: [
-      { path: '/admin/bookings', label: 'Bookings', icon: Calendar },
-      { path: '/admin/users', label: 'User Management', icon: Users },
-      { path: '/admin/reports', label: 'Laporan & Export', icon: FileSpreadsheet },
-      { path: '/admin/refunds', label: 'Refunds', icon: ReceiptText },
-      { path: '/admin/coupons', label: 'Coupons & Promos', icon: Ticket },
+      { path: '/admin/packages', label: 'Paket Wisata', icon: Package },
+      { path: '/admin/destinations', label: 'Destinasi', icon: MapPin },
+      { path: '/admin/hero', label: 'Hero Banner', icon: Sparkles },
+      { path: '/admin/features', label: 'Fitur Unggulan', icon: Layers },
+      { path: '/admin/how-it-works', label: 'Cara Kerja', icon: ListOrdered },
+      { path: '/admin/testimonials', label: 'Ulasan / Testimoni', icon: MessageSquare },
+      { path: '/admin/faqs', label: 'Pertanyaan (FAQ)', icon: HelpCircle },
     ],
   },
   {
-    category: 'System',
+    category: 'Sistem',
     items: [
-      { path: '/admin/audit-logs', label: 'Audit Logs & Safety', icon: ShieldCheck },
-      { path: '/admin/settings', label: 'Settings', icon: Settings },
+      { path: '/admin/audit-logs', label: 'Log Aktivitas & Audit', icon: ShieldCheck },
+      { path: '/admin/settings', label: 'Pengaturan Sistem', icon: Settings },
     ],
   },
+]
+
+const ADMIN_SWIPE_ROUTES = [
+  { path: '/admin', label: 'Ringkasan Dashboard' },
+  { path: '/admin/bookings', label: 'Pemesanan (Bookings)' },
+  { path: '/admin/packages', label: 'Paket Wisata' },
+  { path: '/admin/destinations', label: 'Destinasi' },
+  { path: '/admin/coupons', label: 'Kupon & Promo' },
+  { path: '/admin/refunds', label: 'Pengembalian Dana' },
+  { path: '/admin/users', label: 'Manajemen Pengguna' },
+  { path: '/admin/reports', label: 'Laporan Finansial' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -90,21 +107,65 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [checking, setChecking] = useState(true)
   const [authorized, setAuthorized] = useState(false)
   const [user, setUser] = useState<MeResponse | null>(null)
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [searchFilter, setSearchFilter] = useState('')
+  const navScrollRef = useRef<HTMLElement>(null)
+
+  // Forward trackpad / mouse wheel events anywhere on the sidebar directly into nav scroll
+  const handleSidebarWheel = (e: React.WheelEvent<HTMLElement>) => {
+    if (navScrollRef.current && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      navScrollRef.current.scrollTop += e.deltaY
+    }
+  }
 
   useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => r.json())
-      .then((data: MeResponse & { error?: string }) => {
-        if (!data.role || !['booking_officer', 'admin', 'super_admin'].includes(data.role)) {
-          router.push('/login?redirect=/admin')
-        } else {
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        router.push('/login?redirect=/admin')
+        return
+      }
+
+      // Ensure access token cookie is set for server-side endpoints
+      if (typeof document !== 'undefined' && session.access_token) {
+        document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=604800; SameSite=Lax`
+      }
+
+      fetch('/api/auth/me', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      })
+        .then(r => r.json())
+        .then((data: MeResponse & { error?: string }) => {
+          if (data.error || !['admin', 'super_admin', 'booking_officer'].includes(data.role)) {
+            router.push('/login?error=unauthorized&redirect=/admin')
+            return
+          }
           setUser(data)
           setAuthorized(true)
           setChecking(false)
-        }
-      })
-      .catch(() => router.push('/login'))
+        })
+        .catch(() => {
+          router.push('/login?redirect=/admin')
+        })
+    })
+
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      if (session?.access_token && typeof document !== 'undefined') {
+        document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=604800; SameSite=Lax`
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [router])
+
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [pathname])
 
   const handleSignOut = async () => {
     await supabaseClient.auth.signOut()
@@ -130,10 +191,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (checking) {
     return (
-      <div className="min-h-screen bg-[#f4fbfc] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-brand-lighter border-t-brand rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm text-[#4a6a6e] font-medium">Verifying access...</p>
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <div className="w-10 h-10 border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto" />
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Memverifikasi Hak Akses Admin...</p>
         </div>
       </div>
     )
@@ -141,169 +202,224 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!authorized) {
     return (
-      <div className="min-h-screen bg-[#f4fbfc] flex items-center justify-center">
-        <p className="text-sm text-[#4a6a6e] font-medium">Redirecting...</p>
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+        <p className="text-xs font-bold text-slate-500">Mengalihkan ke halaman login...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFB] flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white text-[#12333a] flex flex-col shrink-0 border-r border-brand/15 h-screen sticky top-0">
-        {/* Header */}
-        <div className="p-5 border-b border-brand/15 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-brand border border-brand-dark/30 flex items-center justify-center font-bold text-white shadow-xs shrink-0 relative">
-            N
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
-          </div>
-          <div className="flex flex-col min-w-0">
-            <span className="font-semibold tracking-tight text-neutral-950 text-base leading-tight">NOVA Admin</span>
-            <span className="text-xs text-brand-dark/80 font-medium">Management Hub</span>
-          </div>
+    <div className="min-h-screen bg-[#F8FAFC] flex">
+      {/* Mobile Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 bg-blue-950/40 backdrop-blur-xs z-40 lg:hidden animate-fade-in"
+        />
+      )}
+
+      {/* Sidebar Navigation */}
+      <aside
+        onWheel={handleSidebarWheel}
+        className={`fixed lg:sticky top-0 h-screen max-h-screen overflow-hidden z-50 bg-white border-r border-slate-200/80 flex flex-col transition-all duration-300 shadow-xl lg:shadow-none select-none ${
+          collapsed ? 'w-20' : 'w-64'
+        } ${
+          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
+        {/* Brand Header */}
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-3 shrink-0 h-16">
+          <Link href="/admin" className="flex items-center gap-3 min-w-0">
+            <LogoIcon className="w-8 h-8 shrink-0" />
+            {!collapsed && (
+              <div className="flex flex-col min-w-0">
+                <span className="font-black tracking-tight text-blue-950 text-base leading-tight truncate">
+                  NOVA Admin
+                </span>
+                <span className="text-[10px] text-blue-600 font-extrabold uppercase tracking-wider">
+                  Aegean Hub
+                </span>
+              </div>
+            )}
+          </Link>
+
+          {/* Desktop Collapse Toggle */}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="hidden lg:flex w-7 h-7 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 items-center justify-center cursor-pointer transition-colors"
+            title={collapsed ? 'Perluas Menu' : 'Sederhanakan Menu'}
+          >
+            <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
+          </button>
+
+          {/* Mobile Close Button */}
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-100"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        {/* Categorized Navigation */}
-        <nav className="flex-1 overflow-y-auto p-4 space-y-6">
-          {navCategories
-            .map((category) => {
-              if (user?.role === 'booking_officer') {
-                if (category.category === 'Overview') return category
-                if (category.category === 'Operations') {
-                  return {
-                    ...category,
-                    items: category.items.filter((item) =>
-                      ['/admin/bookings', '/admin/refunds', '/admin/reports'].includes(item.path)
-                    ),
-                  }
-                }
-                return null
-              }
-              if (user?.role === 'admin') {
-                if (category.category === 'System') return null
-                if (category.category === 'Operations') {
-                  return {
-                    ...category,
-                    items: category.items.filter((item) => item.path !== '/admin/users'),
-                  }
-                }
-                return category
-              }
-              return category
-            })
-            .filter(Boolean)
-            .map((category) => (
-              <div key={category!.category}>
-                <h3 className="px-3 text-[11px] font-semibold tracking-wider text-brand-dark/60 uppercase mb-2">
-                  {category!.category}
-                </h3>
-                <div className="space-y-1">
-                  {category!.items.map((item) => {
-                    const Icon = item.icon
-                    const isActive = item.exact
-                      ? pathname === item.path
-                      : pathname === item.path || pathname.startsWith(item.path + '/')
+        {/* Quick Menu Search (when expanded) */}
+        {!collapsed && (
+          <div className="px-3 pt-3 pb-1 shrink-0">
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={searchFilter}
+                onChange={(e) => setSearchFilter(e.target.value)}
+                placeholder="Cari menu admin..."
+                className="w-full pl-8 pr-2.5 py-1.5 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
+          </div>
+        )}
 
-                    return (
-                      <Link
-                        key={item.path}
-                        href={item.path}
-                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
-                          isActive
-                            ? 'bg-brand text-white font-semibold shadow-md shadow-brand/30'
-                            : 'text-[#3d5a5e]/90 hover:text-brand-darker hover:bg-brand/[0.08] font-medium'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-brand-dark/70'}`} />
-                          <span className="truncate">{item.label}</span>
-                        </div>
-                        {isActive && <ChevronRight className="w-4 h-4 text-white shrink-0 ml-1" />}
-                      </Link>
-                    )
-                  })}
-                </div>
+        {/* Nav Items List */}
+        <nav
+          ref={navScrollRef}
+          className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 py-4 space-y-6 touch-pan-y custom-scrollbar"
+        >
+          {navCategories.map((category) => {
+            const filteredItems = category.items.filter(item => {
+              if (!searchFilter.trim()) return true
+              return item.label.toLowerCase().includes(searchFilter.toLowerCase())
+            })
+
+            if (filteredItems.length === 0) return null
+
+            return (
+              <div key={category.category} className="space-y-1.5">
+                {!collapsed && (
+                  <h3 className="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1.5">
+                    {category.category}
+                  </h3>
+                )}
+                {filteredItems.map((item) => {
+                  const Icon = item.icon
+                  const isActive = item.exact
+                    ? pathname === item.path
+                    : pathname === item.path || pathname.startsWith(item.path + '/')
+
+                  return (
+                    <Link
+                      key={item.path}
+                      href={item.path}
+                      title={collapsed ? item.label : undefined}
+                      className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs transition-all cursor-pointer group ${
+                        isActive
+                          ? 'bg-neutral-900 text-white font-semibold shadow-xs'
+                          : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Icon
+                          className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-105 ${
+                            isActive ? 'text-white' : 'text-neutral-400 group-hover:text-neutral-700'
+                          }`}
+                        />
+                        {!collapsed && <span className="truncate">{item.label}</span>}
+                      </div>
+                      {!collapsed && isActive && (
+                        <ChevronRight className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+                      )}
+                    </Link>
+                  )
+                })}
               </div>
-            ))}
+            )
+          })}
         </nav>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-brand/15 space-y-2">
-          {user && (
-            <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-[#3d5a5e]/90 bg-brand-faint border border-brand/20 min-w-0">
-              <User className="w-4 h-4 shrink-0 text-brand-dark" />
-              <span className="truncate flex-1" title={user.email}>
+        {/* User Badge & Bottom Actions */}
+        <div className="p-3 border-t border-neutral-100 space-y-1.5 shrink-0 bg-neutral-50/50">
+          {user && !collapsed && (
+            <div className="p-2.5 rounded-xl bg-white border border-neutral-200/80 shadow-2xs space-y-1">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                  Pengguna Aktif
+                </span>
+                <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded tracking-wider bg-neutral-900 text-white">
+                  {user.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                </span>
+              </div>
+              <p className="text-xs font-semibold text-neutral-900 truncate" title={user.email}>
                 {user.email}
-              </span>
-              {user.role === 'super_admin' ? (
-                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-600 text-[10px] font-semibold shrink-0">
-                  <Crown className="w-2.5 h-2.5" />
-                  super
-                </span>
-              ) : user.role === 'booking_officer' ? (
-                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-600 text-[10px] font-semibold shrink-0">
-                  <Ticket className="w-2.5 h-2.5" />
-                  booking ops
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-brand/15 text-brand-dark text-[10px] font-semibold shrink-0">
-                  <ShieldCheck className="w-2.5 h-2.5" />
-                  admin
-                </span>
-              )}
+              </p>
             </div>
           )}
+
           <Link
             href="/"
-            className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-[#3d5a5e]/90 hover:text-brand-darker hover:bg-brand/[0.08] transition-colors"
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-neutral-600 hover:text-neutral-900 hover:bg-white transition-colors border border-transparent hover:border-neutral-200/70 ${
+              collapsed ? 'justify-center' : ''
+            }`}
+            title="Kembali ke Situs Publik"
           >
-            <div className="flex items-center gap-3">
-              <ExternalLink className="w-4 h-4 shrink-0 text-brand-dark/70" />
-              <span>Back to site</span>
-            </div>
+            <ExternalLink className="w-4 h-4 shrink-0 text-neutral-400" />
+            {!collapsed && <span>Buka Web Publik</span>}
           </Link>
+
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-[#3d5a5e]/90 hover:text-red-500 hover:bg-red-500/[0.08] transition-colors text-left"
+            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer ${
+              collapsed ? 'justify-center' : ''
+            }`}
+            title="Keluar Akun Admin"
           >
-            <div className="flex items-center gap-3">
-              <LogOut className="w-4 h-4 shrink-0" />
-              <span>Sign out</span>
-            </div>
+            <LogOut className="w-4 h-4 shrink-0 text-rose-500" />
+            {!collapsed && <span>Sign Out</span>}
           </button>
         </div>
       </aside>
 
-      {/* Main Content Area with Topbar */}
+      {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Topbar Header */}
-        <header className="h-14 bg-white border-b border-brand/15 px-8 flex items-center justify-between sticky top-0 z-10">
-          <div className="flex items-center gap-2 text-sm font-medium text-[#4a6a6e]">
-            <span className="text-brand-dark/60">Admin</span>
-            <span className="text-brand-light">/</span>
-            <span className="text-brand-darker font-semibold">{currentPageLabel}</span>
+        <header className="h-16 bg-white/95 backdrop-blur-md border-b border-neutral-200/70 px-6 sm:px-10 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-3">
+            {/* Mobile Hamburger Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:hidden p-2 rounded-xl text-neutral-700 hover:bg-neutral-100 cursor-pointer"
+              aria-label="Toggle menu"
+            >
+              <Menu size={20} />
+            </button>
+
+            <div className="flex items-center gap-2 text-xs font-semibold text-neutral-500">
+              <span className="text-neutral-400">Admin</span>
+              <span>/</span>
+              <span className="text-neutral-900 font-bold">{currentPageLabel}</span>
+            </div>
           </div>
 
-          {user && (
-            <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-semibold ${
-              user.role === 'super_admin'
-                ? 'bg-amber-50 text-amber-700 border-amber-200/60'
-                : 'bg-brand-faint text-brand-darker border-brand/30'
-            }`}>
-              {user.role === 'super_admin'
-                ? <Crown className="w-3.5 h-3.5" />
-                : <ShieldCheck className="w-3.5 h-3.5" />
-              }
-              <span>{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            {user && (
+              <div className="flex items-center gap-2 bg-neutral-100 border border-neutral-200 px-3 py-1.5 rounded-full text-xs font-semibold text-neutral-800">
+                {user.role === 'super_admin' ? (
+                  <Crown size={14} className="text-amber-600" />
+                ) : (
+                  <ShieldCheck size={14} className="text-neutral-600" />
+                )}
+                <span>{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</span>
+              </div>
+            )}
+          </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 p-8 overflow-y-auto bg-[#f4fbfc]">
-          {children}
+        {/* Dynamic Page Content — Generous Whitespace */}
+        <main className="flex-1 p-8 sm:p-12 lg:p-16 overflow-y-auto bg-[#FAFAFA]">
+          <div className="max-w-7xl mx-auto space-y-12">
+            {children}
+          </div>
         </main>
       </div>
+
+      {/* Two-Finger Trackpad Horizontal Swipe Navigation */}
+      <SwipeNavigation routes={ADMIN_SWIPE_ROUTES} />
     </div>
   )
 }

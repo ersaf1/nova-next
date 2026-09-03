@@ -28,31 +28,43 @@ export async function getUserFromRequest(request: Request): Promise<User | null>
           })
         )
 
-        // Explicit sb-access-token cookie
+        // 2a. Explicit sb-access-token cookie
         if (cookies['sb-access-token']) {
           token = cookies['sb-access-token']
         } else {
-          // Supabase SSR cookie: sb-<project-ref>-auth-token (base64 JSON)
-          const ssrCookieKey = Object.keys(cookies).find(
-            (k) => k.startsWith('sb-') && k.endsWith('-auth-token')
-          )
-          if (ssrCookieKey) {
+          // 2b. Supabase SSR cookies (supports both chunked .0, .1 and unchunked formats)
+          const allKeys = Object.keys(cookies)
+          const chunkedKeys = allKeys
+            .filter((k) => /sb-.+-auth-token\.\d+$/.test(k))
+            .sort((a, b) => {
+              const idxA = parseInt(a.split('.').pop() || '0', 10)
+              const idxB = parseInt(b.split('.').pop() || '0', 10)
+              return idxA - idxB
+            })
+
+          let raw = ''
+          if (chunkedKeys.length > 0) {
+            raw = chunkedKeys.map((k) => decodeURIComponent(cookies[k])).join('')
+          } else {
+            const singleKey = allKeys.find((k) => k.startsWith('sb-') && k.includes('-auth-token'))
+            if (singleKey) {
+              raw = decodeURIComponent(cookies[singleKey])
+            }
+          }
+
+          if (raw) {
             try {
-              let raw = decodeURIComponent(cookies[ssrCookieKey])
-              // Supabase SSR v0.5+ encodes cookie as "base64-<base64(JSON)>"
               if (raw.startsWith('base64-')) {
                 raw = Buffer.from(raw.slice(7), 'base64').toString('utf-8')
               }
-              // Value may be a JSON array (chunked) or a plain JSON object
               const parsed: unknown = JSON.parse(raw)
-              if (Array.isArray(parsed)) {
-                // Chunked format: join all parts then parse
-                const joined = parsed.join('')
-                const session = JSON.parse(joined) as { access_token?: string }
-                token = session.access_token ?? null
-              } else if (parsed && typeof parsed === 'object') {
+              if (parsed && typeof parsed === 'object') {
                 const session = parsed as { access_token?: string }
-                token = session.access_token ?? null
+                if (typeof session.access_token === 'string') {
+                  token = session.access_token
+                } else if (Array.isArray(parsed) && typeof parsed[0] === 'string' && parsed[0].startsWith('ey')) {
+                  token = parsed[0]
+                }
               }
             } catch {
               // Malformed cookie — ignore

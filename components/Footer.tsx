@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
     'Produk & Layanan': [
       { label: 'Destinasi Populer', href: '/destinations' },
       { label: 'Paket Wisata Terkurasi', href: '/packages' },
-      { label: 'AI Travel Planner', href: '/ai-planner' },
+      { label: 'Smart Route Planner', href: '/ai-planner' },
       { label: 'Promo & Kupon Diskon', href: '/promo' },
       { label: 'Cara Pemesanan', href: '/how-it-works' },
     ],
@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
       { label: 'Tentang NOVA', href: '/how-it-works' },
       { label: 'Ulasan Traveler', href: '/#testimonials' },
       { label: 'Pusat Bantuan & FAQ', href: '/faq' },
-      { label: 'Hubungi Kami', href: '/how-it-works' },
+      { label: 'Hubungi Concierge', href: '/how-it-works' },
     ],
     'Bantuan & Kebijakan': [
       { label: 'Kebijakan Refund', href: '/faq' },
@@ -27,32 +27,37 @@ const Footer: React.FC = () => {
   }
 
   return (
-    <footer className="bg-neutral-950 text-white overflow-hidden border-t border-neutral-800">
+    <footer className="bg-neutral-950 text-white overflow-hidden border-t border-neutral-800/80">
       
-      {/* Main Top Section */}
-      <div className="max-w-[88rem] mx-auto px-4 sm:px-6 md:px-8 pt-16 pb-12">
+      {/* Main Top Section — Generous Whitespace */}
+      <div className="max-w-[88rem] mx-auto px-6 sm:px-10 pt-20 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
           
           {/* Brand Column (4 cols) */}
           <div className="lg:col-span-4 space-y-5">
             <div className="flex items-center gap-2.5">
               <LogoIcon className="w-8 h-8 text-white" />
-              <span className="text-xl font-black tracking-tight text-white">
-                NOVA TRAVEL
-              </span>
+              <div className="flex flex-col">
+                <span className="text-xl font-black tracking-tight text-white leading-none">
+                  NOVA TRAVEL
+                </span>
+                <span className="text-[9px] font-extrabold tracking-widest uppercase text-sky-400 mt-0.5">
+                  Aegean & World Luxury
+                </span>
+              </div>
             </div>
             
-            <p className="text-white/60 text-xs leading-relaxed max-w-sm font-light">
-              Platform liburan dan perencanaan perjalanan modern terpercaya di Indonesia. Menghadirkan kemudahan pemesanan paket wisata all-inclusive dengan teknologi AI.
+            <p className="text-white/70 text-xs leading-relaxed max-w-sm font-light">
+              Platform perjalanan kurasi modern terpercaya di Indonesia. Menghadirkan paket wisata all-inclusive bintang 5, pelayaran phinisi privat, dan perencanaan rute cerdas.
             </p>
 
-            <div className="space-y-2 text-xs text-white/70 pt-2">
+            <div className="space-y-2 text-xs text-white/75 pt-2">
               <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-brand" />
+                <MapPin className="w-3.5 h-3.5 text-blue-400" />
                 <span>Sudirman Central Business District (SCBD), Jakarta</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-brand" />
+                <Mail className="w-3.5 h-3.5 text-blue-400" />
                 <span>concierge@nova.travel</span>
               </div>
             </div>
@@ -70,7 +75,7 @@ const Footer: React.FC = () => {
                     <li key={label}>
                       <Link
                         href={href}
-                        className="text-white/60 hover:text-brand-light text-xs transition-colors duration-200"
+                        className="text-white/65 hover:text-sky-300 text-xs transition-colors duration-200"
                       >
                         {label}
                       </Link>
@@ -97,7 +102,7 @@ const Footer: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2.5">
-                <Lock className="w-5 h-5 text-brand-light shrink-0" />
+                <Lock className="w-5 h-5 text-sky-400 shrink-0" />
                 <div>
                   <p className="text-xs font-bold text-white">Pembayaran Terenkripsi</p>
                   <p className="text-[10px] text-white/50">256-Bit SSL Security</p>
@@ -121,7 +126,7 @@ const Footer: React.FC = () => {
       {/* NOVA Big Brand Wordmark */}
       <div className="max-w-[88rem] mx-auto px-4 sm:px-6 md:px-8 pb-2 overflow-hidden select-none pointer-events-none">
         <div
-          className="font-black text-white/[0.04] leading-none text-center"
+          className="font-black text-white/[0.03] leading-none text-center"
           style={{
             fontSize: 'clamp(5rem, 16vw, 15rem)',
             letterSpacing: '-0.06em',
@@ -134,7 +139,7 @@ const Footer: React.FC = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/10 py-6">
-        <div className="max-w-[88rem] mx-auto px-4 sm:px-6 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/40">
+        <div className="max-w-[88rem] mx-auto px-4 sm:px-6 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/45">
           <p>© 2026 NOVA Travel Inc. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <Link href="/faq" className="hover:text-white transition-colors">Privasi</Link>

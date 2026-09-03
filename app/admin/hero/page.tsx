@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { adminFetch } from '@/lib/admin-client'
 
 interface Hero {
   id?: number
@@ -75,11 +76,16 @@ export default function HeroAdmin() {
     e.preventDefault()
     setSaving(true)
     try {
-      await fetch('/api/hero', {
+      const res = await adminFetch('/api/hero', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menyimpan Hero: ' + (err.error || err.message || res.statusText))
+        return
+      }
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
     } catch {

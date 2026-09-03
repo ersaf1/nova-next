@@ -21,6 +21,8 @@ import {
   Sparkles,
   FileText,
   CreditCard,
+  X,
+  Ticket,
 } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -56,6 +58,13 @@ interface BookingForm {
   notes: string
 }
 
+export interface Passenger {
+  title: 'Tn.' | 'Ny.' | 'Nn.'
+  name: string
+  idType: 'KTP' | 'Paspor'
+  idNumber: string
+}
+
 interface FormErrors {
   name?: string
   email?: string
@@ -89,6 +98,13 @@ const BookingPageInner: React.FC = () => {
     participants: 1,
     notes: '',
   })
+  const [passengers, setPassengers] = useState<Passenger[]>([
+    { title: 'Tn.', name: '', idType: 'KTP', idNumber: '' }
+  ])
+  const [showCouponModal, setShowCouponModal] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [availableCoupons, setAvailableCoupons] = useState<any[]>([])
+  const [loadingCoupons, setLoadingCoupons] = useState(false)
   const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [voucherCode, setVoucherCode] = useState('')
   const [voucherLoading, setVoucherLoading] = useState(false)
@@ -104,6 +120,49 @@ const BookingPageInner: React.FC = () => {
   const [discountAmount, setDiscountAmount] = useState(0)
   const [matchedPackages, setMatchedPackages] = useState<Package[] | null>(null)
   const [noMatchesFound, setNoMatchesFound] = useState(false)
+
+  // Sync passengers array length with participant count
+  useEffect(() => {
+    setPassengers((prev) => {
+      const current = [...prev]
+      while (current.length < form.participants) {
+        current.push({ title: 'Tn.', name: '', idType: 'KTP', idNumber: '' })
+      }
+      return current.slice(0, form.participants)
+    })
+  }, [form.participants])
+
+  const handlePassengerChange = (index: number, field: keyof Passenger, value: string) => {
+    setPassengers((prev) => {
+      const updated = [...prev]
+      updated[index] = { ...updated[index], [field]: value }
+      return updated
+    })
+  }
+
+  const copyLeadTraveler = (index: number) => {
+    handlePassengerChange(index, 'name', form.name)
+  }
+
+  const openCouponModal = async () => {
+    setShowCouponModal(true)
+    if (availableCoupons.length === 0) {
+      setLoadingCoupons(true)
+      try {
+        const res = await fetch('/api/coupons')
+        const data = await res.json()
+        setAvailableCoupons(Array.isArray(data) ? data : [])
+      } catch {} finally {
+        setLoadingCoupons(false)
+      }
+    }
+  }
+
+  const applyCouponDirect = async (code: string) => {
+    setVoucherCode(code)
+    setShowCouponModal(false)
+    await handleVoucherApply(code)
+  }
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -233,8 +292,9 @@ const BookingPageInner: React.FC = () => {
     return Object.keys(errors).length === 0
   }
 
-  const handleVoucherApply = async () => {
-    if (!voucherCode.trim() || !selectedPackage) return
+  const handleVoucherApply = async (overrideCode?: string) => {
+    const code = (overrideCode !== undefined ? overrideCode : voucherCode).trim()
+    if (!code || !selectedPackage) return
     setVoucherLoading(true)
     setVoucherResult(null)
     try {
@@ -242,12 +302,13 @@ const BookingPageInner: React.FC = () => {
       const res = await fetch('/api/coupons/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: voucherCode.trim(), amount: subtotal }),
+        body: JSON.stringify({ code, amount: subtotal }),
       })
       const data = await res.json()
       setVoucherResult(data)
       if (data.valid) {
         setDiscountAmount(data.discount_amount ?? 0)
+        setVoucherCode(code)
       } else {
         setDiscountAmount(0)
       }
@@ -263,6 +324,14 @@ const BookingPageInner: React.FC = () => {
     e.preventDefault()
     if (!selectedPackage) return
     if (!validateForm()) return
+
+    // Ensure all passenger names are filled
+    const missingNameIdx = passengers.findIndex((p) => !p.name.trim())
+    if (missingNameIdx !== -1) {
+      alert(`Mohon lengkapi nama lengkap untuk Penumpang ${missingNameIdx + 1}.`)
+      return
+    }
+
     setSubmitting(true)
     try {
       const subtotal = selectedPackage.price * form.participants
@@ -275,6 +344,7 @@ const BookingPageInner: React.FC = () => {
           packageName: selectedPackage.title,
           country: selectedCountry,
           ...form,
+          passengers,
           voucherCode: voucherResult?.valid ? voucherResult.code : undefined,
           discountAmount,
           totalAmount: finalTotal,
@@ -687,6 +757,85 @@ const BookingPageInner: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Multi-Passenger Details (Traveloka-style) */}
+                  <div className="border-t border-neutral-100 pt-5 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-jakarta font-black text-sm text-neutral-950 flex items-center gap-2">
+                          <Users size={16} className="text-neutral-800" />
+                          <span>Data Tamu / Penumpang ({form.participants} Orang)</span>
+                        </h4>
+                        <p className="text-neutral-400 font-jakarta text-[11px] mt-0.5">
+                          Nama harus sesuai identitas resmi (KTP / Paspor) untuk boarding dan tiket wisata.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      {passengers.map((p, idx) => (
+                        <div key={idx} className="bg-neutral-50 border border-neutral-200/90 rounded-2xl p-4 space-y-3 shadow-2xs">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-jakarta font-extrabold text-neutral-900">
+                              Penumpang {idx + 1} {idx === 0 && <span className="text-neutral-400 font-medium">(Pemesan Utama)</span>}
+                            </span>
+                            {idx === 0 && (
+                              <button
+                                type="button"
+                                onClick={() => copyLeadTraveler(0)}
+                                className="text-[11px] font-jakarta font-bold text-neutral-700 hover:text-black underline cursor-pointer"
+                              >
+                                Sama dengan Data Kontak
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                            <div className="sm:col-span-3">
+                              <label className="block text-[10px] font-jakarta font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                                Panggilan
+                              </label>
+                              <select
+                                value={p.title}
+                                onChange={(e) => handlePassengerChange(idx, 'title', e.target.value as 'Tn.' | 'Ny.' | 'Nn.')}
+                                className="w-full bg-white border border-neutral-200 rounded-xl px-2.5 py-2 text-xs font-jakarta font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-brand/20 cursor-pointer"
+                              >
+                                <option value="Tn.">Tn. (Tuan)</option>
+                                <option value="Ny.">Ny. (Nyonya)</option>
+                                <option value="Nn.">Nn. (Nona)</option>
+                              </select>
+                            </div>
+
+                            <div className="sm:col-span-5">
+                              <label className="block text-[10px] font-jakarta font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                                Nama Lengkap *
+                              </label>
+                              <input
+                                type="text"
+                                value={p.name}
+                                onChange={(e) => handlePassengerChange(idx, 'name', e.target.value)}
+                                placeholder="Sesuai KTP / Paspor"
+                                className="w-full bg-white border border-neutral-200 rounded-xl px-3 py-2 text-xs font-jakarta font-semibold text-neutral-950 focus:outline-none focus:ring-2 focus:ring-brand/20"
+                              />
+                            </div>
+
+                            <div className="sm:col-span-4">
+                              <label className="block text-[10px] font-jakarta font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                                No. Identitas (KTP/Paspor)
+                              </label>
+                              <input
+                                type="text"
+                                value={p.idNumber}
+                                onChange={(e) => handlePassengerChange(idx, 'idNumber', e.target.value)}
+                                placeholder="16 digit / No Paspor"
+                                className="w-full bg-white border border-neutral-200 rounded-xl px-3 py-2 text-xs font-jakarta font-medium text-neutral-950 focus:outline-none focus:ring-2 focus:ring-brand/20"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Notes */}
                   <div>
                     <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">Catatan Khusus (opsional)</label>
@@ -747,11 +896,21 @@ const BookingPageInner: React.FC = () => {
                     )}
 
                     {/* Voucher Box */}
-                    <div className="pt-3 border-t border-neutral-100 space-y-2">
-                      <p className="text-xs font-jakarta font-bold text-neutral-900 flex items-center gap-1.5">
-                        <Tag className="w-3.5 h-3.5 text-amber-500" />
-                        <span>Kupon & Diskon Promo</span>
-                      </p>
+                    <div className="pt-3 border-t border-neutral-100 space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-jakarta font-bold text-neutral-900 flex items-center gap-1.5">
+                          <Tag className="w-3.5 h-3.5 text-neutral-800" />
+                          <span>Kupon & Diskon Promo</span>
+                        </p>
+                        <button
+                          type="button"
+                          onClick={openCouponModal}
+                          className="text-[11px] font-jakarta font-bold text-neutral-700 hover:text-black underline cursor-pointer"
+                        >
+                          Pilih Kupon
+                        </button>
+                      </div>
+
                       <div className="flex gap-2">
                         <input
                           type="text"
@@ -768,13 +927,14 @@ const BookingPageInner: React.FC = () => {
                         />
                         <button
                           type="button"
-                          onClick={handleVoucherApply}
+                          onClick={() => handleVoucherApply()}
                           disabled={voucherLoading || !voucherCode.trim()}
                           className="px-4 py-2 bg-brand text-white text-xs font-jakarta font-bold rounded-xl disabled:opacity-40 hover:bg-brand-dark transition-all shrink-0 cursor-pointer"
                         >
                           {voucherLoading ? '...' : 'Gunakan'}
                         </button>
                       </div>
+
                       {voucherResult && (
                         <p className={`text-xs font-jakarta font-bold ${voucherResult.valid ? 'text-emerald-600' : 'text-rose-500'}`}>
                           {voucherResult.valid
@@ -782,6 +942,15 @@ const BookingPageInner: React.FC = () => {
                             : voucherResult.message}
                         </p>
                       )}
+
+                      <button
+                        type="button"
+                        onClick={openCouponModal}
+                        className="w-full text-xs font-jakarta font-bold text-neutral-800 bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200/80 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                      >
+                        <Ticket size={13} className="text-neutral-600" />
+                        <span>Daftar Voucher Tersedia</span>
+                      </button>
                     </div>
 
                     {/* Price Breakdown */}
@@ -812,6 +981,74 @@ const BookingPageInner: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Coupon Selection Modal */}
+          {showCouponModal && (
+            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-neutral-200 space-y-4 max-h-[85vh] overflow-y-auto">
+                <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+                  <div>
+                    <h3 className="font-jakarta font-black text-base text-neutral-900 flex items-center gap-1.5">
+                      <Ticket size={16} className="text-brand" />
+                      <span>Kupon Promo Tersedia</span>
+                    </h3>
+                    <p className="text-neutral-400 text-xs">Pilih promo untuk langsung memotong harga</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowCouponModal(false)}
+                    className="p-1.5 rounded-full text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors cursor-pointer"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+
+                {loadingCoupons ? (
+                  <p className="text-center py-8 text-xs text-neutral-400">Memuat voucher promo...</p>
+                ) : availableCoupons.filter(c => c.is_active).length === 0 ? (
+                  <div className="text-center py-8 space-y-1">
+                    <p className="text-xs font-bold text-neutral-800">Tidak ada voucher promo aktif</p>
+                    <p className="text-[11px] text-neutral-400">Nantikan diskon menarik berikutnya dari NOVA.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {availableCoupons.filter(c => c.is_active).map((c) => (
+                      <div
+                        key={c.id}
+                        className="p-4 rounded-2xl border border-neutral-200/90 hover:border-neutral-900 transition-all flex items-center justify-between gap-3 bg-neutral-50/60"
+                      >
+                        <div className="space-y-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono font-black text-xs text-neutral-950 bg-neutral-200/80 px-2 py-0.5 rounded-md tracking-wider">
+                              {c.code}
+                            </span>
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                              {c.discount_type === 'percent' ? `${c.discount_value}% OFF` : `Hemat ${formatIDR(c.discount_value)}`}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-neutral-500 font-medium">
+                            Min. belanja {formatIDR(c.min_amount || 0)}
+                          </p>
+                          {c.expires_at && (
+                            <p className="text-[10px] text-neutral-400">
+                              Berlaku s.d {new Date(c.expires_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => applyCouponDirect(c.code)}
+                          className="shrink-0 bg-neutral-900 hover:bg-black text-white text-xs font-jakarta font-extrabold px-3.5 py-2 rounded-xl transition-all shadow-xs active:scale-95 cursor-pointer"
+                        >
+                          Pakai
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}

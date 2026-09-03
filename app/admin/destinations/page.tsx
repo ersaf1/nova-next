@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import ImageUploadField from '@/components/admin/ImageUploadField'
+import { adminFetch } from '@/lib/admin-client'
 
 interface Destination {
   id: number; city: string; country: string; tagline: string
@@ -29,17 +31,38 @@ export default function DestinationsAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true)
     const body = { ...form, tag: form.tag || null }
-    if (editing) {
-      await fetch(`/api/destinations/${editing.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-    } else {
-      await fetch('/api/destinations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    try {
+      const res = editing
+        ? await adminFetch(`/api/destinations/${editing.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        : await adminFetch('/api/destinations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menyimpan destinasi: ' + (err.error || err.message || res.statusText))
+        setSaving(false)
+        return
+      }
+      setShowModal(false)
+      load()
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setSaving(false)
     }
-    setSaving(false); setShowModal(false); load()
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Delete this destination?')) return
-    await fetch(`/api/destinations/${id}`, { method: 'DELETE' }); load()
+    if (!confirm('Yakin ingin menghapus destinasi ini?')) return
+    try {
+      const res = await adminFetch(`/api/destinations/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menghapus destinasi: ' + (err.error || err.message || res.statusText))
+        return
+      }
+      load()
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   return (
@@ -80,7 +103,14 @@ export default function DestinationsAdmin() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-lg font-bold text-gray-900 mb-5">{editing ? 'Edit Destination' : 'Add Destination'}</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              {[['city','City'],['country','Country'],['tagline','Tagline'],['price','Price'],['image','Image URL'],['tag','Tag (optional)'],['duration','Duration']].map(([name, label]) => (
+              <ImageUploadField
+                label="Foto Destinasi"
+                value={form.image}
+                onChange={(url) => setForm(prev => ({ ...prev, image: url }))}
+                helperText="Upload foto lanskap pemandangan kota/negara destinasi"
+              />
+
+              {[['city','City'],['country','Country'],['tagline','Tagline'],['price','Price (cth: Rp 4.5 Juta)'],['tag','Tag (optional)'],['duration','Duration (cth: 4D3N)']].map(([name, label]) => (
                 <div key={name} className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-gray-700">{label}</label>
                   <input name={name} value={(form as Record<string, unknown>)[name] as string ?? ''} onChange={handleChange} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" />

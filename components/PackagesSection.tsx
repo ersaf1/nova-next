@@ -15,10 +15,12 @@ import {
   Sparkles,
   CheckCircle2,
   Zap,
-  Tag
+  Tag,
+  Compass
 } from 'lucide-react'
 import { use3DTilt, useStaggerReveal } from '@/hooks/useScrollAnimation'
 import ScrollReveal from './ScrollReveal'
+import { useCurrency } from '@/context/CurrencyContext'
 
 interface Package {
   id?: number | string
@@ -122,14 +124,7 @@ const PackageCard: React.FC<{ pkg: Package }> = ({ pkg }) => {
     ? (() => { try { return JSON.parse(pkg.includes) } catch { return [] } })()
     : []
 
-  const formatPrice = (p: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(p)
-  }
+  const { formatPrice } = useCurrency()
 
   const destinationSlug = pkg.slug || pkg.id || 'bali-paradise-escape'
 
@@ -228,7 +223,7 @@ const PackageCard: React.FC<{ pkg: Package }> = ({ pkg }) => {
 
         <Link
           href={`/packages/${destinationSlug}`}
-          className="bg-brand hover:bg-brand-dark text-white text-xs font-extrabold px-4 py-2.5 rounded-xl transition-all shadow-xs flex items-center gap-1 group-hover:scale-105 shrink-0"
+          className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl transition-all shadow-sm shadow-blue-600/25 flex items-center gap-1 group-hover:scale-105 shrink-0"
         >
           <span>Pilih</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -282,36 +277,37 @@ const PackagesSection: React.FC = () => {
   }
 
   return (
-    <section id="packages" className="px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-white border-b border-neutral-200/70">
+    <section id="packages" className="px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-white border-b border-slate-200/70">
       <div className="max-w-[88rem] mx-auto space-y-10">
         
         {/* Section Header */}
         <ScrollReveal animation="slide-up">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-neutral-200/70">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200/70">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-brand-dark bg-brand/10 px-3 py-1 rounded-full">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>All-Inclusive Curated Journeys</span>
+              <div className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-neutral-600 bg-neutral-100 px-3.5 py-1.5 rounded-full border border-neutral-200/80">
+                <Compass className="w-3.5 h-3.5 text-neutral-400" />
+                <span>02 / All-Inclusive Curated Journeys</span>
               </div>
-              <h2 className="text-3xl sm:text-5xl font-black text-neutral-950 tracking-tight leading-tight">
-                Paket Wisata Pilihan
+              <h2 className="text-3xl sm:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
+                <span>Paket Wisata </span>
+                <span className="font-serif-luxury italic font-normal text-neutral-900">Eksklusif & Terkurasi</span>
               </h2>
-              <p className="text-xs sm:text-sm text-neutral-600 max-w-xl font-normal">
-                Setiap paket dirancang serba ada: tiket pesawat, resort bintang 5, tur privat, dan pendampingan 24/7.
+              <p className="text-xs sm:text-sm text-neutral-500 max-w-xl font-normal leading-relaxed">
+                Setiap paket dirancang all-in: tiket pesawat, resort bintang 5, tur privat, dan pendampingan concierge 24/7.
               </p>
             </div>
 
             {/* Filter Pills & Slider Controls */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 p-1 rounded-full bg-neutral-100 border border-neutral-200/80">
+              <div className="flex items-center gap-1.5 p-1 rounded-full bg-slate-100 border border-slate-200/80">
                 {filters.map((f) => (
                   <button
                     key={f.id}
                     onClick={() => setActiveFilter(f.id)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
+                    className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 ${
                       activeFilter === f.id
-                        ? 'bg-neutral-950 text-white shadow-xs'
-                        : 'text-neutral-600 hover:text-neutral-950'
+                        ? 'bg-neutral-900 text-white shadow-xs'
+                        : 'text-neutral-500 hover:text-neutral-900'
                     }`}
                   >
                     {f.label}
@@ -319,17 +315,17 @@ const PackagesSection: React.FC = () => {
                 ))}
               </div>
 
-              <div className="hidden sm:flex items-center gap-1.5">
+              <div className="hidden sm:flex items-center gap-2">
                 <button
                   onClick={() => scroll('left')}
-                  className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-100 text-neutral-700 transition-colors"
+                  className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-100 text-neutral-600 hover:text-neutral-900 transition-colors"
                   aria-label="Geser ke kiri"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => scroll('right')}
-                  className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-100 text-neutral-700 transition-colors"
+                  className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-100 text-neutral-600 hover:text-neutral-900 transition-colors"
                   aria-label="Geser ke kanan"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -342,41 +338,40 @@ const PackagesSection: React.FC = () => {
         {/* Packages Horizontal Carousel Grid */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 scrollbar-none"
+          className="flex gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 scrollbar-none"
         >
           {filteredPackages.length > 0 ? (
             filteredPackages.map((pkg, idx) => (
               <PackageCard key={pkg.slug || pkg.id || idx} pkg={pkg} />
             ))
           ) : (
-            <div className="min-h-64 w-full flex flex-col items-center justify-center bg-neutral-50 border border-neutral-200/80 rounded-3xl p-8 text-center">
-              <p className="text-neutral-500 text-xs font-bold">Tidak ada paket untuk kategori ini.</p>
+            <div className="min-h-64 w-full flex flex-col items-center justify-center bg-neutral-50 border border-neutral-200/80 rounded-3xl p-12 text-center">
+              <p className="text-neutral-400 text-xs font-medium">Tidak ada paket untuk kategori ini.</p>
             </div>
           )}
         </div>
 
-        {/* Bottom CTA Banner */}
+        {/* Bottom CTA Banner — Minimalist Luxury with Expansive Whitespace */}
         <ScrollReveal animation="slide-up">
-          <div className="bg-gradient-to-r from-neutral-950 via-[#072f35] to-neutral-950 rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl text-white">
-            <div className="space-y-1.5 text-center md:text-left">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 bg-white/10 px-3 py-1 rounded-full">
-                KONSULTASI GRATIS
+          <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-10 sm:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl text-white">
+            <div className="space-y-3 text-center md:text-left">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 bg-white/10 px-3.5 py-1 rounded-full border border-white/10">
+                Konsultasi Privat
               </span>
-              <h3 className="text-xl sm:text-2xl font-black tracking-tight">
-                Ingin Custom Jadwal & Rute Sendiri?
+              <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
+                Ingin Jadwal & Rute Khusus?
               </h3>
-              <p className="text-xs sm:text-sm text-white/70 max-w-xl font-light">
-                Konsultasikan rencana liburan keluarga atau grup Anda dengan travel specialist kami secara gratis.
+              <p className="text-xs sm:text-sm text-neutral-400 max-w-xl font-light leading-relaxed">
+                Rancang perjalanan eksklusif keluarga atau rombongan Anda bersama spesialis perjalanan NOVA.
               </p>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-4 shrink-0">
               <Link
                 href="/ai-planner"
-                className="bg-brand hover:bg-brand-dark text-white text-xs font-extrabold px-6 py-3.5 rounded-2xl transition-all shadow-md shadow-brand/30 flex items-center gap-2"
+                className="px-6 py-3.5 rounded-full bg-white text-neutral-900 hover:bg-neutral-100 font-semibold text-xs transition-all shadow-xs"
               >
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>Rancang dengan AI</span>
+                Gunakan Smart Planner
               </Link>
             </div>
           </div>

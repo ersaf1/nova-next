@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { Calendar, Users, ChevronRight, CheckCircle2, ArrowRight, ShieldCheck } from 'lucide-react'
+import { Calendar, Users, ChevronRight, CheckCircle2, ArrowRight, ShieldCheck, Share2, Check, MessageCircle } from 'lucide-react'
 import type { PackageDeparture } from '@/lib/types'
-import { formatIDR, getDepartureStatusLabel, getDepartureStatusColor } from '@/lib/types'
+import { getDepartureStatusLabel, getDepartureStatusColor } from '@/lib/types'
+import { useCurrency } from '@/context/CurrencyContext'
 
 type Props = {
   packageId: number
@@ -13,9 +14,27 @@ type Props = {
 }
 
 export default function PackageDetailClient({ packageId, departures, basePrice }: Props) {
+  const { formatPrice } = useCurrency()
   const [selectedId, setSelectedId] = useState<number | null>(
     departures.length > 0 ? (departures.find(d => d.status !== 'sold_out')?.id ?? null) : null
   )
+  const [copied, setCopied] = useState(false)
+
+  const handleShareWhatsApp = () => {
+    if (typeof window === 'undefined') return
+    const url = window.location.href
+    const text = encodeURIComponent(`Halo! Cek paket wisata eksklusif ini di NOVA: ${url}`)
+    window.open(`https://wa.me/?text=${text}`, '_blank')
+  }
+
+  const handleCopyLink = async () => {
+    if (typeof window === 'undefined') return
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 3000)
+    } catch {}
+  }
 
   const selected = departures.find(d => d.id === selectedId) ?? null
   const bookingHref = selected
@@ -97,7 +116,7 @@ export default function PackageDetailClient({ packageId, departures, basePrice }
                       </span>
                     </div>
                     <span className="text-xs font-black text-neutral-950">
-                      {formatIDR(dep.price)}
+                      {formatPrice(dep.price)}
                     </span>
                   </div>
                 </button>
@@ -112,7 +131,7 @@ export default function PackageDetailClient({ packageId, departures, basePrice }
         <div>
           <p className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-400">Total Harga Mulai</p>
           <p className="text-xl font-black text-neutral-950 tracking-tight">
-            {formatIDR(selected ? selected.price : basePrice)}
+            {formatPrice(selected ? selected.price : basePrice)}
           </p>
         </div>
         <div className="text-right">
@@ -135,6 +154,27 @@ export default function PackageDetailClient({ packageId, departures, basePrice }
       <div className="flex items-center justify-center gap-1.5 text-[11px] text-neutral-400 font-medium text-center pt-1">
         <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
         <span>Garansi 100% Refund & Keamanan Enkripsi SSL</span>
+      </div>
+
+      {/* Share Actions (WhatsApp & Copy Link) */}
+      <div className="pt-2 border-t border-neutral-100 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={handleShareWhatsApp}
+          className="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 rounded-xl py-2.5 px-3 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+        >
+          <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Bagikan ke WA</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={handleCopyLink}
+          className="flex-1 bg-neutral-50 hover:bg-neutral-100 text-neutral-800 border border-neutral-200/80 rounded-xl py-2.5 px-3 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+        >
+          {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5 text-neutral-600" />}
+          <span>{copied ? 'Tersalin!' : 'Salin Link'}</span>
+        </button>
       </div>
 
     </div>

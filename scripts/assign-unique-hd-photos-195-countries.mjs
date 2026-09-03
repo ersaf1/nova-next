@@ -63,15 +63,14 @@ async function main() {
   console.log('🖼️ Assigning 195 UNIQUE, DISTINCT HD Unsplash photos to all UN countries...')
 
   const dataDir = path.join(process.cwd(), 'data')
-  const jsonPath = path.join(dataDir, 'countries_database.json')
   const destPath = path.join(dataDir, 'destinations.json')
 
-  if (!fs.existsSync(jsonPath)) {
+  if (!fs.existsSync(destPath)) {
     console.error('Data file not found!')
     return
   }
 
-  const items = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'))
+  const items = JSON.parse(fs.readFileSync(destPath, 'utf-8'))
 
   const keyCountryMappings = {
     'Indonesia': '1555400038-63f5ba517a47', // Bali Tegalalang Rice Terrace
@@ -125,7 +124,6 @@ async function main() {
     }
   })
 
-  fs.writeFileSync(jsonPath, JSON.stringify(updated, null, 2), 'utf-8')
   fs.writeFileSync(destPath, JSON.stringify(updated, null, 2), 'utf-8')
 
   console.log(`✅ Updated all ${updated.length} countries with 100% UNIQUE HD Unsplash Photos!`)

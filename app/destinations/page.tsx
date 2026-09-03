@@ -133,7 +133,7 @@ export default function DestinationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.01em' }}>
+    <div className="min-h-screen bg-[#F8FAFC]" style={{ letterSpacing: '-0.01em' }}>
       <Navbar />
 
       <div className="pt-24 pb-20 px-6">
@@ -141,12 +141,15 @@ export default function DestinationsPage() {
 
           {/* Header */}
           <div className="pt-12 pb-8">
-            <p className="text-[10px] font-bold text-black/40 uppercase tracking-widest mb-3">195 UN Member States & World Destinations</p>
-            <h1 className="text-4xl md:text-6xl font-semibold text-black leading-[1.05] mb-4" style={{ letterSpacing: '-0.03em' }}>
-              All 195 Official World Destinations
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 mb-3">
+              <span>195 Destinasi Anggota PBB Resmi</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black text-blue-950 leading-[1.05] mb-4" style={{ letterSpacing: '-0.035em' }}>
+              <span>Katalog Destinasi </span>
+              <span className="font-serif-luxury italic font-normal text-blue-600">Seluruh Dunia</span>
             </h1>
-            <p className="text-base text-black/50 max-w-xl leading-relaxed">
-              Explore travel destinations, beaches, mountain peaks, and cultural heritage across all 195 UN member countries worldwide.
+            <p className="text-base text-slate-600 max-w-xl leading-relaxed font-normal">
+              Eksplorasi destinasi liburan, pesisir pantai tropis, puncak pegunungan, dan warisan budaya di seluruh 195 negara dunia.
             </p>
           </div>
 
@@ -154,16 +157,16 @@ export default function DestinationsPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             {/* Search Input */}
             <div className="relative w-full md:w-96">
-              <Search className="w-4 h-4 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Cari negara (misal: Indonesia, Japan, Argentina)..."
-                className="w-full bg-white border border-black/10 rounded-full pl-10 pr-10 py-3 text-xs text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-black transition-all shadow-2xs"
+                placeholder="Cari negara (misal: Indonesia, Japan, Greece)..."
+                className="w-full bg-white border border-slate-200 rounded-full pl-10 pr-10 py-3 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all shadow-2xs"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-black/40 hover:text-black">
+                <button onClick={() => setSearchQuery('')} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                   <X className="w-4 h-4" />
                 </button>
               )}
@@ -175,10 +178,10 @@ export default function DestinationsPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2.5 text-xs font-semibold rounded-full shrink-0 transition-all duration-200 ${
+                  className={`px-4 py-2.5 text-xs font-bold rounded-full shrink-0 transition-all duration-200 ${
                     selectedCategory === cat
-                      ? 'bg-brand text-white shadow-xs'
-                      : 'bg-white text-black/50 hover:text-black border border-black/[0.08]'
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-white text-slate-600 hover:text-blue-600 border border-slate-200 hover:border-blue-200'
                   }`}
                 >
                   {cat}
@@ -227,9 +230,9 @@ export default function DestinationsPage() {
                       <Link
                         key={dest.id}
                         href={`/destinations/${dest.id}`}
-                        className="group bg-white rounded-2xl border border-black/[0.04] overflow-hidden hover:shadow-lg transition-all duration-300 relative flex flex-col justify-between"
+                        className="group bg-white rounded-3xl border border-slate-200/80 overflow-hidden hover:border-blue-300 hover:shadow-xl transition-all duration-300 relative flex flex-col justify-between"
                       >
-                        <div className="relative h-56 overflow-hidden bg-neutral-900">
+                        <div className="relative h-56 overflow-hidden bg-[#0A192F]">
                           {dest.image ? (
                             <img
                               src={dest.image}
@@ -240,34 +243,34 @@ export default function DestinationsPage() {
                           ) : null}
                           <button
                             onClick={(e) => toggleWishlist(e, Number(dest.id))}
-                            className="absolute top-4 right-4 bg-white/80 backdrop-blur-md hover:bg-white text-black p-2.5 rounded-full shadow-md z-10 transition-colors"
-                            title={isSaved ? "Remove from Wishlist" : "Add to Wishlist"}
+                            className="absolute top-4 right-4 bg-white/90 backdrop-blur-md hover:bg-white text-slate-900 p-2.5 rounded-full shadow-md z-10 transition-colors"
+                            title={isSaved ? "Hapus dari Wishlist" : "Simpan ke Wishlist"}
                           >
-                            <Heart size={16} className={`${isSaved ? 'fill-red-500 text-red-500' : 'text-black'}`} />
+                            <Heart size={16} className={`${isSaved ? 'fill-rose-500 text-rose-500' : 'text-slate-900'}`} />
                           </button>
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/90 via-[#0A192F]/25 to-transparent" />
                           <div className="absolute bottom-4 left-4 right-4">
-                            <h3 className="text-white text-xl font-bold" style={{ letterSpacing: '-0.02em' }}>{dest.city}</h3>
-                            <p className="text-white/80 text-xs font-medium flex items-center gap-1">
-                              <MapPin className="w-3 h-3 text-white/60" />
+                            <h3 className="text-white text-xl font-black" style={{ letterSpacing: '-0.02em' }}>{dest.city}</h3>
+                            <p className="text-white/85 text-xs font-semibold flex items-center gap-1 mt-0.5">
+                              <MapPin className="w-3 h-3 text-sky-300" />
                               {dest.country}
                             </p>
                           </div>
                         </div>
 
                         <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                          <p className="text-black/60 text-xs leading-relaxed line-clamp-2">{dest.description}</p>
+                          <p className="text-slate-600 text-xs leading-relaxed line-clamp-2 font-normal">{dest.description}</p>
                           
-                          <div className="flex items-center justify-between pt-3 border-t border-black/5 text-xs text-black/50">
-                            <span className="flex items-center gap-1 font-semibold text-amber-500">
+                          <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500">
+                            <span className="flex items-center gap-1 font-bold text-amber-500">
                               <Star size={12} className="fill-amber-400 text-amber-400" />
                               {dest.rating}
                             </span>
-                            <span className="flex items-center gap-1 text-black/40">
+                            <span className="flex items-center gap-1 text-slate-400 font-medium">
                               <Clock size={12} />
                               {dest.duration}
                             </span>
-                            <span className="font-bold text-black text-xs">{dest.price}</span>
+                            <span className="font-black text-blue-950 text-xs">{dest.price}</span>
                           </div>
                         </div>
                       </Link>
@@ -276,13 +279,13 @@ export default function DestinationsPage() {
                 </div>
               )}
 
-              {/* Sleek Pagination Controls */}
+              {/* Pagination Controls */}
               {totalPages > 1 && (
-                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-black/10">
+                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-brand/25 bg-white hover:bg-brand hover:text-white text-black text-xs font-semibold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-slate-200 bg-white hover:bg-blue-50 hover:text-blue-600 text-slate-900 text-xs font-bold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-slate-900 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     <span>Halaman Sebelumnya</span>
@@ -297,14 +300,14 @@ export default function DestinationsPage() {
                             onClick={() => handlePageChange(p)}
                             className={`w-9 h-9 rounded-full text-xs font-bold transition-all ${
                               currentPage === p
-                                ? 'bg-brand text-white shadow-xs scale-105'
-                                : 'bg-white text-black/60 hover:text-black border border-black/10 hover:border-black/30'
+                                ? 'bg-blue-600 text-white shadow-xs scale-105'
+                                : 'bg-white text-slate-600 hover:text-blue-600 border border-slate-200 hover:border-blue-200'
                             }`}
                           >
                             {p}
                           </button>
                         ) : (
-                          <span className="px-2 text-xs text-black/40 font-bold">...</span>
+                          <span className="px-2 text-xs text-slate-400 font-bold">...</span>
                         )}
                       </React.Fragment>
                     ))}
@@ -313,7 +316,7 @@ export default function DestinationsPage() {
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-brand/25 bg-white hover:bg-brand hover:text-white text-black text-xs font-semibold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-slate-200 bg-white hover:bg-blue-50 hover:text-blue-600 text-slate-900 text-xs font-bold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-slate-900 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
                   >
                     <span>Halaman Selanjutnya</span>
                     <ChevronRight className="w-4 h-4" />

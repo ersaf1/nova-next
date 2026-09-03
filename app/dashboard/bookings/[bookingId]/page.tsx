@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ReceiptText, X } from 'lucide-react'
+import { ArrowLeft, ReceiptText, X, Star, CheckCircle2 } from 'lucide-react'
 import { supabaseClient } from '@/lib/supabase-client'
 import Navbar from '@/components/Navbar'
 import DashboardNav from '@/components/DashboardNav'
@@ -122,6 +122,121 @@ function RefundModal({
   )
 }
 
+function ReviewModal({
+  booking,
+  onClose,
+  onSuccess,
+}: {
+  booking: Booking
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [rating, setRating] = useState(5)
+  const [content, setContent] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSubmit = async () => {
+    if (!content.trim()) {
+      setError('Mohon tulis ulasan pengalaman Anda')
+      return
+    }
+    setSubmitting(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: booking.contactName || booking.name || 'Traveler',
+          email: booking.contactEmail || booking.email || '',
+          content,
+          rating,
+          country: booking.country || 'Indonesia',
+        }),
+      })
+      if (!res.ok) {
+        const err = (await res.json().catch(() => ({}))) as { error?: string }
+        setError(err.error || 'Gagal mengirim ulasan')
+        return
+      }
+      onSuccess()
+    } catch {
+      setError('Terjadi kesalahan jaringan')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-neutral-200 space-y-4">
+        <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+          <div>
+            <h3 className="font-bold text-base text-neutral-900">Ulasan & Rating Trip</h3>
+            <p className="text-neutral-500 text-xs">{booking.packageName}</p>
+          </div>
+          <button onClick={onClose} className="p-1 rounded-full text-neutral-400 hover:text-neutral-900 cursor-pointer">
+            <X size={18} />
+          </button>
+        </div>
+
+        {error && <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl">{error}</div>}
+
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-bold text-neutral-700 mb-1.5">Rating Pengalaman Anda</label>
+            <div className="flex items-center gap-1.5">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setRating(s)}
+                  className="p-1 cursor-pointer transition-transform hover:scale-110"
+                >
+                  <Star
+                    className={`w-6 h-6 ${s <= rating ? 'fill-amber-400 text-amber-400' : 'text-neutral-300'}`}
+                  />
+                </button>
+              ))}
+              <span className="ml-2 text-xs font-bold text-neutral-700">{rating} dari 5</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-neutral-700 mb-1.5">Ulasan Pengalaman</label>
+            <textarea
+              rows={4}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Ceritakan pengalaman seru Anda selama perjalanan..."
+              className="w-full border border-neutral-200 rounded-xl p-3 text-xs text-neutral-900 focus:outline-none focus:ring-2 focus:ring-black/10 resize-none"
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-2 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 py-2.5 border border-neutral-200 text-neutral-700 rounded-xl text-xs font-semibold hover:bg-neutral-50 cursor-pointer"
+          >
+            Batal
+          </button>
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={handleSubmit}
+            className="flex-1 py-2.5 bg-neutral-900 text-white rounded-xl text-xs font-bold hover:bg-black disabled:opacity-50 transition-colors cursor-pointer"
+          >
+            {submitting ? 'Mengirim...' : 'Kirim Ulasan'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function BookingDetailPage() {
   const params = useParams()
   const router = useRouter()
@@ -132,6 +247,8 @@ export default function BookingDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [showRefundModal, setShowRefundModal] = useState(false)
   const [refundSuccess, setRefundSuccess] = useState(false)
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [reviewSuccess, setReviewSuccess] = useState(false)
 
   const fetchBooking = async () => {
     try {
@@ -256,6 +373,30 @@ export default function BookingDetailPage() {
               </div>
             </div>
 
+            {/* Passenger Roster */}
+            {booking.passengers && booking.passengers.length > 0 && (
+              <div className="bg-white rounded-2xl border border-black/[0.06] p-5 space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                  Daftar Penumpang / Tamu ({booking.passengers.length} Orang)
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {booking.passengers.map((p, idx) => (
+                    <div key={idx} className="bg-neutral-50 rounded-xl p-3 border border-neutral-100 flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-bold text-neutral-900">{p.title} {p.name}</span>
+                        {p.idNumber && (
+                          <p className="text-[11px] text-neutral-500 font-mono mt-0.5">
+                            {p.idType || 'ID'}: {p.idNumber}
+                          </p>
+                        )}
+                      </div>
+                      <span className="text-[10px] font-semibold text-neutral-400">Tamu {idx + 1}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Price breakdown */}
             <div className="bg-neutral-50 rounded-2xl border border-black/[0.04] p-5 space-y-2 text-sm">
               <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">Rincian Harga</p>
@@ -277,15 +418,28 @@ export default function BookingDetailPage() {
 
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
-              {needsPayment && (
+              {needsPayment ? (
                 <Link href={`/payment/${booking.id}`} className="bg-brand text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-brand-dark transition-colors">
                   Lanjutkan Pembayaran
                 </Link>
+              ) : (
+                <Link href={`/payment/confirmation/${booking.id}`} className="bg-neutral-900 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-black transition-colors">
+                  Lihat E-Tiket Resmi & QR
+                </Link>
+              )}
+              {paymentStatus === 'paid' && (
+                <button
+                  onClick={() => setShowReviewModal(true)}
+                  className="flex items-center gap-1.5 border border-amber-300 bg-amber-50/80 text-amber-900 text-sm font-bold px-5 py-3 rounded-xl hover:bg-amber-100 transition-colors cursor-pointer shadow-2xs"
+                >
+                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  Beri Ulasan Trip
+                </button>
               )}
               {canRequestRefund && (
                 <button
                   onClick={() => setShowRefundModal(true)}
-                  className="flex items-center gap-2 border border-black/10 text-black text-sm font-medium px-6 py-3 rounded-xl hover:bg-neutral-50 transition-colors"
+                  className="flex items-center gap-2 border border-black/10 text-black text-sm font-medium px-6 py-3 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer"
                 >
                   <ReceiptText className="w-4 h-4" />
                   Ajukan Refund
@@ -295,6 +449,13 @@ export default function BookingDetailPage() {
                 Hubungi Support
               </a>
             </div>
+
+            {reviewSuccess && (
+              <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-2xl flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Terima kasih! Ulasan pengalaman Anda berhasil diterbitkan sebagai ulasan terverifikasi.</span>
+              </div>
+            )}
 
             {/* Cancellation policy */}
             <div className="bg-white rounded-2xl border border-black/[0.06] p-5 space-y-2">
@@ -315,6 +476,18 @@ export default function BookingDetailPage() {
         bookingId={booking.id}
         onClose={() => setShowRefundModal(false)}
         onSuccess={handleRefundSuccess}
+      />
+    )}
+
+    {showReviewModal && (
+      <ReviewModal
+        booking={booking}
+        onClose={() => setShowReviewModal(false)}
+        onSuccess={() => {
+          setShowReviewModal(false)
+          setReviewSuccess(true)
+          setTimeout(() => setReviewSuccess(false), 5000)
+        }}
       />
     )}
     </>

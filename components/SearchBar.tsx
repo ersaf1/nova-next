@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import {
   Search,
   MapPin,
-  Sparkles,
   Calendar,
   Users,
   Compass,
@@ -15,7 +14,8 @@ import {
   ShieldCheck,
   Zap,
   SlidersHorizontal,
-  ChevronDown
+  ChevronDown,
+  Navigation
 } from 'lucide-react'
 
 const POPULAR_DESTINATIONS = [
@@ -135,16 +135,16 @@ export default function SearchBar() {
     <div className="w-full max-w-5xl mx-auto relative z-20">
       
       {/* Category Tabs Pill Bar */}
-      <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/90 backdrop-blur-xl border border-white/40 shadow-lg shadow-black/10 inline-flex mb-3">
+      <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/60 shadow-lg shadow-blue-950/10 inline-flex mb-3">
         <button
           onClick={() => setActiveTab('packages')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
             activeTab === 'packages'
-              ? 'bg-neutral-950 text-white shadow-md'
-              : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/60'
           }`}
         >
-          <Compass size={14} className={activeTab === 'packages' ? 'text-amber-400' : 'text-neutral-500'} />
+          <Compass size={14} className={activeTab === 'packages' ? 'text-white' : 'text-slate-500'} />
           <span>Paket Wisata</span>
         </button>
 
@@ -152,32 +152,32 @@ export default function SearchBar() {
           onClick={() => setActiveTab('opentrip')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
             activeTab === 'opentrip'
-              ? 'bg-neutral-950 text-white shadow-md'
-              : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/60'
           }`}
         >
-          <Users size={14} className={activeTab === 'opentrip' ? 'text-brand' : 'text-neutral-500'} />
-          <span>Open Trip & Grup</span>
+          <Users size={14} className={activeTab === 'opentrip' ? 'text-white' : 'text-slate-500'} />
+          <span>Open Trip & Sailing</span>
         </button>
 
         <button
           onClick={() => setActiveTab('ai')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 relative ${
             activeTab === 'ai'
-              ? 'bg-brand text-white shadow-sm hover:bg-brand-dark'
-              : 'text-neutral-700 hover:text-neutral-950 hover:bg-brand/10'
+              ? 'bg-blue-950 text-white shadow-sm'
+              : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/60'
           }`}
         >
-          <Sparkles size={14} className="text-amber-300 animate-pulse" />
-          <span>AI Custom Trip</span>
-          <span className="text-[8px] font-black uppercase bg-white/20 text-white px-1.5 py-0.2 rounded-full">
-            INSTANT
+          <Navigation size={13} className={activeTab === 'ai' ? 'text-sky-300' : 'text-blue-600'} />
+          <span>Smart Route Planner</span>
+          <span className="text-[8px] font-black uppercase bg-blue-100 text-blue-700 px-1.5 py-0.2 rounded-full">
+            SMART
           </span>
         </button>
       </div>
 
       {/* Main Search Container Widget */}
-      <div className="bg-white/98 backdrop-blur-2xl rounded-3xl p-3 sm:p-4 border border-white/60 shadow-2xl shadow-black/20">
+      <div className="bg-white rounded-3xl p-3 sm:p-4 border border-blue-100/90 shadow-2xl shadow-blue-950/20">
         
         {/* Tab 1: Paket Wisata & Tab 2: Open Trip Fields */}
         {activeTab !== 'ai' ? (
@@ -187,13 +187,13 @@ export default function SearchBar() {
             <div className="md:col-span-5 relative" ref={destRef}>
               <div
                 onClick={() => setShowDestDropdown(true)}
-                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-neutral-50 hover:bg-neutral-100/80 border border-neutral-200/80 transition-all cursor-pointer group"
+                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-50 hover:bg-blue-50/40 border border-slate-200/80 transition-all cursor-pointer group"
               >
-                <div className="w-8 h-8 rounded-xl bg-brand/10 text-brand-dark flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
                   <MapPin size={16} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                     Destinasi Tujuan
                   </p>
                   <input
@@ -204,8 +204,8 @@ export default function SearchBar() {
                       setShowDestDropdown(true)
                     }}
                     onFocus={() => setShowDestDropdown(true)}
-                    placeholder="Mau liburan ke mana? (Bali, Tokyo...)"
-                    className="w-full text-xs font-bold text-neutral-900 placeholder:text-neutral-400 bg-transparent focus:outline-none truncate"
+                    placeholder="Mau liburan ke mana? (Bali, Santorini, Tokyo...)"
+                    className="w-full text-xs font-bold text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none truncate"
                   />
                 </div>
                 {destination && (
@@ -214,7 +214,7 @@ export default function SearchBar() {
                       e.stopPropagation()
                       setDestination('')
                     }}
-                    className="text-neutral-400 hover:text-neutral-700 p-1"
+                    className="text-slate-400 hover:text-slate-700 p-1"
                   >
                     <X size={14} />
                   </button>
@@ -223,8 +223,8 @@ export default function SearchBar() {
 
               {/* Destination Dropdown Menu */}
               {showDestDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-neutral-200/90 p-2 z-50 animate-fade-in-up max-h-72 overflow-y-auto">
-                  <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-neutral-400 border-b border-neutral-100 mb-1">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-blue-100 p-2 z-50 animate-fade-in-up max-h-72 overflow-y-auto">
+                  <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
                     Destinasi Populer
                   </div>
                   {filteredDestinations.length > 0 ? (
@@ -235,17 +235,17 @@ export default function SearchBar() {
                           setDestination(d.city)
                           setShowDestDropdown(false)
                         }}
-                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-brand/10 flex items-center justify-between text-xs font-semibold text-neutral-800 transition-colors group"
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-blue-50 flex items-center justify-between text-xs font-semibold text-slate-800 transition-colors group"
                       >
                         <div className="flex items-center gap-2">
-                          <MapPin size={13} className="text-brand group-hover:scale-110 transition-transform" />
+                          <MapPin size={13} className="text-blue-600 group-hover:scale-110 transition-transform" />
                           <span>{d.city}, {d.country}</span>
                         </div>
-                        <span className="text-[10px] text-neutral-400 font-normal">{d.tag}</span>
+                        <span className="text-[10px] text-slate-400 font-normal">{d.tag}</span>
                       </button>
                     ))
                   ) : (
-                    <div className="p-3 text-xs text-neutral-400 text-center">
+                    <div className="p-3 text-xs text-slate-400 text-center">
                       Destinasi tidak ditemukan, ketik manual nama kota.
                     </div>
                   )}
@@ -257,25 +257,25 @@ export default function SearchBar() {
             <div className="md:col-span-3 relative" ref={durRef}>
               <div
                 onClick={() => setShowDurationDropdown(!showDurationDropdown)}
-                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-neutral-50 hover:bg-neutral-100/80 border border-neutral-200/80 transition-all cursor-pointer"
+                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-50 hover:bg-blue-50/40 border border-slate-200/80 transition-all cursor-pointer"
               >
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
                   <Calendar size={16} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                     Durasi / Waktu
                   </p>
-                  <p className="text-xs font-bold text-neutral-900 truncate">
+                  <p className="text-xs font-bold text-slate-900 truncate">
                     {DURATION_OPTIONS.find(d => d.id === duration)?.label.split('(')[0] || 'Semua Durasi'}
                   </p>
                 </div>
-                <ChevronDown size={14} className="text-neutral-400" />
+                <ChevronDown size={14} className="text-slate-400" />
               </div>
 
               {/* Duration Dropdown Menu */}
               {showDurationDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-neutral-200/90 p-2 z-50 animate-fade-in-up">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-blue-100 p-2 z-50 animate-fade-in-up">
                   {DURATION_OPTIONS.map((opt) => (
                     <button
                       key={opt.id}
@@ -285,8 +285,8 @@ export default function SearchBar() {
                       }}
                       className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-colors flex items-center justify-between ${
                         duration === opt.id
-                          ? 'bg-brand text-white font-bold'
-                          : 'text-neutral-800 hover:bg-neutral-100'
+                          ? 'bg-blue-600 text-white font-bold'
+                          : 'text-slate-800 hover:bg-blue-50'
                       }`}
                     >
                       <span>{opt.label}</span>
@@ -300,25 +300,25 @@ export default function SearchBar() {
             <div className="md:col-span-2 relative" ref={guestRef}>
               <div
                 onClick={() => setShowGuestDropdown(!showGuestDropdown)}
-                className="flex items-center gap-2.5 px-3.5 py-3 rounded-2xl bg-neutral-50 hover:bg-neutral-100/80 border border-neutral-200/80 transition-all cursor-pointer"
+                className="flex items-center gap-2.5 px-3.5 py-3 rounded-2xl bg-slate-50 hover:bg-blue-50/40 border border-slate-200/80 transition-all cursor-pointer"
               >
-                <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
                   <Users size={16} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                     Traveler
                   </p>
-                  <p className="text-xs font-bold text-neutral-900 truncate">
+                  <p className="text-xs font-bold text-slate-900 truncate">
                     {GUEST_OPTIONS.find(g => g.id === guests)?.label.split('(')[0] || `${guests} Orang`}
                   </p>
                 </div>
-                <ChevronDown size={13} className="text-neutral-400" />
+                <ChevronDown size={13} className="text-slate-400" />
               </div>
 
               {/* Guest Dropdown Menu */}
               {showGuestDropdown && (
-                <div className="absolute top-full right-0 w-56 bg-white rounded-2xl shadow-2xl border border-neutral-200/90 p-2 z-50 animate-fade-in-up">
+                <div className="absolute top-full right-0 w-56 bg-white rounded-2xl shadow-2xl border border-blue-100 p-2 z-50 animate-fade-in-up">
                   {GUEST_OPTIONS.map((opt) => (
                     <button
                       key={opt.id}
@@ -328,8 +328,8 @@ export default function SearchBar() {
                       }}
                       className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                         guests === opt.id
-                          ? 'bg-brand text-white font-bold'
-                          : 'text-neutral-800 hover:bg-neutral-100'
+                          ? 'bg-blue-600 text-white font-bold'
+                          : 'text-slate-800 hover:bg-blue-50'
                       }`}
                     >
                       {opt.label}
@@ -343,7 +343,7 @@ export default function SearchBar() {
             <div className="md:col-span-2">
               <button
                 onClick={handleSearch}
-                className="w-full bg-brand hover:bg-brand-dark active:scale-[0.98] text-white py-3.5 px-4 rounded-2xl font-extrabold text-xs transition-all shadow-md shadow-brand/30 flex items-center justify-center gap-2 group"
+                className="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white py-3.5 px-4 rounded-2xl font-extrabold text-xs transition-all shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 group"
               >
                 <Search size={15} className="group-hover:rotate-12 transition-transform" />
                 <span>Cari Liburan</span>
@@ -352,25 +352,25 @@ export default function SearchBar() {
 
           </div>
         ) : (
-          /* Tab 3: AI Smart Travel Planner Input Bar */
+          /* Tab 3: Smart Travel Planner Input Bar */
           <div className="flex flex-col sm:flex-row items-center gap-3">
-            <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-2xl bg-neutral-50 border border-brand/30 w-full focus-within:ring-2 focus-within:ring-brand">
-              <Sparkles className="w-5 h-5 text-amber-500 shrink-0 animate-pulse" />
+            <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-50 border border-blue-200 w-full focus-within:ring-2 focus-within:ring-blue-500">
+              <Navigation className="w-5 h-5 text-blue-600 shrink-0" />
               <input
                 type="text"
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder="Misal: 5 hari di Jepang bersama keluarga, budget 20 juta, suka kuliner & kuil..."
-                className="w-full text-xs sm:text-sm font-semibold text-neutral-900 placeholder:text-neutral-400 bg-transparent focus:outline-none"
+                placeholder="Misal: 5 hari di Santorini & Athena untuk honeymoon, budget 30 juta, suka sunset cruise..."
+                className="w-full text-xs sm:text-sm font-semibold text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
               />
             </div>
             <button
               onClick={handleSearch}
-              className="bg-brand hover:bg-brand-dark text-white font-extrabold text-xs px-6 py-3.5 rounded-2xl transition-all shadow-md shadow-brand/30 flex items-center gap-2 shrink-0 w-full sm:w-auto justify-center"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-3.5 rounded-2xl transition-all shadow-md shadow-blue-600/30 flex items-center gap-2 shrink-0 w-full sm:w-auto justify-center"
             >
-              <Sparkles size={14} className="text-amber-300" />
-              <span>Buat Itinerary AI</span>
+              <Navigation size={14} />
+              <span>Rancang Rute Cerdas</span>
               <ArrowRight size={14} />
             </button>
           </div>
@@ -380,23 +380,23 @@ export default function SearchBar() {
 
       {/* Quick Filter & Trending Keywords Bar */}
       <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1 scrollbar-none flex-wrap sm:flex-nowrap">
-        <div className="flex items-center gap-1.5 text-[11px] font-bold text-white/90 shrink-0 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-          <Zap size={12} className="text-amber-400 fill-amber-400" />
+        <div className="flex items-center gap-1.5 text-[11px] font-bold text-white shrink-0 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/25">
+          <Zap size={12} className="text-amber-300 fill-amber-300" />
           <span>Tren:</span>
         </div>
 
         {[
-          { label: '🔥 Diskon s/d 35%', href: '/promo' },
-          { label: '🏝️ Bali & Nusa Penida', href: '/search?destination=Bali' },
+          { label: '🔥 Promo s/d 35%', href: '/promo' },
+          { label: '🏝️ Bali Beach & Ubud', href: '/search?destination=Bali' },
           { label: '⛵ Labuan Bajo Phinisi', href: '/search?destination=Labuan%20Bajo' },
-          { label: '🌸 Tokyo Sakura', href: '/search?destination=Tokyo' },
-          { label: '🏔️ Bromo Sunrise', href: '/search?category=Mountain' },
-          { label: '⚡ Konfirmasi Instan', href: '/packages' },
+          { label: '🇬🇷 Santorini Caldera', href: '/search?destination=Santorini' },
+          { label: '🌸 Tokyo & Mt. Fuji', href: '/search?destination=Tokyo' },
+          { label: '⚡ Tiket Konfirmasi Instan', href: '/packages' },
         ].map((tag, idx) => (
           <button
             key={idx}
             onClick={() => router.push(tag.href)}
-            className="text-[11px] font-semibold text-white/90 hover:text-white bg-black/35 hover:bg-black/60 backdrop-blur-md border border-white/15 hover:border-white/30 px-3 py-1 rounded-full transition-all shrink-0 hover:-translate-y-0.5"
+            className="text-[11px] font-semibold text-white hover:text-blue-950 bg-white/20 hover:bg-white backdrop-blur-md border border-white/25 hover:border-white px-3 py-1 rounded-full transition-all shrink-0 hover:-translate-y-0.5"
           >
             {tag.label}
           </button>

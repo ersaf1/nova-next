@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import ImageUploadField from '@/components/admin/ImageUploadField'
+import { adminFetch } from '@/lib/admin-client'
 
 interface Package {
   id: number; tag: string; tagColor: string; title: string; subtitle: string
@@ -43,17 +45,38 @@ export default function PackagesAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true)
     const body = { ...form, includes: includesStr.split(',').map(s => s.trim()).filter(Boolean) }
-    if (editing) {
-      await fetch(`/api/packages/${editing.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-    } else {
-      await fetch('/api/packages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    try {
+      const res = editing
+        ? await adminFetch(`/api/packages/${editing.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        : await adminFetch('/api/packages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menyimpan paket: ' + (err.error || err.message || res.statusText))
+        setSaving(false)
+        return
+      }
+      setShowModal(false)
+      load()
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setSaving(false)
     }
-    setSaving(false); setShowModal(false); load()
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Delete this package?')) return
-    await fetch(`/api/packages/${id}`, { method: 'DELETE' }); load()
+    if (!confirm('Yakin ingin menghapus paket ini?')) return
+    try {
+      const res = await adminFetch(`/api/packages/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menghapus paket: ' + (err.error || err.message || res.statusText))
+        return
+      }
+      load()
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   return (
@@ -92,7 +115,14 @@ export default function PackagesAdmin() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-lg font-bold text-gray-900 mb-5">{editing ? 'Edit Package' : 'Add Package'}</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              {[['tag','Tag'],['tagColor','Tag Color (Tailwind)'],['title','Title'],['subtitle','Subtitle'],['image','Image URL'],['duration','Duration'],['groupSize','Group Size'],['highlight','Highlight'],['category','Category']].map(([name, label]) => (
+              <ImageUploadField
+                label="Foto Cover Paket"
+                value={form.image}
+                onChange={(url) => setForm(prev => ({ ...prev, image: url }))}
+                helperText="Upload gambar beresolusi tinggi untuk kartu paket wisata"
+              />
+
+              {[['tag','Tag'],['tagColor','Tag Color (Tailwind)'],['title','Title'],['subtitle','Subtitle'],['duration','Duration'],['groupSize','Group Size'],['highlight','Highlight'],['category','Category']].map(([name, label]) => (
                 <div key={name} className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-gray-700">{label}</label>
                   <input name={name} value={(form as Record<string, unknown>)[name] as string ?? ''} onChange={handleChange} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" />

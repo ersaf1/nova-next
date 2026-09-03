@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { adminFetch } from '@/lib/admin-client'
 import {
   Calendar,
   User,
@@ -55,7 +56,7 @@ export default function BookingsAdmin() {
 
   const load = () => {
     setLoading(true)
-    fetch('/api/bookings')
+    adminFetch('/api/bookings')
       .then(r => r.json())
       .then((data: Booking[]) => {
         setItems(Array.isArray(data) ? data : [])
@@ -70,17 +71,22 @@ export default function BookingsAdmin() {
 
   const handleStatusChange = async (id: number, status: string) => {
     try {
-      await fetch(`/api/bookings/${id}/status`, {
+      const res = await adminFetch(`/api/bookings/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal memperbarui status: ' + (err.error || err.message || res.statusText))
+        return
+      }
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking(prev => prev ? { ...prev, status } : null)
       }
       load()
-    } catch (err) {
-      console.error(err)
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
     }
   }
 
@@ -88,13 +94,18 @@ export default function BookingsAdmin() {
     if (e) e.stopPropagation()
     if (!confirm('Apakah Anda yakin ingin menghapus booking ini?')) return
     try {
-      await fetch(`/api/bookings/${id}`, { method: 'DELETE' })
+      const res = await adminFetch(`/api/bookings/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menghapus booking: ' + (err.error || err.message || res.statusText))
+        return
+      }
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking(null)
       }
       load()
-    } catch (err) {
-      console.error(err)
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
     }
   }
 

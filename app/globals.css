@@ -3,12 +3,16 @@
 @theme {
   --font-sans: var(--font-geist-sans), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
-  --color-brand: #0E939E;
-  --color-brand-dark: #0B7983;
-  --color-brand-darker: #075860;
-  --color-brand-light: #2DB3BF;
-  --color-brand-lighter: #CEF0F4;
-  --color-brand-faint: #EEF9FA;
+  
+  /* Minimalist Refined Accent Palette */
+  --color-brand: #0284C7;
+  --color-brand-dark: #0369A1;
+  --color-brand-light: #38BDF8;
+  --color-brand-lighter: #F0F9FF;
+
+  /* True Black Typography */
+  --color-blue-950: #0a0a0a;
+  --color-blue-900: #171717;
 }
 
 @layer base {
@@ -19,9 +23,13 @@
 
   body {
     background-color: #ffffff;
-    color: #1a2b2d;
+    color: #0a0a0a;
     font-family: var(--font-sans);
     text-rendering: optimizeSpeed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #0a0a0a;
   }
 
   img, video {
@@ -79,19 +87,19 @@ select {
 }
 
 select:hover {
-  border-color: rgba(14, 147, 158, 0.45);
+  border-color: rgba(0, 98, 227, 0.45);
 }
 
 select:focus {
   outline: none;
-  border-color: #0E939E;
-  box-shadow: 0 0 0 3px rgba(14, 147, 158, 0.15);
+  border-color: #0062E3;
+  box-shadow: 0 0 0 3px rgba(0, 98, 227, 0.15);
 }
 
 select option {
   padding: 10px 14px;
   background-color: #ffffff;
-  color: #1a2b2d;
+  color: #0f172a;
   font-weight: 600;
 }
 
@@ -101,65 +109,65 @@ select option {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #EEF9FA;
+  background: #F0F6FF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0E939E;
+  background: #0062E3;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #0B7983;
+  background: #004BC4;
 }
 
-/* Glow utility classes */
+/* Soft Aegean Elevation classes */
 .glow-primary {
-  box-shadow: 0 4px 20px -2px rgba(14, 147, 158, 0.22);
+  box-shadow: 0 4px 20px -2px rgba(0, 98, 227, 0.15);
 }
 
 .glow-accent {
-  box-shadow: 0 4px 20px -2px rgba(45, 179, 191, 0.2);
+  box-shadow: 0 4px 20px -2px rgba(59, 130, 246, 0.15);
 }
 
 .glow-card {
-  box-shadow: 0 10px 30px -10px rgba(7, 88, 96, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(10, 25, 47, 0.06);
 }
 
 .glow-card:hover {
-  box-shadow: 0 15px 35px -10px rgba(14, 147, 158, 0.16);
+  box-shadow: 0 15px 35px -10px rgba(0, 98, 227, 0.12);
 }
 
-/* Glassmorphism — light glass for white world */
+/* Glassmorphism — Aegean Sunlit White Glass */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(14, 147, 158, 0.12);
+  border: 1px solid rgba(0, 98, 227, 0.1);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(14, 147, 158, 0.08);
+  border: 1px solid rgba(0, 98, 227, 0.08);
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(14, 147, 158, 0.25);
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 98, 227, 0.22);
 }
 
-/* Text Gradient — Clean Solid Brand */
+/* Text Gradient — Aegean Cobalt Blue */
 .text-gradient {
-  color: #0E939E;
+  color: #0062E3;
 }
 
 .text-gradient-accent {
-  color: #0E939E;
+  color: #0062E3;
 }
 
 /* Animated gradient text */
 .text-gradient-animated {
-  color: #0E939E;
+  color: #0062E3;
 }
 
 @keyframes shine {
@@ -214,8 +222,8 @@ html {
 
 /* Selection color */
 ::selection {
-  background: rgba(14, 147, 158, 0.2);
-  color: #075860;
+  background: rgba(0, 98, 227, 0.18);
+  color: #004BC4;
 }
 
 /* Global Interactive Smoothness — Hover & Click Physics */
@@ -296,7 +304,7 @@ svg,
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(90deg, rgba(14,147,158,0.03) 25%, rgba(14,147,158,0.08) 37%, rgba(14,147,158,0.03) 63%);
+  background: linear-gradient(90deg, rgba(0,98,227,0.03) 25%, rgba(0,98,227,0.08) 37%, rgba(0,98,227,0.03) 63%);
   background-size: 200% 100%;
   animation: shimmer 1.8s infinite;
 }
@@ -316,17 +324,17 @@ svg,
   overflow: hidden;
 }
 
-/* Card Image Overlay Gradients */
+/* Card Image Overlay Gradients — Mediterranean Deep Navy */
 .img-gradient-overlay-bottom {
-  background: linear-gradient(to top, rgba(4, 38, 42, 0.85) 0%, rgba(4, 38, 42, 0.3) 50%, rgba(4, 38, 42, 0) 100%);
+  background: linear-gradient(to top, rgba(10, 25, 47, 0.85) 0%, rgba(10, 25, 47, 0.3) 50%, rgba(10, 25, 47, 0) 100%);
 }
 
 .img-gradient-overlay-top {
-  background: linear-gradient(to bottom, rgba(4, 38, 42, 0.6) 0%, rgba(4, 38, 42, 0) 100%);
+  background: linear-gradient(to bottom, rgba(10, 25, 47, 0.6) 0%, rgba(10, 25, 47, 0) 100%);
 }
 
 .img-gradient-overlay-full {
-  background: linear-gradient(180deg, rgba(4, 38, 42, 0.3) 0%, rgba(4, 38, 42, 0.5) 60%, rgba(4, 38, 42, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(10, 25, 47, 0.3) 0%, rgba(10, 25, 47, 0.5) 60%, rgba(10, 25, 47, 0.85) 100%);
 }
 
 /* High Contrast Pill Badges */
@@ -340,20 +348,21 @@ svg,
 }
 
 .badge-luxury-dark {
-  background: rgba(7, 88, 96, 0.85);
+  background: rgba(10, 25, 47, 0.85);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
   font-weight: 600;
 }
 
-.badge-luxury-teal {
-  background: #0E939E;
+.badge-luxury-teal,
+.badge-luxury-blue {
+  background: #0062E3;
   color: #ffffff;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(14, 147, 158, 0.22);
+  box-shadow: 0 2px 8px rgba(0, 98, 227, 0.22);
 }
 
 /* Stagger Animation Utility */
@@ -422,11 +431,11 @@ svg,
 
 /* Radial Glow Gradient Background */
 .bg-radial-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(14, 147, 158, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(0, 98, 227, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
 .bg-radial-glow-accent {
-  background: radial-gradient(circle at 80% 20%, rgba(14, 147, 158, 0.05) 0%, rgba(255, 255, 255, 0) 60%);
+  background: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.05) 0%, rgba(255, 255, 255, 0) 60%);
 }
 
 /* ─── Heading reveal keyframes ────────────────────────────────────────────── */

@@ -5,6 +5,16 @@ import PageTransition from '@/components/PageTransition'
 import SmoothScroll from '@/components/SmoothScroll'
 import CrispChat from '@/components/CrispChat'
 import { CurrencyProvider } from '@/context/CurrencyContext'
+import SwipeNavigation from '@/components/SwipeNavigation'
+
+const PUBLIC_SWIPE_ROUTES = [
+  { path: '/', label: 'Beranda' },
+  { path: '/destinations', label: 'Destinasi Global' },
+  { path: '/packages', label: 'Paket Wisata' },
+  { path: '/ai-planner', label: 'Smart Planner' },
+  { path: '/promo', label: 'Promo Spesial' },
+  { path: '/how-it-works', label: 'Cara Pesan' },
+]
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -58,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SmoothScroll>
             <PageTransition>{children}</PageTransition>
           </SmoothScroll>
+          <SwipeNavigation routes={PUBLIC_SWIPE_ROUTES} />
         </CurrencyProvider>
         <CrispChat />
       </body>

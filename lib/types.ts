@@ -3,6 +3,8 @@
 // Single source of truth for all entities across UI, API, DB
 // ============================================================
 
+import { formatCurrencyDirect } from '@/context/CurrencyContext'
+
 // ─── Destination ────────────────────────────────────────────
 export interface Destination {
   id: number
@@ -136,6 +138,8 @@ export interface Booking {
   refund_reason?: string
   refunded_at?: string
 
+  passengers?: Array<{ title: string; name: string; idType?: string; idNumber?: string }>
+
   createdAt?: string
   updatedAt?: string
 }
@@ -211,8 +215,16 @@ export interface VoucherValidationResult {
   discounted_amount?: number
 }
 
-// ─── Utility: IDR formatter ──────────────────────────────────
+// ─── Utility: IDR formatter (Dynamic Currency Aware) ─────────
 export function formatIDR(amount: number): string {
+  if (typeof window !== 'undefined') {
+    try {
+      const saved = localStorage.getItem('nova_currency')
+      if (saved && saved !== 'IDR') {
+        return formatCurrencyDirect(amount, saved)
+      }
+    } catch {}
+  }
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',

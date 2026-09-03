@@ -77,21 +77,22 @@ const WhyNovaSection: React.FC = () => {
   }, [])
 
   return (
-    <section className="bg-white px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-neutral-200/70">
+    <section className="bg-white px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-slate-200/70">
       <div className="max-w-[88rem] mx-auto space-y-12">
         
         {/* Section Header */}
         <ScrollReveal animation="slide-up">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-neutral-200/70">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200/70">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-brand-dark bg-brand/10 px-3 py-1 rounded-full">
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
                 <Award className="w-3.5 h-3.5" />
-                <span>Keunggulan Layanan</span>
+                <span>04 / Keunggulan Layanan</span>
               </div>
-              <h2 className="text-3xl sm:text-5xl font-black text-neutral-950 tracking-tight leading-tight">
-                Mengapa Memilih NOVA?
+              <h2 className="text-3xl sm:text-5xl font-black text-blue-950 tracking-tight leading-tight">
+                <span>Mengapa Memilih </span>
+                <span className="font-serif-luxury italic font-normal text-blue-600">NOVA Travel?</span>
               </h2>
-              <p className="text-xs sm:text-sm text-neutral-600 max-w-xl font-normal">
+              <p className="text-xs sm:text-sm text-slate-600 max-w-xl font-normal">
                 Komitmen kami menghadirkan pengalaman liburan premium tanpa kendala dari awal hingga pulang.
               </p>
             </div>
@@ -109,7 +110,7 @@ const WhyNovaSection: React.FC = () => {
               return (
                 <div
                   key={feature.title || idx}
-                  className="group relative rounded-3xl overflow-hidden cursor-default transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 h-80 sm:h-96 flex flex-col justify-between p-6 text-white border border-neutral-200/20"
+                  className="group relative rounded-3xl overflow-hidden cursor-default transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 h-80 sm:h-96 flex flex-col justify-between p-6 text-white border border-slate-200/50 hover:border-blue-300"
                 >
                   {/* Background Image */}
                   <Image
@@ -120,11 +121,11 @@ const WhyNovaSection: React.FC = () => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
 
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-neutral-950/20" />
+                  {/* Gradient Overlay in Mediterranean Deep Navy */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/95 via-[#0A192F]/40 to-transparent" />
 
                   {/* Top Icon Badge */}
-                  <div className="relative z-10 w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-xs">
+                  <div className="relative z-10 w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md border border-white/25 flex items-center justify-center shadow-xs">
                     <Icon className="w-5 h-5 text-white" />
                   </div>
 
@@ -135,17 +136,17 @@ const WhyNovaSection: React.FC = () => {
                         {feature.title}
                       </h3>
                       {feature.subtitle && (
-                        <p className="text-xs text-white/70 mt-0.5 font-normal">
+                        <p className="text-xs text-white/75 mt-0.5 font-normal">
                           {feature.subtitle}
                         </p>
                       )}
                     </div>
 
                     <div className="pt-3 border-t border-white/20">
-                      <span className="text-2xl sm:text-3xl font-black text-amber-400 block tracking-tight">
+                      <span className="text-2xl sm:text-3xl font-black text-amber-300 block tracking-tight">
                         {feature.stat}
                       </span>
-                      <span className="text-white/60 text-[10px] font-extrabold uppercase tracking-wider block mt-0.5">
+                      <span className="text-white/70 text-[10px] font-extrabold uppercase tracking-wider block mt-0.5">
                         {feature.statLabel}
                       </span>
                     </div>

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { CheckCircle, CreditCard, Building2, Wallet, ChevronRight, Lock, Clock } from 'lucide-react'
+import { CheckCircle, CreditCard, Building2, Wallet, Lock, ShieldCheck, ArrowRight, Loader2 } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import { useCurrency } from '@/context/CurrencyContext'
 
 interface Booking {
   id: number
@@ -23,44 +24,37 @@ interface Booking {
 const PAYMENT_METHODS = [
   {
     id: 'bank_transfer',
-    label: 'Transfer Bank',
-    desc: 'BCA · Mandiri · BNI · BRI',
+    label: 'Transfer Bank Otomatis (VA)',
+    desc: 'BCA, Mandiri, BNI, BRI (Konfirmasi Langsung)',
     icon: Building2,
-    color: 'text-blue-600',
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
+    badge: 'Paling Populer',
   },
   {
     id: 'credit_card',
     label: 'Kartu Kredit / Debit',
-    desc: 'Visa · Mastercard · JCB',
+    desc: 'Visa, Mastercard, JCB (Instant Settled)',
     icon: CreditCard,
-    color: 'text-violet-600',
-    bg: 'bg-violet-50',
-    border: 'border-violet-200',
+    badge: 'Instan',
   },
   {
     id: 'ewallet',
-    label: 'E-Wallet',
-    desc: 'GoPay · OVO · Dana · ShopeePay',
+    label: 'E-Wallet / QRIS',
+    desc: 'GoPay, OVO, Dana, ShopeePay (Scan Langsung)',
     icon: Wallet,
-    color: 'text-emerald-600',
-    bg: 'bg-emerald-50',
-    border: 'border-emerald-200',
+    badge: '1-Klik',
   },
 ]
-
-type Step = 'select' | 'processing' | 'done'
 
 export default function PaymentPage() {
   const params = useParams()
   const router = useRouter()
   const bookingId = params.bookingId as string
+  const { formatPrice } = useCurrency()
 
   const [booking, setBooking] = useState<Booking | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedMethod, setSelectedMethod] = useState('bank_transfer')
-  const [step, setStep] = useState<Step>('select')
+  const [paying, setPaying] = useState(false)
 
   useEffect(() => {
     if (!bookingId) return
@@ -74,16 +68,14 @@ export default function PaymentPage() {
         }
       })
       .catch(() => setLoading(false))
-  }, [bookingId])
+  }, [bookingId, router])
 
   const totalAmount = booking?.totalAmount ?? (booking?.price ?? 0) * (booking?.participants ?? 1)
 
-  async function handlePay() {
-    if (!booking) return
-    setStep('processing')
-
-    // Simulasi delay processing 2.5 detik
-    await new Promise((r) => setTimeout(r, 2500))
+  // Direct 1-Click Instant Payment — no waiting, no stuck in pending!
+  async function handleInstantPay() {
+    if (!booking || paying) return
+    setPaying(true)
 
     try {
       const res = await fetch('/api/payment/simulate', {
@@ -91,32 +83,39 @@ export default function PaymentPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bookingId: booking.id, method: selectedMethod }),
       })
+
       if (res.ok) {
-        setStep('done')
-        setTimeout(() => router.push(`/payment/confirmation/${bookingId}`), 1500)
+        // Direct jump to e-ticket confirmation!
+        router.push(`/payment/confirmation/${bookingId}`)
       } else {
-        setStep('select')
-        alert('Pembayaran gagal, coba lagi.')
+        alert('Gagal memproses pembayaran. Silakan coba lagi.')
+        setPaying(false)
       }
     } catch {
-      setStep('select')
+      alert('Terjadi kendala jaringan saat pembayaran.')
+      setPaying(false)
     }
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <span className="text-sm text-black/40" style={{ letterSpacing: '-0.02em' }}>Loading…</span>
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center space-y-3">
+        <div className="w-10 h-10 border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Memuat Rincian Pembayaran...</p>
       </div>
     )
   }
 
   if (!booking) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-sm text-black/40 mb-4">Booking tidak ditemukan.</p>
-          <button onClick={() => router.push('/')} className="bg-brand text-white rounded-full px-6 py-3 text-sm font-medium hover:bg-brand-dark transition-colors">
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 text-center">
+        <div className="max-w-md w-full bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+          <p className="text-base font-bold text-blue-950">Data Pemesanan Tidak Ditemukan</p>
+          <p className="text-xs text-slate-500">Silakan periksa kembali tautan pembayaran Anda.</p>
+          <button
+            onClick={() => router.push('/')}
+            className="w-full bg-blue-600 text-white rounded-xl py-3 text-xs font-bold hover:bg-blue-700 transition-colors"
+          >
             Kembali ke Beranda
           </button>
         </div>
@@ -124,151 +123,147 @@ export default function PaymentPage() {
     )
   }
 
-  // Done state
-  if (step === 'done') {
-    return (
-      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto">
-            <CheckCircle className="w-8 h-8 text-emerald-500" />
-          </div>
-          <p className="text-sm font-semibold text-black">Pembayaran Berhasil!</p>
-          <p className="text-xs text-black/40">Mengarahkan ke konfirmasi…</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Processing state
-  if (step === 'processing') {
-    const method = PAYMENT_METHODS.find(m => m.id === selectedMethod)
-    return (
-      <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <div className="text-center space-y-4 max-w-xs mx-auto px-6">
-          <div className="w-16 h-16 rounded-full bg-white border border-black/[0.06] flex items-center justify-center mx-auto shadow-sm">
-            <span className="w-6 h-6 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-black" style={{ letterSpacing: '-0.02em' }}>Memproses Pembayaran</p>
-            <p className="text-xs text-black/40 mt-1">via {method?.label}</p>
-          </div>
-          <div className="bg-white rounded-2xl border border-black/[0.04] p-4 text-left space-y-2">
-            <div className="flex justify-between text-xs">
-              <span className="text-black/40">Total</span>
-              <span className="font-semibold text-black">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalAmount)}</span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-black/40">Kode Booking</span>
-              <span className="font-mono text-black">{booking.bookingCode ?? `#${booking.id}`}</span>
-            </div>
-          </div>
-          <p className="text-[10px] text-black/20">Harap tunggu, jangan tutup halaman ini…</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.02em' }}>
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
-      <main className="px-6 py-16 pt-28 max-w-lg mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <p className="text-xs font-medium text-black/30 uppercase tracking-widest mb-2">Langkah 4 dari 4</p>
-          <h1 className="text-2xl font-semibold text-black">Pembayaran</h1>
-          <p className="text-sm text-black/40 mt-1">Pilih metode pembayaran dan selesaikan booking.</p>
-        </div>
 
-        {/* Booking Summary */}
-        <div className="bg-white rounded-2xl border border-black/[0.04] p-5 mb-4">
-          <p className="text-xs font-semibold text-black/40 uppercase tracking-widest mb-3">Ringkasan Booking</p>
-          <div className="space-y-2.5">
-            <div className="flex justify-between text-sm">
-              <span className="text-black/40">Paket</span>
-              <span className="font-medium text-black text-right max-w-[60%]">{booking.packageName}</span>
+      <main className="flex-1 pt-28 pb-16 px-4 sm:px-6">
+        <div className="max-w-xl mx-auto space-y-6">
+          {/* Header Title */}
+          <div className="text-center space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[11px] font-extrabold uppercase tracking-wider">
+              <ShieldCheck size={14} />
+              <span>Pembayaran Instan & Aman</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-black/40">Tujuan</span>
-              <span className="font-medium text-black">{booking.country}</span>
+            <h1 className="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight">
+              Selesaikan Pembayaran
+            </h1>
+            <p className="text-xs text-slate-500">
+              Pilih metode pembayaran dan konfirmasi tiket e-voucher Anda secara otomatis.
+            </p>
+          </div>
+
+          {/* Booking Summary Box */}
+          <div className="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs space-y-4">
+            <div className="flex items-start justify-between gap-3 pb-4 border-b border-slate-100">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Kode Booking
+                </span>
+                <p className="font-mono text-base font-black text-blue-950">
+                  {booking.bookingCode ?? `#${booking.id}`}
+                </p>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Paket Wisata
+                </span>
+                <p className="text-xs font-extrabold text-slate-800 max-w-[200px] truncate">
+                  {booking.packageName}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-black/40">Tanggal</span>
-              <span className="font-medium text-black">{booking.travelDate}</span>
+
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between text-slate-600">
+                <span>Nama Pemesan</span>
+                <span className="font-bold text-blue-950">{booking.name}</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
+                <span>Jumlah Peserta</span>
+                <span className="font-bold text-blue-950">{booking.participants} Orang</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
+                <span>Tanggal Keberangkatan</span>
+                <span className="font-bold text-blue-950">
+                  {booking.travelDate ? new Date(booking.travelDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-'}
+                </span>
+              </div>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-black/40">Peserta</span>
-              <span className="font-medium text-black">{booking.participants} orang</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-black/40">Kode Booking</span>
-              <span className="font-mono text-black text-xs">{booking.bookingCode ?? `#${booking.id}`}</span>
-            </div>
-            <div className="pt-2 border-t border-black/[0.06] flex justify-between">
-              <span className="text-sm font-semibold text-black">Total</span>
-              <span className="text-lg font-bold text-black">
-                {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalAmount)}
+
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700">Total Tagihan</span>
+              <span className="text-xl font-black text-blue-600">
+                {formatPrice(totalAmount)}
               </span>
             </div>
           </div>
-        </div>
 
-        {/* Payment Method Selector */}
-        <div className="bg-white rounded-2xl border border-black/[0.04] p-5 mb-4">
-          <p className="text-xs font-semibold text-black/40 uppercase tracking-widest mb-3">Metode Pembayaran</p>
-          <div className="space-y-2">
-            {PAYMENT_METHODS.map((method) => {
-              const Icon = method.icon
-              const isSelected = selectedMethod === method.id
-              return (
-                <button
-                  key={method.id}
-                  onClick={() => setSelectedMethod(method.id)}
-                  className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all duration-200 text-left ${
-                    isSelected
-                      ? `${method.border} ${method.bg}`
-                      : 'border-brand/20 hover:border-brand/40 hover:bg-brand/[0.04]'
-                  }`}
-                >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? method.bg : 'bg-black/[0.04]'}`}>
-                    <Icon className={`w-4.5 h-4.5 ${isSelected ? method.color : 'text-black/40'}`} size={18} />
-                  </div>
-                  <div className="flex-1">
-                    <p className={`text-sm font-semibold ${isSelected ? 'text-black' : 'text-black/70'}`}>{method.label}</p>
-                    <p className="text-xs text-black/40">{method.desc}</p>
-                  </div>
-                  <div className={`w-4 h-4 rounded-full border-2 shrink-0 transition-all ${isSelected ? `${method.color.replace('text', 'border')} flex items-center justify-center` : 'border-black/20'}`}>
-                    {isSelected && <div className={`w-2 h-2 rounded-full ${method.color.replace('text', 'bg')}`} />}
-                  </div>
-                </button>
-              )
-            })}
+          {/* Payment Method Selector */}
+          <div className="space-y-3">
+            <p className="text-xs font-extrabold uppercase tracking-wider text-slate-500 px-1">
+              Pilih Saluran Pembayaran
+            </p>
+
+            <div className="space-y-2.5">
+              {PAYMENT_METHODS.map((method) => {
+                const Icon = method.icon
+                const isSelected = selectedMethod === method.id
+
+                return (
+                  <button
+                    key={method.id}
+                    type="button"
+                    onClick={() => setSelectedMethod(method.id)}
+                    className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center justify-between gap-3 cursor-pointer ${
+                      isSelected
+                        ? 'border-blue-600 bg-blue-50/40 shadow-xs ring-1 ring-blue-600/30'
+                        : 'border-slate-200/80 bg-white hover:border-blue-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        <Icon size={18} />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-extrabold text-blue-950">{method.label}</p>
+                          <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
+                            {method.badge}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-0.5">{method.desc}</p>
+                      </div>
+                    </div>
+
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                      isSelected ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300'
+                    }`}>
+                      {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Simulator Notice */}
-        <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3.5 mb-6">
-          <Clock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-700 leading-relaxed">
-            <span className="font-semibold">Mode Simulasi</span> — Ini adalah simulasi pembayaran untuk keperluan demo. Tidak ada transaksi nyata yang terjadi.
-          </p>
-        </div>
+          {/* Instant Submit Button */}
+          <div className="space-y-2 pt-2">
+            <button
+              onClick={handleInstantPay}
+              disabled={paying}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-2xl transition-all text-sm shadow-md shadow-blue-600/25 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              {paying ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Memverifikasi & Menerbitkan Tiket...</span>
+                </>
+              ) : (
+                <>
+                  <span>Bayar Sekarang (Auto-Lunas)</span>
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </button>
 
-        {/* CTA */}
-        <div className="space-y-3">
-          <button
-            onClick={handlePay}
-            className="w-full bg-brand text-white rounded-full px-6 py-3.5 font-semibold hover:bg-brand-dark transition-colors text-sm flex items-center justify-center gap-2"
-          >
-            <Lock className="w-3.5 h-3.5" />
-            Bayar {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(totalAmount)}
-            <ChevronRight className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => router.back()}
-            className="w-full text-black/40 rounded-full px-6 py-3 font-medium hover:text-black transition-colors text-sm border border-black/10"
-          >
-            Kembali
-          </button>
+            <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium text-center">
+              <Lock size={12} className="text-emerald-600" />
+              <span>Tanpa menunggu admin. Status otomatis terkonfirmasi lunas seketika.</span>
+            </div>
+          </div>
         </div>
       </main>
     </div>

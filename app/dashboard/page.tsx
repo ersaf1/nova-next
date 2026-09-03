@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabaseClient } from '@/lib/supabase-client'
-import { Luggage, CalendarCheck, CheckCircle2, Search, MapIcon, Ticket } from 'lucide-react'
+import { Luggage, CalendarCheck, CheckCircle2, Search, MapIcon, Ticket, ShieldCheck } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import Navbar from '@/components/Navbar'
 import CancelBookingModal from '@/components/CancelBookingModal'
@@ -55,6 +55,7 @@ const QUICK_ACTIONS = [
 export default function DashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
+  const [role, setRole] = useState<string | null>(null)
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [bookingsLoading, setBookingsLoading] = useState(false)
@@ -62,17 +63,31 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const controller = new AbortController()
-    supabaseClient.auth.getUser().then(({ data }) => {
-      if (!data.user) {
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.user) {
         router.replace('/login?redirect=/dashboard')
         return
       }
-      setUser(data.user)
+      setUser(session.user)
       setLoading(false)
+
+      // Fetch role
+      if (session.access_token) {
+        fetch('/api/auth/me', {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+          signal: controller.signal
+        })
+          .then(r => r.json())
+          .then(d => {
+            if (d?.role) setRole(d.role)
+          })
+          .catch(() => {})
+      }
+
       // Fetch bookings filtered by this user's email
-      if (data.user.email) {
+      if (session.user.email) {
         setBookingsLoading(true)
-        fetch(`/api/bookings?email=${encodeURIComponent(data.user.email)}`, { signal: controller.signal })
+        fetch(`/api/bookings?email=${encodeURIComponent(session.user.email)}`, { signal: controller.signal })
           .then((r) => r.json())
           .then((data) => {
             if (Array.isArray(data)) setBookings(data)
@@ -127,19 +142,40 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.02em' }}>
+    <div className="min-h-screen bg-[#F8FAFC]" style={{ letterSpacing: '-0.02em' }}>
       <Navbar />
 
       <main className="max-w-5xl mx-auto px-6 py-8 pt-24">
+        {/* Admin Quick Jump Banner */}
+        {role && ['admin', 'super_admin', 'booking_officer'].includes(role) && (
+          <div className="mb-6 p-4 rounded-2xl bg-blue-50 border border-blue-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs shrink-0">
+                <ShieldCheck size={20} />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-blue-950">Akses Panel Manajemen Administrator</p>
+                <p className="text-[11px] text-blue-700">Anda masuk dengan hak akses {role === 'super_admin' ? 'Super Admin' : 'Admin'}.</p>
+              </div>
+            </div>
+            <Link
+              href="/admin"
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold transition-all shadow-sm shadow-blue-600/30 shrink-0 text-center"
+            >
+              Buka Panel Admin &rarr;
+            </Link>
+          </div>
+        )}
+
         {/* Welcome */}
         <div className="mb-8">
           <h1
-            className="text-2xl font-semibold text-black"
+            className="text-2xl font-black text-blue-950"
             style={{ letterSpacing: '-0.02em' }}
           >
-            Welcome back, {displayName}
+            Selamat datang, {displayName}
           </h1>
-          <p className="mt-1 text-sm text-neutral-500">{user?.email}</p>
+          <p className="mt-1 text-sm text-slate-500 font-medium">{user?.email}</p>
         </div>
 
         {/* Stats */}

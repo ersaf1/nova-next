@@ -291,11 +291,10 @@ async function main() {
     }
   })
 
-  // Save 195 countries to data/countries_database.json & data/destinations.json
-  fs.writeFileSync(path.join(dataDir, 'countries_database.json'), JSON.stringify(countriesDatabase, null, 2), 'utf-8')
+  // Save 195 countries to data/destinations.json
   fs.writeFileSync(path.join(dataDir, 'destinations.json'), JSON.stringify(countriesDatabase, null, 2), 'utf-8')
 
-  console.log(`✅ Saved all ${countriesDatabase.length} UN member countries to data/countries_database.json & data/destinations.json`)
+  console.log(`✅ Saved all ${countriesDatabase.length} UN member countries to data/destinations.json`)
 
   // Sync to Supabase Database
   try {

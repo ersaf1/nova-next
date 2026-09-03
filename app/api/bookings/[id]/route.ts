@@ -7,7 +7,24 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     const { id } = await params
     const { data, error } = await supabase.from('Booking').select('*').eq('id', Number(id)).single()
     if (error) throw error
-    return NextResponse.json(data)
+
+    let passengers: Array<{ title: string; name: string; idType?: string; idNumber?: string }> = []
+    let userNotes = data.notes || ''
+    if (data.notes && data.notes.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(data.notes)
+        if (Array.isArray(parsed.passengers)) {
+          passengers = parsed.passengers
+          userNotes = parsed.userNotes || ''
+        }
+      } catch {}
+    }
+
+    return NextResponse.json({
+      ...data,
+      passengers,
+      userNotes,
+    })
   } catch {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }

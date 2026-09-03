@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import ImageUploadField from '@/components/admin/ImageUploadField'
+import { adminFetch } from '@/lib/admin-client'
 
 interface Step {
   id: number
@@ -13,7 +15,7 @@ interface Step {
   active: boolean
 }
 
-const ICON_OPTIONS = ['Search', 'BookOpen', 'Compass', 'Map', 'Globe', 'Plane', 'Star', 'Heart']
+const ICON_OPTIONS = ['Search', 'Sparkles', 'Calendar', 'CreditCard', 'Compass', 'MapPin', 'CheckCircle', 'Send']
 
 export default function HowItWorksAdmin() {
   const [steps, setSteps] = useState<Step[]>([])
@@ -34,32 +36,61 @@ export default function HowItWorksAdmin() {
 
   const saveStep = async (step: Step) => {
     setSaving(step.id)
-    await fetch(`/api/how-it-works/${step.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(step),
-    })
-    setSaving(null)
-    flash(step.id)
+    try {
+      const res = await adminFetch(`/api/how-it-works/${step.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(step),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menyimpan langkah: ' + (err.error || err.message || res.statusText))
+        return
+      }
+      flash(step.id)
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setSaving(null)
+    }
   }
 
   const deleteStep = async (id: number) => {
-    if (!confirm('Delete this step?')) return
-    await fetch(`/api/how-it-works/${id}`, { method: 'DELETE' })
-    setSteps(prev => prev.filter(s => s.id !== id))
+    if (!confirm('Yakin ingin menghapus langkah ini?')) return
+    try {
+      const res = await adminFetch(`/api/how-it-works/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menghapus langkah: ' + (err.error || err.message || res.statusText))
+        return
+      }
+      setSteps(prev => prev.filter(s => s.id !== id))
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   const addStep = async () => {
     setAdding(true)
-    const res = await fetch('/api/how-it-works', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newForm),
-    })
-    const created = await res.json()
-    setSteps(prev => [...prev, created])
-    setNewForm({ number: '', title: '', caption: '', iconName: 'Search', image: '', sortOrder: 0, active: true })
-    setAdding(false)
+    try {
+      const res = await adminFetch('/api/how-it-works', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newForm),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menambah langkah: ' + (err.error || err.message || res.statusText))
+        return
+      }
+      const created = await res.json()
+      setSteps(prev => [...prev, created])
+      setNewForm({ number: '', title: '', caption: '', iconName: 'Search', image: '', sortOrder: 0, active: true })
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setAdding(false)
+    }
   }
 
   if (loading) return <p className="text-gray-400 text-sm">Loading...</p>
@@ -110,9 +141,13 @@ export default function HowItWorksAdmin() {
                 <label className="text-xs font-medium text-gray-600">Caption</label>
                 <input value={step.caption} onChange={e => setSteps(prev => prev.map(s => s.id === step.id ? { ...s, caption: e.target.value } : s))} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" />
               </div>
-              <div className="flex flex-col gap-1 col-span-2">
-                <label className="text-xs font-medium text-gray-600">Image URL</label>
-                <input value={step.image} onChange={e => setSteps(prev => prev.map(s => s.id === step.id ? { ...s, image: e.target.value } : s))} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" />
+              <div className="col-span-2">
+                <ImageUploadField
+                  label="Foto Ilustrasi Langkah"
+                  value={step.image}
+                  onChange={url => setSteps(prev => prev.map(s => s.id === step.id ? { ...s, image: url } : s))}
+                  aspectRatio="wide"
+                />
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -129,17 +164,25 @@ export default function HowItWorksAdmin() {
       <div className="bg-gray-50 rounded-xl border border-dashed border-gray-300 p-5 flex flex-col gap-3">
         <p className="text-sm font-semibold text-gray-700">Add New Step</p>
         <div className="grid grid-cols-2 gap-3">
-          {(['number', 'title', 'caption', 'image'] as const).map(field => (
-            <div key={field} className={`flex flex-col gap-1 ${field === 'caption' || field === 'image' ? 'col-span-2' : ''}`}>
+          {(['number', 'title', 'caption'] as const).map(field => (
+            <div key={field} className={`flex flex-col gap-1 ${field === 'caption' ? 'col-span-2' : ''}`}>
               <label className="text-xs font-medium text-gray-600 capitalize">{field}</label>
               <input value={newForm[field]} onChange={e => setNewForm(prev => ({ ...prev, [field]: e.target.value }))} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black bg-white" />
             </div>
           ))}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 col-span-2">
             <label className="text-xs font-medium text-gray-600">Icon</label>
             <select value={newForm.iconName} onChange={e => setNewForm(prev => ({ ...prev, iconName: e.target.value }))} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black bg-white">
               {ICON_OPTIONS.map(icon => <option key={icon} value={icon}>{icon}</option>)}
             </select>
+          </div>
+          <div className="col-span-2">
+            <ImageUploadField
+              label="Foto Langkah Baru"
+              value={newForm.image}
+              onChange={url => setNewForm(prev => ({ ...prev, image: url }))}
+              aspectRatio="wide"
+            />
           </div>
         </div>
         <button onClick={addStep} disabled={adding || !newForm.title} className="bg-brand text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-brand-dark disabled:opacity-50 transition-colors w-fit">

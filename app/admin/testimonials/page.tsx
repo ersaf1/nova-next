@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import ImageUploadField from '@/components/admin/ImageUploadField'
+import { adminFetch } from '@/lib/admin-client'
 
 interface Testimonial {
   id: number; name: string; location: string; avatar: string; rating: number; text: string; trip: string
@@ -27,17 +29,38 @@ export default function TestimonialsAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true)
-    if (editing) {
-      await fetch(`/api/testimonials/${editing.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
-    } else {
-      await fetch('/api/testimonials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+    try {
+      const res = editing
+        ? await adminFetch(`/api/testimonials/${editing.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+        : await adminFetch('/api/testimonials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menyimpan testimoni: ' + (err.error || err.message || res.statusText))
+        setSaving(false)
+        return
+      }
+      setShowModal(false)
+      load()
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setSaving(false)
     }
-    setSaving(false); setShowModal(false); load()
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Delete this testimonial?')) return
-    await fetch(`/api/testimonials/${id}`, { method: 'DELETE' }); load()
+    if (!confirm('Yakin ingin menghapus testimoni ini?')) return
+    try {
+      const res = await adminFetch(`/api/testimonials/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal menghapus testimoni: ' + (err.error || err.message || res.statusText))
+        return
+      }
+      load()
+    } catch (err: unknown) {
+      alert('Terjadi kesalahan: ' + (err instanceof Error ? err.message : String(err)))
+    }
   }
 
   return (
@@ -74,7 +97,15 @@ export default function TestimonialsAdmin() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-lg font-bold mb-5">{editing ? 'Edit Testimonial' : 'Add Testimonial'}</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              {[['name','Name'],['location','Location'],['avatar','Avatar URL'],['trip','Trip']].map(([name, label]) => (
+              <ImageUploadField
+                label="Foto Profil / Avatar Traveler"
+                value={form.avatar}
+                onChange={(url) => setForm(prev => ({ ...prev, avatar: url }))}
+                aspectRatio="square"
+                helperText="Upload foto profil traveler (rasio 1:1 persegi)"
+              />
+
+              {[['name','Name'],['location','Location'],['trip','Trip Paket']].map(([name, label]) => (
                 <div key={name} className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-gray-700">{label}</label>
                   <input name={name} value={(form as Record<string, unknown>)[name] as string ?? ''} onChange={handleChange} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" />

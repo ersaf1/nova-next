@@ -30,6 +30,7 @@ interface Booking {
   midtrans_order_id?: string
   created_at?: string
   bookingCode?: string
+  passengers?: Array<{ title: string; name: string; idType?: string; idNumber?: string }>
 }
 
 // Simple deterministic QR grid from booking id
@@ -220,6 +221,29 @@ export default function ConfirmationPage() {
                   </div>
                 </div>
 
+                {/* Passenger Roster */}
+                {booking.passengers && booking.passengers.length > 0 && (
+                  <div className="pt-3 border-t border-black/5 space-y-2">
+                    <p className="text-xs font-bold text-neutral-800 uppercase tracking-wider">
+                      Daftar Penumpang / Tamu ({booking.passengers.length} Orang)
+                    </p>
+                    <div className="space-y-1.5">
+                      {booking.passengers.map((p, i) => (
+                        <div key={i} className="flex items-center justify-between text-xs bg-neutral-50 px-3 py-2 rounded-xl border border-neutral-100">
+                          <span className="font-semibold text-neutral-900">
+                            {p.title} {p.name}
+                          </span>
+                          {p.idNumber && (
+                            <span className="text-[11px] text-neutral-500 font-mono">
+                              {p.idType || 'ID'}: {p.idNumber}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {totalAmount > 0 && (
                   <div className="pt-3 border-t border-black/5 flex justify-between items-center">
                     <span className="text-xs text-black/30">Total Pembayaran</span>
@@ -264,6 +288,7 @@ export default function ConfirmationPage() {
                   status: 'paid',
                   midtrans_order_id: booking.midtrans_order_id,
                   created_at: booking.created_at ?? new Date().toISOString(),
+                  passengers: booking.passengers,
                 }}
               />
             </div>

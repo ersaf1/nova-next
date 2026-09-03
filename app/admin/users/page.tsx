@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { adminFetch } from '@/lib/admin-client'
 import {
   Users,
   Search,
@@ -53,7 +54,7 @@ export default function AdminUsersPage() {
 
   const loadUsers = () => {
     setLoading(true)
-    fetch('/api/admin/users')
+    adminFetch('/api/admin/users')
       .then(r => r.json())
       .then(data => {
         setUsers(Array.isArray(data) ? data : [])
@@ -69,11 +70,17 @@ export default function AdminUsersPage() {
   const handleRoleChange = async (userId: string, newRole: string) => {
     setUpdatingRole(true)
     try {
-      await fetch(`/api/admin/users/${userId}/role`, {
+      const res = await adminFetch(`/api/admin/users/${userId}/role`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: newRole })
       })
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert('Gagal mengubah role: ' + (err.error || err.message || res.statusText))
+        return
+      }
 
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole as any } : u))
       if (selectedUser && selectedUser.id === userId) {
@@ -81,6 +88,7 @@ export default function AdminUsersPage() {
       }
     } catch (err) {
       console.error('Failed to update role:', err)
+      alert('Terjadi kesalahan saat mengubah role.')
     } finally {
       setUpdatingRole(false)
     }

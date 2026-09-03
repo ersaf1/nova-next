@@ -81,6 +81,7 @@ export async function POST(request: Request) {
       participants,
       voucherCode,
       notes,
+      passengers,
       // legacy fields
       name, email, phone, travelDate, country,
     } = body
@@ -142,32 +143,41 @@ export async function POST(request: Request) {
 
     // Validate voucher server-side if provided
     if (voucherCode) {
-      const today = new Date().toISOString().split('T')[0]
       const { data: coupon } = await supabase
         .from('Coupon')
         .select('*')
-        .eq('code', voucherCode.toUpperCase())
-        .eq('active', true)
-        .lte('startDate', today)
-        .gte('endDate', today)
+        .eq('code', voucherCode.toUpperCase().trim())
+        .eq('is_active', true)
         .single()
 
       if (coupon) {
-        if (!coupon.minimumPurchase || subtotal >= coupon.minimumPurchase) {
-          if (coupon.discountType === 'percentage') {
-            discountAmount = Math.floor((subtotal * coupon.discountValue) / 100)
-            if (coupon.maximumDiscount) {
-              discountAmount = Math.min(discountAmount, coupon.maximumDiscount)
-            }
+        const notExpired = !coupon.expires_at || new Date(coupon.expires_at) > new Date()
+        const withinUsage = coupon.max_uses === null || coupon.used_count < coupon.max_uses
+        const meetsMin = subtotal >= (coupon.min_amount || 0)
+
+        if (notExpired && withinUsage && meetsMin) {
+          if (coupon.discount_type === 'percent') {
+            discountAmount = Math.round((subtotal * coupon.discount_value) / 100)
           } else {
-            discountAmount = coupon.discountValue
+            discountAmount = Math.min(coupon.discount_value, subtotal)
           }
+
+          // Increment coupon usage
+          await supabase
+            .from('Coupon')
+            .update({ used_count: (coupon.used_count ?? 0) + 1 })
+            .eq('id', coupon.id)
         }
       }
     }
 
-    const totalAmount = Math.max(0, subtotal - discountAmount) + SERVICE_FEE
+    // Total calculation
+    const totalAmount = Math.max(0, subtotal - discountAmount + SERVICE_FEE)
     const bookingCode = generateBookingCode()
+
+    const finalNotes = passengers && Array.isArray(passengers) && passengers.length > 0
+      ? JSON.stringify({ userNotes: notes || '', passengers })
+      : (notes || null)
 
     const bookingData = {
       bookingCode,
@@ -181,7 +191,7 @@ export async function POST(request: Request) {
       discountAmount,
       serviceFee: SERVICE_FEE,
       totalAmount,
-      notes: notes || null,
+      notes: finalNotes,
       bookingStatus: 'confirmed',
       paymentStatus: 'paid',
       userId: userId || null,

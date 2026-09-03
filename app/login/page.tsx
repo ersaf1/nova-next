@@ -46,15 +46,35 @@ function LoginForm() {
     setLoading(true)
     setError('')
 
-    const { error } = await supabaseClient.auth.signInWithPassword({ email, password })
+    const { data: authData, error } = await supabaseClient.auth.signInWithPassword({ email, password })
     if (error) {
       setError(mapError(error.message))
       setLoading(false)
       return
     }
 
-    // Hard navigation so proxy.ts reads the fresh Supabase session cookies
-    window.location.href = redirect
+    if (authData?.session?.access_token && typeof document !== 'undefined') {
+      document.cookie = `sb-access-token=${authData.session.access_token}; path=/; max-age=604800; SameSite=Lax`
+    }
+
+    let targetUrl = redirect
+    // If user logged in without specific redirect, check their role
+    if (!searchParams.get('redirect') && authData?.session?.access_token) {
+      try {
+        const res = await fetch('/api/auth/me', {
+          headers: {
+            Authorization: `Bearer ${authData.session.access_token}`
+          }
+        })
+        const me = await res.json()
+        if (me?.role && ['admin', 'super_admin', 'booking_officer'].includes(me.role)) {
+          targetUrl = '/admin'
+        }
+      } catch {}
+    }
+
+    // Hard navigation so cookies & session are read freshly
+    window.location.href = targetUrl
   }
 
   async function handleSignUp(e: React.FormEvent) {

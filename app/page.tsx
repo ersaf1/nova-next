@@ -5,7 +5,7 @@ import AnimatedSections from '@/components/AnimatedSections'
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col bg-[#F5F5F5]">
+    <div className="flex flex-col bg-[#F8FAFC] text-slate-900 selection:bg-blue-100 selection:text-blue-900">
       <Navbar />
       <HeroSection />
       <AnimatedSections />

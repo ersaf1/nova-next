@@ -477,22 +477,23 @@ function FinalBossAiPlannerInner() {
       <div className="pt-24 pb-28 px-4 sm:px-6 max-w-5xl mx-auto space-y-16">
         {/* ─── Hero Header (Spacious & Clean) ─── */}
         <section className="text-center space-y-4 max-w-3xl mx-auto pt-4">
-          <div className="gsap-hero-item inline-flex items-center gap-2 bg-white border border-neutral-200/80 text-neutral-700 text-xs font-jakarta font-semibold tracking-wide px-4 py-1.5 rounded-full shadow-2xs">
-            <Navigation size={13} className="text-brand" />
-            <span>Sistem Navigasi & Perjalanan Terpadu</span>
+          <div className="gsap-hero-item inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-xs font-jakarta font-extrabold tracking-wide px-4 py-1.5 rounded-full shadow-2xs">
+            <Navigation size={13} className="text-blue-600" />
+            <span>Smart Route Planner & Concierge</span>
           </div>
 
-          <h1 className="gsap-hero-item font-jakarta font-extrabold text-3xl sm:text-4xl lg:text-5xl text-neutral-950 tracking-tight leading-tight">
-            Rancang Rencana Perjalanan
+          <h1 className="gsap-hero-item font-jakarta font-black text-3xl sm:text-4xl lg:text-5xl text-blue-950 tracking-tight leading-tight">
+            <span>Rancang Rencana Perjalanan </span>
+            <span className="font-serif-luxury italic font-normal text-blue-600">Presisi & Cerdas</span>
           </h1>
 
-          <p className="gsap-hero-item font-jakarta text-sm sm:text-base text-neutral-500 max-w-xl mx-auto leading-relaxed font-normal">
-            Penyusun rencana perjalanan dengan rute harian efisien, estimasi biaya transparan, dan kurasi spot terverifikasi.
+          <p className="gsap-hero-item font-jakarta text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
+            Penyusun jadwal perjalanan dengan rute harian efisien, estimasi biaya transparan, dan kurasi spot terverifikasi.
           </p>
 
           {/* Quick Destination Tags */}
           <div className="gsap-hero-item flex flex-wrap items-center justify-center gap-2 pt-2">
-            <span className="text-xs font-jakarta text-neutral-400 mr-1">Inspirasi Cepat:</span>
+            <span className="text-xs font-jakarta text-slate-400 mr-1 font-medium">Inspirasi Cepat:</span>
             {POPULAR_DESTINATIONS.map((dest, i) => (
               <button
                 key={i}
@@ -501,9 +502,9 @@ function FinalBossAiPlannerInner() {
                   setDestination(dest.query)
                   handleGenerate(dest.query)
                 }}
-                className="text-xs font-jakarta font-semibold px-3 py-1.5 rounded-full bg-white hover:bg-neutral-900 hover:text-white border border-neutral-200/80 text-neutral-700 transition-all active:scale-95 shadow-2xs flex items-center gap-1.5 cursor-pointer"
+                className="text-xs font-jakarta font-bold px-3 py-1.5 rounded-full bg-white hover:bg-blue-600 hover:text-white border border-slate-200 text-slate-700 transition-all active:scale-95 shadow-2xs flex items-center gap-1.5 cursor-pointer"
               >
-                <span className="text-[10px] font-mono text-neutral-400">{dest.code}</span>
+                <span className="text-[10px] font-mono text-slate-400">{dest.code}</span>
                 <span>{dest.name}</span>
               </button>
             ))}
@@ -511,41 +512,46 @@ function FinalBossAiPlannerInner() {
         </section>
 
         {/* ─── Simplified Search Island (Clean Whitespace) ─── */}
-        <section className="gsap-hero-item w-full max-w-3xl mx-auto bg-white border border-neutral-200/80 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+        <section className="gsap-hero-item w-full max-w-3xl mx-auto bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xl shadow-blue-950/5 space-y-6">
           {loading ? (
             /* Loading State */
             <div className="py-14 flex flex-col items-center text-center space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-neutral-900 flex items-center justify-center text-white shadow-xs">
-                <Loader2 size={20} className="animate-spin text-brand-light" />
+              <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-600/30">
+                <Loader2 size={20} className="animate-spin text-white" />
               </div>
-              <div className="space-y-1 max-w-md">
-                <h3 className="text-sm font-jakarta font-bold text-neutral-900">
-                  {loadingMessages[loadingStep]}
-                </h3>
-                <p className="text-xs font-jakarta text-neutral-400">
-                  Memetakan titik lokasi & rekomendasi rute
+              <div className="space-y-1">
+                <p className="font-jakarta font-bold text-sm text-blue-950">Menyusun Itinerary Terbaik...</p>
+                <p className="font-jakarta text-xs text-slate-500 max-w-xs">
+                  Mengalkulasi rute efisien, spot populer, dan estimasi biaya harian di {destination}.
                 </p>
               </div>
             </div>
           ) : (
             <>
-              {/* Destination Search Bar */}
+              {/* Destination Input */}
               <div className="space-y-2">
-                <div className="flex items-center bg-neutral-50/90 border border-neutral-200 rounded-2xl px-4 py-1.5 focus-within:bg-white focus-within:border-neutral-900 focus-within:ring-4 focus-within:ring-neutral-900/5 transition-all">
-                  <MapPin size={18} className="text-neutral-500 mr-3 shrink-0" />
+                <label className="text-[11px] font-jakarta font-bold text-slate-400 uppercase tracking-wider">
+                  Destinasi Wisata
+                </label>
+                <div className="relative">
+                  <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600" />
                   <input
                     type="text"
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
-                    placeholder="Ketik destinasi (misal: Magelang, Kopeng, Purworejo, Tokyo, Bali)..."
-                    className="w-full bg-transparent py-2.5 text-sm sm:text-base font-jakarta font-semibold text-neutral-900 placeholder:text-neutral-400 focus:outline-none"
-                    onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+                    placeholder="Contoh: Tokyo, Bali, Swiss Alps, Labuan Bajo..."
+                    className="w-full pl-11 pr-20 py-3.5 bg-slate-50/70 border border-slate-200 rounded-2xl font-jakarta text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all font-medium"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && destination.trim()) {
+                        handleGenerate()
+                      }
+                    }}
                   />
                   {destination && (
                     <button
                       type="button"
                       onClick={() => setDestination('')}
-                      className="text-xs font-jakarta text-neutral-400 hover:text-neutral-700 px-2 py-1 transition-colors cursor-pointer"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-jakarta text-slate-400 hover:text-slate-600 cursor-pointer"
                     >
                       Batal
                     </button>
@@ -555,7 +561,7 @@ function FinalBossAiPlannerInner() {
 
               {/* Vibe Selection Pills */}
               <div className="space-y-2">
-                <label className="text-[11px] font-jakarta font-bold text-neutral-400 uppercase tracking-wider">
+                <label className="text-[11px] font-jakarta font-bold text-slate-400 uppercase tracking-wider">
                   Gaya Perjalanan
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -567,13 +573,13 @@ function FinalBossAiPlannerInner() {
                         key={v.id}
                         type="button"
                         onClick={() => setSelectedVibe(v.id)}
-                        className={`px-3.5 py-2 rounded-xl text-xs font-jakarta font-semibold border transition-all flex items-center gap-2 cursor-pointer ${
+                        className={`px-3.5 py-2 rounded-xl text-xs font-jakarta font-bold border transition-all flex items-center gap-2 cursor-pointer ${
                           isSelected
-                            ? 'bg-neutral-900 text-white border-neutral-900 shadow-xs'
-                            : 'bg-white hover:bg-neutral-50 border-neutral-200/80 text-neutral-700'
+                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-600/25'
+                            : 'bg-white hover:bg-blue-50 border-slate-200 text-slate-700 hover:text-blue-600'
                         }`}
                       >
-                        <IconComp size={14} className={isSelected ? 'text-white' : 'text-neutral-500'} />
+                        <IconComp size={14} className={isSelected ? 'text-white' : 'text-slate-500'} />
                         <span>{v.label}</span>
                       </button>
                     )
@@ -642,13 +648,13 @@ function FinalBossAiPlannerInner() {
                 type="button"
                 onClick={() => {
                   if (!destination.trim()) {
-                    setError('Silakan ketik destinasi liburan (misal: Magelang, Bali, Tokyo, dsb).')
+                    setError('Silakan ketik destinasi liburan (misal: Tokyo, Bali, Santorini, dsb).')
                     return
                   }
                   handleGenerate()
                 }}
                 disabled={loading}
-                className="w-full bg-brand text-white text-sm font-jakarta font-bold py-3.5 rounded-xl hover:bg-brand-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                className="w-full bg-blue-600 text-white text-sm font-jakarta font-extrabold py-3.5 rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm shadow-blue-600/30 cursor-pointer"
               >
                 <Compass size={16} />
                 <span>Susun Rencana Perjalanan</span>
@@ -663,7 +669,7 @@ function FinalBossAiPlannerInner() {
               <button
                 type="button"
                 onClick={() => handleGenerate()}
-                className="text-xs font-jakarta font-semibold text-neutral-800 underline hover:text-neutral-950 cursor-pointer"
+                className="text-xs font-jakarta font-semibold text-blue-600 underline hover:text-blue-800 cursor-pointer"
               >
                 Coba lagi
               </button>
@@ -675,14 +681,14 @@ function FinalBossAiPlannerInner() {
         {itinerary && (
           <div ref={resultsRef} className="space-y-10 pt-4 animate-fade-in max-w-4xl mx-auto">
             {/* Header: Destination & Quick Summary */}
-            <div className="gsap-bento-item bg-white border border-neutral-200/80 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-100 pb-6">
+            <div className="gsap-bento-item bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 text-xs font-jakarta font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-3 py-0.5 rounded-full mb-2">
-                    <ShieldCheck size={12} className="text-emerald-600" />
+                  <div className="inline-flex items-center gap-1.5 text-xs font-jakarta font-bold text-blue-700 bg-blue-50 border border-blue-200/60 px-3 py-0.5 rounded-full mb-2">
+                    <ShieldCheck size={12} className="text-blue-600" />
                     <span>Rencana Perjalanan Terverifikasi</span>
                   </div>
-                  <h2 className="font-jakarta font-extrabold text-2xl sm:text-3xl text-neutral-950 tracking-tight">
+                  <h2 className="font-jakarta font-black text-2xl sm:text-3xl text-blue-950 tracking-tight">
                     {itinerary.destination}
                   </h2>
                 </div>
@@ -691,7 +697,7 @@ function FinalBossAiPlannerInner() {
                   <button
                     type="button"
                     onClick={handleCopyLink}
-                    className="text-xs font-jakarta font-semibold px-3 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+                    className="text-xs font-jakarta font-semibold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
                   >
                     {copiedLink ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
                     <span>{copiedLink ? 'Tersalin' : 'Bagikan'}</span>
@@ -700,7 +706,7 @@ function FinalBossAiPlannerInner() {
                   <button
                     type="button"
                     onClick={handlePrint}
-                    className="text-xs font-jakarta font-semibold px-3 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+                    className="text-xs font-jakarta font-semibold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
                   >
                     <Printer size={13} />
                     <span>Cetak</span>
@@ -709,7 +715,7 @@ function FinalBossAiPlannerInner() {
                   <button
                     type="button"
                     onClick={() => setShowBookingModal(true)}
-                    className="text-xs font-jakarta font-bold px-4 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+                    className="text-xs font-jakarta font-extrabold px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-sm shadow-blue-600/25 flex items-center gap-1.5 cursor-pointer"
                   >
                     <CalendarCheck size={13} />
                     <span>Booking Rencana</span>
