@@ -162,29 +162,28 @@ function LoginForm() {
 
   return (
     <div
-      className="min-h-screen bg-[#F5F5F5] flex items-center justify-center px-6 py-24"
-      style={{ letterSpacing: '-0.02em' }}
+      className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900 flex items-center justify-center px-6 py-24"
     >
       <div className="w-full max-w-md">
         {/* Logo / brand */}
         <div className="mb-10 text-center">
-          <span className="text-2xl font-semibold tracking-tight text-black">NOVA</span>
-          <p className="mt-1 text-sm text-neutral-500">Your AI-powered travel companion</p>
+          <span className="text-3xl font-semibold tracking-tight text-stone-900 font-serif-luxury">NOVA</span>
+          <p className="mt-1 text-xs uppercase tracking-[0.2em] text-[#C29B38]">Curated Luxury Journeys</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl p-8 shadow-sm">
+        <div className="bg-white rounded-3xl p-8 sm:p-9 shadow-xl shadow-stone-200/40 border border-stone-200/80">
           {/* Tabs — hide signup for admin login */}
           {!isAdminLogin && (
-            <div className="flex rounded-full bg-[#F5F5F5] p-1 mb-8">
+            <div className="flex rounded-full bg-[#F5F2EB] p-1 mb-8">
               {(['signin', 'signup'] as Tab[]).map((t) => (
                 <button
                   key={t}
                   onClick={() => switchTab(t)}
-                  className={`flex-1 py-2 rounded-full text-sm font-medium transition-colors ${
+                  className={`flex-1 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     tab === t
-                      ? 'bg-brand text-white'
-                      : 'text-neutral-500 hover:text-black'
+                      ? 'bg-stone-900 text-[#FAF9F6] shadow-sm'
+                      : 'text-stone-500 hover:text-stone-900'
                   }`}
                 >
                   {t === 'signin' ? 'Sign in' : 'Sign up'}
@@ -199,7 +198,7 @@ function LoginForm() {
             <div className="space-y-4">
               {/* Email */}
               <div>
-                <label htmlFor="email" className="block text-xs font-medium text-neutral-500 mb-1.5">
+                <label htmlFor="email" className="block text-xs font-bold text-stone-700 mb-1.5 uppercase tracking-wider">
                   Email
                 </label>
                 <input
@@ -211,13 +210,13 @@ function LoginForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-neutral-200 bg-[#F5F5F5] px-4 py-3 text-sm text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-2xl border border-stone-200/80 bg-stone-50 px-4 py-3 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
 
               {/* Password */}
               <div>
-                <label htmlFor="password" className="block text-xs font-medium text-neutral-500 mb-1.5">
+                <label htmlFor="password" className="block text-xs font-bold text-stone-700 mb-1.5 uppercase tracking-wider">
                   Password
                 </label>
                 <div className="relative">
@@ -230,13 +229,13 @@ function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-neutral-200 bg-[#F5F5F5] px-4 py-3 pr-11 text-sm text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full rounded-2xl border border-stone-200/80 bg-stone-50 px-4 py-3 pr-11 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <button
                     type="button"
                     tabIndex={-1}
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black transition"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-900 transition cursor-pointer"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -249,7 +248,7 @@ function LoginForm() {
                     type="button"
                     onClick={handleForgotPassword}
                     disabled={loading}
-                    className="mt-1.5 text-xs text-neutral-400 hover:text-black transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="mt-2 text-xs font-semibold text-[#C29B38] hover:text-[#9E7B27] hover:underline transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     Forgot password?
                   </button>
@@ -259,7 +258,7 @@ function LoginForm() {
               {/* Confirm password — sign up only */}
               {tab === 'signup' && (
                 <div>
-                  <label htmlFor="confirm-password" className="block text-xs font-medium text-neutral-500 mb-1.5">
+                  <label htmlFor="confirm-password" className="block text-xs font-bold text-stone-700 mb-1.5 uppercase tracking-wider">
                     Confirm Password
                   </label>
                   <div className="relative">
@@ -272,13 +271,13 @@ function LoginForm() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-neutral-200 bg-[#F5F5F5] px-4 py-3 pr-11 text-sm text-black placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full rounded-2xl border border-stone-200/80 bg-stone-50 px-4 py-3 pr-11 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                     <button
                       type="button"
                       tabIndex={-1}
                       onClick={() => setShowConfirmPassword((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black transition"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-900 transition cursor-pointer"
                       aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
                     >
                       {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -286,7 +285,7 @@ function LoginForm() {
                   </div>
                   {/* Inline mismatch error */}
                   {confirmPassword && password !== confirmPassword && (
-                    <p className="mt-1.5 text-xs text-red-500">Passwords do not match.</p>
+                    <p className="mt-1.5 text-xs text-rose-500 font-medium">Passwords do not match.</p>
                   )}
                 </div>
               )}
@@ -294,12 +293,12 @@ function LoginForm() {
 
             {/* Error / success banners */}
             {error && (
-              <p className="mt-4 text-xs text-red-600 bg-red-50 rounded-xl px-4 py-3">
+              <p className="mt-4 text-xs text-rose-700 bg-rose-50 border border-rose-200/70 rounded-2xl px-4 py-3">
                 {error}
               </p>
             )}
             {success && (
-              <p className="mt-4 text-xs text-green-700 bg-green-50 rounded-xl px-4 py-3">
+              <p className="mt-4 text-xs text-emerald-800 bg-emerald-50 border border-emerald-200/70 rounded-2xl px-4 py-3">
                 {success}
               </p>
             )}
@@ -307,7 +306,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 w-full bg-brand text-white rounded-full py-3 text-sm font-medium hover:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="mt-6 w-full bg-stone-900 text-[#FAF9F6] rounded-2xl py-3.5 text-xs font-bold hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed transition shadow-md shadow-stone-900/10 cursor-pointer"
             >
               {loading
                 ? tab === 'signin' ? 'Signing in…' : 'Creating account…'
@@ -318,7 +317,7 @@ function LoginForm() {
           {/* No guest checkout allowed */}
         </div>
 
-        <p className="mt-6 text-center text-xs text-neutral-400">
+        <p className="mt-6 text-center text-xs text-stone-400">
           By continuing you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>
@@ -330,47 +329,38 @@ function LoginForm() {
 function LoginSkeleton() {
   return (
     <div
-      className="min-h-screen bg-[#F5F5F5] flex items-center justify-center px-6 py-24"
-      style={{ letterSpacing: '-0.02em' }}
+      className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-6 py-24"
     >
       <div className="w-full max-w-md">
         {/* Brand */}
         <div className="mb-10 text-center">
-          <span className="text-2xl font-semibold tracking-tight text-black">NOVA</span>
-          <p className="mt-1 text-sm text-neutral-500">Your AI-powered travel companion</p>
+          <span className="text-3xl font-semibold tracking-tight text-stone-900 font-serif-luxury">NOVA</span>
+          <p className="mt-1 text-xs uppercase tracking-[0.2em] text-[#C29B38]">Curated Luxury Journeys</p>
         </div>
 
         {/* Card skeleton */}
-        <div className="bg-white rounded-2xl p-8 shadow-sm animate-pulse">
+        <div className="bg-white rounded-3xl p-8 sm:p-9 shadow-xl shadow-stone-200/40 border border-stone-200/80 animate-pulse">
           {/* Tab bar */}
-          <div className="flex rounded-full bg-[#F5F5F5] p-1 mb-8">
-            <div className="flex-1 h-9 rounded-full bg-neutral-200" />
-            <div className="flex-1 h-9 rounded-full bg-neutral-100 ml-1" />
+          <div className="flex rounded-full bg-[#F5F2EB] p-1 mb-8">
+            <div className="flex-1 h-9 rounded-full bg-stone-200" />
+            <div className="flex-1 h-9 rounded-full bg-stone-100 ml-1" />
           </div>
           {/* Fields */}
           <div className="space-y-4">
             <div>
-              <div className="h-3 w-8 bg-neutral-200 rounded mb-1.5" />
-              <div className="h-12 bg-[#F5F5F5] rounded-xl border border-neutral-200" />
+              <div className="h-3 w-8 bg-stone-200 rounded mb-1.5" />
+              <div className="h-12 bg-stone-50 rounded-2xl border border-stone-200" />
             </div>
             <div>
-              <div className="h-3 w-14 bg-neutral-200 rounded mb-1.5" />
-              <div className="h-12 bg-[#F5F5F5] rounded-xl border border-neutral-200" />
+              <div className="h-3 w-14 bg-stone-200 rounded mb-1.5" />
+              <div className="h-12 bg-stone-50 rounded-2xl border border-stone-200" />
             </div>
           </div>
           {/* Button */}
-          <div className="mt-6 h-12 bg-neutral-200 rounded-full" />
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-3">
-            <div className="flex-1 h-px bg-neutral-200" />
-            <div className="h-3 w-4 bg-neutral-200 rounded" />
-            <div className="flex-1 h-px bg-neutral-200" />
-          </div>
-          {/* Guest button */}
-          <div className="h-12 border border-neutral-200 rounded-full bg-neutral-50" />
+          <div className="mt-6 h-12 bg-stone-900 rounded-2xl" />
         </div>
 
-        <p className="mt-6 text-center text-xs text-neutral-400">
+        <p className="mt-6 text-center text-xs text-stone-400">
           By continuing you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>

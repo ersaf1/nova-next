@@ -14,7 +14,6 @@ import {
   Lightbulb,
   BookOpen,
   ArrowRight,
-  Clock,
   Compass,
   Printer,
   CheckCircle2,
@@ -33,6 +32,11 @@ import {
   ShieldCheck,
   Loader2,
   SlidersHorizontal,
+  MessageSquare,
+  MessageCircle,
+  RotateCcw,
+  X,
+  Sparkles,
 } from 'lucide-react'
 import { supabaseClient } from '@/lib/supabase-client'
 import AIConvertBookingModal from '@/components/planner/AIConvertBookingModal'
@@ -98,13 +102,32 @@ const BUDGET_OPTIONS = [
 ]
 
 const POPULAR_DESTINATIONS = [
-  { name: 'Tokyo', query: 'Tokyo', code: 'JP' },
+  { name: 'Jepara', query: 'Jepara', code: 'ID' },
   { name: 'Bali', query: 'Bali', code: 'ID' },
+  { name: 'Denpasar', query: 'Denpasar', code: 'ID' },
+  { name: 'Labuan Bajo', query: 'Labuan Bajo', code: 'ID' },
+  { name: 'Tokyo', query: 'Tokyo', code: 'JP' },
   { name: 'Swiss Alps', query: 'Swiss Alps', code: 'CH' },
-  { name: 'Paris', query: 'Paris', code: 'FR' },
   { name: 'Santorini', query: 'Santorini', code: 'GR' },
-  { name: 'Magelang', query: 'Magelang', code: 'ID' },
 ]
+
+function cleanTravelTimeText(text: string): string {
+  if (!text || typeof text !== 'string') return text || ''
+  return text
+    // Strip parenthetical travel times e.g. "(sekitar 2,5 jam dari Semarang)" or "(2 jam perjalanan dari bandara)"
+    .replace(/\s*\([^)]*?\d+(?:[.,]\d+)?\s*(?:jam|menit|km)\s+(?:perjalanan\s+)?dari[^)]*\)/gi, '')
+    // Strip "perjalanan sekitar 2,5 jam dari..." or "sekitar 2,5 jam dari..."
+    .replace(/(?:,\s*)?(?:perjalanan\s+)?(?:sekitar\s+)?\d+(?:[.,]\d+)?\s*(?:jam|menit|km)\s+(?:perjalanan\s+)?dari\s+[^,.;\n]+/gi, '')
+    // Strip "berjarak sekitar 2,5 jam dari..."
+    .replace(/(?:,\s*)?berjarak\s+(?:sekitar\s+)?\d+(?:[.,]\d+)?\s*(?:jam|menit|km)\s+dari\s+[^,.;\n]+/gi, '')
+    // Clean up residual standalone "2,5 jam" or "2.5 jam"
+    .replace(/^\s*\d+(?:[.,]\d+)?\s*(?:jam|menit)\s*$/gi, '')
+    // Clean dangling punctuation or duplicate spaces
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s+([,.;])/g, '$1')
+    .replace(/^[,.;:\s-]+|[,.;:\s-]+$/g, '')
+    .trim()
+}
 
 function DayAccordionItem({
   day,
@@ -120,38 +143,40 @@ function DayAccordionItem({
   return (
     <div
       className={`rounded-2xl overflow-hidden border transition-all duration-300 ${
-        isActive ? 'border-brand/40 bg-white shadow-xs' : 'border-neutral-200/70 bg-white hover:border-neutral-300'
+        isActive ? 'border-stone-900/30 bg-white shadow-xs' : 'border-stone-200/70 bg-white hover:border-stone-300'
       }`}
     >
       <button
         type="button"
         onClick={onSelect}
-        className="w-full flex items-center justify-between px-6 py-5 text-left transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-6 py-5 text-left transition-colors cursor-pointer group"
         aria-expanded={isActive}
       >
         <div className="flex items-center gap-4">
           <span
-            className={`w-9 h-9 rounded-xl text-xs font-jakarta font-bold flex items-center justify-center shrink-0 transition-all ${
-              isActive ? 'bg-brand text-white' : 'bg-neutral-100 text-neutral-600'
+            className={`w-9 h-9 rounded-xl text-xs font-jakarta font-extrabold flex items-center justify-center shrink-0 transition-all ${
+              isActive
+                ? 'bg-stone-900 text-white shadow-xs'
+                : 'bg-stone-100 text-stone-700 border border-stone-200 group-hover:bg-stone-200/60'
             }`}
           >
             H-{day.day}
           </span>
           <div>
-            <p className="font-jakarta font-bold text-sm text-neutral-900 leading-snug">{day.title}</p>
-            <p className="font-jakarta text-xs text-neutral-400 mt-0.5 font-normal">
+            <p className="font-jakarta font-bold text-sm text-stone-900 leading-snug">{cleanTravelTimeText(day.title)}</p>
+            <p className="font-jakarta text-xs text-stone-400 mt-0.5 font-normal">
               {day.estimatedDailyCost} · {day.activities.length} aktivitas
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="hidden sm:inline text-xs font-jakarta text-neutral-400 font-medium">
+          <span className="hidden sm:inline text-xs font-jakarta text-neutral-400 font-medium group-hover:text-[#C29B38] transition-colors">
             {isActive ? 'Tutup' : 'Lihat Rincian'}
           </span>
           <ChevronDown
             size={16}
             className={`text-neutral-400 shrink-0 transition-transform duration-300 ${
-              isActive ? 'rotate-180 text-brand' : ''
+              isActive ? 'rotate-180 text-[#C29B38]' : 'group-hover:text-[#C29B38]'
             }`}
           />
         </div>
@@ -162,11 +187,14 @@ function DayAccordionItem({
           {/* Activities List */}
           <div className="space-y-4">
             {day.activities.map((act, i) => {
-              const mapsQuery = act.location
-                ? (act.location.toLowerCase().includes(destinationContext.toLowerCase())
-                    ? act.location
-                    : `${act.location}, ${destinationContext}`)
-                : act.activity
+              const cleanLocation = cleanTravelTimeText(act.location) || 'Destinasi Wisata'
+              const cleanActivity = cleanTravelTimeText(act.activity)
+              const cleanTips = cleanTravelTimeText(act.tips)
+              const mapsQuery = cleanLocation
+                ? (cleanLocation.toLowerCase().includes(destinationContext.toLowerCase())
+                    ? cleanLocation
+                    : `${cleanLocation}, ${destinationContext}`)
+                : cleanActivity
 
               return (
                 <div key={i} className="flex gap-4 group">
@@ -186,22 +214,23 @@ function DayAccordionItem({
                       <div className="relative h-44 sm:h-48 overflow-hidden bg-neutral-100">
                         <img
                           src={act.image}
-                          alt={act.location}
+                          alt={cleanLocation}
                           loading="lazy"
                           className="w-full h-full object-cover img-smooth-zoom"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-transparent to-transparent" />
 
-                        {/* Subtle Accuracy Badge */}
-                        <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-emerald-300 text-[10px] font-jakarta font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/30 shadow-xs">
-                          <CheckCircle2 size={11} className="text-emerald-400" />
-                          <span>{act.accuracy || 95}% Akurat</span>
-                        </div>
+                        {/* Category or Curated Badge */}
+                        {act.category && (
+                          <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white/90 text-[10px] font-jakarta font-semibold px-2.5 py-0.5 rounded-full border border-white/20 shadow-xs">
+                            <span className="capitalize">{act.category}</span>
+                          </div>
+                        )}
 
                         {/* Location Overlay */}
                         <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between gap-2">
                           <span className="font-jakarta text-white text-xs font-bold truncate drop-shadow-xs">
-                            {act.location}
+                            {cleanLocation}
                           </span>
                           <span className="text-[10px] font-jakarta font-medium text-white/90 bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded-full shrink-0">
                             {act.cost}
@@ -215,20 +244,20 @@ function DayAccordionItem({
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <h4 className="font-jakarta text-base font-bold text-neutral-900 leading-snug">
-                            {act.location || act.activity}
+                            {cleanLocation || cleanActivity}
                           </h4>
                         </div>
                         {act.cost && (
-                          <span className="text-[11px] font-jakarta font-semibold text-brand bg-brand/10 px-2.5 py-0.5 rounded-full shrink-0">
+                          <span className="text-[11px] font-jakarta font-semibold text-stone-800 bg-stone-100 px-2.5 py-0.5 rounded-full shrink-0 border border-stone-200/60">
                             {act.cost}
                           </span>
                         )}
                       </div>
 
                       {/* Activity / Action Description */}
-                      {act.activity && act.activity.toLowerCase() !== (act.location || '').toLowerCase() && (
+                      {cleanActivity && cleanActivity.toLowerCase() !== cleanLocation.toLowerCase() && (
                         <p className="font-jakarta text-xs text-neutral-600 leading-relaxed font-normal">
-                          {act.activity}
+                          {cleanActivity}
                         </p>
                       )}
 
@@ -237,24 +266,19 @@ function DayAccordionItem({
                           href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 font-bold text-brand hover:text-brand-dark transition-colors"
-                          title={`Buka rute ${act.location} di Google Maps`}
+                          className="inline-flex items-center gap-1.5 font-bold text-stone-900 hover:text-[#C29B38] transition-colors"
+                          title={`Buka rute ${cleanLocation} di Google Maps`}
                         >
                           <MapPin size={12} className="shrink-0" />
                           <span>Buka di Peta</span>
                           <ArrowRight size={10} />
                         </a>
-                        <span>·</span>
-                        <span className="flex items-center gap-1">
-                          <Clock size={11} className="text-neutral-400 shrink-0" />
-                          <span>{act.duration}</span>
-                        </span>
                       </div>
 
-                      {act.tips && (
+                      {cleanTips && (
                         <div className="font-jakarta text-xs text-neutral-600 bg-neutral-50 border border-neutral-100 p-3 rounded-xl flex items-start gap-2 leading-relaxed">
                           <Lightbulb size={13} className="mt-0.5 shrink-0 text-amber-500" />
-                          <span>{act.tips}</span>
+                          <span>{cleanTips}</span>
                         </div>
                       )}
                     </div>
@@ -473,27 +497,26 @@ function FinalBossAiPlannerInner() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBFBFC] text-neutral-900 font-sans selection:bg-brand selection:text-white">
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 font-sans selection:bg-[#EAE5D9] selection:text-stone-900">
       <div className="pt-24 pb-28 px-4 sm:px-6 max-w-5xl mx-auto space-y-16">
         {/* ─── Hero Header (Spacious & Clean) ─── */}
         <section className="text-center space-y-4 max-w-3xl mx-auto pt-4">
-          <div className="gsap-hero-item inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 text-xs font-jakarta font-extrabold tracking-wide px-4 py-1.5 rounded-full shadow-2xs">
-            <Navigation size={13} className="text-blue-600" />
-            <span>Smart Route Planner & Concierge</span>
+          <div className="gsap-hero-item inline-flex items-center gap-2 bg-stone-100 border border-stone-200 text-stone-700 text-xs font-jakarta font-bold tracking-wide px-4 py-1.5 rounded-full">
+            <Navigation size={13} className="text-[#C29B38]" />
+            <span>Smart Route Concierge</span>
           </div>
 
-          <h1 className="gsap-hero-item font-jakarta font-black text-3xl sm:text-4xl lg:text-5xl text-blue-950 tracking-tight leading-tight">
-            <span>Rancang Rencana Perjalanan </span>
-            <span className="font-serif-luxury italic font-normal text-blue-600">Presisi & Cerdas</span>
+          <h1 className="gsap-hero-item font-jakarta font-black text-3xl sm:text-4xl lg:text-5xl text-stone-900 tracking-tight leading-tight">
+            Rancang Rencana Perjalanan <span className="font-serif-luxury italic font-normal text-stone-800">Presisi & Cerdas</span>
           </h1>
 
-          <p className="gsap-hero-item font-jakarta text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
+          <p className="gsap-hero-item font-jakarta text-sm sm:text-base text-stone-500 max-w-xl mx-auto leading-relaxed font-normal">
             Penyusun jadwal perjalanan dengan rute harian efisien, estimasi biaya transparan, dan kurasi spot terverifikasi.
           </p>
 
           {/* Quick Destination Tags */}
           <div className="gsap-hero-item flex flex-wrap items-center justify-center gap-2 pt-2">
-            <span className="text-xs font-jakarta text-slate-400 mr-1 font-medium">Inspirasi Cepat:</span>
+            <span className="text-xs font-jakarta text-stone-400 mr-1 font-medium">Inspirasi Cepat:</span>
             {POPULAR_DESTINATIONS.map((dest, i) => (
               <button
                 key={i}
@@ -502,9 +525,9 @@ function FinalBossAiPlannerInner() {
                   setDestination(dest.query)
                   handleGenerate(dest.query)
                 }}
-                className="text-xs font-jakarta font-bold px-3 py-1.5 rounded-full bg-white hover:bg-blue-600 hover:text-white border border-slate-200 text-slate-700 transition-all active:scale-95 shadow-2xs flex items-center gap-1.5 cursor-pointer"
+                className="text-xs font-jakarta font-bold px-3 py-1.5 rounded-full bg-white hover:bg-stone-900 hover:text-white border border-stone-200 text-stone-700 transition-all active:scale-95 shadow-xs flex items-center gap-1.5 cursor-pointer"
               >
-                <span className="text-[10px] font-mono text-slate-400">{dest.code}</span>
+                <span className="text-[10px] font-mono text-stone-400">{dest.code}</span>
                 <span>{dest.name}</span>
               </button>
             ))}
@@ -512,56 +535,84 @@ function FinalBossAiPlannerInner() {
         </section>
 
         {/* ─── Simplified Search Island (Clean Whitespace) ─── */}
-        <section className="gsap-hero-item w-full max-w-3xl mx-auto bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xl shadow-blue-950/5 space-y-6">
+        <section className="gsap-hero-item w-full max-w-3xl mx-auto bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
           {loading ? (
             /* Loading State */
             <div className="py-14 flex flex-col items-center text-center space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-600/30">
+              <div className="w-12 h-12 rounded-2xl bg-stone-900 flex items-center justify-center text-white shadow-xs">
                 <Loader2 size={20} className="animate-spin text-white" />
               </div>
               <div className="space-y-1">
-                <p className="font-jakarta font-bold text-sm text-blue-950">Menyusun Itinerary Terbaik...</p>
-                <p className="font-jakarta text-xs text-slate-500 max-w-xs">
+                <p className="font-jakarta font-bold text-sm text-stone-900">Menyusun Itinerary Terbaik...</p>
+                <p className="font-jakarta text-xs text-stone-500 max-w-xs">
                   Mengalkulasi rute efisien, spot populer, dan estimasi biaya harian di {destination}.
                 </p>
               </div>
             </div>
           ) : (
             <>
-              {/* Destination Input */}
+              {/* Destination Input — with immediate inline submit button */}
               <div className="space-y-2">
-                <label className="text-[11px] font-jakarta font-bold text-slate-400 uppercase tracking-wider">
-                  Destinasi Wisata
-                </label>
-                <div className="relative">
-                  <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600" />
-                  <input
-                    type="text"
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                    placeholder="Contoh: Tokyo, Bali, Swiss Alps, Labuan Bajo..."
-                    className="w-full pl-11 pr-20 py-3.5 bg-slate-50/70 border border-slate-200 rounded-2xl font-jakarta text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all font-medium"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && destination.trim()) {
-                        handleGenerate()
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">
+                    Destinasi Wisata
+                  </label>
+                  <span className="text-[11px] text-stone-400 font-medium hidden sm:inline">
+                    Ketik destinasi lalu klik &quot;Mulai Rancang&quot; atau tekan Enter
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C29B38]" />
+                    <input
+                      id="search-destination-input"
+                      type="text"
+                      value={destination}
+                      onChange={(e) => setDestination(e.target.value)}
+                      placeholder="Ketik destinasi (misal: Jepara, Bali, Denpasar, Tokyo...)"
+                      className="w-full pl-11 pr-10 py-3.5 bg-stone-50/80 border border-stone-200 rounded-2xl text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 focus:bg-white transition-all font-medium"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && destination.trim()) {
+                          handleGenerate()
+                        }
+                      }}
+                    />
+                    {destination && (
+                      <button
+                        type="button"
+                        onClick={() => setDestination('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-200/60 transition-colors cursor-pointer"
+                        title="Hapus teks"
+                        aria-label="Hapus teks"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Inline Submit Button right beside the input box */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!destination.trim()) {
+                        setError('Silakan ketik destinasi liburan (misal: Jepara, Bali, Denpasar).')
+                        return
                       }
+                      handleGenerate()
                     }}
-                  />
-                  {destination && (
-                    <button
-                      type="button"
-                      onClick={() => setDestination('')}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-jakarta text-slate-400 hover:text-slate-600 cursor-pointer"
-                    >
-                      Batal
-                    </button>
-                  )}
+                    disabled={loading || !destination.trim()}
+                    className="bg-stone-900 hover:bg-black text-white px-5 py-3.5 rounded-2xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-md active:scale-95"
+                  >
+                    <Sparkles size={14} className="text-[#C29B38]" />
+                    <span>Mulai Rancang</span>
+                    <ArrowRight size={13} />
+                  </button>
                 </div>
               </div>
 
               {/* Vibe Selection Pills */}
               <div className="space-y-2">
-                <label className="text-[11px] font-jakarta font-bold text-slate-400 uppercase tracking-wider">
+                <label className="text-[11px] font-jakarta font-bold text-stone-400 uppercase tracking-wider">
                   Gaya Perjalanan
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -575,11 +626,11 @@ function FinalBossAiPlannerInner() {
                         onClick={() => setSelectedVibe(v.id)}
                         className={`px-3.5 py-2 rounded-xl text-xs font-jakarta font-bold border transition-all flex items-center gap-2 cursor-pointer ${
                           isSelected
-                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-600/25'
-                            : 'bg-white hover:bg-blue-50 border-slate-200 text-slate-700 hover:text-blue-600'
+                            ? 'bg-stone-900 text-white border-stone-900 shadow-xs'
+                            : 'bg-white hover:bg-stone-100 border-stone-200 text-stone-700 hover:text-stone-900'
                         }`}
                       >
-                        <IconComp size={14} className={isSelected ? 'text-white' : 'text-slate-500'} />
+                        <IconComp size={14} className={isSelected ? 'text-white' : 'text-stone-500'} />
                         <span>{v.label}</span>
                       </button>
                     )
@@ -588,12 +639,12 @@ function FinalBossAiPlannerInner() {
               </div>
 
               {/* Parameter Settings (Compact & Spacious) */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 border-t border-neutral-100">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 border-t border-stone-100">
                 {/* Durasi */}
-                <div className="p-3 bg-neutral-50/70 border border-neutral-100 rounded-xl space-y-2">
+                <div className="p-3 bg-[#F5F2EB]/50 border border-stone-200/60 rounded-xl space-y-2">
                   <div className="flex items-center justify-between text-xs font-jakarta">
-                    <span className="text-neutral-500 font-medium">Durasi</span>
-                    <span className="font-bold text-neutral-900">{duration} Hari</span>
+                    <span className="text-stone-500 font-medium">Durasi</span>
+                    <span className="font-bold text-stone-900">{duration} Hari</span>
                   </div>
                   <input
                     type="range"
@@ -601,26 +652,26 @@ function FinalBossAiPlannerInner() {
                     max={14}
                     value={duration}
                     onChange={(e) => setDuration(parseInt(e.target.value))}
-                    className="w-full accent-neutral-900 h-1.5 bg-neutral-200 rounded-full cursor-pointer"
+                    className="w-full accent-stone-900 h-1.5 bg-stone-200 rounded-full cursor-pointer"
                   />
                 </div>
 
                 {/* Wisatawan */}
-                <div className="p-3 bg-neutral-50/70 border border-neutral-100 rounded-xl space-y-1.5">
-                  <span className="text-xs font-jakarta text-neutral-500 font-medium block">Wisatawan</span>
-                  <div className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-2 py-1">
+                <div className="p-3 bg-[#F5F2EB]/50 border border-stone-200/60 rounded-xl space-y-1.5">
+                  <span className="text-xs font-jakarta text-stone-500 font-medium block">Wisatawan</span>
+                  <div className="flex items-center justify-between bg-white border border-stone-200 rounded-lg px-2 py-1">
                     <button
                       type="button"
                       onClick={() => setTravelers(Math.max(1, travelers - 1))}
-                      className="w-6 h-6 rounded bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-bold text-xs flex items-center justify-center transition-colors"
+                      className="w-6 h-6 rounded bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs flex items-center justify-center transition-colors cursor-pointer"
                     >
                       −
                     </button>
-                    <span className="text-xs font-jakarta font-bold text-neutral-900">{travelers} Orang</span>
+                    <span className="text-xs font-jakarta font-bold text-stone-900">{travelers} Orang</span>
                     <button
                       type="button"
                       onClick={() => setTravelers(Math.min(20, travelers + 1))}
-                      className="w-6 h-6 rounded bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-bold text-xs flex items-center justify-center transition-colors"
+                      className="w-6 h-6 rounded bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs flex items-center justify-center transition-colors cursor-pointer"
                     >
                       +
                     </button>
@@ -628,8 +679,8 @@ function FinalBossAiPlannerInner() {
                 </div>
 
                 {/* Budget */}
-                <div className="p-3 bg-neutral-50/70 border border-neutral-100 rounded-xl space-y-1.5">
-                  <span className="text-xs font-jakarta text-neutral-500 font-medium block">Kategori Budget</span>
+                <div className="p-3 bg-[#F5F2EB]/50 border border-stone-200/60 rounded-xl space-y-1.5">
+                  <span className="text-xs font-jakarta text-stone-500 font-medium block">Kategori Budget</span>
                   <CustomSelect
                     value={selectedBudget}
                     onChange={(val) => setSelectedBudget(val)}
@@ -648,16 +699,16 @@ function FinalBossAiPlannerInner() {
                 type="button"
                 onClick={() => {
                   if (!destination.trim()) {
-                    setError('Silakan ketik destinasi liburan (misal: Tokyo, Bali, Santorini, dsb).')
+                    setError('Silakan ketik destinasi liburan (misal: Jepara, Bali, Denpasar).')
                     return
                   }
                   handleGenerate()
                 }}
                 disabled={loading}
-                className="w-full bg-blue-600 text-white text-sm font-jakarta font-extrabold py-3.5 rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm shadow-blue-600/30 cursor-pointer"
+                className="w-full bg-stone-900 hover:bg-black text-white text-sm font-bold py-4 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xs hover:shadow-md cursor-pointer active:scale-98"
               >
-                <Compass size={16} />
-                <span>Susun Rencana Perjalanan</span>
+                <Compass size={17} className="text-[#C29B38]" />
+                <span>{destination.trim() ? `Susun Rencana Perjalanan ke ${destination}` : 'Susun Rencana Perjalanan Lengkap'}</span>
                 <ArrowRight size={15} />
               </button>
             </>
@@ -669,7 +720,7 @@ function FinalBossAiPlannerInner() {
               <button
                 type="button"
                 onClick={() => handleGenerate()}
-                className="text-xs font-jakarta font-semibold text-blue-600 underline hover:text-blue-800 cursor-pointer"
+                className="text-xs font-jakarta font-semibold text-stone-900 underline hover:text-black cursor-pointer"
               >
                 Coba lagi
               </button>
@@ -681,79 +732,150 @@ function FinalBossAiPlannerInner() {
         {itinerary && (
           <div ref={resultsRef} className="space-y-10 pt-4 animate-fade-in max-w-4xl mx-auto">
             {/* Header: Destination & Quick Summary */}
-            <div className="gsap-bento-item bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
+            <div className="gsap-bento-item bg-white border border-stone-200/80 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-100 pb-6">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 text-xs font-jakarta font-bold text-blue-700 bg-blue-50 border border-blue-200/60 px-3 py-0.5 rounded-full mb-2">
-                    <ShieldCheck size={12} className="text-blue-600" />
+                  <div className="inline-flex items-center gap-1.5 text-xs font-jakarta font-bold text-stone-700 bg-stone-100 border border-stone-200 px-3 py-0.5 rounded-full mb-2">
+                    <ShieldCheck size={12} className="text-stone-600" />
                     <span>Rencana Perjalanan Terverifikasi</span>
                   </div>
-                  <h2 className="font-jakarta font-black text-2xl sm:text-3xl text-blue-950 tracking-tight">
+                  <h2 className="font-jakarta font-black text-2xl sm:text-3xl text-stone-900 tracking-tight">
                     {itinerary.destination}
                   </h2>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={handleCopyLink}
-                    className="text-xs font-jakarta font-semibold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
-                  >
-                    {copiedLink ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
-                    <span>{copiedLink ? 'Tersalin' : 'Bagikan'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handlePrint}
-                    className="text-xs font-jakarta font-semibold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Printer size={13} />
-                    <span>Cetak</span>
-                  </button>
-
+                <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 shrink-0">
+                  {/* Primary Action: Booking */}
                   <button
                     type="button"
                     onClick={() => setShowBookingModal(true)}
-                    className="text-xs font-jakarta font-extrabold px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-sm shadow-blue-600/25 flex items-center gap-1.5 cursor-pointer"
+                    className="text-xs font-bold px-5 py-3 rounded-full bg-stone-900 hover:bg-black text-white transition-all shadow-xs hover:shadow-md flex items-center gap-2 cursor-pointer active:scale-95"
                   >
-                    <CalendarCheck size={13} />
-                    <span>Booking Rencana</span>
+                    <CalendarCheck size={14} className="text-[#C29B38]" />
+                    <span>Pesan Rute Ini</span>
                   </button>
+
+                  {/* Primary Action: WhatsApp Concierge */}
+                  <a
+                    href={`https://wa.me/6281234567890?text=${encodeURIComponent(
+                      `Halo NOVA Travel, saya ingin konsultasi mengenai rencana perjalanan AI ke ${itinerary.destination} (${itinerary.duration} hari, ${travelers} orang). Mohon infonya.`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-bold px-4 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
+                    title="Konsultasi langsung via WhatsApp"
+                  >
+                    <MessageSquare size={14} />
+                    <span>Tanya Concierge</span>
+                  </a>
+
+                  {/* Secondary Action: Re-plan / Change Destination */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }}
+                    className="text-xs font-semibold px-4 py-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+                    title="Ubah parameter atau ganti destinasi"
+                  >
+                    <RotateCcw size={13} />
+                    <span>Ubah Rute</span>
+                  </button>
+
+                  {/* Utility Actions: Copy & Print */}
+                  <div className="flex items-center gap-1 pl-1">
+                    <button
+                      type="button"
+                      onClick={handleCopyLink}
+                      className="p-2.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 transition-colors cursor-pointer"
+                      title={copiedLink ? 'Link Tersalin!' : 'Bagikan Link'}
+                    >
+                      {copiedLink ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handlePrint}
+                      className="p-2.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 transition-colors cursor-pointer"
+                      title="Cetak Itinerary"
+                    >
+                      <Printer size={14} />
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* Clean Metadata Strip */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-jakarta">
-                <div className="p-3 bg-neutral-50 border border-neutral-100 rounded-xl">
-                  <span className="text-neutral-400 font-medium block">Durasi</span>
-                  <span className="font-bold text-neutral-900 mt-0.5 block">{itinerary.duration} Hari</span>
+                <div className="p-3 bg-[#F5F2EB]/50 border border-stone-200/60 rounded-xl">
+                  <span className="text-stone-400 font-medium block">Durasi</span>
+                  <span className="font-bold text-stone-900 mt-0.5 block">{itinerary.duration} Hari</span>
                 </div>
-                <div className="p-3 bg-neutral-50 border border-neutral-100 rounded-xl">
-                  <span className="text-neutral-400 font-medium block">Wisatawan</span>
-                  <span className="font-bold text-neutral-900 mt-0.5 block">{travelers} Orang</span>
+                <div className="p-3 bg-[#F5F2EB]/50 border border-stone-200/60 rounded-xl">
+                  <span className="text-stone-400 font-medium block">Wisatawan</span>
+                  <span className="font-bold text-stone-900 mt-0.5 block">{travelers} Orang</span>
                 </div>
-                <div className="p-3 bg-neutral-50 border border-neutral-100 rounded-xl">
-                  <span className="text-neutral-400 font-medium block">Est. Total Biaya</span>
-                  <span className="font-bold text-emerald-700 mt-0.5 block">{itinerary.totalEstimatedCost}</span>
+                <div className="p-3 bg-[#F5F2EB]/50 border border-stone-200/60 rounded-xl">
+                  <span className="text-stone-400 font-medium block">Est. Total Biaya</span>
+                  <span className="font-bold text-emerald-800 mt-0.5 block">{itinerary.totalEstimatedCost}</span>
                 </div>
-                <div className="p-3 bg-neutral-50 border border-neutral-100 rounded-xl">
-                  <span className="text-neutral-400 font-medium block">Musim Terbaik</span>
-                  <span className="font-bold text-neutral-900 mt-0.5 block truncate">{itinerary.bestTimeToVisit}</span>
+                <div className="p-3 bg-[#F5F2EB]/50 border border-stone-200/60 rounded-xl">
+                  <span className="text-stone-400 font-medium block">Musim Terbaik</span>
+                  <span className="font-bold text-stone-900 mt-0.5 block truncate">{itinerary.bestTimeToVisit}</span>
                 </div>
               </div>
             </div>
 
             {/* Day-by-day Itinerary Accordion */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between pb-1">
-                <h3 className="font-jakarta font-bold text-lg text-neutral-900 flex items-center gap-2">
-                  <Compass size={17} className="text-neutral-600" />
-                  <span>Rute Perjalanan Hari demi Hari</span>
-                </h3>
-                <span className="font-jakarta text-xs text-neutral-400 font-medium">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
+                <div>
+                  <h3 className="font-jakarta font-bold text-lg text-neutral-900 flex items-center gap-2">
+                    <Compass size={17} className="text-neutral-600" />
+                    <span>Rute Perjalanan Hari demi Hari</span>
+                  </h3>
+                  <p className="text-xs text-stone-500 font-jakarta mt-0.5">
+                    Pilih tab hari untuk membuka rute spesifik, atau klik setiap kartu agenda di bawah.
+                  </p>
+                </div>
+                <span className="font-jakarta text-xs text-neutral-400 font-medium self-start sm:self-auto">
                   {itinerary.days.length} Hari Lengkap
                 </span>
+              </div>
+
+              {/* Day Quick Navigation Tabs */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5 scrollbar-none">
+                <button
+                  type="button"
+                  onClick={() => setActiveDayTab(-1)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-jakarta font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    activeDayTab === -1
+                      ? 'bg-stone-900 text-white shadow-xs'
+                      : 'bg-stone-100 hover:bg-stone-200 text-stone-600'
+                  }`}
+                >
+                  Tutup Semua
+                </button>
+                {itinerary.days.map((day, idx) => {
+                  const isDayActive = activeDayTab === idx
+                  return (
+                    <button
+                      key={day.day}
+                      type="button"
+                      onClick={() => setActiveDayTab(isDayActive ? -1 : idx)}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-jakarta font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                        isDayActive
+                          ? 'bg-[#C29B38] text-white shadow-xs'
+                          : 'bg-white border border-stone-200 hover:border-stone-300 text-stone-700'
+                      }`}
+                    >
+                      <span>Hari {day.day}</span>
+                      <span className={`text-[10px] ${isDayActive ? 'text-amber-100' : 'text-stone-400'} font-normal`}>
+                        ({day.activities?.length || 0} spot)
+                      </span>
+                    </button>
+                  )
+                })}
               </div>
 
               <div className="space-y-3">
@@ -771,22 +893,19 @@ function FinalBossAiPlannerInner() {
 
             {/* Practical Travel Insights (Clean, Uncluttered Grid) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Weather & Advice */}
+              {/* Best Season & Travel Advice */}
               <div className="bg-white rounded-2xl border border-neutral-200/80 p-5 space-y-2 shadow-2xs">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-jakarta font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <CloudSun size={14} className="text-amber-500" />
-                    Prakiraan Cuaca
-                  </span>
-                  <span className="text-xs font-jakarta font-bold text-neutral-900">
-                    {itinerary.weatherForecast?.temp}
+                    <CloudSun size={14} className="text-[#C29B38]" />
+                    Waktu Kunjungan Terbaik
                   </span>
                 </div>
-                <p className="text-xs font-jakarta font-semibold text-neutral-800">
-                  {itinerary.weatherForecast?.condition}
+                <p className="text-xs font-jakarta font-bold text-neutral-900 leading-snug">
+                  {itinerary.bestTimeToVisit || 'Musim kemarau & masa transisi cuaca'}
                 </p>
                 <p className="text-xs font-jakarta text-neutral-500 leading-relaxed font-normal">
-                  {itinerary.weatherForecast?.clothesAdvice}
+                  Disarankan memantau prakiraan cuaca resmi H-1 sebelum memulai aktivitas luar ruangan di {itinerary.destination}.
                 </p>
               </div>
 
@@ -823,7 +942,7 @@ function FinalBossAiPlannerInner() {
                       <span className="w-4 h-4 rounded-full bg-neutral-100 text-neutral-600 text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
                         {i + 1}
                       </span>
-                      <span>{tip}</span>
+                      <span>{cleanTravelTimeText(tip)}</span>
                     </li>
                   ))}
                 </ul>
@@ -875,17 +994,17 @@ function FinalBossAiPlannerInner() {
                               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${item.name}, ${itinerary.destination}`)}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-xs font-jakarta font-bold text-brand hover:text-brand-dark flex items-center gap-1 transition-colors"
+                              className="text-xs font-jakarta font-bold text-stone-900 hover:text-[#C29B38] flex items-center gap-1 transition-colors"
                             >
                               <MapPin size={11} />
                               <span>Peta</span>
                               <ArrowRight size={10} />
                             </a>
                           </div>
-                          <h4 className="font-jakarta font-bold text-sm text-neutral-900 leading-snug">
+                          <h4 className="font-jakarta font-bold text-sm text-stone-900 leading-snug">
                             {item.name}
                           </h4>
-                          <p className="text-neutral-500 font-jakarta text-xs leading-relaxed line-clamp-2 font-normal">
+                          <p className="text-stone-500 font-jakarta text-xs leading-relaxed line-clamp-2 font-normal">
                             {item.description}
                           </p>
                         </div>
@@ -895,7 +1014,115 @@ function FinalBossAiPlannerInner() {
                 </div>
               </div>
             )}
+
+            {/* ─── Grand Next-Step Action Card at bottom of itinerary ─── */}
+            <div className="bg-stone-950 text-white rounded-3xl p-6 sm:p-8 border border-stone-800 shadow-xl space-y-6">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-amber-300 text-xs font-bold tracking-wide">
+                  <Sparkles size={13} />
+                  <span>Rute AI Siap Diwujudkan</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold font-jakarta text-white tracking-tight">
+                  Suka dengan rencana perjalanan ke {itinerary.destination}?
+                </h3>
+                <p className="text-stone-400 text-xs sm:text-sm font-jakarta leading-relaxed max-w-2xl font-normal">
+                  Kunci tanggal perjalanan dan amankan reservasi tiket serta akomodasi, atau diskusikan kustomisasi rute ini langsung dengan tim Concierge NOVA via WhatsApp.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowBookingModal(true)}
+                  className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#C29B38] to-[#dfb857] hover:brightness-110 text-stone-950 text-sm font-jakarta font-bold flex items-center gap-2 shadow-md transition-all cursor-pointer active:scale-98"
+                >
+                  <CalendarCheck size={16} />
+                  <span>Pesan & Amankan Rute Ini</span>
+                  <ArrowRight size={14} />
+                </button>
+
+                <a
+                  href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Concierge NOVA, saya ingin konsultasi dan kustomisasi rute AI Planner ke ${itinerary.destination} (${itinerary.duration} Hari untuk ${travelers} orang). Total estimasi biaya: ${itinerary.totalEstimatedCost}.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-jakarta font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <MessageCircle size={16} />
+                  <span>Tanya Concierge (WhatsApp)</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('search-destination-input')
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                      el.focus()
+                    } else {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }
+                  }}
+                  className="px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-stone-200 text-sm font-jakarta font-bold flex items-center gap-2 transition-colors cursor-pointer border border-white/10"
+                >
+                  <RotateCcw size={15} />
+                  <span>Rancang Destinasi Lain</span>
+                </button>
+              </div>
+
+              <div className="border-t border-stone-800/80 pt-4 flex flex-wrap items-center justify-between gap-3 text-[11px] font-jakarta text-stone-400">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 size={13} className="text-emerald-400" />
+                  Garansi penyesuaian rute fleksibel 100% tanpa biaya tersembunyi
+                </span>
+                <span>Estimasi Rute: <strong className="text-white">{itinerary.totalEstimatedCost}</strong></span>
+              </div>
+            </div>
           </div>
+        )}
+
+        {/* ─── Sticky Floating Bottom Action Bar on Mobile/Desktop ─── */}
+        {itinerary && (
+          <aside
+            aria-label="Aksi Cepat Rencana Perjalanan"
+            className="fixed bottom-4 left-4 right-4 z-40 max-w-3xl mx-auto pointer-events-auto"
+          >
+            <div className="bg-stone-900/95 backdrop-blur-md text-white rounded-2xl p-3 sm:px-5 sm:py-3.5 border border-stone-800 shadow-2xl flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="font-jakarta font-bold text-sm text-white truncate">
+                    {itinerary.destination}
+                  </span>
+                  <span className="text-[11px] font-jakarta px-2 py-0.5 rounded-full bg-stone-800 text-stone-300 font-medium whitespace-nowrap">
+                    {itinerary.duration} Hari
+                  </span>
+                </div>
+                <div className="text-xs text-amber-400 font-jakarta font-semibold truncate">
+                  Est. {itinerary.totalEstimatedCost}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <a
+                  href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Concierge NOVA, saya tertarik dengan rute AI ke ${itinerary.destination} (${itinerary.duration} Hari). Mohon info reservasi.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-jakarta font-bold transition-colors cursor-pointer"
+                >
+                  <MessageCircle size={14} />
+                  <span>WhatsApp</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setShowBookingModal(true)}
+                  className="px-4 py-2 sm:py-2.5 rounded-xl bg-[#C29B38] hover:bg-[#dfb857] text-stone-950 text-xs sm:text-sm font-jakarta font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer active:scale-95"
+                >
+                  <CalendarCheck size={15} />
+                  <span>Pesan Rute</span>
+                </button>
+              </div>
+            </div>
+          </aside>
         )}
 
         {/* ─── Live Booking Modal ─── */}
@@ -904,7 +1131,11 @@ function FinalBossAiPlannerInner() {
             itineraryTitle={`Rencana Perjalanan - ${itinerary.destination}`}
             destination={itinerary.destination}
             durationDays={itinerary.duration}
-            estimatedBudgetIDR={8500000}
+            estimatedBudgetIDR={
+              itinerary.totalEstimatedCost
+                ? parseInt(itinerary.totalEstimatedCost.replace(/\D/g, ''), 10) || (itinerary.duration * 1500000)
+                : (itinerary.duration * 1500000)
+            }
             onClose={() => setShowBookingModal(false)}
           />
         )}
@@ -921,11 +1152,11 @@ export default function AiPlannerClient() {
   }, [])
 
   if (!mounted) {
-    return <div className="min-h-screen bg-[#FBFBFC]" />
+    return <div className="min-h-screen bg-[#FAF9F6]" />
   }
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#FBFBFC]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#FAF9F6]" />}>
       <FinalBossAiPlannerInner />
     </Suspense>
   )

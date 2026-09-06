@@ -273,7 +273,7 @@ export function getBookingStatusColor(status: Booking['bookingStatus']): string 
     case 'pending_payment': return 'text-amber-600 bg-amber-50'
     case 'confirmed': return 'text-emerald-600 bg-emerald-50'
     case 'cancelled': return 'text-red-500 bg-red-50'
-    case 'completed': return 'text-blue-600 bg-blue-50'
+    case 'completed': return 'text-[#0099FF] bg-sky-50'
   }
 }
 
@@ -297,7 +297,7 @@ export function getPaymentStatusColor(status: Booking['paymentStatus']): string 
     case 'paid': return 'text-emerald-600 bg-emerald-50'
     case 'failed': return 'text-red-500 bg-red-50'
     case 'expired': return 'text-neutral-400 bg-neutral-100'
-    case 'refunded': return 'text-blue-600 bg-blue-50'
+    case 'refunded': return 'text-[#0099FF] bg-sky-50'
   }
 }
 

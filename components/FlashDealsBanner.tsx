@@ -84,35 +84,35 @@ export default function FlashDealsBanner() {
   }
 
   return (
-    <section className="bg-white py-10 px-4 sm:px-6 md:px-8 border-b border-slate-200/70">
+    <section className="bg-[#FAF9F6] py-12 px-4 sm:px-6 md:px-8 border-b border-stone-200/80">
       <div className="max-w-[88rem] mx-auto space-y-6">
         
         {/* Section Top Header & Countdown Timer */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0">
-              <Flame className="w-5 h-5 fill-rose-500 text-rose-500 animate-bounce" />
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-500/20">
+              <Flame className="w-5 h-5 fill-[#C29B38] text-[#C29B38]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-rose-500 text-white px-2 py-0.5 rounded-full">
-                  FLASH SALE
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-stone-900 text-white px-2.5 py-0.5 rounded-full">
+                  PROMO SPESIAL
                 </span>
-                <h3 className="text-lg sm:text-xl font-black text-blue-950 tracking-tight">
+                <h3 className="text-lg sm:text-xl font-bold text-[#1C1917] tracking-tight">
                   Kupon Promo Terbatas
                 </h3>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-stone-500 mt-0.5">
                 Klaim kode kupon berikut untuk diskon instan saat checkout!
               </p>
             </div>
           </div>
 
           {/* Live Countdown Badge */}
-          <div className="flex items-center gap-2 bg-blue-950 text-white px-4 py-2 rounded-2xl shrink-0 shadow-xs border border-blue-900/50">
-            <Clock className="w-4 h-4 text-amber-300" />
-            <span className="text-xs text-slate-300 font-medium">Berakhir dalam:</span>
-            <span className="font-mono font-bold text-xs text-amber-300">
+          <div className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2 rounded-2xl shrink-0 border border-stone-800 shadow-xs">
+            <Clock className="w-4 h-4 text-[#C29B38]" />
+            <span className="text-xs text-stone-300 font-medium">Berakhir dalam:</span>
+            <span className="font-mono font-bold text-xs text-[#C29B38]">
               {String(timeLeft.hours).padStart(2, '0')}j : {String(timeLeft.minutes).padStart(2, '0')}m : {String(timeLeft.seconds).padStart(2, '0')}d
             </span>
           </div>
@@ -126,48 +126,55 @@ export default function FlashDealsBanner() {
               coupon.discount_type === 'percent'
                 ? `DISKON ${coupon.discount_value}%`
                 : `DISKON ${formatPrice(coupon.discount_value)}`
+            
+            const cardAccents = [
+              { badge: 'bg-stone-900', border: 'border-stone-200', hover: 'hover:border-stone-300' },
+              { badge: 'bg-[#B45309]', border: 'border-stone-200', hover: 'hover:border-stone-300' },
+              { badge: 'bg-stone-900', border: 'border-stone-200', hover: 'hover:border-stone-300' },
+            ]
+            const accent = cardAccents[idx % cardAccents.length]
 
             return (
               <div
                 key={coupon.code || idx}
-                className="bg-slate-50/70 hover:bg-white border border-slate-200/90 rounded-3xl p-5 transition-all duration-300 flex flex-col justify-between hover:shadow-lg hover:-translate-y-0.5 group relative overflow-hidden"
+                className={`bg-white border ${accent.border} ${accent.hover} rounded-2xl p-5 transition-all duration-300 flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 relative overflow-hidden`}
               >
-                {/* Decorative Side Notch like a luxury flight coupon ticket */}
-                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border-r border-slate-200" />
-                <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border-l border-slate-200" />
+                {/* Decorative notches */}
+                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#FAF9F6] border-r border-stone-200/80" />
+                <div className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#FAF9F6] border-l border-stone-200/80" />
 
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-[11px] font-black uppercase tracking-wider bg-blue-600 text-white px-3 py-1 rounded-full shadow-2xs">
+                    <span className={`text-[11px] font-bold uppercase tracking-wider ${accent.badge} text-white px-3 py-1 rounded-full`}>
                       {discountText}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                    <span className="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">
                       Semua Paket
                     </span>
                   </div>
 
                   <div>
-                    <h4 className="font-extrabold text-sm text-blue-950 leading-tight">
+                    <h4 className="font-bold text-sm text-[#1C1917] leading-tight">
                       {coupon.title || 'Penawaran Spesial Liburan'}
                     </h4>
-                    <p className="text-xs text-slate-500 mt-1 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-stone-500 mt-1 leading-relaxed line-clamp-2">
                       {coupon.description || 'Gunakan kode promo saat pemesanan paket wisata impian Anda.'}
                     </p>
                   </div>
                 </div>
 
-                {/* Coupon Code Pill & 1-Click Copy */}
-                <div className="mt-4 pt-3 border-t border-dashed border-slate-200 flex items-center justify-between gap-3">
-                  <div className="font-mono text-xs font-black text-blue-950 bg-white border border-blue-100 px-3 py-1.5 rounded-xl shadow-2xs">
+                {/* Coupon Code & Copy Button */}
+                <div className="mt-4 pt-3 border-t border-dashed border-stone-200 flex items-center justify-between gap-3">
+                  <div className="font-mono text-xs font-bold text-[#1C1917] bg-stone-50 border border-stone-200 px-3 py-1.5 rounded-xl">
                     {coupon.code}
                   </div>
 
                   <button
                     onClick={() => handleCopy(coupon.code)}
-                    className={`text-xs font-bold px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shadow-2xs ${
+                    className={`text-xs font-semibold px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
                       isCopied
                         ? 'bg-emerald-600 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                        : `${accent.badge} hover:opacity-90 text-white`
                     }`}
                   >
                     {isCopied ? (
@@ -192,10 +199,10 @@ export default function FlashDealsBanner() {
         <div className="text-center pt-1">
           <Link
             href="/promo"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors group"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-900 hover:text-[#C29B38] transition-colors group"
           >
             <span>Lihat Semua Voucher & Syarat Ketentuan Promo</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 

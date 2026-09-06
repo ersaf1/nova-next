@@ -85,7 +85,7 @@ export default function BookingStepReview({ pkg, departure, contact, travelers, 
           <p className="font-semibold text-black">{pkg.title}</p>
           {pkg.subtitle && <p className="text-sm text-neutral-500">{pkg.subtitle}</p>}
           <p className="text-sm text-neutral-600 mt-1">
-            {formatDate(departure.startDate)} — {formatDate(departure.endDate)}
+            {formatDate(departure.startDate)} s/d {formatDate(departure.endDate)}
           </p>
         </div>
       </div>

@@ -31,41 +31,41 @@ const STEPS: Step[] = [
     number: '01',
     title: 'Eksplorasi 195+ Destinasi Dunia',
     subtitle: 'Kurasi Destinasi Terbaik Tanpa Batas',
-    description: 'Cari destinasi impian Anda berdasarkan suasana (Pantai, Pulau, Pegunungan, Kota Bersejarah), atau nama negara dari seluruh destinasi resmi terverifikasi.',
+    description: 'Cari destinasi impian Anda berdasarkan suasana pantai, pegunungan, pulau tropis, hingga kota bersejarah terverifikasi.',
     category: 'Pencarian Destinasi',
     icon: Search,
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=90',
-    features: ['195+ Destinasi Dunia', 'Filter Kategori & Suasana', 'Pencarian Real-Time']
+    features: ['195+ Destinasi', 'Filter Suasana', 'Real-Time']
   },
   {
     number: '02',
     title: 'Kurasi Rute Cerdas & Fleksibel',
-    subtitle: 'Rancangan Jadwal Presisi dalam Hitungan Detik',
-    description: 'Sistem cerdas menyusun jadwal harian, rekomendasi kuliner lokal, waktu terbaik berkunjung, serta panduan rute wisata optimal sesuai budget Anda.',
+    subtitle: 'Rancangan Jadwal Presisi dalam 30 Detik',
+    description: 'Jadwal harian presisi, rekomendasi kuliner lokal, dan rute optimal disesuaikan dengan preferensi serta ritme Anda.',
     category: 'Smart Route Concierge',
     icon: Navigation,
     image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=90',
-    features: ['Rute Harian Presisi', 'Estimasi Biaya & Transparansi', 'Rekomendasi Kuliner & Budaya']
+    features: ['Rute Harian', 'Transparansi Biaya', 'Kuliner Lokal']
   },
   {
     number: '03',
     title: 'Pemesanan All-Inclusive Instan',
-    subtitle: 'Semua Kebutuhan Perjalanan dalam 1 Pembayaran',
-    description: 'Pesan paket all-in: tiket pesawat PP, resort bintang 5, tur privat lokal, dan proteksi asuransi perjalanan terpercaya dalam sekali proses aman.',
+    subtitle: 'Semua Kebutuhan dalam 1 Pembayaran',
+    description: 'Tiket pesawat PP, resort bintang 5, tur privat lokal, dan proteksi asuransi perjalanan terpercaya dalam sekali proses aman.',
     category: 'Booking & Reservasi',
     icon: CheckCircle2,
     image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1600&q=90',
-    features: ['E-Ticket QR Code Resmi', 'Garansi Harga Jujur', 'QRIS & Multi-Payment']
+    features: ['E-Ticket Resmi', 'Garansi Harga Jujur', 'Multi-Payment']
   },
   {
     number: '04',
     title: '24/7 Live Concierge di Tangan Anda',
     subtitle: 'Pendampingan Perjalanan Real-Time',
-    description: 'Akses jadwal perjalanan offline dari smartphone Anda, tips lokal, serta tim concierge standby 24 jam via live chat & WhatsApp ke mana pun Anda melangkah.',
+    description: 'Akses jadwal perjalanan offline dari ponsel dan tim concierge bersiaga 24 jam via WhatsApp ke mana pun Anda melangkah.',
     category: 'Pendampingan 24 Jam',
     icon: Compass,
     image: 'https://images.unsplash.com/photo-1502784444187-359ac186c5bb?w=1600&q=90',
-    features: ['Itinerary Pocket Offline', 'Panduan Frasa Bahasa Lokal', 'Asistensi Bantuan 24/7']
+    features: ['Itinerary Offline', 'Tips Lokal', 'Asistensi 24/7']
   }
 ]
 
@@ -85,40 +85,39 @@ const HowItWorksSection: React.FC = () => {
   const IconComponent = current.icon
 
   return (
-    <section id="how-it-works" className="bg-[#F8FAFC] px-4 sm:px-6 py-24 md:py-32 border-b border-slate-200/80">
-      <div className="max-w-[88rem] mx-auto space-y-16">
+    <section id="how-it-works" className="bg-[#FAF9F6] px-4 sm:px-6 py-20 md:py-28 border-b border-stone-200/80">
+      <div className="max-w-[88rem] mx-auto space-y-12">
         
         {/* Editorial Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-8 border-b border-slate-200/80">
-          <div className="space-y-4 max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 text-[10px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full border border-blue-100">
-              <Compass className="w-3.5 h-3.5" />
-              <span>08 / Alur Pemesanan & Perjalanan</span>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-8 border-b border-stone-200/80">
+          <div className="space-y-3 max-w-3xl">
+            <div className="inline-flex items-center gap-2 bg-stone-100 text-stone-700 text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-stone-200">
+              <Compass className="w-3.5 h-3.5 text-[#C29B38]" />
+              <span>Alur Pemesanan &amp; Pendampingan</span>
             </div>
-            <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black text-blue-950 leading-[1.02] tracking-tight">
-              <span>Cara Kerja </span>
-              <span className="font-serif-luxury italic font-normal text-blue-600">NOVA Travel</span>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1C1917] leading-[1.05] tracking-tight">
+              Perjalanan Sempurna Bersama <span className="font-serif-luxury italic font-normal text-stone-800">NOVA Travel</span>
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal max-w-xl">
-              Dari eksplorasi awal hingga kembali dengan selamat — NOVA mengelola setiap detail perjalanan Anda dengan sentuhan kurasi manusiawi dan teknologi cerdas.
+            <p className="text-sm sm:text-base text-stone-500 leading-relaxed font-normal max-w-xl">
+              Dari eksplorasi awal hingga kembali dengan selamat, NOVA mengelola setiap detail perjalanan Anda.
             </p>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => router.push('/ai-planner')}
-              className="bg-blue-600 text-white text-xs font-extrabold px-6 py-3.5 rounded-2xl hover:bg-blue-700 transition-all shadow-md shadow-blue-600/30 flex items-center gap-2"
+              className="bg-stone-900 text-white text-xs font-semibold px-6 py-3.5 rounded-full hover:bg-black transition-all shadow-xs hover:shadow-md flex items-center gap-2 cursor-pointer"
             >
-              <Navigation className="w-4 h-4 text-sky-200" />
+              <Navigation className="w-4 h-4 text-[#C29B38]" />
               <span>Rancang Rute Cerdas</span>
             </button>
           </div>
         </div>
 
         {/* Interactive Step Switcher & Live Visual Canvas */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
-          {/* Left Column: Interactive Step List (5 cols) */}
+          {/* Left Column: Interactive Step List */}
           <div className="lg:col-span-5 space-y-3 flex flex-col justify-center">
             {STEPS.map((step, index) => {
               const isActive = activeStep === index
@@ -128,25 +127,25 @@ const HowItWorksSection: React.FC = () => {
                 <div
                   key={step.number}
                   onClick={() => setActiveStep(index)}
-                  className={`p-6 rounded-3xl cursor-pointer transition-all duration-500 border relative overflow-hidden group ${
+                  className={`p-5 rounded-2xl cursor-pointer transition-all duration-300 border relative overflow-hidden group ${
                     isActive
-                      ? 'bg-white border-blue-600 shadow-xl shadow-blue-950/10 scale-[1.02] ring-1 ring-blue-600/20'
-                      : 'bg-white/60 hover:bg-white border-slate-200/80 hover:border-blue-200'
+                      ? 'bg-white border-stone-300 shadow-md'
+                      : 'bg-[#FAF9F6] hover:bg-white border-stone-200/80 hover:border-stone-300'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <span className={`text-2xl font-black transition-colors ${
-                        isActive ? 'text-blue-600' : 'text-slate-300 group-hover:text-slate-500'
+                        isActive ? 'text-[#C29B38]' : 'text-stone-300 group-hover:text-stone-400'
                       }`}>
                         {step.number}
                       </span>
                       <div>
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-0.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-0.5">
                           {step.category}
                         </span>
-                        <h3 className={`text-base font-bold transition-colors ${
-                          isActive ? 'text-blue-950' : 'text-slate-700'
+                        <h3 className={`text-sm font-bold transition-colors ${
+                          isActive ? 'text-[#1C1917]' : 'text-stone-700'
                         }`}>
                           {step.title}
                         </h3>
@@ -154,16 +153,15 @@ const HowItWorksSection: React.FC = () => {
                     </div>
 
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all ${
-                      isActive ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600'
+                      isActive ? 'bg-stone-900 text-white' : 'bg-stone-100 text-stone-500 group-hover:bg-stone-200 group-hover:text-stone-800'
                     }`}>
-                      <StepIcon className="w-4.5 h-4.5" />
+                      <StepIcon className="w-4 h-4" />
                     </div>
                   </div>
 
-                  {/* Active Indicator Bar */}
                   {isActive && (
-                    <div className="mt-4 pt-3 border-t border-slate-100 animate-fade-in">
-                      <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                    <div className="mt-3 pt-3 border-t border-stone-200 animate-fade-in">
+                      <p className="text-xs text-stone-600 leading-relaxed">
                         {step.description}
                       </p>
                     </div>
@@ -173,29 +171,29 @@ const HowItWorksSection: React.FC = () => {
             })}
           </div>
 
-          {/* Right Column: Mediterranean Blue Showcase Card (7 cols) */}
-          <div className="lg:col-span-7 bg-gradient-to-br from-blue-700 via-sky-700 to-indigo-700 rounded-3xl overflow-hidden relative min-h-[480px] lg:min-h-[560px] flex flex-col justify-between p-8 sm:p-10 shadow-2xl shadow-blue-500/15 text-white group border border-blue-400/30">
+          {/* Right Column: Sleek Luxury Showcase Card (7 cols) — 80% Photo Dominance */}
+          <div className="lg:col-span-7 bg-[#1C1917] rounded-3xl overflow-hidden relative min-h-[520px] lg:min-h-[620px] flex flex-col justify-between p-8 sm:p-10 shadow-2xl shadow-stone-950/20 text-white group border border-stone-800">
             {/* Background Image with Smooth Transitions */}
             <img
               key={current.number}
               src={current.image}
               alt={current.title}
-              className="absolute inset-0 w-full h-full object-cover img-smooth-zoom opacity-45 animate-fade-in"
+              className="absolute inset-0 w-full h-full object-cover img-smooth-zoom opacity-85 animate-fade-in"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-sky-950/80 via-sky-900/40 to-transparent z-[1]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/95 via-[#1C1917]/35 to-transparent z-[1]" />
 
             {/* Top Bar inside Card */}
             <div className="relative z-10 flex items-center justify-between border-b border-white/15 pb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center">
-                  <IconComponent className="w-4 h-4 text-sky-300" />
+                <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center">
+                  <IconComponent className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-300 block">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-stone-300 block">
                     Tahap {current.number} dari 04
                   </span>
-                  <span className="text-xs font-bold text-white">{current.category}</span>
+                  <span className="text-xs font-semibold text-white">{current.category}</span>
                 </div>
               </div>
 
@@ -206,7 +204,7 @@ const HowItWorksSection: React.FC = () => {
                     key={i}
                     onClick={() => setActiveStep(i)}
                     className={`h-2 rounded-full transition-all duration-300 ${
-                      activeStep === i ? 'w-8 bg-blue-500' : 'w-2 bg-white/30'
+                      activeStep === i ? 'w-8 bg-[#C29B38]' : 'w-2 bg-white/30'
                     }`}
                   />
                 ))}
@@ -230,9 +228,9 @@ const HowItWorksSection: React.FC = () => {
                 {current.features.map((feat, i) => (
                   <span
                     key={i}
-                    className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center gap-1.5"
+                    className="text-xs font-medium px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center gap-1.5"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5 text-sky-300" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#C29B38]" />
                     {feat}
                   </span>
                 ))}
@@ -241,13 +239,13 @@ const HowItWorksSection: React.FC = () => {
 
             {/* Bottom Actions inside Showcase */}
             <div className="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between">
-              <span className="text-xs font-bold text-white/70">
+              <span className="text-xs font-medium text-white/70">
                 {current.subtitle}
               </span>
 
               <button
                 onClick={() => router.push('/how-it-works')}
-                className="px-5 py-2.5 rounded-xl bg-white text-blue-950 font-extrabold text-xs hover:bg-blue-50 transition-colors flex items-center gap-2 shadow-md"
+                className="px-5 py-2.5 rounded-full bg-[#FAF9F6] text-stone-900 font-semibold text-xs hover:bg-white transition-all shadow-xs hover:shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <span>Pelajari Selengkapnya</span>
                 <ArrowRight className="w-4 h-4" />

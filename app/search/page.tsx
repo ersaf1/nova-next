@@ -61,9 +61,9 @@ function PackageCard({ pkg }: { pkg: TravelPackage }) {
   return (
     <Link
       href={`/packages/${pkg.slug ?? pkg.id}`}
-      className="group bg-white rounded-3xl border border-neutral-200/80 overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
+      className="group bg-white rounded-3xl border border-stone-200/80 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
     >
-      <div className="relative h-56 overflow-hidden bg-neutral-900">
+      <div className="relative h-56 overflow-hidden bg-stone-900">
         {pkg.image ? (
           <img
             src={pkg.image}
@@ -72,28 +72,27 @@ function PackageCard({ pkg }: { pkg: TravelPackage }) {
             className="w-full h-full object-cover img-smooth-zoom"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-neutral-800 to-neutral-900 flex items-center justify-center">
+          <div className="w-full h-full bg-stone-900 flex items-center justify-center">
             <Compass className="w-10 h-10 text-white/30" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-neutral-950/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent" />
 
         <span
-          className="absolute top-3.5 left-3.5 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs"
-          style={{ backgroundColor: pkg.tagColor || '#18181b', color: '#fff' }}
+          className="absolute top-3.5 left-3.5 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs bg-stone-900 text-white"
         >
           {pkg.tag || 'Best Seller'}
         </span>
 
         {savings > 0 && (
-          <span className="absolute top-3.5 right-3.5 bg-white/95 text-neutral-950 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+          <span className="absolute top-3.5 right-3.5 bg-white/95 text-stone-900 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
             Hemat {formatPrice(savings)}
           </span>
         )}
 
         <div className="absolute bottom-3 left-4 right-4 text-white">
-          <p className="text-[11px] font-bold text-white/80 uppercase tracking-wider flex items-center gap-1">
-            <MapPin className="w-3 h-3 text-brand-light" />
+          <p className="text-[11px] font-semibold text-white/80 uppercase tracking-wider flex items-center gap-1">
+            <MapPin className="w-3 h-3 text-[#C29B38]" />
             <span>{pkg.subtitle}</span>
           </p>
         </div>
@@ -101,42 +100,42 @@ function PackageCard({ pkg }: { pkg: TravelPackage }) {
 
       <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
         <div>
-          <h3 className="font-extrabold text-base text-neutral-950 leading-snug tracking-tight mb-2 line-clamp-2">
+          <h3 className="font-bold text-base text-stone-900 leading-snug tracking-tight mb-2 line-clamp-2">
             {pkg.title}
           </h3>
 
-          <div className="flex items-center gap-4 text-xs text-neutral-500 py-2 border-y border-neutral-100">
+          <div className="flex items-center gap-4 text-xs text-stone-500 py-2 border-y border-stone-100">
             <span className="flex items-center gap-1 font-medium">
-              <Clock size={13} className="text-neutral-400" />
+              <Clock size={13} className="text-[#C29B38]" />
               <span>{pkg.duration}</span>
             </span>
             <span className="flex items-center gap-1 font-medium">
-              <Users size={13} className="text-neutral-400" />
+              <Users size={13} className="text-[#C29B38]" />
               <span>{pkg.groupSize}</span>
             </span>
-            <span className="flex items-center gap-1 font-extrabold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-md ml-auto">
+            <span className="flex items-center gap-1 font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-md ml-auto">
               <Star size={13} className="fill-amber-400 text-amber-400" />
               <span>{pkg.rating} ({pkg.reviews})</span>
             </span>
           </div>
         </div>
 
-        <div className="pt-3 border-t border-neutral-100 flex items-center justify-between gap-3">
+        <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-3">
           <div>
             {(pkg.originalPrice ?? 0) > pkg.price && (
-              <span className="text-[11px] text-neutral-400 line-through leading-none block">
+              <span className="text-[11px] text-stone-400 line-through leading-none block">
                 {formatPrice(pkg.originalPrice ?? 0)}
               </span>
             )}
             <div className="flex items-baseline">
-              <span className="text-lg font-black text-neutral-950 tracking-tight">
+              <span className="text-lg font-black text-stone-900 tracking-tight">
                 {formatPrice(pkg.price)}
               </span>
-              <span className="text-[10px] text-neutral-400 font-normal ml-1">/org</span>
+              <span className="text-[10px] text-stone-400 font-normal ml-1">/org</span>
             </div>
           </div>
 
-          <span className="text-xs font-bold bg-brand group-hover:bg-brand-dark text-white px-4 py-2.5 rounded-xl transition-all flex items-center gap-1 shadow-2xs">
+          <span className="text-xs font-bold bg-stone-900 group-hover:bg-black text-[#FAF9F6] px-4 py-2.5 rounded-xl transition-all flex items-center gap-1 shadow-2xs">
             <span>Detail</span>
             <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
           </span>
@@ -150,9 +149,9 @@ function DestinationCard({ dest }: { dest: Destination }) {
   return (
     <Link
       href={`/destinations/${dest.id}`}
-      className="group bg-white rounded-3xl border border-neutral-200/80 overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
+      className="group bg-white rounded-3xl border border-stone-200/80 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
     >
-      <div className="relative h-56 overflow-hidden bg-neutral-900">
+      <div className="relative h-56 overflow-hidden bg-stone-900">
         {dest.image ? (
           <img
             src={dest.image}
@@ -161,39 +160,39 @@ function DestinationCard({ dest }: { dest: Destination }) {
             className="w-full h-full object-cover img-smooth-zoom"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-neutral-800 to-neutral-900 flex items-center justify-center">
+          <div className="w-full h-full bg-stone-900 flex items-center justify-center">
             <MapPin className="w-10 h-10 text-white/30" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-neutral-950/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent" />
 
-        <span className="absolute top-3.5 left-3.5 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-black/60 text-white backdrop-blur-sm">
+        <span className="absolute top-3.5 left-3.5 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-stone-900/80 text-white backdrop-blur-sm">
           {(dest as { category?: string }).category ?? dest.country}
         </span>
       </div>
 
       <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
         <div>
-          <h3 className="font-black text-xl text-neutral-950 mb-0.5 tracking-tight">{dest.city}</h3>
-          <p className="text-xs text-neutral-500 font-semibold mb-3">{dest.country}</p>
-          <div className="flex items-center gap-3 text-xs text-neutral-500 py-2 border-y border-neutral-100">
+          <h3 className="font-normal font-serif-luxury text-xl text-stone-900 mb-0.5 tracking-tight">{dest.city}</h3>
+          <p className="text-xs text-stone-500 font-medium mb-3">{dest.country}</p>
+          <div className="flex items-center gap-3 text-xs text-stone-500 py-2 border-y border-stone-100">
             <span className="flex items-center gap-1 font-bold text-amber-500">
               <Star size={13} className="fill-amber-400 text-amber-400" />
               <span>{dest.rating}</span>
             </span>
             <span className="flex items-center gap-1">
-              <Clock size={13} />
+              <Clock size={13} className="text-[#C29B38]" />
               <span>{(dest as { duration?: string }).duration || '5-7 Hari'}</span>
             </span>
           </div>
         </div>
 
-        <div className="pt-3 border-t border-neutral-100 flex items-center justify-between">
+        <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
           <div>
-            <span className="text-[10px] text-neutral-400 font-bold uppercase block">Mulai Dari</span>
-            <span className="text-base font-black text-neutral-950 tracking-tight">{dest.price}</span>
+            <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Mulai Dari</span>
+            <span className="text-base font-black text-stone-900 tracking-tight">{dest.price}</span>
           </div>
-          <span className="text-xs font-bold bg-brand group-hover:bg-brand-dark text-white px-4 py-2.5 rounded-xl transition-all">
+          <span className="text-xs font-bold bg-stone-900 group-hover:bg-black text-[#FAF9F6] px-4 py-2.5 rounded-xl transition-all">
             Eksplor
           </span>
         </div>
@@ -338,21 +337,33 @@ function SearchContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
       <Navbar />
 
       {/* Header */}
       <div className="pt-28 pb-6 px-4 sm:px-6 md:px-8">
         <div className="max-w-[88rem] mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-brand-dark bg-brand/10 px-3 py-1 rounded-full">
-            <Compass className="w-3.5 h-3.5" />
-            <span>Hasil Pencarian</span>
+          <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#9E7B27] bg-[#C29B38]/10 border border-[#C29B38]/30 px-3 py-1 rounded-full">
+            <Compass className="w-3.5 h-3.5 text-[#C29B38]" />
+            <span>Hasil Pencarian & Kurasi</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black text-neutral-950 tracking-tight">
-            {q ? `Pencarian untuk "${q}"` : isDestinations ? 'Semua Destinasi' : 'Semua Paket Wisata'}
+          <h1 className="text-3xl sm:text-5xl font-black text-stone-900 tracking-tight">
+            {q ? (
+              <>
+                Pencarian untuk <span className="font-serif-luxury italic font-normal text-[#C29B38]">"{q}"</span>
+              </>
+            ) : isDestinations ? (
+              <>
+                Semua <span className="font-serif-luxury italic font-normal text-[#C29B38]">Destinasi</span>
+              </>
+            ) : (
+              <>
+                Semua <span className="font-serif-luxury italic font-normal text-[#C29B38]">Paket Wisata</span>
+              </>
+            )}
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-500 font-semibold">
+          <p className="text-xs sm:text-sm text-stone-500 font-medium">
             {loading ? 'Mencari paket...' : `${resultCount} hasil ditemukan`}
           </p>
 
@@ -360,16 +371,16 @@ function SearchContent() {
           <div className="flex items-center gap-2 pt-2">
             <button
               onClick={() => setParams({ type: 'packages' })}
-              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all ${
-                !isDestinations ? 'bg-neutral-950 text-white shadow-xs' : 'bg-white border border-neutral-200 text-neutral-700'
+              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                !isDestinations ? 'bg-stone-900 text-[#FAF9F6] shadow-xs' : 'bg-white border border-stone-200 text-stone-700 hover:border-stone-300'
               }`}
             >
               Paket Wisata
             </button>
             <button
               onClick={() => setParams({ type: 'destinations' })}
-              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all ${
-                isDestinations ? 'bg-neutral-950 text-white shadow-xs' : 'bg-white border border-neutral-200 text-neutral-700'
+              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                isDestinations ? 'bg-stone-900 text-[#FAF9F6] shadow-xs' : 'bg-white border border-stone-200 text-stone-700 hover:border-stone-300'
               }`}
             >
               Destinasi
@@ -384,12 +395,12 @@ function SearchContent() {
           
           {/* Filter Sidebar */}
           {!isDestinations && (
-            <aside className="w-full lg:w-72 shrink-0 bg-white rounded-3xl border border-neutral-200/80 p-6 space-y-6 shadow-sm">
-              <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
-                <h2 className="font-extrabold text-sm text-neutral-950">Filter Pencarian</h2>
+            <aside className="w-full lg:w-72 shrink-0 bg-white rounded-3xl border border-stone-200/80 p-6 space-y-6 shadow-sm">
+              <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+                <h2 className="font-bold text-sm text-stone-900">Filter Pencarian</h2>
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs text-brand-dark font-bold hover:underline"
+                  className="text-xs text-[#C29B38] font-bold hover:underline cursor-pointer"
                 >
                   Reset
                 </button>
@@ -397,20 +408,20 @@ function SearchContent() {
 
               {/* Search keyword */}
               <div>
-                <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-wider mb-2 block">
+                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2 block">
                   Kata Kunci
                 </label>
                 <div className="relative">
-                  <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+                  <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
                   <input
                     type="text"
                     value={q}
                     onChange={(e) => setParams({ q: e.target.value || null })}
                     placeholder="Cari destinasi..."
-                    className="w-full bg-neutral-50 rounded-2xl pl-9 pr-8 py-2.5 text-xs text-neutral-900 border border-neutral-200/80 focus:outline-none focus:ring-2 focus:ring-brand font-semibold"
+                    className="w-full bg-stone-50 rounded-2xl pl-9 pr-8 py-2.5 text-xs text-stone-900 border border-stone-200/80 focus:outline-none focus:ring-2 focus:ring-stone-900 font-medium"
                   />
                   {q && (
-                    <button onClick={() => setParams({ q: null })} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
+                    <button onClick={() => setParams({ q: null })} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 cursor-pointer">
                       <X size={12} />
                     </button>
                   )}
@@ -419,19 +430,19 @@ function SearchContent() {
 
               {/* Category */}
               <div>
-                <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-wider mb-2 block">
+                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2 block">
                   Kategori
                 </label>
                 <div className="space-y-1.5">
                   {CATEGORIES.map((cat) => (
-                    <label key={cat} className="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-neutral-700 hover:text-neutral-950">
+                    <label key={cat} className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-stone-700 hover:text-stone-950">
                       <input
                         type="radio"
                         name="category"
                         value={cat}
                         checked={selectedCategory === cat}
                         onChange={() => setParams({ category: cat === 'All' ? null : cat })}
-                        className="accent-brand"
+                        className="accent-stone-900"
                       />
                       <span>{cat}</span>
                     </label>
@@ -441,19 +452,19 @@ function SearchContent() {
 
               {/* Duration */}
               <div>
-                <label className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-wider mb-2 block">
+                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2 block">
                   Durasi
                 </label>
                 <div className="space-y-1.5">
                   {DURATIONS.map((dur) => (
-                    <label key={dur} className="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-neutral-700 hover:text-neutral-950">
+                    <label key={dur} className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-stone-700 hover:text-stone-950">
                       <input
                         type="radio"
                         name="duration"
                         value={dur}
                         checked={selectedDuration === dur}
                         onChange={() => setParams({ duration: dur === 'Any' ? null : dur })}
-                        className="accent-brand"
+                        className="accent-stone-900"
                       />
                       <span>{dur}</span>
                     </label>

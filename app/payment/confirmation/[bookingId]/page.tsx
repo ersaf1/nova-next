@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { CheckCircle } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 import dynamic from 'next/dynamic'
 import { formatIDR } from '@/lib/types'
 
@@ -43,13 +44,13 @@ function QRPlaceholder({ seed }: { seed: string }) {
   }
   return (
     <div
-      className="inline-grid gap-[2px] p-3 bg-white border border-black/10 rounded-xl"
+      className="inline-grid gap-[2px] p-3 bg-white border border-stone-200 rounded-xl"
       style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}
     >
       {cells.map((filled, i) => (
         <div
           key={i}
-          className={`w-3 h-3 rounded-[1px] ${filled ? 'bg-brand' : 'bg-white'}`}
+          className={`w-3 h-3 rounded-[1px] ${filled ? 'bg-stone-900' : 'bg-white'}`}
         />
       ))}
     </div>
@@ -59,9 +60,9 @@ function QRPlaceholder({ seed }: { seed: string }) {
 function TicketDivider() {
   return (
     <div className="relative my-0 flex items-center">
-      <div className="absolute -left-6 w-6 h-6 rounded-full bg-[#F5F5F5]" />
-      <div className="flex-1 border-t-2 border-dashed border-black/10 mx-1" />
-      <div className="absolute -right-6 w-6 h-6 rounded-full bg-[#F5F5F5]" />
+      <div className="absolute -left-6 w-6 h-6 rounded-full bg-[#FAF9F6] border-r border-stone-200" />
+      <div className="flex-1 border-t-2 border-dashed border-stone-200 mx-1" />
+      <div className="absolute -right-6 w-6 h-6 rounded-full bg-[#FAF9F6] border-l border-stone-200" />
     </div>
   )
 }
@@ -99,45 +100,46 @@ export default function ConfirmationPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.02em' }}>
+      <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
         <Navbar />
         <main className="px-6 py-16 pt-28 max-w-2xl mx-auto">
           {/* Header skeleton */}
           <div className="text-center mb-10 space-y-3">
-            <div className="inline-block w-20 h-20 rounded-full bg-black/10 animate-pulse" />
-            <div className="h-6 bg-black/10 rounded-full w-48 mx-auto animate-pulse" />
-            <div className="h-4 bg-black/10 rounded-full w-72 mx-auto animate-pulse" />
+            <div className="inline-block w-20 h-20 rounded-full bg-stone-200/60 animate-pulse" />
+            <div className="h-6 bg-stone-200/60 rounded-full w-48 mx-auto animate-pulse" />
+            <div className="h-4 bg-stone-200/60 rounded-full w-72 mx-auto animate-pulse" />
           </div>
           {/* Ticket card skeleton */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm animate-pulse">
-            <div className="bg-black/10 h-20 px-6 py-5" />
+          <div className="bg-white rounded-3xl border border-stone-200/80 overflow-hidden shadow-xs animate-pulse">
+            <div className="bg-stone-900 h-20 px-6 py-5" />
             <div className="px-6 py-5 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="space-y-1.5">
-                    <div className="h-3 bg-black/10 rounded-full w-16" />
-                    <div className="h-4 bg-black/10 rounded-full w-28" />
+                    <div className="h-3 bg-stone-200/60 rounded-full w-16" />
+                    <div className="h-4 bg-stone-200/60 rounded-full w-28" />
                   </div>
                 ))}
               </div>
-              <div className="pt-3 border-t border-black/5 flex justify-between items-center">
-                <div className="h-3 bg-black/10 rounded-full w-16" />
-                <div className="h-5 bg-black/10 rounded-full w-24" />
+              <div className="pt-3 border-t border-stone-100 flex justify-between items-center">
+                <div className="h-3 bg-stone-200/60 rounded-full w-16" />
+                <div className="h-5 bg-stone-200/60 rounded-full w-24" />
               </div>
             </div>
-            <div className="border-t-2 border-dashed border-black/10 mx-6" />
+            <div className="border-t-2 border-dashed border-stone-200 mx-6" />
             <div className="px-6 py-6 flex flex-col items-center gap-3">
-              <div className="w-32 h-32 bg-black/10 rounded-xl" />
-              <div className="h-3 bg-black/10 rounded-full w-36" />
+              <div className="w-32 h-32 bg-stone-200/60 rounded-xl" />
+              <div className="h-3 bg-stone-200/60 rounded-full w-36" />
             </div>
           </div>
         </main>
+        <Footer />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5]" style={{ letterSpacing: '-0.02em' }}>
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
       <Navbar />
       <main className="px-6 py-16 pt-28 max-w-2xl mx-auto">
         {/* Status Header */}
@@ -145,21 +147,21 @@ export default function ConfirmationPage() {
           <div
             className={`inline-flex items-center justify-center w-20 h-20 rounded-full mb-5 transition-all duration-700 ${
               animateCheck
-                ? 'bg-emerald-50 scale-100 opacity-100'
+                ? 'bg-emerald-50 scale-100 opacity-100 border border-emerald-100'
                 : 'scale-50 opacity-0'
             }`}
           >
-            <CheckCircle className="w-10 h-10 text-emerald-500" />
+            <CheckCircle className="w-10 h-10 text-emerald-600" />
           </div>
           <h1
-            className={`text-2xl font-semibold mb-2 transition-all duration-500 delay-200 ${
+            className={`text-3xl sm:text-4xl font-black text-stone-900 tracking-tight mb-2 transition-all duration-500 delay-200 ${
               animateCheck ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
-            Pemesanan Dikonfirmasi!
+            Pemesanan <span className="font-serif-luxury italic font-normal text-stone-800">Dikonfirmasi!</span>
           </h1>
           <p
-            className={`text-sm text-black/40 transition-all duration-500 delay-300 ${
+            className={`text-sm text-stone-500 transition-all duration-500 delay-300 ${
               animateCheck ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -169,21 +171,21 @@ export default function ConfirmationPage() {
 
         {/* E-Ticket Card */}
         <div
-          className={`bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm transition-all duration-500 delay-400 ${
+          className={`bg-white rounded-3xl border border-stone-200/80 overflow-hidden shadow-xs transition-all duration-500 delay-400 ${
             animateCheck ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
           {/* Ticket Header */}
-          <div className="bg-black px-6 py-5 flex items-center justify-between">
+          <div className="bg-stone-900 px-6 py-5 flex items-center justify-between text-white">
             <div>
-              <p className="text-white/50 text-xs font-medium uppercase tracking-widest mb-1">
-                E-Ticket
+              <p className="text-stone-400 text-xs font-medium uppercase tracking-widest mb-1">
+                E-Ticket Resmi NOVA
               </p>
-              <p className="text-white font-mono text-lg font-semibold tracking-wider">
+              <p className="text-white font-mono text-lg font-bold tracking-wider">
                 {ticketNumber}
               </p>
             </div>
-            <div className="px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-400/20 text-emerald-300">
+            <div className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
               CONFIRMED
             </div>
           </div>
@@ -194,47 +196,47 @@ export default function ConfirmationPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs text-black/30 mb-1">Paket Wisata</p>
-                    <p className="text-sm font-semibold text-black">{booking.packageName}</p>
+                    <p className="text-xs text-stone-400 mb-0.5">Paket Wisata</p>
+                    <p className="text-sm font-bold text-stone-900">{booking.packageName}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-black/30 mb-1">Destinasi</p>
-                    <p className="text-sm font-semibold text-black">{booking.country}</p>
+                    <p className="text-xs text-stone-400 mb-0.5">Destinasi</p>
+                    <p className="text-sm font-bold text-stone-900">{booking.country}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-black/30 mb-1">Tanggal Keberangkatan</p>
-                    <p className="text-sm font-semibold text-black">{booking.travelDate}</p>
+                    <p className="text-xs text-stone-400 mb-0.5">Tanggal Keberangkatan</p>
+                    <p className="text-sm font-bold text-stone-900">{booking.travelDate}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-black/30 mb-1">Jumlah Peserta</p>
-                    <p className="text-sm font-semibold text-black">
+                    <p className="text-xs text-stone-400 mb-0.5">Jumlah Peserta</p>
+                    <p className="text-sm font-bold text-stone-900">
                       {booking.participants} orang
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-black/30 mb-1">Nama Pemesan</p>
-                    <p className="text-sm font-semibold text-black">{passengerName}</p>
+                    <p className="text-xs text-stone-400 mb-0.5">Nama Pemesan</p>
+                    <p className="text-sm font-bold text-stone-900">{passengerName}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-black/30 mb-1">Email</p>
-                    <p className="text-sm font-semibold text-black truncate">{passengerEmail}</p>
+                    <p className="text-xs text-stone-400 mb-0.5">Email</p>
+                    <p className="text-sm font-bold text-stone-900 truncate">{passengerEmail}</p>
                   </div>
                 </div>
 
                 {/* Passenger Roster */}
                 {booking.passengers && booking.passengers.length > 0 && (
-                  <div className="pt-3 border-t border-black/5 space-y-2">
-                    <p className="text-xs font-bold text-neutral-800 uppercase tracking-wider">
+                  <div className="pt-3 border-t border-stone-100 space-y-2">
+                    <p className="text-xs font-bold text-stone-800 uppercase tracking-wider">
                       Daftar Penumpang / Tamu ({booking.passengers.length} Orang)
                     </p>
                     <div className="space-y-1.5">
                       {booking.passengers.map((p, i) => (
-                        <div key={i} className="flex items-center justify-between text-xs bg-neutral-50 px-3 py-2 rounded-xl border border-neutral-100">
-                          <span className="font-semibold text-neutral-900">
+                        <div key={i} className="flex items-center justify-between text-xs bg-[#F5F2EB]/50 px-3.5 py-2 rounded-xl border border-stone-200/60">
+                          <span className="font-semibold text-stone-900">
                             {p.title} {p.name}
                           </span>
                           {p.idNumber && (
-                            <span className="text-[11px] text-neutral-500 font-mono">
+                            <span className="text-[11px] text-stone-500 font-mono">
                               {p.idType || 'ID'}: {p.idNumber}
                             </span>
                           )}
@@ -245,16 +247,16 @@ export default function ConfirmationPage() {
                 )}
 
                 {totalAmount > 0 && (
-                  <div className="pt-3 border-t border-black/5 flex justify-between items-center">
-                    <span className="text-xs text-black/30">Total Pembayaran</span>
-                    <span className="text-base font-bold text-black">
+                  <div className="pt-3 border-t border-stone-100 flex justify-between items-center">
+                    <span className="text-xs text-stone-400">Total Pembayaran</span>
+                    <span className="text-lg font-bold text-stone-950 font-serif-luxury">
                       {formatIDR(totalAmount)}
                     </span>
                   </div>
                 )}
               </div>
             ) : (
-              <p className="text-sm text-black/40 text-center py-4">
+              <p className="text-sm text-stone-400 text-center py-4">
                 Nomor referensi tiket: {ticketNumber}
               </p>
             )}
@@ -263,10 +265,10 @@ export default function ConfirmationPage() {
           <TicketDivider />
 
           {/* QR Section */}
-          <div className="px-6 py-6 flex flex-col items-center gap-3">
+          <div className="px-6 py-6 flex flex-col items-center gap-3 bg-stone-50/40">
             <QRPlaceholder seed={ticketNumber} />
-            <p className="text-xs text-black/30 font-mono">{ticketNumber}</p>
-            <p className="text-xs text-black/20">Scan saat check-in keberangkatan</p>
+            <p className="text-xs text-stone-500 font-mono font-bold">{ticketNumber}</p>
+            <p className="text-[11px] text-stone-400">Scan saat check-in keberangkatan</p>
           </div>
         </div>
 
@@ -295,7 +297,7 @@ export default function ConfirmationPage() {
           )}
           <button
             onClick={() => window.print()}
-            className="w-full bg-brand text-white rounded-full px-6 py-3 font-medium hover:bg-brand-dark transition-colors text-sm cursor-pointer"
+            className="w-full bg-stone-900 hover:bg-black text-white rounded-full px-6 py-3.5 font-bold transition-all text-xs cursor-pointer shadow-xs"
           >
             Cetak E-Ticket
           </button>
@@ -307,7 +309,7 @@ export default function ConfirmationPage() {
                 const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Trip+ke+${dest}&dates=${date}/${date}`
                 window.open(calUrl, '_blank')
               }}
-              className="bg-white text-black rounded-full px-6 py-3 font-medium hover:bg-black/5 transition-colors text-sm border border-black/10 cursor-pointer"
+              className="bg-white hover:bg-stone-50 text-stone-800 rounded-full px-6 py-3 font-semibold transition-all text-xs border border-stone-200/80 cursor-pointer shadow-xs"
             >
               Simpan ke Kalender
             </button>
@@ -317,7 +319,7 @@ export default function ConfirmationPage() {
                 const waUrl = `https://wa.me/?text=${encodeURIComponent(`Saya baru saja memesan liburan ke ${dest} di NOVA Travel! 🌍`)}`
                 window.open(waUrl, '_blank')
               }}
-              className="bg-white text-black rounded-full px-6 py-3 font-medium hover:bg-black/5 transition-colors text-sm border border-black/10 cursor-pointer"
+              className="bg-white hover:bg-stone-50 text-stone-800 rounded-full px-6 py-3 font-semibold transition-all text-xs border border-stone-200/80 cursor-pointer shadow-xs"
             >
               Bagikan
             </button>
@@ -325,31 +327,33 @@ export default function ConfirmationPage() {
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => router.push('/')}
-              className="bg-white text-black rounded-full px-6 py-3 font-medium hover:bg-black/5 transition-colors text-sm border border-black/10 cursor-pointer"
+              className="bg-white hover:bg-stone-50 text-stone-800 rounded-full px-6 py-3 font-semibold transition-all text-xs border border-stone-200/80 cursor-pointer shadow-xs"
             >
               Kembali ke Beranda
             </button>
             <button
               onClick={() => router.push('/dashboard')}
-              className="bg-white text-black rounded-full px-6 py-3 font-medium hover:bg-black/5 transition-colors text-sm border border-black/10 cursor-pointer"
+              className="bg-white hover:bg-stone-50 text-stone-800 rounded-full px-6 py-3 font-semibold transition-all text-xs border border-stone-200/80 cursor-pointer shadow-xs"
             >
               Lihat Dashboard
             </button>
           </div>
         </div>
 
-        <p className="text-xs text-black/20 text-center mt-6">
+        <p className="text-xs text-stone-400 text-center mt-6">
           Salinan E-Ticket telah dikirimkan ke {passengerEmail}.
         </p>
       </main>
+
+      <Footer />
 
       {/* Print styles */}
       <style>{`
         @media print {
           body * { visibility: hidden; }
-          .bg-white.rounded-2xl, .bg-white.rounded-2xl * { visibility: visible; }
-          .bg-white.rounded-2xl { position: absolute; left: 0; top: 0; width: 100%; }
-          nav, button { display: none !important; }
+          .bg-white.rounded-3xl, .bg-white.rounded-3xl * { visibility: visible; }
+          .bg-white.rounded-3xl { position: absolute; left: 0; top: 0; width: 100%; }
+          nav, button, footer { display: none !important; }
         }
       `}</style>
     </div>

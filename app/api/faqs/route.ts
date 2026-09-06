@@ -2,14 +2,26 @@ import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
 const DEFAULT_FAQS = [
-  { id: 1, q: 'How do I book a trip with NOVA?', a: 'Simply search for your destination, choose a package that suits your budget and preferences, fill in your travel details, and confirm your booking. The whole process takes less than 5 minutes.' },
-  { id: 2, q: 'Can I customize my travel package?', a: 'Yes! Every package can be customized — you can adjust travel dates, number of travelers, room types, and add optional experiences. Contact our concierge team for fully bespoke itineraries.' },
-  { id: 3, q: 'What is included in the package price?', a: 'Package prices include flights, accommodation, listed tours, and any meals specified in the package details. Airport transfers and travel insurance are optional add-ons available at checkout.' },
-  { id: 4, q: 'How does the AI Itinerary Planner work?', a: 'Our AI Planner uses Gemini to generate a personalized day-by-day itinerary based on your destination, duration, budget, and interests. It suggests activities, restaurants, accommodation, and local tips — all in seconds.' },
-  { id: 5, q: 'What is the cancellation policy?', a: 'Cancellations made more than 30 days before departure receive a full refund. Cancellations 14-30 days before receive a 50% refund. Within 14 days, refunds are subject to supplier terms. Travel insurance is strongly recommended.' },
-  { id: 6, q: 'Is my payment secure?', a: 'Absolutely. All transactions are processed through encrypted payment gateways. We never store your card details, and all bookings are protected by our secure payment infrastructure.' },
-  { id: 7, q: 'Can I book for a group?', a: 'Yes — most packages support groups of up to 12 people. For larger groups or corporate travel, please reach out to our team directly for special group rates and dedicated coordination.' },
-  { id: 8, q: 'How do I get my e-ticket after booking?', a: 'Once payment is confirmed, your e-ticket and booking confirmation are instantly available on your dashboard under "My Bookings". You can print or save your e-ticket from there.' },
+  {
+    id: 1,
+    q: 'Apa saja yang sudah termasuk dalam paket perjalanan All-Inclusive?',
+    a: 'Seluruh paket All-Inclusive mencakup tiket pesawat pulang-pergi (PP), akomodasi hotel atau resort bintang 4/5 terverifikasi, transportasi lokal privat, jadwal makan terencana, tiket masuk destinasi wisata, serta asuransi perjalanan dasar.'
+  },
+  {
+    id: 2,
+    q: 'Bagaimana kebijakan pembatalan dan jaminan pengembalian dana (refund)?',
+    a: 'NOVA memberikan jaminan 100% refund untuk pembatalan lebih dari 30 hari sebelum keberangkatan, dan 50% refund untuk 15-30 hari sebelum keberangkatan. Jika terjadi kendala bencana alam atau penutupan bandara resmi, perjalanan dapat dijadwalkan ulang secara fleksibel tanpa penalti.'
+  },
+  {
+    id: 3,
+    q: 'Kapan dan bagaimana saya menerima e-ticket setelah pembayaran?',
+    a: 'Setelah pembayaran berhasil diverifikasi, e-ticket dan voucher akomodasi resmi langsung terbit di menu Pemesanan Saya dan dikirimkan salinannya ke email terdaftar dalam hitungan menit.'
+  },
+  {
+    id: 4,
+    q: 'Bagaimana jika saya memerlukan bantuan darurat selama liburan?',
+    a: 'Pemandu lokal berlisensi dan tim Travel Concierge NOVA siap mendampingi Anda 24 jam via WhatsApp untuk menangani kendala akomodasi, penyesuaian jadwal, atau bantuan darurat di lapangan.'
+  }
 ]
 
 export async function GET() {

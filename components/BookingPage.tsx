@@ -361,42 +361,42 @@ const BookingPageInner: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+      <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900 flex flex-col font-sans">
         <Navbar />
         <div className="flex-1 flex items-center justify-center px-4 sm:px-6 pt-28 pb-16">
-          <div className="bg-white rounded-3xl p-8 sm:p-10 max-w-lg w-full text-center shadow-xl border border-neutral-200/90 space-y-6 animate-fade-in">
-            <div className="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center mx-auto shadow-md">
+          <div className="bg-white rounded-3xl p-8 sm:p-10 max-w-lg w-full text-center shadow-xl border border-stone-200/90 space-y-6 animate-fade-in">
+            <div className="w-16 h-16 bg-emerald-600 text-white rounded-2xl flex items-center justify-center mx-auto shadow-md">
               <Check className="w-8 h-8 stroke-[2.5]" />
             </div>
             <div>
-              <h2 className="text-2xl sm:text-3xl font-jakarta font-black text-neutral-950 mb-2">
+              <h2 className="text-2xl sm:text-3xl font-jakarta font-black text-stone-950 mb-2">
                 Pemesanan Berhasil!
               </h2>
-              <p className="text-neutral-500 font-jakarta text-sm">
-                Terima kasih, <strong className="text-neutral-900">{form.name}</strong>. Rincian e-tiket telah dikirimkan ke <strong className="text-neutral-900">{form.email}</strong>.
+              <p className="text-stone-500 font-jakarta text-sm">
+                Terima kasih, <strong className="text-stone-900">{form.name}</strong>. Rincian e-tiket telah dikirimkan ke <strong className="text-stone-900">{form.email}</strong>.
               </p>
             </div>
 
-            <div className="bg-neutral-50 rounded-2xl p-5 text-left space-y-2.5 border border-neutral-200/70 font-jakarta text-xs">
+            <div className="bg-[#F5F2EB]/50 rounded-2xl p-5 text-left space-y-2.5 border border-stone-200/70 font-jakarta text-xs">
               <div className="flex justify-between">
-                <span className="text-neutral-400 font-medium">Paket</span>
-                <span className="font-bold text-neutral-900">{selectedPackage?.title}</span>
+                <span className="text-stone-400 font-medium">Paket</span>
+                <span className="font-bold text-stone-900">{selectedPackage?.title}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-neutral-400 font-medium">Destinasi</span>
-                <span className="font-bold text-neutral-900">{selectedCountry}</span>
+                <span className="text-stone-400 font-medium">Destinasi</span>
+                <span className="font-bold text-stone-900">{selectedCountry}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-neutral-400 font-medium">Tanggal</span>
-                <span className="font-bold text-neutral-900">{form.travelDate}</span>
+                <span className="text-stone-400 font-medium">Tanggal</span>
+                <span className="font-bold text-stone-900">{form.travelDate}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-neutral-400 font-medium">Peserta</span>
-                <span className="font-bold text-neutral-900">{form.participants} Orang</span>
+                <span className="text-stone-400 font-medium">Peserta</span>
+                <span className="font-bold text-stone-900">{form.participants} Orang</span>
               </div>
-              <div className="flex justify-between pt-2.5 border-t border-neutral-200 font-bold text-sm">
-                <span className="text-neutral-900">Total Pembayaran</span>
-                <span className="text-emerald-600">
+              <div className="flex justify-between pt-2.5 border-t border-stone-200 font-bold text-sm">
+                <span className="text-stone-900">Total Pembayaran</span>
+                <span className="text-emerald-700 font-serif-luxury text-base">
                   {selectedPackage ? formatIDR(selectedPackage.price * form.participants - discountAmount) : formatIDR(0)}
                 </span>
               </div>
@@ -404,7 +404,7 @@ const BookingPageInner: React.FC = () => {
 
             <button
               onClick={() => router.push('/dashboard/bookings')}
-              className="w-full bg-brand text-white font-jakarta font-extrabold py-3.5 rounded-xl hover:bg-brand-dark transition-all text-sm shadow-md active:scale-95 cursor-pointer"
+              className="w-full bg-stone-900 hover:bg-black text-white font-jakarta font-bold py-3.5 rounded-full transition-all text-sm shadow-xs cursor-pointer"
             >
               Lihat Tiket di Dashboard
             </button>
@@ -416,7 +416,7 @@ const BookingPageInner: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-neutral-900">
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900 flex flex-col font-sans">
       <Navbar />
       <div className="flex-1 pt-28 pb-20 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto space-y-8">
@@ -425,15 +425,15 @@ const BookingPageInner: React.FC = () => {
             <div>
               <button
                 onClick={() => (step === 0 ? router.push('/') : setStep((s) => s - 1))}
-                className="inline-flex items-center gap-2 text-xs font-jakarta font-bold text-neutral-500 hover:text-neutral-950 transition-colors mb-2 cursor-pointer"
+                className="inline-flex items-center gap-2 text-xs font-jakarta font-bold text-stone-500 hover:text-stone-950 transition-colors mb-2 cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>{step === 0 ? 'Kembali ke Beranda' : 'Kembali ke Langkah Sebelumnya'}</span>
               </button>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-jakarta font-black text-neutral-950 tracking-tight">
-                Pemesanan Perjalanan Nova
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-stone-950 tracking-tight">
+                Pemesanan Perjalanan <span className="font-serif-luxury italic font-normal text-stone-800">NOVA Luxury</span>
               </h1>
-              <p className="text-neutral-500 font-jakarta text-xs sm:text-sm font-normal mt-1">
+              <p className="text-stone-500 font-jakarta text-xs sm:text-sm font-normal mt-1">
                 Lengkapi langkah mudah untuk mengamankan slot perjalanan impianmu.
               </p>
             </div>
@@ -445,7 +445,7 @@ const BookingPageInner: React.FC = () => {
           </div>
 
           {/* Step Progress Navigation Bar */}
-          <div className="bg-white border border-neutral-200/90 rounded-2xl p-3 shadow-2xs">
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-3 shadow-xs">
             <div className="grid grid-cols-3 gap-2">
               {STEPS.map((s, i) => {
                 const Icon = s.icon
@@ -462,19 +462,19 @@ const BookingPageInner: React.FC = () => {
                     }}
                     className={`flex items-center justify-center sm:justify-start gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl text-xs font-jakarta font-bold transition-all ${
                       isCurrent
-                        ? 'bg-brand text-white shadow-xs'
+                        ? 'bg-stone-900 text-white shadow-xs'
                         : isPast
-                        ? 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 cursor-pointer'
-                        : 'text-neutral-400 bg-transparent cursor-not-allowed'
+                        ? 'bg-stone-100 text-stone-900 hover:bg-stone-200 cursor-pointer'
+                        : 'text-stone-400 bg-transparent cursor-not-allowed'
                     }`}
                   >
                     <div
                       className={`w-6 h-6 rounded-lg flex items-center justify-center text-[10px] shrink-0 font-extrabold ${
                         isCurrent
-                          ? 'bg-white text-neutral-950'
+                          ? 'bg-white text-stone-950'
                           : isPast
-                          ? 'bg-emerald-500 text-white'
-                          : 'bg-neutral-200 text-neutral-500'
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-stone-200 text-stone-500'
                       }`}
                     >
                       {isPast ? <Check size={12} className="stroke-[3]" /> : i + 1}
@@ -568,7 +568,7 @@ const BookingPageInner: React.FC = () => {
                   </p>
                   <button
                     onClick={() => setStep(0)}
-                    className="text-xs font-jakarta font-bold text-blue-600 hover:underline cursor-pointer"
+                    className="text-xs font-jakarta font-bold text-stone-900 hover:text-[#C29B38] underline cursor-pointer"
                   >
                     Ganti Destinasi
                   </button>
@@ -579,55 +579,55 @@ const BookingPageInner: React.FC = () => {
                 {(matchedPackages || filteredPackages).map((pkg, idx) => (
                   <div
                     key={pkg.slug || pkg.id || `booking-pkg-${idx}`}
-                    className="group bg-white rounded-3xl overflow-hidden border border-neutral-200/90 hover:border-brand-dark hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between"
+                    className="group bg-white rounded-3xl overflow-hidden border border-stone-200/90 hover:border-stone-300 hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between shadow-xs"
                   >
-                    <div className="relative h-48 overflow-hidden bg-neutral-900">
+                    <div className="relative h-48 overflow-hidden bg-stone-900">
                       <img
                         src={pkg.image}
                         alt={pkg.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 img-smooth-zoom"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                      <span className={`absolute top-3 left-3 text-[10px] font-jakarta font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-2xs ${pkg.tagColor || 'bg-white text-neutral-950'}`}>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/70 via-transparent to-transparent" />
+                      <span className="absolute top-3 left-3 text-[10px] font-jakarta font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs bg-stone-900/90 text-white backdrop-blur-xs">
                         {pkg.tag || 'Popular'}
                       </span>
                     </div>
 
                     <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                       <div>
-                        <h3 className="font-jakarta font-extrabold text-base text-neutral-950 mb-1 leading-snug">
+                        <h3 className="font-jakarta font-bold text-base text-stone-950 mb-1 leading-snug">
                           {pkg.title}
                         </h3>
-                        <p className="font-jakarta text-xs text-neutral-500 mb-3 line-clamp-2">
+                        <p className="font-jakarta text-xs text-stone-500 mb-3 line-clamp-2">
                           {pkg.subtitle}
                         </p>
-                        <div className="flex flex-wrap gap-3 text-[11px] font-jakarta font-semibold text-neutral-600">
+                        <div className="flex flex-wrap gap-3 text-[11px] font-jakarta font-semibold text-stone-600">
                           <span className="flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-neutral-400" />
+                            <Clock className="w-3.5 h-3.5 text-stone-400" />
                             {pkg.duration}
                           </span>
                           <span className="flex items-center gap-1">
-                            <Users className="w-3.5 h-3.5 text-neutral-400" />
+                            <Users className="w-3.5 h-3.5 text-stone-400" />
                             {pkg.groupSize}
                           </span>
-                          <span className="flex items-center gap-1">
-                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                          <span className="flex items-center gap-1 font-bold text-amber-800 bg-amber-50/80 px-2 py-0.5 rounded-md">
+                            <Star className="w-3.5 h-3.5 fill-[#C29B38] text-[#C29B38]" />
                             {pkg.rating} ({pkg.reviews})
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-4 border-t border-neutral-100">
+                      <div className="flex items-center justify-between pt-4 border-t border-stone-100">
                         <div>
-                          <p className="text-[10px] font-jakarta font-bold text-neutral-400 uppercase tracking-wider">Harga Mulai</p>
-                          <p className="font-jakarta font-black text-base text-neutral-950">{formatIDR(pkg.price)}</p>
+                          <p className="text-[10px] font-jakarta font-bold text-stone-400 uppercase tracking-wider">Harga Mulai</p>
+                          <p className="font-jakarta font-bold text-base text-stone-950 font-serif-luxury">{formatIDR(pkg.price)}</p>
                         </div>
                         <button
                           onClick={() => {
                             setSelectedPackage(pkg)
                             setStep(2)
                           }}
-                          className="bg-brand text-white text-xs font-jakarta font-extrabold px-4 py-2.5 rounded-xl hover:bg-brand-dark transition-all flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
+                          className="bg-stone-900 hover:bg-black text-white text-xs font-jakarta font-bold px-5 py-2.5 rounded-full transition-all flex items-center gap-1.5 shadow-xs active:scale-95 cursor-pointer"
                         >
                           <span>Pilih Paket</span>
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -853,9 +853,9 @@ const BookingPageInner: React.FC = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-brand text-white font-jakarta font-extrabold py-4 rounded-2xl hover:bg-brand-dark disabled:opacity-50 transition-all text-sm flex items-center justify-center gap-2 shadow-xl shadow-brand/30 active:scale-[0.99] cursor-pointer"
+                  className="w-full bg-stone-900 hover:bg-black text-white font-jakarta font-bold py-4 rounded-full disabled:opacity-50 transition-all text-sm flex items-center justify-center gap-2 shadow-xs active:scale-[0.99] cursor-pointer"
                 >
-                  <CreditCard size={18} className="text-amber-400" />
+                  <CreditCard size={18} className="text-[#C29B38]" />
                   <span>{submitting ? 'Memproses Pesanan...' : 'Lanjut ke Pembayaran'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
@@ -863,17 +863,17 @@ const BookingPageInner: React.FC = () => {
 
               {/* Order Summary Sidebar */}
               <div className="gsap-booking-sidebar lg:col-span-5 space-y-4 lg:sticky lg:top-28">
-                <div className="bg-white rounded-3xl overflow-hidden border border-neutral-200/90 shadow-sm">
+                <div className="bg-white rounded-3xl overflow-hidden border border-stone-200/90 shadow-xs">
                   {/* Photo Header */}
-                  <div className="relative h-40 overflow-hidden bg-neutral-900">
+                  <div className="relative h-40 overflow-hidden bg-stone-900">
                     <Image src={selectedPackage.image} alt={selectedPackage.title} fill className="object-cover img-smooth-zoom" sizes="100vw" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                    <span className={`absolute top-3 left-3 text-[10px] font-jakarta font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-2xs ${selectedPackage.tagColor || 'bg-white text-neutral-950'}`}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/70 via-transparent to-transparent" />
+                    <span className="absolute top-3 left-3 text-[10px] font-jakarta font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs bg-stone-900/90 text-white backdrop-blur-xs">
                       {selectedPackage.tag || 'Selected'}
                     </span>
                     <div className="absolute bottom-3 left-3 right-3 text-white">
                       <h4 className="font-jakarta font-bold text-sm leading-snug">{selectedPackage.title}</h4>
-                      <p className="text-[11px] text-white/80 font-medium">{selectedCountry}</p>
+                      <p className="text-[11px] text-amber-200/90 font-medium">{selectedCountry}</p>
                     </div>
                   </div>
 
@@ -881,13 +881,13 @@ const BookingPageInner: React.FC = () => {
                     {/* Includes Checklist */}
                     {selectedPackage.includes && selectedPackage.includes.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-[10px] font-jakarta font-bold uppercase tracking-wider text-neutral-400">
+                        <p className="text-[10px] font-jakarta font-bold uppercase tracking-wider text-stone-400">
                           Sudah Termasuk
                         </p>
                         <ul className="space-y-1.5">
                           {selectedPackage.includes.slice(0, 4).map((item, i) => (
-                            <li key={i} className="flex items-center gap-2 text-xs font-jakarta text-neutral-600 font-medium">
-                              <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 stroke-[2.5]" />
+                            <li key={i} className="flex items-center gap-2 text-xs font-jakarta text-stone-600 font-medium">
+                              <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 stroke-[2.5]" />
                               <span>{item}</span>
                             </li>
                           ))}
@@ -896,16 +896,16 @@ const BookingPageInner: React.FC = () => {
                     )}
 
                     {/* Voucher Box */}
-                    <div className="pt-3 border-t border-neutral-100 space-y-2.5">
+                    <div className="pt-3 border-t border-stone-100 space-y-2.5">
                       <div className="flex items-center justify-between">
-                        <p className="text-xs font-jakarta font-bold text-neutral-900 flex items-center gap-1.5">
-                          <Tag className="w-3.5 h-3.5 text-neutral-800" />
+                        <p className="text-xs font-jakarta font-bold text-stone-900 flex items-center gap-1.5">
+                          <Tag className="w-3.5 h-3.5 text-[#C29B38]" />
                           <span>Kupon & Diskon Promo</span>
                         </p>
                         <button
                           type="button"
                           onClick={openCouponModal}
-                          className="text-[11px] font-jakarta font-bold text-neutral-700 hover:text-black underline cursor-pointer"
+                          className="text-[11px] font-jakarta font-bold text-stone-700 hover:text-black underline cursor-pointer"
                         >
                           Pilih Kupon
                         </button>
@@ -923,20 +923,20 @@ const BookingPageInner: React.FC = () => {
                             }
                           }}
                           placeholder="KODE PROMO"
-                          className="flex-1 border border-neutral-200 rounded-xl px-3 py-2 text-xs font-jakarta font-bold text-neutral-950 uppercase placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 bg-neutral-50"
+                          className="flex-1 border border-stone-200 rounded-xl px-3 py-2 text-xs font-jakarta font-bold text-stone-950 uppercase placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 bg-[#FAF9F6]"
                         />
                         <button
                           type="button"
                           onClick={() => handleVoucherApply()}
                           disabled={voucherLoading || !voucherCode.trim()}
-                          className="px-4 py-2 bg-brand text-white text-xs font-jakarta font-bold rounded-xl disabled:opacity-40 hover:bg-brand-dark transition-all shrink-0 cursor-pointer"
+                          className="px-4 py-2 bg-stone-900 text-white text-xs font-jakarta font-bold rounded-xl disabled:opacity-40 hover:bg-black transition-all shrink-0 cursor-pointer shadow-xs"
                         >
                           {voucherLoading ? '...' : 'Gunakan'}
                         </button>
                       </div>
 
                       {voucherResult && (
-                        <p className={`text-xs font-jakarta font-bold ${voucherResult.valid ? 'text-emerald-600' : 'text-rose-500'}`}>
+                        <p className={`text-xs font-jakarta font-bold ${voucherResult.valid ? 'text-emerald-700' : 'text-rose-600'}`}>
                           {voucherResult.valid
                             ? `Diskon ${formatIDR(voucherResult.discount_amount || discountAmount)} aktif!`
                             : voucherResult.message}
@@ -946,21 +946,21 @@ const BookingPageInner: React.FC = () => {
                       <button
                         type="button"
                         onClick={openCouponModal}
-                        className="w-full text-xs font-jakarta font-bold text-neutral-800 bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200/80 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                        className="w-full text-xs font-jakarta font-bold text-stone-800 bg-[#F5F2EB]/60 hover:bg-[#F5F2EB] border border-stone-200/80 rounded-xl py-2 px-3 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                       >
-                        <Ticket size={13} className="text-neutral-600" />
+                        <Ticket size={13} className="text-[#C29B38]" />
                         <span>Daftar Voucher Tersedia</span>
                       </button>
                     </div>
 
                     {/* Price Breakdown */}
-                    <div className="pt-3 border-t border-neutral-100 space-y-2 font-jakarta text-xs">
-                      <div className="flex justify-between text-neutral-600">
+                    <div className="pt-3 border-t border-stone-100 space-y-2 font-jakarta text-xs">
+                      <div className="flex justify-between text-stone-600">
                         <span>Harga Paket ({form.participants} Orang)</span>
-                        <span className="font-bold text-neutral-900">{formatIDR(selectedPackage.price * form.participants)}</span>
+                        <span className="font-bold text-stone-900">{formatIDR(selectedPackage.price * form.participants)}</span>
                       </div>
                       {discountAmount > 0 && (
-                        <div className="flex justify-between text-emerald-600 font-bold">
+                        <div className="flex justify-between text-emerald-700 font-bold">
                           <span>Diskon Promo ({voucherCode})</span>
                           <span>− {formatIDR(discountAmount)}</span>
                         </div>
@@ -968,14 +968,14 @@ const BookingPageInner: React.FC = () => {
                     </div>
 
                     {/* Grand Total */}
-                    <div className="pt-3 border-t border-neutral-200 flex items-center justify-between">
+                    <div className="pt-3 border-t border-stone-200 flex items-center justify-between">
                       <div>
-                        <p className="text-[10px] font-jakarta font-bold uppercase tracking-wider text-neutral-400">Total Tagihan</p>
-                        <p className="text-lg font-jakarta font-black text-neutral-950">
+                        <p className="text-[10px] font-jakarta font-bold uppercase tracking-wider text-stone-400">Total Tagihan</p>
+                        <p className="text-xl font-jakarta font-bold text-stone-950 font-serif-luxury">
                           {formatIDR(Math.max(0, selectedPackage.price * form.participants - discountAmount))}
                         </p>
                       </div>
-                      <span className="text-[10px] font-jakarta font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md">
+                      <span className="text-[10px] font-jakarta font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 rounded-md">
                         Bebas Biaya Admin
                       </span>
                     </div>
@@ -988,52 +988,52 @@ const BookingPageInner: React.FC = () => {
           {/* Coupon Selection Modal */}
           {showCouponModal && (
             <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-              <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-neutral-200 space-y-4 max-h-[85vh] overflow-y-auto">
-                <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+              <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 space-y-4 max-h-[85vh] overflow-y-auto">
+                <div className="flex items-center justify-between border-b border-stone-100 pb-3">
                   <div>
-                    <h3 className="font-jakarta font-black text-base text-neutral-900 flex items-center gap-1.5">
-                      <Ticket size={16} className="text-brand" />
+                    <h3 className="font-jakarta font-bold text-base text-stone-900 flex items-center gap-1.5">
+                      <Ticket size={16} className="text-[#C29B38]" />
                       <span>Kupon Promo Tersedia</span>
                     </h3>
-                    <p className="text-neutral-400 text-xs">Pilih promo untuk langsung memotong harga</p>
+                    <p className="text-stone-400 text-xs">Pilih promo untuk langsung memotong harga</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setShowCouponModal(false)}
-                    className="p-1.5 rounded-full text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-full text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-colors cursor-pointer"
                   >
                     <X size={18} />
                   </button>
                 </div>
 
                 {loadingCoupons ? (
-                  <p className="text-center py-8 text-xs text-neutral-400">Memuat voucher promo...</p>
+                  <p className="text-center py-8 text-xs text-stone-400">Memuat voucher promo...</p>
                 ) : availableCoupons.filter(c => c.is_active).length === 0 ? (
                   <div className="text-center py-8 space-y-1">
-                    <p className="text-xs font-bold text-neutral-800">Tidak ada voucher promo aktif</p>
-                    <p className="text-[11px] text-neutral-400">Nantikan diskon menarik berikutnya dari NOVA.</p>
+                    <p className="text-xs font-bold text-stone-800">Tidak ada voucher promo aktif</p>
+                    <p className="text-[11px] text-stone-400">Nantikan diskon menarik berikutnya dari NOVA.</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {availableCoupons.filter(c => c.is_active).map((c) => (
                       <div
                         key={c.id}
-                        className="p-4 rounded-2xl border border-neutral-200/90 hover:border-neutral-900 transition-all flex items-center justify-between gap-3 bg-neutral-50/60"
+                        className="p-4 rounded-2xl border border-stone-200/90 hover:border-stone-900 transition-all flex items-center justify-between gap-3 bg-[#FAF9F6]"
                       >
                         <div className="space-y-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono font-black text-xs text-neutral-950 bg-neutral-200/80 px-2 py-0.5 rounded-md tracking-wider">
+                            <span className="font-mono font-bold text-xs text-stone-950 bg-stone-200/80 px-2 py-0.5 rounded-md tracking-wider">
                               {c.code}
                             </span>
-                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-full">
                               {c.discount_type === 'percent' ? `${c.discount_value}% OFF` : `Hemat ${formatIDR(c.discount_value)}`}
                             </span>
                           </div>
-                          <p className="text-[11px] text-neutral-500 font-medium">
-                            Min. belanja {formatIDR(c.min_amount || 0)}
+                          <p className="text-[11px] text-stone-500 font-medium">
+                            Min. transaksi {formatIDR(c.min_amount || 0)}
                           </p>
                           {c.expires_at && (
-                            <p className="text-[10px] text-neutral-400">
+                            <p className="text-[10px] text-stone-400">
                               Berlaku s.d {new Date(c.expires_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                             </p>
                           )}
@@ -1041,7 +1041,7 @@ const BookingPageInner: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => applyCouponDirect(c.code)}
-                          className="shrink-0 bg-neutral-900 hover:bg-black text-white text-xs font-jakarta font-extrabold px-3.5 py-2 rounded-xl transition-all shadow-xs active:scale-95 cursor-pointer"
+                          className="shrink-0 bg-stone-900 hover:bg-black text-white text-xs font-jakarta font-bold px-4 py-2 rounded-full transition-all shadow-xs active:scale-95 cursor-pointer"
                         >
                           Pakai
                         </button>
@@ -1063,10 +1063,10 @@ const BookingPage: React.FC = () => {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+        <div className="min-h-screen bg-[#FAF9F6] flex flex-col">
           <Navbar />
           <div className="flex-1 flex items-center justify-center">
-            <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-950 rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-stone-200 border-t-stone-900 rounded-full animate-spin" />
           </div>
           <Footer />
         </div>

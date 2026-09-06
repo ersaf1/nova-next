@@ -159,7 +159,7 @@ export default function ChatMessage({ message, onOpenMap, onOpenBooking }: Props
               {message.places && onOpenMap && (
                 <button
                   onClick={onOpenMap}
-                  className="text-[11px] text-blue-400 hover:text-blue-300 flex items-center gap-1 hover:bg-blue-950/40 px-2 py-1 rounded-lg border border-blue-500/20 transition-colors"
+                  className="text-[11px] text-sky-400 hover:text-sky-300 flex items-center gap-1 hover:bg-slate-800 px-2 py-1 rounded-lg border border-sky-500/20 transition-colors"
                 >
                   <MapPin size={11} />
                   <span>Buka Peta</span>

@@ -143,13 +143,13 @@ export default function SwipeNavigation({ routes, enabled = true }: SwipeNavigat
 
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none animate-in fade-in slide-in-from-bottom-3 duration-200">
-      <div className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-blue-950/90 text-white text-xs font-black shadow-2xl backdrop-blur-md border border-blue-800/80">
+      <div className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-slate-900/90 text-white text-xs font-bold shadow-2xl backdrop-blur-md border border-slate-700/80">
         {indicator.direction === 'right' && (
-          <ArrowLeft size={16} className="text-blue-400 animate-pulse" />
+          <ArrowLeft size={16} className="text-[#0099FF] animate-pulse" />
         )}
         <span>Menuju: {indicator.label}</span>
         {indicator.direction === 'left' && (
-          <ArrowRight size={16} className="text-blue-400 animate-pulse" />
+          <ArrowRight size={16} className="text-[#0099FF] animate-pulse" />
         )}
       </div>
     </div>

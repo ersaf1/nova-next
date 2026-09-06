@@ -45,24 +45,24 @@ export default function CurrencySwitcher() {
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-blue-50 text-slate-800 hover:text-blue-600 border border-slate-200/80 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-200 text-slate-800 hover:text-slate-900 border border-slate-200/80 text-xs font-bold transition-all shadow-2xs cursor-pointer"
         title="Pilih Mata Uang (Currency)"
       >
         <span className="text-sm">{currentConfig.flag}</span>
         <span className="font-extrabold">{currentConfig.code}</span>
         <span className="text-slate-400 text-[10px]">({currentConfig.symbol})</span>
-        <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${isOpen ? 'rotate-180 text-blue-600' : ''}`} />
+        <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${isOpen ? 'rotate-180 text-[#0099FF]' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl border border-blue-100 shadow-2xl p-2 z-50 animate-fade-in-up text-xs">
+        <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl border border-slate-200 shadow-2xl p-2 z-50 animate-fade-in-up text-xs">
           {/* Header & Quick Search */}
           <div className="p-1.5 pb-2 border-b border-slate-100 space-y-1.5">
             <div className="flex items-center justify-between px-1">
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
                 Pilih Mata Uang Global
               </span>
-              <span className="text-[10px] font-bold text-blue-600">
+              <span className="text-[10px] font-bold text-slate-500">
                 {currencyList.length} Kurs
               </span>
             </div>
@@ -74,7 +74,7 @@ export default function CurrencySwitcher() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Cari mata uang (USD, Yen, EUR...)"
-                className="w-full pl-8 pr-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 font-medium"
+                className="w-full pl-8 pr-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#0099FF] font-medium"
               />
             </div>
           </div>
@@ -97,15 +97,15 @@ export default function CurrencySwitcher() {
                     }}
                     className={`w-full px-3 py-2 rounded-xl text-left flex items-center justify-between transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-blue-600 text-white font-extrabold shadow-2xs'
-                        : 'text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-semibold'
+                        ? 'bg-[#0099FF] text-white font-extrabold shadow-2xs'
+                        : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 font-semibold'
                     }`}
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="text-base shrink-0">{item.flag}</span>
                       <div className="flex flex-col min-w-0">
                         <span className="text-xs font-bold leading-tight truncate">{item.code}</span>
-                        <span className={`text-[10px] leading-tight truncate ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
+                        <span className={`text-[10px] leading-tight truncate ${isSelected ? 'text-sky-100' : 'text-slate-400'}`}>
                           {item.name}
                         </span>
                       </div>
@@ -113,7 +113,7 @@ export default function CurrencySwitcher() {
 
                     <div className="flex items-center gap-1.5 shrink-0 ml-2">
                       <span className={`text-[11px] font-mono font-bold px-1.5 py-0.5 rounded ${
-                        isSelected ? 'bg-blue-700 text-white' : 'bg-slate-100 text-slate-600'
+                        isSelected ? 'bg-[#0084DE] text-white' : 'bg-slate-100 text-slate-600'
                       }`}>
                         {item.symbol}
                       </span>

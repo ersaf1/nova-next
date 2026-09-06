@@ -34,10 +34,10 @@ const BackedBySection: React.FC = () => {
   }, [])
 
   return (
-    <section className="bg-white px-6 py-16 border-t border-slate-200/70">
+    <section className="bg-[#FAF9F6] px-6 py-14 border-t border-stone-200/80">
       <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
         <div className="md:col-span-1">
-          <p className="text-slate-600 text-base font-semibold leading-relaxed">
+          <p className="text-stone-500 text-xs sm:text-sm font-medium leading-relaxed">
             Didukung mitra global & pemimpin industri perjalanan dunia.
           </p>
         </div>
@@ -46,7 +46,7 @@ const BackedBySection: React.FC = () => {
             {[...backers, ...backers].map((backer, i) => (
               <span
                 key={i}
-                className="mx-10 shrink-0 text-black/50 whitespace-nowrap"
+                className="mx-10 shrink-0 text-stone-600/60 hover:text-stone-900 transition-colors whitespace-nowrap"
                 style={{
                   fontFamily: backer.fontFamily,
                   fontWeight: backer.fontWeight,

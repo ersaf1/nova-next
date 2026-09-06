@@ -77,22 +77,21 @@ const WhyNovaSection: React.FC = () => {
   }, [])
 
   return (
-    <section className="bg-white px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-slate-200/70">
-      <div className="max-w-[88rem] mx-auto space-y-12">
+    <section className="bg-[#F5F2EB] px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-stone-200/80">
+      <div className="max-w-[88rem] mx-auto space-y-10">
         
         {/* Section Header */}
         <ScrollReveal animation="slide-up">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200/70">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-200/80">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                <Award className="w-3.5 h-3.5" />
-                <span>04 / Keunggulan Layanan</span>
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-stone-700 bg-stone-100 px-3.5 py-1.5 rounded-full border border-stone-200">
+                <Award className="w-3.5 h-3.5 text-[#C29B38]" />
+                <span>05 / The NOVA Advantage</span>
               </div>
-              <h2 className="text-3xl sm:text-5xl font-black text-blue-950 tracking-tight leading-tight">
-                <span>Mengapa Memilih </span>
-                <span className="font-serif-luxury italic font-normal text-blue-600">NOVA Travel?</span>
+              <h2 className="text-3xl sm:text-5xl font-black text-[#1C1917] tracking-tight leading-tight">
+                Mengapa Memilih <span className="font-serif-luxury italic font-normal text-stone-800">NOVA Travel?</span>
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-xl font-normal">
+              <p className="text-xs sm:text-sm text-stone-500 max-w-xl leading-relaxed">
                 Komitmen kami menghadirkan pengalaman liburan premium tanpa kendala dari awal hingga pulang.
               </p>
             </div>
@@ -101,7 +100,7 @@ const WhyNovaSection: React.FC = () => {
 
         {/* Feature Cards Grid */}
         <ScrollReveal staggerChildren={true} animation="slide-up" delay={0.1}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {features.map((feature, idx) => {
               const Icon = ICON_MAP[feature.iconName] ?? Zap
               const fallbackImg = DEFAULT_FEATURES[idx % DEFAULT_FEATURES.length].image
@@ -110,7 +109,7 @@ const WhyNovaSection: React.FC = () => {
               return (
                 <div
                   key={feature.title || idx}
-                  className="group relative rounded-3xl overflow-hidden cursor-default transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 h-80 sm:h-96 flex flex-col justify-between p-6 text-white border border-slate-200/50 hover:border-blue-300"
+                  className="group relative rounded-2xl overflow-hidden cursor-default transition-all duration-500 hover:shadow-xl hover:-translate-y-1.5 h-72 sm:h-80 flex flex-col justify-between p-5 text-white border border-gray-100 hover:border-slate-300"
                 >
                   {/* Background Image */}
                   <Image
@@ -121,32 +120,32 @@ const WhyNovaSection: React.FC = () => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
 
-                  {/* Gradient Overlay in Mediterranean Deep Navy */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/95 via-[#0A192F]/40 to-transparent" />
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
 
                   {/* Top Icon Badge */}
-                  <div className="relative z-10 w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md border border-white/25 flex items-center justify-center shadow-xs">
+                  <div className="relative z-10 w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md border border-white/25 flex items-center justify-center shadow-sm">
                     <Icon className="w-5 h-5 text-white" />
                   </div>
 
                   {/* Bottom Text Content */}
-                  <div className="relative z-10 space-y-3">
+                  <div className="relative z-10 space-y-2">
                     <div>
-                      <h3 className="text-lg sm:text-xl font-black text-white leading-snug">
+                      <h3 className="text-base sm:text-lg font-bold text-white leading-snug">
                         {feature.title}
                       </h3>
                       {feature.subtitle && (
-                        <p className="text-xs text-white/75 mt-0.5 font-normal">
+                        <p className="text-xs text-white/70 mt-0.5">
                           {feature.subtitle}
                         </p>
                       )}
                     </div>
 
-                    <div className="pt-3 border-t border-white/20">
-                      <span className="text-2xl sm:text-3xl font-black text-amber-300 block tracking-tight">
+                    <div className="pt-2 border-t border-white/20">
+                      <span className="text-xl sm:text-2xl font-black text-white block tracking-tight">
                         {feature.stat}
                       </span>
-                      <span className="text-white/70 text-[10px] font-extrabold uppercase tracking-wider block mt-0.5">
+                      <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider block mt-0.5">
                         {feature.statLabel}
                       </span>
                     </div>

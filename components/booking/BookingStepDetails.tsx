@@ -96,7 +96,7 @@ export default function BookingStepDetails({ pkg, departure, onNext }: Props) {
           <div>
             <p className="font-semibold text-black text-sm">{pkg.title}</p>
             <p className="text-xs text-neutral-500 mt-0.5">
-              {formatDate(departure.startDate)} — {formatDate(departure.endDate)}
+              {formatDate(departure.startDate)} s/d {formatDate(departure.endDate)}
             </p>
             <p className="text-xs text-neutral-400 mt-0.5">
               {departure.remainingSlots} slot tersisa

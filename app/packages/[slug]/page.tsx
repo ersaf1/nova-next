@@ -95,7 +95,7 @@ export default async function PackageSlugPage({
   const displayPrice = pkg.price
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-neutral-900">
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
       <Navbar />
 
       {/* Hero Gallery Banner */}
@@ -105,7 +105,7 @@ export default async function PackageSlugPage({
         <div className="flex items-center justify-between">
           <Link
             href="/packages"
-            className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-950 text-xs font-bold transition-colors group bg-white border border-neutral-200/80 px-4 py-2 rounded-full shadow-2xs"
+            className="inline-flex items-center gap-2 text-stone-600 hover:text-stone-950 text-xs font-semibold transition-colors group bg-white border border-stone-200/80 px-4 py-2 rounded-full shadow-2xs"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
             <span>Kembali ke Semua Paket</span>
@@ -113,24 +113,27 @@ export default async function PackageSlugPage({
 
           <div className="flex items-center gap-2">
             {pkg.tag && (
-              <span className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full ${pkg.tagColor ?? 'bg-neutral-900 text-white'}`}>
+              <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-stone-900 text-[#F5F2EB]">
                 {pkg.tag}
               </span>
             )}
-            <span className="text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-brand/10 text-brand-dark">
+            <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-[#C29B38]/15 text-[#9E7B27] border border-[#C29B38]/30">
               {pkg.category || 'All-Inclusive'}
             </span>
           </div>
         </div>
 
         {/* Title Header */}
-        <div className="space-y-1">
-          <h1 className="text-3xl sm:text-5xl font-black text-neutral-950 tracking-tight leading-tight">
+        <div className="space-y-1.5">
+          <div className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#C29B38]">
+            Curated Expedition &middot; Private Itinerary
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-black text-stone-900 tracking-tight leading-tight">
             {displayTitle}
           </h1>
           {displayLocation && (
-            <p className="flex items-center gap-1.5 text-neutral-500 text-xs sm:text-sm font-semibold">
-              <MapPin className="w-4 h-4 text-brand-dark" />
+            <p className="flex items-center gap-1.5 text-stone-500 text-xs sm:text-sm font-medium">
+              <MapPin className="w-4 h-4 text-[#C29B38]" />
               <span>{displayLocation}</span>
             </p>
           )}
@@ -207,16 +210,16 @@ export default async function PackageSlugPage({
           <div className="lg:col-span-7 space-y-8">
             
             {/* Meta Stats Row */}
-            <div className="flex flex-wrap items-center gap-6 p-4 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs text-xs font-semibold text-neutral-700">
+            <div className="flex flex-wrap items-center gap-6 p-4 rounded-2xl bg-white border border-stone-200/80 shadow-2xs text-xs font-medium text-stone-700">
               <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-brand-dark" />
+                <Clock className="w-4 h-4 text-[#C29B38]" />
                 <span>{displayDuration}</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-brand-dark" />
+                <Users className="w-4 h-4 text-[#C29B38]" />
                 <span>{pkg.groupSize || '2-10 Orang'}</span>
               </span>
-              <span className="flex items-center gap-1.5 font-extrabold text-neutral-950">
+              <span className="flex items-center gap-1.5 font-bold text-stone-900">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                 <span>{displayRating} ({displayReviews} ulasan traveler)</span>
               </span>
@@ -224,11 +227,11 @@ export default async function PackageSlugPage({
 
             {/* Description / Overview */}
             {(pkg.description ?? pkg.shortDescription ?? pkg.highlight) && (
-              <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 sm:p-8 space-y-3 shadow-2xs">
-                <h2 className="text-lg font-black text-neutral-950 tracking-tight">
+              <div className="bg-white rounded-3xl border border-stone-200/80 p-6 sm:p-8 space-y-3 shadow-2xs">
+                <h2 className="text-xl font-normal font-serif-luxury text-stone-900 tracking-tight">
                   Ringkasan Perjalanan
                 </h2>
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
+                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-normal">
                   {pkg.description ?? pkg.shortDescription ?? pkg.highlight}
                 </p>
               </div>
@@ -238,10 +241,10 @@ export default async function PackageSlugPage({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
               {/* Inclusions */}
-              <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 space-y-4 shadow-2xs">
-                <div className="flex items-center gap-2 text-emerald-700 font-extrabold text-sm">
-                  <Check className="w-4 h-4" />
-                  <h3>Fasilitas Termasuk</h3>
+              <div className="bg-white rounded-3xl border border-stone-200/80 p-6 space-y-4 shadow-2xs">
+                <div className="flex items-center gap-2 text-stone-900 font-bold text-sm">
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <h3 className="font-serif-luxury text-base font-normal">Fasilitas Termasuk</h3>
                 </div>
                 <ul className="space-y-2.5">
                   {(includes.length > 0 ? includes : [
@@ -252,7 +255,7 @@ export default async function PackageSlugPage({
                     'Tour Guide Berlisensi Resmi',
                     'Asuransi Perjalanan Wisata'
                   ]).map((inc, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-neutral-700 font-medium leading-relaxed">
+                    <li key={i} className="flex items-start gap-2 text-xs text-stone-700 font-medium leading-relaxed">
                       <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
                       <span>{inc}</span>
                     </li>
@@ -261,10 +264,10 @@ export default async function PackageSlugPage({
               </div>
 
               {/* Exclusions */}
-              <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 space-y-4 shadow-2xs">
-                <div className="flex items-center gap-2 text-rose-600 font-extrabold text-sm">
-                  <X className="w-4 h-4" />
-                  <h3>Tidak Termasuk</h3>
+              <div className="bg-white rounded-3xl border border-stone-200/80 p-6 space-y-4 shadow-2xs">
+                <div className="flex items-center gap-2 text-stone-900 font-bold text-sm">
+                  <X className="w-4 h-4 text-rose-500" />
+                  <h3 className="font-serif-luxury text-base font-normal text-stone-800">Tidak Termasuk</h3>
                 </div>
                 <ul className="space-y-2.5">
                   {(excluded.length > 0 ? excluded : [
@@ -272,7 +275,7 @@ export default async function PackageSlugPage({
                     'Tipping Guide & Driver (Sukarela)',
                     'Biaya Pembuatan Paspor / Visa Pribadi'
                   ]).map((exc, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-neutral-500 font-medium leading-relaxed">
+                    <li key={i} className="flex items-start gap-2 text-xs text-stone-500 font-medium leading-relaxed">
                       <X className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
                       <span>{exc}</span>
                     </li>
@@ -283,12 +286,12 @@ export default async function PackageSlugPage({
             </div>
 
             {/* Cancellation Policy */}
-            <div className="bg-white rounded-3xl border border-neutral-200/80 p-6 space-y-3 shadow-2xs">
-              <div className="flex items-center gap-2 text-neutral-900 font-extrabold text-sm">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <h3>Kebijakan Pembatalan & Garansi Refund</h3>
+            <div className="bg-white rounded-3xl border border-stone-200/80 p-6 space-y-3 shadow-2xs">
+              <div className="flex items-center gap-2 text-stone-900 font-bold text-sm">
+                <ShieldCheck className="w-4 h-4 text-[#C29B38]" />
+                <h3 className="font-serif-luxury text-base font-normal">Kebijakan Pembatalan & Garansi Refund</h3>
               </div>
-              <ul className="space-y-2 text-xs text-neutral-600 leading-relaxed font-normal">
+              <ul className="space-y-2 text-xs text-stone-600 leading-relaxed font-normal">
                 <li>• <strong>Pembatalan &gt; 30 hari</strong> sebelum jadwal keberangkatan: <strong>100% Pengembalian Dana (Refund Penuh)</strong>.</li>
                 <li>• <strong>Pembatalan 15–30 hari</strong> sebelum jadwal: <strong>50% Pengembalian Dana</strong>.</li>
                 <li>• <strong>Reschedule Fleksibel:</strong> Bebas ubah tanggal 1x hingga 14 hari sebelum keberangkatan.</li>
@@ -296,12 +299,12 @@ export default async function PackageSlugPage({
             </div>
 
             {/* Important Info */}
-            <div className="bg-amber-50/60 rounded-3xl border border-amber-200/60 p-6 space-y-2">
-              <div className="flex items-center gap-2 text-amber-900 font-extrabold text-sm">
-                <AlertCircle className="w-4 h-4 text-amber-600" />
-                <h3>Catatan Penting Traveler</h3>
+            <div className="bg-[#F5F2EB]/90 rounded-3xl border border-stone-300/70 p-6 space-y-2">
+              <div className="flex items-center gap-2 text-stone-900 font-bold text-sm">
+                <AlertCircle className="w-4 h-4 text-[#C29B38]" />
+                <h3 className="font-serif-luxury text-base font-normal">Catatan Penting Traveler</h3>
               </div>
-              <ul className="space-y-1.5 text-xs text-amber-800 leading-relaxed">
+              <ul className="space-y-1.5 text-xs text-stone-700 leading-relaxed">
                 <li>• Untuk destinasi luar negeri, pastikan paspor masih berlaku minimal 6 bulan.</li>
                 <li>• Konfirmasi e-ticket dan voucher hotel akan langsung terbit ke akun & email setelah pembayaran berhasil.</li>
               </ul>
@@ -311,21 +314,21 @@ export default async function PackageSlugPage({
 
           {/* Right Column: Sticky Booking Widget (5 cols) */}
           <div className="lg:col-span-5 lg:sticky lg:top-24">
-            <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-xl p-6 sm:p-7 space-y-6">
+            <div className="bg-white rounded-3xl border border-stone-200/90 shadow-xl shadow-stone-200/40 p-6 sm:p-7 space-y-6">
               
               {/* Price Header */}
-              <div className="pb-4 border-b border-neutral-100">
-                <p className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-400">
+              <div className="pb-4 border-b border-stone-100">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
                   Harga Mulai Dari
                 </p>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-3xl font-black text-neutral-950 tracking-tight">
+                  <span className="text-3xl font-black text-stone-900 tracking-tight">
                     {formatIDR(displayPrice)}
                   </span>
-                  <span className="text-xs text-neutral-400 font-normal">/ orang</span>
+                  <span className="text-xs text-stone-400 font-normal">/ orang</span>
                 </div>
                 {pkg.originalPrice && pkg.originalPrice > displayPrice && (
-                  <p className="text-xs text-neutral-400 line-through font-medium mt-0.5">
+                  <p className="text-xs text-stone-400 line-through font-medium mt-0.5">
                     {formatIDR(pkg.originalPrice)}
                   </p>
                 )}
@@ -333,13 +336,13 @@ export default async function PackageSlugPage({
 
               {/* Trust Badges Pill Bar */}
               <div className="flex flex-wrap gap-2">
-                <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full flex items-center gap-1">
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 rounded-full flex items-center gap-1">
                   <Zap className="w-3 h-3" /> Konfirmasi Instan
                 </span>
-                <span className="text-[10px] font-extrabold text-brand-dark bg-brand/10 px-2.5 py-1 rounded-full flex items-center gap-1">
+                <span className="text-[10px] font-bold text-[#9E7B27] bg-[#C29B38]/10 border border-[#C29B38]/30 px-2.5 py-1 rounded-full flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3" /> Garansi Refund
                 </span>
-                <span className="text-[10px] font-extrabold text-neutral-700 bg-neutral-100 px-2.5 py-1 rounded-full">
+                <span className="text-[10px] font-bold text-stone-700 bg-stone-100 border border-stone-200/70 px-2.5 py-1 rounded-full">
                   Support 24/7
                 </span>
               </div>

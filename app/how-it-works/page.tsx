@@ -19,6 +19,7 @@ import {
   Check
 } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
 const STEPS = [
   {
@@ -52,7 +53,7 @@ const STEPS = [
     number: '04',
     title: '24/7 Live Pocket Concierge',
     subtitle: 'Pendampingan Perjalanan Real-Time',
-    description: 'Akses jadwal perjalanan offline dari smartphone Anda, pembaruan status penerbangan, kamus frasa lokal, serta dukungan tim tim concierge 24 jam nonstop.',
+    description: 'Akses jadwal perjalanan offline dari smartphone Anda, pembaruan status penerbangan, kamus frasa lokal, serta dukungan tim concierge 24 jam nonstop.',
     icon: Compass,
     image: 'https://images.unsplash.com/photo-1502784444187-359ac186c5bb?w=1600&q=90',
     highlights: ['Akses Jadwal Offline', 'Dukungan Concierge 24/7', 'Integrasi Dashboard User']
@@ -84,23 +85,23 @@ export default function HowItWorksPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]" style={{ letterSpacing: '-0.01em' }}>
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
       <Navbar />
 
       <div className="pt-24 pb-24 px-4 sm:px-6">
         <div className="max-w-[88rem] mx-auto space-y-16">
 
           {/* Maximal Editorial Hero Header */}
-          <div className="pt-12 pb-6 border-b border-neutral-200/80 text-center max-w-4xl mx-auto space-y-4">
-            <div className="inline-flex items-center gap-2 bg-brand text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Step-by-Step Travel Guide</span>
+          <div className="pt-12 pb-6 border-b border-stone-200/80 text-center max-w-4xl mx-auto space-y-4">
+            <div className="inline-flex items-center gap-2 bg-stone-900 text-[#F5F2EB] text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#C29B38]" />
+              <span>04 &middot; Step-by-Step Travel Guide</span>
             </div>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-neutral-950 leading-[1.02] tracking-tight">
-              Empowering Your Journey with AI
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-stone-900 leading-[1.05] tracking-tight">
+              Empowering Your Journey with <span className="font-serif-luxury italic font-normal text-[#C29B38]">Intelligent Luxury</span>
             </h1>
-            <p className="text-sm sm:text-base text-neutral-600 leading-relaxed font-normal max-w-2xl mx-auto">
-              Pelajari bagaimana platform NOVA mengintegrasikan kecerdasan buatan, akses 195 negara PBB, dan reservasi *all-inclusive* untuk mewujudkan liburan sempurna Anda.
+            <p className="text-sm sm:text-base text-stone-600 leading-relaxed font-normal max-w-2xl mx-auto">
+              Pelajari bagaimana platform NOVA mengintegrasikan kecerdasan buatan, akses 195 negara PBB, dan reservasi <em>all-inclusive</em> untuk mewujudkan liburan sempurna Anda.
             </p>
           </div>
 
@@ -112,32 +113,32 @@ export default function HowItWorksPage() {
               return (
                 <div
                   key={step.number}
-                  className="group bg-white rounded-3xl border border-neutral-200/80 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 flex flex-col justify-between hover:-translate-y-1.5"
+                  className="group bg-white rounded-3xl border border-stone-200/80 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 flex flex-col justify-between hover:-translate-y-1"
                 >
                   {/* Photo Header Container */}
-                  <div className="relative h-64 overflow-hidden bg-neutral-900">
+                  <div className="relative h-64 overflow-hidden bg-stone-900">
                     <img
                       src={step.image}
                       alt={step.title}
                       loading="lazy"
                       className="w-full h-full object-cover img-smooth-zoom"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent" />
 
                     {/* Step Number Badge */}
-                    <span className="absolute top-4 left-4 text-5xl font-black text-white/20 select-none">
+                    <span className="absolute top-4 left-4 text-5xl font-black text-white/20 select-none font-serif-luxury">
                       {step.number}
                     </span>
 
-                    <div className="absolute top-4 right-4 w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
+                    <div className="absolute top-4 right-4 w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center text-[#C29B38]">
                       <StepIcon className="w-5 h-5" />
                     </div>
 
                     <div className="absolute bottom-4 left-6 right-6">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block mb-0.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#C29B38] block mb-0.5">
                         {step.subtitle}
                       </span>
-                      <h3 className="text-xl font-extrabold text-white tracking-tight leading-tight">
+                      <h3 className="text-xl font-bold text-white tracking-tight leading-tight">
                         {step.title}
                       </h3>
                     </div>
@@ -145,20 +146,20 @@ export default function HowItWorksPage() {
 
                   {/* Body Content */}
                   <div className="p-7 space-y-5 flex-1 flex flex-col justify-between">
-                    <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
+                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-normal">
                       {step.description}
                     </p>
 
                     {/* Highlights List */}
-                    <div className="pt-4 border-t border-neutral-100 space-y-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block">Fitur Utama:</span>
+                    <div className="pt-4 border-t border-stone-100 space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">Fitur Utama:</span>
                       <div className="flex flex-wrap gap-1.5">
                         {step.highlights.map((h, idx) => (
                           <span
                             key={idx}
-                            className="text-[11px] font-semibold bg-neutral-100 text-neutral-800 px-3 py-1 rounded-xl flex items-center gap-1.5"
+                            className="text-[11px] font-semibold bg-[#F5F2EB] text-stone-800 px-3 py-1 rounded-xl flex items-center gap-1.5"
                           >
-                            <Check className="w-3 h-3 text-emerald-600 shrink-0" />
+                            <Check className="w-3 h-3 text-[#C29B38] shrink-0" />
                             {h}
                           </span>
                         ))}
@@ -171,10 +172,10 @@ export default function HowItWorksPage() {
           </div>
 
           {/* Interactive Feature Sandbox Showcase */}
-          <div className="bg-brand text-white rounded-3xl p-8 sm:p-12 space-y-8 shadow-2xl overflow-hidden relative">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/15 pb-6">
+          <div className="bg-[#1C1917] text-[#FAF9F6] border border-stone-800 rounded-3xl p-8 sm:p-12 space-y-8 shadow-2xl overflow-hidden relative">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-stone-800 pb-6">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block mb-1">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#C29B38] block mb-1">
                   Interactive Technology Showcase
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -188,10 +189,10 @@ export default function HowItWorksPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveTab(idx)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                       activeTab === idx
-                        ? 'bg-white text-neutral-950 shadow-md'
-                        : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white'
+                        ? 'bg-[#FAF9F6] text-stone-900 shadow-md'
+                        : 'bg-stone-800/60 text-stone-300 hover:bg-stone-800 hover:text-white'
                     }`}
                   >
                     {tab}
@@ -201,28 +202,28 @@ export default function HowItWorksPage() {
             </div>
 
             {/* Simulated Live Preview Screen */}
-            <div className="bg-neutral-900 border border-white/15 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div className="bg-stone-950 border border-stone-800 rounded-2xl p-6 sm:p-8 space-y-6">
               {activeTab === 0 && (
                 <div className="space-y-4 animate-fade-in">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-[#C29B38] flex items-center gap-1.5">
                       <Sparkles className="w-4 h-4" />
                       Gemini 2.0 AI Itinerary Generation
                     </span>
-                    <span className="text-[10px] text-white/50 bg-white/10 px-2.5 py-1 rounded-full">Real-Time Sync</span>
+                    <span className="text-[10px] text-stone-400 bg-stone-900 px-2.5 py-1 rounded-full border border-stone-800">Real-Time Sync</span>
                   </div>
                   <p className="text-sm font-semibold text-white">Destinasi: "Argentina — 5 Hari Perjalanan"</p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div className="bg-neutral-800/80 p-3 rounded-xl border border-white/10">
-                      <span className="text-[10px] text-white/50 block">Hari 1</span>
+                    <div className="bg-stone-900 p-3 rounded-xl border border-stone-800">
+                      <span className="text-[10px] text-stone-400 block">Hari 1</span>
                       <p className="text-xs font-bold text-white">Buenos Aires Plaza & Tango Show</p>
                     </div>
-                    <div className="bg-neutral-800/80 p-3 rounded-xl border border-white/10">
-                      <span className="text-[10px] text-white/50 block">Hari 2</span>
+                    <div className="bg-stone-900 p-3 rounded-xl border border-stone-800">
+                      <span className="text-[10px] text-stone-400 block">Hari 2</span>
                       <p className="text-xs font-bold text-white">Glacier Perito Moreno Trekking</p>
                     </div>
-                    <div className="bg-neutral-800/80 p-3 rounded-xl border border-white/10">
-                      <span className="text-[10px] text-white/50 block">Hari 3</span>
+                    <div className="bg-stone-900 p-3 rounded-xl border border-stone-800">
+                      <span className="text-[10px] text-stone-400 block">Hari 3</span>
                       <p className="text-xs font-bold text-white">Mendoza Wine Tasting Tour</p>
                     </div>
                   </div>
@@ -232,16 +233,16 @@ export default function HowItWorksPage() {
               {activeTab === 1 && (
                 <div className="space-y-4 animate-fade-in">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-sky-400 flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-[#C29B38] flex items-center gap-1.5">
                       <Globe2 className="w-4 h-4" />
                       195 Official UN Member States Database
                     </span>
-                    <span className="text-[10px] text-white/50 bg-white/10 px-2.5 py-1 rounded-full">Global Coverage</span>
+                    <span className="text-[10px] text-stone-400 bg-stone-900 px-2.5 py-1 rounded-full border border-stone-800">Global Coverage</span>
                   </div>
                   <p className="text-sm font-semibold text-white">Cakupan lengkap dari Asia, Eropa, Amerika, Afrika, & Oseania dengan foto HD unik.</p>
                   <div className="flex flex-wrap gap-2 text-xs">
                     {['Indonesia 🇮🇩', 'Japan 🇯🇵', 'Argentina 🇦🇷', 'France 🇫🇷', 'Egypt 🇪🇬', 'Switzerland 🇨🇭', 'Iceland 🇮🇸'].map((c, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-white/10 border border-white/15 rounded-full font-medium">{c}</span>
+                      <span key={i} className="px-3 py-1.5 bg-stone-900 border border-stone-800 text-stone-200 rounded-full font-medium">{c}</span>
                     ))}
                   </div>
                 </div>
@@ -254,12 +255,12 @@ export default function HowItWorksPage() {
                       <CheckCircle2 className="w-4 h-4" />
                       Instant E-Ticket & Order Confirmation
                     </span>
-                    <span className="text-[10px] text-white/50 bg-white/10 px-2.5 py-1 rounded-full">Verifikasi QR Code</span>
+                    <span className="text-[10px] text-stone-400 bg-stone-900 px-2.5 py-1 rounded-full border border-stone-800">Verifikasi QR Code</span>
                   </div>
                   <p className="text-sm font-semibold text-white">Pemesanan tiket pesawat, hotel bintang 5, & pemandu wisata dalam 1 klik.</p>
-                  <div className="p-3 bg-emerald-950/60 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs font-semibold flex items-center justify-between">
+                  <div className="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs font-semibold flex items-center justify-between">
                     <span>Order #NV-2026-9482 · E-Ticket Terkonfirmasi</span>
-                    <span className="px-2 py-0.5 bg-emerald-500 text-neutral-950 font-bold rounded">SUCCESS</span>
+                    <span className="px-2 py-0.5 bg-emerald-500 text-stone-950 font-bold rounded">SUCCESS</span>
                   </div>
                 </div>
               )}
@@ -269,8 +270,10 @@ export default function HowItWorksPage() {
           {/* Frequently Asked Questions Section */}
           <div className="space-y-6 pt-4">
             <div className="text-center max-w-2xl mx-auto space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Paling Sering Ditanyakan</span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-neutral-950">Pertanyaan Umum (FAQ)</h2>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C29B38]">Paling Sering Ditanyakan</span>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-stone-900">
+                Pertanyaan Umum <span className="font-serif-luxury italic font-normal text-[#C29B38]">(FAQ)</span>
+              </h2>
             </div>
 
             <div className="max-w-3xl mx-auto space-y-3">
@@ -279,18 +282,18 @@ export default function HowItWorksPage() {
                 return (
                   <div
                     key={idx}
-                    className="bg-white rounded-2xl border border-neutral-200/80 overflow-hidden shadow-2xs transition-all"
+                    className="bg-white rounded-2xl border border-stone-200/80 overflow-hidden shadow-2xs transition-all"
                   >
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
-                      className="w-full p-5 text-left font-bold text-neutral-900 text-sm flex items-center justify-between gap-4 hover:bg-neutral-50"
+                      className="w-full p-5 text-left font-bold text-stone-900 text-sm flex items-center justify-between gap-4 hover:bg-stone-50 cursor-pointer"
                     >
                       <span>{faq.question}</span>
-                      <ChevronDown className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-brand-dark' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-stone-400 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-[#C29B38]' : ''}`} />
                     </button>
 
                     {isOpen && (
-                      <div className="px-5 pb-5 pt-1 text-xs text-neutral-600 leading-relaxed border-t border-neutral-100">
+                      <div className="px-5 pb-5 pt-1 text-xs text-stone-600 leading-relaxed border-t border-stone-100">
                         {faq.answer}
                       </div>
                     )}
@@ -301,24 +304,24 @@ export default function HowItWorksPage() {
           </div>
 
           {/* Conversion CTA Footer Banner */}
-          <div className="p-8 sm:p-12 bg-brand text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+          <div className="p-8 sm:p-12 bg-[#1C1917] text-[#FAF9F6] border border-stone-800 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
             <div className="space-y-2 text-center md:text-left">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400">Siap Memulai Liburan?</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C29B38]">Siap Memulai Liburan?</span>
               <h3 className="text-2xl font-extrabold tracking-tight">Mulai Perjalanan Anda Bersama NOVA Today</h3>
-              <p className="text-xs text-neutral-400 max-w-xl">Rancang rencana perjalanan impian Anda dengan AI atau jelajahi paket wisata eksklusif.</p>
+              <p className="text-xs text-stone-400 max-w-xl">Rancang rencana perjalanan impian Anda dengan AI atau jelajahi paket wisata eksklusif.</p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <button
                 onClick={() => router.push('/ai-planner')}
-                className="px-6 py-3.5 rounded-2xl bg-white text-neutral-950 text-xs font-extrabold hover:bg-neutral-100 transition-colors flex items-center gap-2 shadow-md"
+                className="px-6 py-3.5 rounded-2xl bg-[#FAF9F6] text-stone-900 text-xs font-bold hover:bg-white transition-colors flex items-center gap-2 shadow-md cursor-pointer"
               >
-                <Sparkles className="w-4 h-4 text-amber-500" />
+                <Sparkles className="w-4 h-4 text-[#C29B38]" />
                 <span>Coba AI Planner</span>
               </button>
               <button
                 onClick={() => router.push('/destinations')}
-                className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition-colors"
+                className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-[#FAF9F6] text-xs font-bold transition-colors cursor-pointer"
               >
                 Jelajahi 195 Destinasi
               </button>
@@ -327,6 +330,8 @@ export default function HowItWorksPage() {
 
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }

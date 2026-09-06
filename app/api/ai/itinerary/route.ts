@@ -159,6 +159,48 @@ const INDONESIAN_LOCAL_KNOWLEDGE: Record<string, {
     bestSeason: 'Maret - Oktober (Gelombang laut tenang & air jernih)',
     tips: ['Cek jadwal kapal ferry atau fast boat dari Pelabuhan Kartini Jepara.'],
   },
+  'jepara': {
+    canonicalName: 'Jepara & Pesisir Kartini, Jawa Tengah',
+    parentRegion: 'Kabupaten Jepara, Jawa Tengah',
+    spots: [
+      'Pantai Kartini & Kura-Kura Ocean Park',
+      'Museum R.A. Kartini Jepara',
+      'Pantai Bandengan (Tirta Samudra)',
+      'Benteng Portugis & Pantai Banyumanis',
+      'Pulau Panjang Jepara',
+      'Sentra Seni Ukir Kayu Mulyoharjo',
+      'Pantai Bondo (Pantai Ombak Mati)',
+      'Hutan Wisata Sreni Indah & Pinus',
+      'Sentra Tenun Ikat Tradisional Troso',
+      'Alun-Alun 1 Jepara & Masjid Agung',
+      'Makam & Masjid Cagar Budaya Mantingan',
+      'Puncak Jehan & Kebun Kopi Tempur',
+      'Pantai Teluk Awur Jepara',
+      'Air Terjun Songgo Langit Kembang',
+      'Sentra Keramik & Gerabah Mayong',
+      'Pantai Pailus Mlonggo',
+      'Desa Wisata Plajan & Taman Celosia',
+      'Gua Manik Karanganyar',
+      'Pantai Blebak Sekuro',
+      'Benteng VOC Fort Japara Heritage',
+      'Pusat Kerajinan Rotan Teluk Wetan',
+      'Pantai Semat & Dermaga Tradisional',
+      'Hutan Mangrove Desa Bulak Baru',
+      'Sentra Monel & Perhiasan Kriyan',
+    ],
+    culinary: {
+      breakfast: 'Pindang Serani Jepara & Nasi Hangat Gurih',
+      lunch: 'Horok-Horok Bakso & Rujak Jepara Asli',
+      dinner: 'Sop Udang Jepara & Es Dawet Ayu',
+    },
+    accommodation: 'Jepara Marina Beach Resort / D’Season Premiere Hotel Jepara',
+    bestSeason: 'April - Oktober (Musim Kemarau & Cuaca Pesisir Cerah)',
+    tips: [
+      'Kunjungi Museum RA Kartini di pagi hari untuk mempelajari sejarah emansipasi wanita Indonesia.',
+      'Sewa perahu dari Pantai Kartini menuju Pulau Panjang untuk snorkeling di perairan karang jernih.',
+      'Sempatkan berbelanja cinderamata ukir kayu jati di Sentra Mulyoharjo dan kain tenun di Desa Troso.',
+    ],
+  },
   'gunungkidul': {
     canonicalName: 'Gunungkidul & Pantai Eksotis Selatan, DI Yogyakarta',
     parentRegion: 'Wonosari, Gunungkidul',
@@ -422,6 +464,24 @@ async function findCountryData(destination: string) {
 
 import { fetchRealPlacePhoto } from '@/lib/real-photos'
 
+function cleanTravelTimeText(text: string): string {
+  if (!text || typeof text !== 'string') return text || ''
+  return text
+    // Strip parenthetical travel times e.g. "(sekitar 2,5 jam dari Semarang)" or "(2 jam perjalanan dari bandara)"
+    .replace(/\s*\([^)]*?\d+(?:[.,]\d+)?\s*(?:jam|menit|km)\s+(?:perjalanan\s+)?dari[^)]*\)/gi, '')
+    // Strip "perjalanan sekitar 2,5 jam dari..." or "sekitar 2,5 jam dari..."
+    .replace(/(?:,\s*)?(?:perjalanan\s+)?(?:sekitar\s+)?\d+(?:[.,]\d+)?\s*(?:jam|menit|km)\s+(?:perjalanan\s+)?dari\s+[^,.;\n]+/gi, '')
+    // Strip "berjarak sekitar 2,5 jam dari..."
+    .replace(/(?:,\s*)?berjarak\s+(?:sekitar\s+)?\d+(?:[.,]\d+)?\s*(?:jam|menit|km)\s+dari\s+[^,.;\n]+/gi, '')
+    // Clean up residual standalone "2,5 jam" or "2.5 jam"
+    .replace(/^\s*\d+(?:[.,]\d+)?\s*(?:jam|menit)\s*$/gi, '')
+    // Clean dangling punctuation or duplicate spaces
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s+([,.;])/g, '$1')
+    .replace(/^[,.;:\s-]+|[,.;:\s-]+$/g, '')
+    .trim()
+}
+
 function buildDynamicActivity(
   time: string,
   placeName: string,
@@ -463,24 +523,19 @@ function buildDynamicActivity(
   ]
 
   let activityTitle = ''
-  let duration = '2 jam'
   let cost = 'Rp 15.000 - Rp 35.000'
 
   if (slot === 'morning') {
     activityTitle = morningVerbs[index % morningVerbs.length]
-    duration = '2 - 3 jam'
     cost = 'Rp 10.000 - Rp 25.000'
   } else if (slot === 'lunch') {
     activityTitle = lunchVerbs[index % lunchVerbs.length]
-    duration = '1.5 jam'
     cost = 'Rp 30.000 - Rp 65.000'
   } else if (slot === 'afternoon') {
     activityTitle = afternoonVerbs[index % afternoonVerbs.length]
-    duration = '2.5 jam'
     cost = 'Rp 15.000 - Rp 40.000'
   } else {
     activityTitle = eveningVerbs[index % eveningVerbs.length]
-    duration = '2 jam'
     cost = 'Rp 35.000 - Rp 85.000'
   }
 
@@ -488,36 +543,255 @@ function buildDynamicActivity(
     time,
     activity: activityTitle,
     location: placeName,
-    duration,
+    duration: 'Fleksibel',
     cost,
     tips: tipsList[(index + slot.length) % tipsList.length],
   }
 }
 
-function getMockDayData(dayNum: number, destName: string, realPlaces: string[]) {
-  const p = (idx: number, fallback: string) =>
-    realPlaces.length > 0 ? realPlaces[idx % realPlaces.length] : fallback
+const COMMON_STOPWORDS = new Set([
+  'wisata', 'taman', 'pantai', 'museum', 'desa', 'benteng', 'pulau', 'hutan', 'sentra', 'alun',
+  'kura', 'air', 'terjun', 'bukit', 'lembah', 'kawasan', 'pusat', 'dan', 'di', 'ke', 'dari',
+  'yang', 'untuk', 'dengan', 'khas', 'pesisir', 'kota', 'kabupaten', 'provinsi', 'indonesia',
+  'area', 'spot', 'jepara', 'bali', 'jogja', 'yogyakarta', 'bandung', 'malang', 'surabaya',
+  'jakarta', 'kunjungan', 'menikmati', 'eksplorasi', 'tour', 'tur', 'hari', 'siang', 'sore',
+  'pagi', 'malam', 'indah', 'sejuk', 'terkenal', 'populer', 'estetik', 'asli', 'lokal', 'tradisional'
+])
 
-  const spot1 = p((dayNum - 1) * 3, `Pusat Wisata & Ikon ${destName}`)
-  const spot2 = p((dayNum - 1) * 3 + 1, `Kawasan Wisata Alam & Budaya ${destName}`)
-  const spot3 = p((dayNum - 1) * 3 + 2, `Pusat Kuliner Malam & Alun-Alun ${destName}`)
+function extractDistinctiveTokens(text: string): string[] {
+  if (!text) return []
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(t => t.length >= 3 && !COMMON_STOPWORDS.has(t))
+}
 
-  return {
-    title: `Hari ${dayNum} — Eksplorasi ${spot1} & Keindahan ${destName}`,
-    activities: [
-      buildDynamicActivity('08:30', spot1, destName, 'morning', dayNum),
-      buildDynamicActivity('12:30', `Sentra Kuliner Khas ${destName}`, destName, 'lunch', dayNum + 1),
-      buildDynamicActivity('15:00', spot2, destName, 'afternoon', dayNum + 2),
-      buildDynamicActivity('19:00', spot3, destName, 'evening', dayNum + 3),
-    ],
-    meals: {
-      breakfast: `Sarapan Khas Pagi di Sekitar ${spot1}`,
-      lunch: `Makan Siang Menu Andalan Khas ${destName}`,
-      dinner: `Kuliner Malam & Santap Santai di ${spot3}`,
-    },
-    accommodation: `Resort / Boutique Homestay Nyaman di ${destName}`,
-    estimatedDailyCost: 'Rp 250.000 - Rp 450.000',
+function normalizePlaceKey(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/(taman|pantai|museum|wisata|desa|benteng|pulau|hutan|sentra|alun-alun|kura-kura|air terjun|bukit)\s+/g, '')
+    .replace(/[^a-z0-9]/g, '')
+    .trim()
+}
+
+function getContextualSpotThemes(destName: string): string[] {
+  const clean = destName.split(',')[0].replace(/(kabupaten|kota)\s+/i, '').trim()
+  return [
+    `Pantai Pesisir & Sudut Senja ${clean}`,
+    `Pusat Cagar Budaya & Museum ${clean}`,
+    `Sentra Seni Ukir & Kerajinan Kayu ${clean}`,
+    `Pulau Eksotis & Wisata Bahari ${clean}`,
+    `Hutan Wisata Pinus & Udara Sejuk ${clean}`,
+    `Sentra Tenun Tradisional & Kain Tenun ${clean}`,
+    `Alun-Alun Utama & Masjid Bersejarah ${clean}`,
+    `Kawasan Heritage & Benteng Kolonial ${clean}`,
+    `Puncak Bukit & Kebun Kopi Panorama ${clean}`,
+    `Pantai Pasir Putih & Suasana Teduh ${clean}`,
+    `Air Terjun Alami & Lembah Pegunungan ${clean}`,
+    `Sentra Keramik Gerabah & Industri Kreatif ${clean}`,
+    `Taman Rekreasi Bahari & Edukasi Samudra ${clean}`,
+    `Desa Wisata Budaya & Agrowisata Buah ${clean}`,
+    `Gua Alami & Tebing Pemandangan Laut ${clean}`,
+    `Pusat Kuliner Tradisional & Pasar Malam ${clean}`,
+    `Dermaga Perahu Tradisional & Mangrove ${clean}`,
+    `Kawasan Konservasi Penyu & Terumbu Karang ${clean}`,
+    `Sentra Perhiasan & Kerajinan Khas ${clean}`,
+    `Pusat Cinderamata & Galeri Oleh-Oleh ${clean}`,
+    `Taman Rekreasi Air & Spot Foto Estetik ${clean}`,
+    `Lembah Hijau & Jalur Gowes Pedesaan ${clean}`,
+    `Pasar Tradisional Pagi & Wisata Gastronomi ${clean}`,
+    `Kawasan Ekowisata Pesisir & Muara ${clean}`,
+    `Kawasan Santai Tepi Laut & Kafe Sunset ${clean}`,
+    `Bukit Teletubbies & Hamparan Savana ${clean}`,
+    `Sentra Kuliner Seafood Tepi Pantai ${clean}`,
+    `Kawasan Relaksasi & Pemandian Air Alami ${clean}`,
+    `Taman Kota Bunga & Sudut Santai ${clean}`,
+    `Kompleks Makam Tokoh Bersejarah & Ziarah ${clean}`,
+  ]
+}
+
+function buildUniquePlacesPool(destName: string, rawSpots: string[], neededCount: number): string[] {
+  const pool: string[] = []
+  const seen = new Set<string>()
+
+  const add = (item: string) => {
+    if (!item || typeof item !== 'string') return
+    const trimmed = item.trim()
+    const key = normalizePlaceKey(trimmed)
+    if (key.length >= 2 && !seen.has(key)) {
+      seen.add(key)
+      pool.push(trimmed)
+    }
   }
+
+  for (const s of rawSpots) add(s)
+  const fallbacks = getContextualSpotThemes(destName)
+  for (const f of fallbacks) add(f)
+
+  let counter = 1
+  const clean = destName.split(',')[0].replace(/(kabupaten|kota)\s+/i, '').trim()
+  while (pool.length < neededCount) {
+    add(`Kawasan Wisata Unggulan ${clean} Area #${counter++}`)
+  }
+
+  return pool
+}
+
+function isSpotDuplicate(
+  locOrText: string,
+  usedLocationKeys: Set<string>,
+  usedTokens: Set<string>
+): boolean {
+  if (!locOrText || locOrText.trim().length < 2) return true
+  const normKey = normalizePlaceKey(locOrText)
+  if (!normKey || normKey.length < 2) return true
+  if (usedLocationKeys.has(normKey)) return true
+
+  // Check token overlap with already visited landmarks
+  const tokens = extractDistinctiveTokens(locOrText)
+  for (const t of tokens) {
+    if (usedTokens.has(t)) {
+      return true
+    }
+  }
+
+  // Check substring overlap with existing location keys
+  for (const existing of usedLocationKeys) {
+    if (existing.length >= 5 && normKey.length >= 5) {
+      if (existing.includes(normKey) || normKey.includes(existing)) {
+        return true
+      }
+    }
+  }
+
+  return false
+}
+
+function registerSpot(
+  locOrText: string,
+  usedLocationKeys: Set<string>,
+  usedTokens: Set<string>
+) {
+  const normKey = normalizePlaceKey(locOrText)
+  if (normKey) usedLocationKeys.add(normKey)
+  const tokens = extractDistinctiveTokens(locOrText)
+  for (const t of tokens) {
+    usedTokens.add(t)
+  }
+}
+
+function deduplicateItinerary(itinerary: any, destName: string, knownSpots: string[] = []): any {
+  if (!itinerary || !Array.isArray(itinerary.days)) return itinerary
+
+  const cleanDest = destName.split(',')[0].replace(/(kabupaten|kota)\s+/i, '').trim()
+  const usedLocationKeys = new Set<string>()
+  const usedTokens = new Set<string>()
+  const usedTitles = new Set<string>()
+
+  // Resolve hyper-local grounding spots for backup pool
+  const knowledge = findDestinationKnowledge(destName)
+  const localGrounding = resolveLocalGrounding(destName)
+  const combinedRawSpots = [
+    ...(knowledge?.spots || []),
+    ...(localGrounding?.spots || []),
+    ...knownSpots
+  ]
+
+  // Build a backup pool of guaranteed unique spots
+  const backupPool = buildUniquePlacesPool(destName, combinedRawSpots, itinerary.days.length * 6 + 40)
+  let backupCursor = 0
+
+  const getUnusedSpot = (): string => {
+    while (backupCursor < backupPool.length) {
+      const spot = backupPool[backupCursor++]
+      if (!isSpotDuplicate(spot, usedLocationKeys, usedTokens)) {
+        registerSpot(spot, usedLocationKeys, usedTokens)
+        return spot
+      }
+    }
+    backupCursor++
+    const fallbackSpot = `Destinasi Menarik ${cleanDest} #${backupCursor}`
+    registerSpot(fallbackSpot, usedLocationKeys, usedTokens)
+    return fallbackSpot
+  }
+
+  for (let d = 0; d < itinerary.days.length; d++) {
+    const day = itinerary.days[d]
+    const dayNum = day.day || (d + 1)
+    let morningSpot = ''
+
+    if (Array.isArray(day.activities)) {
+      for (let a = 0; a < day.activities.length; a++) {
+        const act = day.activities[a]
+        const loc = act.location || ''
+
+        if (isSpotDuplicate(loc, usedLocationKeys, usedTokens)) {
+          // Duplicate detected across days or within same day — assign guaranteed unique location
+          const newSpot = getUnusedSpot()
+          act.location = newSpot
+          // Also sanitize activity title to avoid repeating the duplicate place name
+          const actTokens = extractDistinctiveTokens(act.activity || '')
+          const hasDuplicateTokens = actTokens.some(t => usedTokens.has(t))
+          if (hasDuplicateTokens || !act.activity) {
+            act.activity = `Eksplorasi spot ikonik & keunikan ${newSpot}`
+          }
+        } else {
+          registerSpot(loc, usedLocationKeys, usedTokens)
+        }
+
+        act.location = cleanTravelTimeText(act.location) || ''
+        act.activity = cleanTravelTimeText(act.activity) || `Eksplorasi spot ikonik & keunikan ${act.location}`
+        act.tips = cleanTravelTimeText(act.tips)
+        act.duration = cleanTravelTimeText(act.duration)
+
+        if (a === 0) {
+          morningSpot = act.location
+        }
+      }
+    }
+
+    if (!morningSpot) {
+      morningSpot = getUnusedSpot()
+    }
+
+    // Ensure day title is unique and doesn't repeat spots from previous days
+    const titleTokens = extractDistinctiveTokens(day.title || '')
+    const titleDuplicatesPrevDay = titleTokens.some(t => {
+      // Check if token was used by a different spot in earlier days
+      const morningTokens = new Set(extractDistinctiveTokens(morningSpot))
+      return usedTokens.has(t) && !morningTokens.has(t)
+    })
+
+    const currentTitleKey = normalizePlaceKey(day.title || '')
+    if (!day.title || usedTitles.has(currentTitleKey) || titleDuplicatesPrevDay || day.title.includes('undefined')) {
+      day.title = `Hari ${dayNum} — Eksplorasi ${morningSpot} & Keindahan ${cleanDest}`
+    } else {
+      day.title = cleanTravelTimeText(day.title)
+    }
+    usedTitles.add(normalizePlaceKey(day.title))
+  }
+
+  if (itinerary.aiIntro) {
+    itinerary.aiIntro = cleanTravelTimeText(itinerary.aiIntro)
+  }
+  if (Array.isArray(itinerary.travelTips)) {
+    itinerary.travelTips = itinerary.travelTips.map((t: string) => cleanTravelTimeText(t)).filter(Boolean)
+  }
+
+  // Deduplicate attractions list
+  if (Array.isArray(itinerary.attractions)) {
+    const seenAttr = new Set<string>()
+    itinerary.attractions = itinerary.attractions.filter((attr: any) => {
+      if (!attr || !attr.name) return false
+      const k = normalizePlaceKey(attr.name)
+      if (seenAttr.has(k)) return false
+      seenAttr.add(k)
+      return true
+    })
+  }
+
+  return itinerary
 }
 
 const MOCK_INTROS = [
@@ -544,87 +818,64 @@ function generateMockItinerary(destination: string, duration: number, countryDat
     destName = isMulti ? `${destination.trim()}, ${countryData.country}` : `${countryData.city}, ${countryData.country}`
   }
 
-  // 1. If knowledge has curated dayTemplates, use them for clean, authentic, high-quality results
-  if (knowledge && knowledge.dayTemplates && knowledge.dayTemplates.length > 0) {
-    const intro = MOCK_INTROS[Math.floor(Math.random() * MOCK_INTROS.length)]
-    const defaultAttractions = knowledge.spots.slice(0, 4).map((name) => ({
-      name,
-      description: `Spot ikonik unggulan dan favorit wajib kunjung di ${knowledge.parentRegion}.`,
-      image: '',
-    }))
+  const cleanDest = destName.split(',')[0].replace(/(kabupaten|kota)\s+/i, '').trim()
 
-    return {
-      isMock: true,
-      destination: destName,
-      duration,
-      totalEstimatedCost: knowledge.totalEstimatedCost || 'Rp 1.800.000 - Rp 4.500.000',
-      heroImage: countryData ? countryData.image : null,
-      days: Array.from({ length: duration }, (_, i) => {
-        const dayNum = i + 1
-        const template = knowledge.dayTemplates[i % knowledge.dayTemplates.length]
-        return {
-          day: dayNum,
-          title: template.title.replace(/^Hari\s+\d+/, `Hari ${dayNum}`),
-          activities: template.activities.map((act) => ({ ...act })),
-          meals: template.meals,
-          accommodation: template.accommodation,
-          estimatedDailyCost: template.estimatedDailyCost,
-        }
-      }),
-      attractions: defaultAttractions,
-      travelTips: knowledge.tips,
-      bestTimeToVisit: knowledge.bestSeason,
-      localPhrases: knowledge.localPhrases || [
-        { phrase: 'Matur Nuwun / Terima kasih', meaning: 'Ungkapan rasa terima kasih' },
-        { phrase: 'Pinten nggih? / Berapa harganya?', meaning: 'Menanyakan harga ke penjual' },
-        { phrase: 'Nyuwun sewu / Permisi', meaning: 'Ungkapan sopan santun' }
-      ],
-      aiIntro: intro(destName, duration),
+  // Build a 100% unique pool of spots
+  const rawSpots = [
+    ...(localGrounding?.spots || []),
+    ...realPlaces
+  ]
+  const uniquePool = buildUniquePlacesPool(destName, rawSpots, duration * 4 + 20)
+
+  let cursor = 0
+  const getNextSpot = (): string => {
+    if (cursor < uniquePool.length) {
+      return uniquePool[cursor++]
     }
+    cursor++
+    return `Kawasan Wisata ${cleanDest} #${cursor}`
   }
 
-  // 2. Fallback for uncatalogued custom locations
-  const allPlaces = localGrounding ? [...localGrounding.spots, ...realPlaces] : realPlaces
-  const defaultAttractions = localGrounding ? localGrounding.spots.slice(0, 3).map((name) => ({
-    name,
-    description: `Destinasi ikonik dan spot favorit wajib kunjung di ${localGrounding.parentRegion}.`,
-    image: '',
-  })) : (countryData ? [
-    { name: `Pemandangan & Landmark Utama ${countryData.city.split(',')[0]}`, description: countryData.tagline || countryData.description, image: countryData.image },
-    { name: `Kawasan Wisata Khas ${countryData.country}`, description: `Nikmati pesona alam, kebudayaan, dan daya tarik lokal ${countryData.country}.`, image: countryData.image },
-    { name: `Pusat Kuliner & Seni ${countryData.city.split(',')[0]}`, description: `Cicipi hidangan otentik dan jelajahi pusat kerajinan lokal.`, image: countryData.image }
-  ] : getAttractionsForDestination(destination))
-
-  const shuffledPlaces = shuffle(allPlaces)
   const intro = MOCK_INTROS[Math.floor(Math.random() * MOCK_INTROS.length)]
 
-  return {
+  const defaultAttractions = uniquePool.slice(0, 4).map((name) => ({
+    name,
+    description: `Destinasi ikonik dan spot favorit wajib kunjung di ${destName}.`,
+    image: '',
+  }))
+
+  const days = Array.from({ length: duration }, (_, i) => {
+    const dayNum = i + 1
+    const morningSpot = getNextSpot()
+    const afternoonSpot = getNextSpot()
+    const eveningSpot = getNextSpot()
+
+    return {
+      day: dayNum,
+      title: `Hari ${dayNum} — Eksplorasi ${morningSpot} & Keindahan ${cleanDest}`,
+      activities: [
+        buildDynamicActivity('08:30', morningSpot, destName, 'morning', dayNum),
+        buildDynamicActivity('12:30', `Sentra Kuliner Khas ${cleanDest}`, destName, 'lunch', dayNum + 1),
+        buildDynamicActivity('15:00', afternoonSpot, destName, 'afternoon', dayNum + 2),
+        buildDynamicActivity('19:00', eveningSpot, destName, 'evening', dayNum + 3),
+      ],
+      meals: localGrounding && 'culinary' in localGrounding ? localGrounding.culinary : {
+        breakfast: `Sarapan Khas Pagi di Sekitar ${morningSpot}`,
+        lunch: `Makan Siang Menu Andalan Khas ${cleanDest}`,
+        dinner: `Kuliner Malam & Santap Santai di ${eveningSpot}`,
+      },
+      accommodation: localGrounding && 'accommodation' in localGrounding ? localGrounding.accommodation : `Resort / Boutique Homestay Nyaman di ${destName}`,
+      estimatedDailyCost: 'Rp 250.000 - Rp 450.000',
+    }
+  })
+
+  return deduplicateItinerary({
     isMock: true,
     destination: destName,
     duration,
     totalEstimatedCost: localGrounding && 'totalEstimatedCost' in localGrounding ? (localGrounding as any).totalEstimatedCost : (countryData ? countryData.price : 'Rp 2.500.000 - Rp 5.000.000'),
     heroImage: countryData ? countryData.image : null,
-    days: Array.from({ length: duration }, (_, i) => {
-      const dayNum = i + 1
-      const dayData = getMockDayData(dayNum, destName, shuffledPlaces)
-      return {
-        day: dayNum,
-        title: localGrounding ? `Hari ${dayNum} — Eksplorasi ${localGrounding.spots[i % localGrounding.spots.length]}` : dayData.title,
-        activities: dayData.activities.map((act, aIdx) => {
-          const spotLocation = localGrounding
-            ? localGrounding.spots[(i * 4 + aIdx) % localGrounding.spots.length]
-            : (realPlaces.length > 0 ? realPlaces[(i * 4 + aIdx) % realPlaces.length] : act.location)
-          return {
-            ...act,
-            location: spotLocation,
-            cost: localGrounding ? 'Rp 10.000 - Rp 35.000' : act.cost,
-          }
-        }),
-        meals: localGrounding ? localGrounding.culinary : dayData.meals,
-        accommodation: localGrounding ? localGrounding.accommodation : dayData.accommodation,
-        estimatedDailyCost: localGrounding ? 'Rp 250.000 - Rp 450.000' : 'Rp 350.000 - Rp 700.000',
-      }
-    }),
+    days,
     attractions: defaultAttractions,
     travelTips: localGrounding ? localGrounding.tips : [
       `Siapkan dokumen perjalanan untuk kunjungan ke ${countryData ? countryData.country : destination}.`,
@@ -640,7 +891,7 @@ function generateMockItinerary(destination: string, duration: number, countryDat
           { phrase: 'Nyuwun sewu / Permisi', meaning: 'Ungkapan sopan santun' }
         ],
     aiIntro: intro(destName, duration),
-  }
+  }, destName, rawSpots)
 }
 
 export async function POST(request: Request) {
@@ -725,6 +976,13 @@ CRITICAL ACCURACY & DYNAMIC COPYWRITING INSTRUCTIONS:
 3. AUTHENTIC LOCAL CULINARY & REAL ACCOMMODATIONS:
    - Suggest the exact real dishes and famous stalls (e.g. Kupat Tahu Pojok, Wedang Kacang Kebonpolo, Sop Senerek Bu Atmo).
    - Suggest real hotels / resorts in that area.
+4. ABSOLUTE ZERO DUPLICATION ACROSS DAYS:
+   - Every day (Day 1 through Day ${duration}) MUST feature completely unique, non-overlapping spots and activities.
+   - NEVER repeat the same museum, beach, park, or tourist attraction across different days.
+   - If a place was visited on Day 1, it must NEVER appear on Day 2, Day 3, or any later day.
+5. NO DISTANT TRAVEL DURATION OR "X JAM DARI BLABLA":
+   - STRICTLY PROHIBITED: NEVER mention travel duration or distance estimates referencing other cities, airports, or stations (e.g. NEVER write "2,5 jam dari Semarang", "2 jam perjalanan dari bandara", "X jam dari Y").
+   - Focus exclusively on the experience, atmosphere, and activities at the destination itself.
 
 Return a JSON object with this exact structure:
 {
@@ -740,7 +998,7 @@ Return a JSON object with this exact structure:
           "time": "string (e.g. 08:30)",
           "activity": "string (Specific inspiring activity title)",
           "location": "string (Exact real place name)",
-          "duration": "string (e.g. 2 jam)",
+          "duration": "string (e.g. Fleksibel)",
           "cost": "string (e.g. Rp 15.000 / Gratis)",
           "tips": "string (Actionable practical local tip)"
         }
@@ -782,6 +1040,8 @@ Return a JSON object with this exact structure:
       }
     }
     if (!itinerary) throw lastError ?? new Error('AI itinerary generation failed')
+
+    itinerary = deduplicateItinerary(itinerary, destination, placeNames)
 
     // Galeri attractions
     if (realPlaces.length > 0) {
@@ -847,7 +1107,7 @@ Return a JSON object with this exact structure:
     })
     await Promise.all([...mockPhotoPromises, ...mockAttrPromises])
 
-    return NextResponse.json(mock, { status: 200 })
+    return NextResponse.json(deduplicateItinerary(mock, dest, realPlaceNames), { status: 200 })
   }
 }
 

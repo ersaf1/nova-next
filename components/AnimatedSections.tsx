@@ -9,11 +9,9 @@ import MeetNovaSection from '@/components/MeetNovaSection'
 const DestinationsSection = dynamic(() => import('@/components/DestinationsSection'), { ssr: false })
 const PackagesSection = dynamic(() => import('@/components/PackagesSection'), { ssr: false })
 const HowItWorksSection = dynamic(() => import('@/components/HowItWorksSection'), { ssr: false })
-const WhyNovaSection = dynamic(() => import('@/components/WhyNovaSection'), { ssr: false })
 const FeaturesHighlightSection = dynamic(() => import('@/components/FeaturesHighlightSection'), { ssr: false })
 const ExperiencesSection = dynamic(() => import('@/components/ExperiencesSection'), { ssr: false })
 const TestimonialsSection = dynamic(() => import('@/components/TestimonialsSection'), { ssr: false })
-const BackedBySection = dynamic(() => import('@/components/BackedBySection'), { ssr: false })
 const FAQSection = dynamic(() => import('@/components/FAQSection'), { ssr: false })
 const AppCtaSection = dynamic(() => import('@/components/AppCtaSection'), { ssr: false })
 
@@ -48,29 +46,19 @@ export default function AnimatedSections() {
         <HowItWorksSection />
       </ScrollReveal>
 
-      {/* 4 Trust Pillars / Why Choose Nova */}
-      <ScrollReveal animation="slide-up" duration={0.8}>
-        <WhyNovaSection />
-      </ScrollReveal>
-
-      {/* Features Spotlight / AI Integration */}
+      {/* Features Spotlight / Interactive Showcase */}
       <ScrollReveal animation="slide-up" duration={0.8}>
         <FeaturesHighlightSection />
       </ScrollReveal>
 
-      {/* Travel Modes (Solo, Family, Adventure, Business) */}
+      {/* Travel Modes (Solo, Family, Adventure, Luxury) */}
       <ScrollReveal animation="slide-up" duration={0.8}>
         <ExperiencesSection />
       </ScrollReveal>
 
-      {/* Verified Traveler Testimonials */}
+      {/* Verified Traveler Testimonials & Guest Pledge */}
       <ScrollReveal animation="slide-up" duration={0.8}>
         <TestimonialsSection />
-      </ScrollReveal>
-
-      {/* Backed By & Investors */}
-      <ScrollReveal animation="slide-up" duration={0.8}>
-        <BackedBySection />
       </ScrollReveal>
 
       {/* Travel FAQ Accordion */}
@@ -78,7 +66,7 @@ export default function AnimatedSections() {
         <FAQSection />
       </ScrollReveal>
 
-      {/* Mobile App Download & Newsletter CTA */}
+      {/* Member Privileges & Concierge CTA */}
       <ScrollReveal animation="slide-up" duration={0.8}>
         <AppCtaSection />
       </ScrollReveal>

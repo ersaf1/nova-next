@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { MapPin, Star, Clock, ArrowRight, Heart, Search, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
 interface Destination {
   id: number
@@ -133,23 +134,22 @@ export default function DestinationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]" style={{ letterSpacing: '-0.01em' }}>
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
       <Navbar />
 
-      <div className="pt-24 pb-20 px-6">
+      <div className="pt-28 pb-20 px-6">
         <div className="max-w-[88rem] mx-auto">
 
           {/* Header */}
-          <div className="pt-12 pb-8">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 mb-3">
-              <span>195 Destinasi Anggota PBB Resmi</span>
+          <div className="pt-8 pb-8 border-b border-stone-200/80 mb-8">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-stone-700 bg-stone-100 px-3.5 py-1.5 rounded-full border border-stone-200 mb-3">
+              <span>Destinasi Terverifikasi</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-blue-950 leading-[1.05] mb-4" style={{ letterSpacing: '-0.035em' }}>
-              <span>Katalog Destinasi </span>
-              <span className="font-serif-luxury italic font-normal text-blue-600">Seluruh Dunia</span>
+            <h1 className="text-4xl md:text-6xl font-black text-stone-900 leading-[1.05] mb-4 tracking-tight">
+              Katalog Destinasi <span className="font-serif-luxury italic font-normal text-stone-800">Pilihan Dunia</span>
             </h1>
-            <p className="text-base text-slate-600 max-w-xl leading-relaxed font-normal">
-              Eksplorasi destinasi liburan, pesisir pantai tropis, puncak pegunungan, dan warisan budaya di seluruh 195 negara dunia.
+            <p className="text-sm md:text-base text-stone-500 max-w-xl leading-relaxed font-normal">
+              Eksplorasi destinasi liburan kurasi, pesisir pantai tropis, puncak pegunungan, dan warisan budaya otentik.
             </p>
           </div>
 
@@ -157,16 +157,16 @@ export default function DestinationsPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             {/* Search Input */}
             <div className="relative w-full md:w-96">
-              <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Cari negara (misal: Indonesia, Japan, Greece)..."
-                className="w-full bg-white border border-slate-200 rounded-full pl-10 pr-10 py-3 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all shadow-2xs"
+                className="w-full bg-white border border-stone-200/80 rounded-full pl-10 pr-10 py-3 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 transition-all shadow-xs"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <button onClick={() => setSearchQuery('')} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 cursor-pointer">
                   <X className="w-4 h-4" />
                 </button>
               )}
@@ -178,10 +178,10 @@ export default function DestinationsPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2.5 text-xs font-bold rounded-full shrink-0 transition-all duration-200 ${
+                  className={`px-4 py-2.5 text-xs font-bold rounded-full shrink-0 transition-all duration-200 cursor-pointer ${
                     selectedCategory === cat
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'bg-white text-slate-600 hover:text-blue-600 border border-slate-200 hover:border-blue-200'
+                      ? 'bg-stone-900 text-white shadow-xs'
+                      : 'bg-white text-stone-700 hover:text-stone-950 border border-stone-200/80 hover:border-stone-300'
                   }`}
                 >
                   {cat}
@@ -192,13 +192,13 @@ export default function DestinationsPage() {
 
           {/* Loading Skeleton */}
           {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-black/[0.04] overflow-hidden animate-pulse">
-                  <div className="h-56 bg-black/[0.04]" />
+                <div key={i} className="bg-white rounded-3xl border border-stone-200/80 overflow-hidden animate-pulse">
+                  <div className="h-56 bg-stone-200/60" />
                   <div className="p-5 space-y-3">
-                    <div className="h-5 bg-black/[0.04] rounded w-2/3" />
-                    <div className="h-4 bg-black/[0.04] rounded w-full" />
+                    <div className="h-5 bg-stone-200/60 rounded-full w-2/3" />
+                    <div className="h-4 bg-stone-200/60 rounded-full w-full" />
                   </div>
                 </div>
               ))}
@@ -208,31 +208,31 @@ export default function DestinationsPage() {
           {/* Destination Cards Grid */}
           {!loading && (
             <>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
-                <p className="text-xs text-black/50 font-medium">
-                  Menampilkan <span className="font-bold text-black">{filtered.length > 0 ? startIndex + 1 : 0} – {Math.min(startIndex + ITEMS_PER_PAGE, filtered.length)}</span> dari <span className="font-bold text-black">{filtered.length}</span> destinasi negara
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+                <p className="text-xs text-stone-500 font-medium">
+                  Menampilkan <span className="font-bold text-stone-900">{filtered.length > 0 ? startIndex + 1 : 0} – {Math.min(startIndex + ITEMS_PER_PAGE, filtered.length)}</span> dari <span className="font-bold text-stone-900">{filtered.length}</span> destinasi negara
                 </p>
-                <p className="text-xs text-black/40 font-medium">
-                  Halaman <span className="font-bold text-black">{currentPage}</span> dari <span className="font-bold text-black">{totalPages}</span>
+                <p className="text-xs text-stone-400 font-medium">
+                  Halaman <span className="font-bold text-stone-900">{currentPage}</span> dari <span className="font-bold text-stone-900">{totalPages}</span>
                 </p>
               </div>
 
               {filtered.length === 0 ? (
-                <div className="bg-white rounded-2xl p-12 text-center border border-black/5 space-y-2">
-                  <p className="text-sm font-semibold text-black/80">Destinasi tidak ditemukan.</p>
-                  <p className="text-xs text-black/40">Coba ubah kata kunci pencarian negara atau kategori.</p>
+                <div className="bg-white rounded-3xl p-16 text-center border border-stone-200/80 space-y-3">
+                  <p className="text-base font-bold text-stone-900">Destinasi tidak ditemukan.</p>
+                  <p className="text-xs text-stone-500">Coba ubah kata kunci pencarian negara atau pilih kategori lain.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {paginatedDestinations.map((dest) => {
                     const isSaved = wishlistIds.includes(Number(dest.id))
                     return (
                       <Link
                         key={dest.id}
                         href={`/destinations/${dest.id}`}
-                        className="group bg-white rounded-3xl border border-slate-200/80 overflow-hidden hover:border-blue-300 hover:shadow-xl transition-all duration-300 relative flex flex-col justify-between"
+                        className="group bg-white rounded-3xl border border-stone-200/80 overflow-hidden hover:border-stone-300 hover:shadow-xl transition-all duration-300 relative flex flex-col justify-between shadow-xs hover:-translate-y-1"
                       >
-                        <div className="relative h-56 overflow-hidden bg-[#0A192F]">
+                        <div className="relative h-56 overflow-hidden bg-stone-900">
                           {dest.image ? (
                             <img
                               src={dest.image}
@@ -243,34 +243,34 @@ export default function DestinationsPage() {
                           ) : null}
                           <button
                             onClick={(e) => toggleWishlist(e, Number(dest.id))}
-                            className="absolute top-4 right-4 bg-white/90 backdrop-blur-md hover:bg-white text-slate-900 p-2.5 rounded-full shadow-md z-10 transition-colors"
+                            className="absolute top-4 right-4 bg-white/90 backdrop-blur-md hover:bg-white text-stone-900 p-2.5 rounded-full shadow-md z-10 transition-colors cursor-pointer"
                             title={isSaved ? "Hapus dari Wishlist" : "Simpan ke Wishlist"}
                           >
-                            <Heart size={16} className={`${isSaved ? 'fill-rose-500 text-rose-500' : 'text-slate-900'}`} />
+                            <Heart size={16} className={`${isSaved ? 'fill-rose-500 text-rose-500' : 'text-stone-900'}`} />
                           </button>
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/90 via-[#0A192F]/25 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/90 via-[#1C1917]/25 to-transparent" />
                           <div className="absolute bottom-4 left-4 right-4">
-                            <h3 className="text-white text-xl font-black" style={{ letterSpacing: '-0.02em' }}>{dest.city}</h3>
-                            <p className="text-white/85 text-xs font-semibold flex items-center gap-1 mt-0.5">
-                              <MapPin className="w-3 h-3 text-sky-300" />
+                            <h3 className="text-white text-xl font-bold tracking-tight">{dest.city}</h3>
+                            <p className="text-amber-200/90 text-xs font-medium flex items-center gap-1 mt-0.5">
+                              <MapPin className="w-3 h-3 text-[#C29B38]" />
                               {dest.country}
                             </p>
                           </div>
                         </div>
 
                         <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                          <p className="text-slate-600 text-xs leading-relaxed line-clamp-2 font-normal">{dest.description}</p>
+                          <p className="text-stone-600 text-xs leading-relaxed line-clamp-2 font-normal">{dest.description}</p>
                           
-                          <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500">
-                            <span className="flex items-center gap-1 font-bold text-amber-500">
-                              <Star size={12} className="fill-amber-400 text-amber-400" />
+                          <div className="flex items-center justify-between pt-3 border-t border-stone-100 text-xs text-stone-500">
+                            <span className="flex items-center gap-1 font-bold text-amber-800 bg-amber-50/80 border border-amber-200/60 px-2 py-0.5 rounded-md">
+                              <Star size={12} className="fill-[#C29B38] text-[#C29B38]" />
                               {dest.rating}
                             </span>
-                            <span className="flex items-center gap-1 text-slate-400 font-medium">
+                            <span className="flex items-center gap-1 text-stone-400 font-medium">
                               <Clock size={12} />
                               {dest.duration}
                             </span>
-                            <span className="font-black text-blue-950 text-xs">{dest.price}</span>
+                            <span className="font-bold text-stone-950 text-xs">{dest.price}</span>
                           </div>
                         </div>
                       </Link>
@@ -281,11 +281,11 @@ export default function DestinationsPage() {
 
               {/* Pagination Controls */}
               {totalPages > 1 && (
-                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200">
+                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-stone-200/80">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-slate-200 bg-white hover:bg-blue-50 hover:text-blue-600 text-slate-900 text-xs font-bold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-slate-900 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-stone-200/80 bg-white hover:bg-stone-50 hover:text-stone-900 text-stone-900 text-xs font-bold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-stone-900 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     <span>Halaman Sebelumnya</span>
@@ -298,16 +298,16 @@ export default function DestinationsPage() {
                         {typeof p === 'number' ? (
                           <button
                             onClick={() => handlePageChange(p)}
-                            className={`w-9 h-9 rounded-full text-xs font-bold transition-all ${
+                            className={`w-9 h-9 rounded-full text-xs font-bold transition-all cursor-pointer ${
                               currentPage === p
-                                ? 'bg-blue-600 text-white shadow-xs scale-105'
-                                : 'bg-white text-slate-600 hover:text-blue-600 border border-slate-200 hover:border-blue-200'
+                                ? 'bg-stone-900 text-white shadow-xs scale-105'
+                                : 'bg-white text-stone-700 hover:text-stone-950 border border-stone-200/80 hover:border-stone-300'
                             }`}
                           >
                             {p}
                           </button>
                         ) : (
-                          <span className="px-2 text-xs text-slate-400 font-bold">...</span>
+                          <span className="px-2 text-xs text-stone-400 font-bold">...</span>
                         )}
                       </React.Fragment>
                     ))}
@@ -316,7 +316,7 @@ export default function DestinationsPage() {
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-slate-200 bg-white hover:bg-blue-50 hover:text-blue-600 text-slate-900 text-xs font-bold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-slate-900 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-2xs"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-stone-200/80 bg-white hover:bg-stone-50 hover:text-stone-900 text-stone-900 text-xs font-bold disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-stone-900 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                   >
                     <span>Halaman Selanjutnya</span>
                     <ChevronRight className="w-4 h-4" />
@@ -328,6 +328,8 @@ export default function DestinationsPage() {
 
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }

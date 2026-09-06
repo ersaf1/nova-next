@@ -137,8 +137,8 @@ const PackageCard: React.FC<{ pkg: Package }> = ({ pkg }) => {
       }}
     >
       <div>
-        {/* Card Header & Photo */}
-        <div className="relative h-52 overflow-hidden bg-neutral-900">
+        {/* Card Header & Photo — 80% Visual Hero */}
+        <div className="relative h-64 sm:h-72 overflow-hidden bg-stone-950">
           <Image
             src={pkg.image}
             alt={pkg.title}
@@ -146,62 +146,46 @@ const PackageCard: React.FC<{ pkg: Package }> = ({ pkg }) => {
             className="object-cover img-smooth-zoom"
             sizes="(max-width: 768px) 100vw, 360px"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-neutral-950/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/15 to-transparent" />
 
           {/* Top Tag Badges */}
-          <div className="absolute top-4 left-4 flex items-center gap-2">
-            <span className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs ${pkg.tagColor || 'bg-neutral-900 text-white'}`}>
+          <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+            <span className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs ${pkg.tagColor || 'bg-stone-900 text-white'}`}>
               {pkg.tag}
             </span>
+            <div className="flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20 text-white">
+              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+              <span className="font-extrabold text-[11px]">{pkg.rating}</span>
+            </div>
           </div>
 
           {/* Location Bar on Image */}
           <div className="absolute bottom-3 left-4 right-4 text-white">
-            <p className="text-[11px] font-bold text-white/80 uppercase tracking-wider flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-brand-light" />
+            <p className="text-[11px] font-bold text-white/90 uppercase tracking-wider flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-[#C29B38]" />
               <span>{pkg.subtitle}</span>
             </p>
           </div>
         </div>
 
-        {/* Card Content Body */}
-        <div className="p-5 space-y-4">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="text-neutral-950 text-base font-extrabold leading-snug tracking-tight line-clamp-2">
-              {pkg.title}
-            </h3>
-            <div className="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-lg shrink-0 border border-amber-100">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span className="text-neutral-900 font-extrabold text-xs">{pkg.rating}</span>
-            </div>
-          </div>
+        {/* Card Content Body — 20% Concise Copy */}
+        <div className="p-4 sm:p-5 space-y-2.5">
+          <h3 className="text-stone-900 text-base font-extrabold leading-snug tracking-tight line-clamp-1">
+            {pkg.title}
+          </h3>
 
-          {/* Duration, Travelers & Inclusions */}
-          <div className="flex items-center gap-4 text-xs text-neutral-500 py-2 border-y border-neutral-100">
-            <div className="flex items-center gap-1.5 font-medium">
-              <Clock className="w-3.5 h-3.5 text-neutral-400" />
+          {/* Duration & Group Size micro-pills */}
+          <div className="flex items-center gap-3 text-xs text-stone-500 pt-1">
+            <div className="flex items-center gap-1 font-medium">
+              <Clock className="w-3.5 h-3.5 text-stone-400" />
               <span>{pkg.duration}</span>
             </div>
-            <div className="flex items-center gap-1.5 font-medium">
-              <Users className="w-3.5 h-3.5 text-neutral-400" />
+            <span className="text-stone-300">•</span>
+            <div className="flex items-center gap-1 font-medium">
+              <Users className="w-3.5 h-3.5 text-stone-400" />
               <span>{pkg.groupSize}</span>
             </div>
           </div>
-
-          {/* Includes Summary */}
-          {includesList.length > 0 && (
-            <div className="space-y-1.5">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Termasuk:</p>
-              <div className="flex flex-wrap gap-1.5">
-                {includesList.slice(0, 3).map((inc: string, i: number) => (
-                  <span key={i} className="text-[10px] font-semibold bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded-md flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                    <span>{inc}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
@@ -223,7 +207,7 @@ const PackageCard: React.FC<{ pkg: Package }> = ({ pkg }) => {
 
         <Link
           href={`/packages/${destinationSlug}`}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl transition-all shadow-sm shadow-blue-600/25 flex items-center gap-1 group-hover:scale-105 shrink-0"
+          className="bg-stone-900 hover:bg-black text-white text-xs font-semibold px-4 py-2.5 rounded-full transition-all shadow-xs hover:shadow-md flex items-center gap-1 group-hover:scale-105 shrink-0"
         >
           <span>Pilih</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -277,37 +261,36 @@ const PackagesSection: React.FC = () => {
   }
 
   return (
-    <section id="packages" className="px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-white border-b border-slate-200/70">
+    <section id="packages" className="px-4 sm:px-6 md:px-8 py-20 md:py-28 bg-[#FAF9F6] border-b border-stone-200/80">
       <div className="max-w-[88rem] mx-auto space-y-10">
         
         {/* Section Header */}
         <ScrollReveal animation="slide-up">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200/70">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-200/80">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-neutral-600 bg-neutral-100 px-3.5 py-1.5 rounded-full border border-neutral-200/80">
-                <Compass className="w-3.5 h-3.5 text-neutral-400" />
-                <span>02 / All-Inclusive Curated Journeys</span>
+              <div className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-700 bg-stone-100 px-3.5 py-1.5 rounded-full border border-stone-200">
+                <Compass className="w-3.5 h-3.5 text-[#C29B38]" />
+                <span>Paket Perjalanan Terkurasi</span>
               </div>
-              <h2 className="text-3xl sm:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
-                <span>Paket Wisata </span>
-                <span className="font-serif-luxury italic font-normal text-neutral-900">Eksklusif & Terkurasi</span>
+              <h2 className="text-3xl sm:text-5xl font-black text-[#1C1917] tracking-tight leading-tight">
+                Paket Wisata <span className="font-serif-luxury italic font-normal text-stone-800">Eksklusif & Terkurasi</span>
               </h2>
-              <p className="text-xs sm:text-sm text-neutral-500 max-w-xl font-normal leading-relaxed">
+              <p className="text-xs sm:text-sm text-stone-500 max-w-xl leading-relaxed">
                 Setiap paket dirancang all-in: tiket pesawat, resort bintang 5, tur privat, dan pendampingan concierge 24/7.
               </p>
             </div>
 
             {/* Filter Pills & Slider Controls */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 p-1 rounded-full bg-slate-100 border border-slate-200/80">
+              <div className="flex items-center gap-1.5 p-1 rounded-full bg-stone-100 border border-stone-200">
                 {filters.map((f) => (
                   <button
                     key={f.id}
                     onClick={() => setActiveFilter(f.id)}
                     className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 ${
                       activeFilter === f.id
-                        ? 'bg-neutral-900 text-white shadow-xs'
-                        : 'text-neutral-500 hover:text-neutral-900'
+                        ? 'bg-stone-900 text-white shadow-xs'
+                        : 'text-stone-500 hover:text-stone-900'
                     }`}
                   >
                     {f.label}
@@ -318,14 +301,14 @@ const PackagesSection: React.FC = () => {
               <div className="hidden sm:flex items-center gap-2">
                 <button
                   onClick={() => scroll('left')}
-                  className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-100 text-neutral-600 hover:text-neutral-900 transition-colors"
+                  className="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center hover:bg-stone-100 text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
                   aria-label="Geser ke kiri"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => scroll('right')}
-                  className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-100 text-neutral-600 hover:text-neutral-900 transition-colors"
+                  className="w-9 h-9 rounded-full border border-stone-200 flex items-center justify-center hover:bg-stone-100 text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
                   aria-label="Geser ke kanan"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -345,31 +328,31 @@ const PackagesSection: React.FC = () => {
               <PackageCard key={pkg.slug || pkg.id || idx} pkg={pkg} />
             ))
           ) : (
-            <div className="min-h-64 w-full flex flex-col items-center justify-center bg-neutral-50 border border-neutral-200/80 rounded-3xl p-12 text-center">
-              <p className="text-neutral-400 text-xs font-medium">Tidak ada paket untuk kategori ini.</p>
+            <div className="min-h-64 w-full flex flex-col items-center justify-center bg-stone-50 border border-stone-200 rounded-3xl p-12 text-center">
+              <p className="text-stone-400 text-xs font-medium">Tidak ada paket untuk kategori ini.</p>
             </div>
           )}
         </div>
 
-        {/* Bottom CTA Banner — Minimalist Luxury with Expansive Whitespace */}
+        {/* Bottom CTA Banner — Sleek Obsidian Editorial with Champagne Accent */}
         <ScrollReveal animation="slide-up">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-10 sm:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl text-white">
-            <div className="space-y-3 text-center md:text-left">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 bg-white/10 px-3.5 py-1 rounded-full border border-white/10">
+          <div className="bg-[#1C1917] border border-stone-800 rounded-3xl p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl text-white">
+            <div className="space-y-2 text-center md:text-left">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C29B38] bg-white/10 px-3.5 py-1 rounded-full border border-white/10">
                 Konsultasi Privat
               </span>
-              <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
+              <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
                 Ingin Jadwal & Rute Khusus?
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-400 max-w-xl font-light leading-relaxed">
+              <p className="text-xs sm:text-sm text-stone-300 max-w-xl leading-relaxed">
                 Rancang perjalanan eksklusif keluarga atau rombongan Anda bersama spesialis perjalanan NOVA.
               </p>
             </div>
 
-            <div className="flex items-center gap-4 shrink-0">
+            <div className="flex items-center gap-3 shrink-0">
               <Link
                 href="/ai-planner"
-                className="px-6 py-3.5 rounded-full bg-white text-neutral-900 hover:bg-neutral-100 font-semibold text-xs transition-all shadow-xs"
+                className="px-6 py-3.5 rounded-full bg-[#FAF9F6] hover:bg-white text-stone-950 font-semibold text-xs transition-all shadow-xs hover:shadow-md"
               >
                 Gunakan Smart Planner
               </Link>

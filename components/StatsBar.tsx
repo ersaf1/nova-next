@@ -3,70 +3,66 @@
 import React, { useEffect, useState } from 'react'
 import { Globe, Users, Building2, Plane, LucideIcon, Award, ShieldCheck, HeartHandshake } from 'lucide-react'
 
-interface Stat {
-  statKey: string
-  value: string
+interface Assurance {
+  title: string
+  subtitle: string
   label: string
-  iconName: string | null
+  icon: LucideIcon
 }
 
-const ICON_MAP: Record<string, LucideIcon> = {
-  Globe,
-  Building2,
-  Plane,
-  Users,
-}
-
-const DEFAULT_STATS: Stat[] = [
-  { statKey: 'countries', value: '195+', label: 'Destinasi Negara', iconName: 'Globe' },
-  { statKey: 'hotels', value: '10K+', label: 'Hotel & Resort 5★', iconName: 'Building2' },
-  { statKey: 'airlines', value: '500+', label: 'Mitra Maskapai', iconName: 'Plane' },
-  { statKey: 'travelers', value: '50K+', label: 'Traveler Bahagia', iconName: 'Users' },
+const ASSURANCES: Assurance[] = [
+  {
+    title: 'Kurasi Resort 5★',
+    subtitle: 'Inspeksi berkala untuk kenyamanan mutlak.',
+    label: 'STANDAR FASILITAS',
+    icon: Building2,
+  },
+  {
+    title: 'Garansi Refund',
+    subtitle: 'Proteksi dana transparan dan kebijakan fleksibel.',
+    label: 'KEPASTIAN PERJALANAN',
+    icon: ShieldCheck,
+  },
+  {
+    title: 'Pemandu Berlisensi',
+    subtitle: 'Pemandu lokal resmi untuk wawasan otentik.',
+    label: 'PENGALAMAN NYATA',
+    icon: Award,
+  },
+  {
+    title: 'Concierge 24/7',
+    subtitle: 'Pendampingan langsung via WhatsApp & live chat.',
+    label: 'ASISTENSI PENUH',
+    icon: HeartHandshake,
+  },
 ]
 
 const StatsBar: React.FC = () => {
-  const [stats, setStats] = useState<Stat[]>(DEFAULT_STATS)
-
-  useEffect(() => {
-    fetch('/api/stats')
-      .then(r => r.json())
-      .then((data: Stat[]) => {
-        if (Array.isArray(data)) {
-          const barStats = data.filter(s => s.iconName).slice(0, 4)
-          if (barStats.length > 0) setStats(barStats)
-        }
-      })
-      .catch(() => {})
-  }, [])
-
   return (
-    <section className="bg-white px-4 sm:px-6 md:px-8 py-12 border-b border-slate-200/70">
+    <section className="bg-[#F5F2EB] px-4 sm:px-6 md:px-8 py-12 border-b border-stone-200/80">
       <div className="max-w-[88rem] mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x md:divide-slate-200/80">
-          {stats.map(({ statKey, value, label, iconName }, idx) => {
-            const Icon = iconName ? (ICON_MAP[iconName] ?? Globe) : Globe
-            return (
-              <div
-                key={statKey || idx}
-                className="flex flex-col items-center md:items-start md:px-10 first:md:pl-0 last:md:pr-0 text-center md:text-left"
-              >
-                <div className="flex items-center gap-3 mb-1.5">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100/80 flex items-center justify-center shrink-0">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <span
-                    className="text-3xl sm:text-4xl font-black text-blue-950 tracking-tight"
-                    style={{ letterSpacing: '-0.03em' }}
-                  >
-                    {value}
-                  </span>
-                </div>
-                <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {ASSURANCES.map(({ title, subtitle, label, icon: Icon }) => (
+            <div
+              key={title}
+              className="flex items-start gap-4 p-6 rounded-2xl bg-white/90 border border-stone-200/90 hover:border-stone-300 hover:shadow-xs transition-all duration-300"
+            >
+              <div className="w-11 h-11 rounded-xl bg-[#FAF9F6] border border-stone-200/80 flex items-center justify-center shrink-0 text-[#C29B38]">
+                <Icon className="w-5 h-5 text-[#C29B38]" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">
                   {label}
                 </span>
+                <h3 className="text-base font-bold text-stone-900 tracking-tight leading-snug">
+                  {title}
+                </h3>
+                <p className="text-xs text-stone-500 leading-relaxed font-normal">
+                  {subtitle}
+                </p>
               </div>
-            )
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </section>

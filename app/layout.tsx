@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Urbanist, Instrument_Serif, Plus_Jakarta_Sans, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import PageTransition from '@/components/PageTransition'
 import SmoothScroll from '@/components/SmoothScroll'
@@ -16,9 +16,25 @@ const PUBLIC_SWIPE_ROUTES = [
   { path: '/how-it-works', label: 'Cara Pesan' },
 ]
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const urbanist = Urbanist({
+  variable: '--font-urbanist',
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+})
+
+const instrumentSerif = Instrument_Serif({
+  variable: '--font-instrument-serif',
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  weight: ['400'],
+  display: 'swap',
+})
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: '--font-plus-jakarta-sans',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 })
 
@@ -28,8 +44,8 @@ const geistMono = Geist_Mono({
   display: 'swap',
 })
 
-const title = 'Nova — Travel Platform'
-const description = 'Your AI-powered travel companion — from first search to safe return across 195 countries.'
+const title = 'Nova | Curated Travel Platform'
+const description = 'Platform perjalanan kurasi terpercaya: rancang rute harian terpadu, tur privat bintang 5, dan pendampingan concierge 24 jam.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? 'https://nova-travel.vercel.app'),
@@ -54,16 +70,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="id" className={`${urbanist.variable} ${instrumentSerif.variable} ${plusJakartaSans.variable} ${geistMono.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Special+Elite&family=Geist:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Urbanist:ital,wght@0,300..900;1,300..900&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans antialiased bg-white text-[#1a1a1a] overflow-x-hidden">
+      <body className="font-sans antialiased bg-[#FAF9F6] text-[#1C1917] overflow-x-hidden selection:bg-[#EAE5D9] selection:text-[#1C1917]">
         <CurrencyProvider>
           <SmoothScroll>
             <PageTransition>{children}</PageTransition>

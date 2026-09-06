@@ -47,7 +47,7 @@ export default function PlacesCard({ result }: Props) {
                 href={place.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-blue-400/70 mt-0.5 flex items-center gap-1 hover:text-blue-400 transition-colors"
+                className="text-xs text-sky-400/80 mt-0.5 flex items-center gap-1 hover:text-sky-300 transition-colors"
               >
                 <Globe size={10} />
                 {place.website}

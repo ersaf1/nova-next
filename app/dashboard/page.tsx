@@ -148,19 +148,19 @@ export default function DashboardPage() {
       <main className="max-w-5xl mx-auto px-6 py-8 pt-24">
         {/* Admin Quick Jump Banner */}
         {role && ['admin', 'super_admin', 'booking_officer'].includes(role) && (
-          <div className="mb-6 p-4 rounded-2xl bg-blue-50 border border-blue-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+          <div className="mb-6 p-4 rounded-2xl bg-[#0F172A] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm text-white">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#0099FF] text-white flex items-center justify-center shadow-xs shrink-0">
                 <ShieldCheck size={20} />
               </div>
               <div>
-                <p className="text-xs font-bold text-blue-950">Akses Panel Manajemen Administrator</p>
-                <p className="text-[11px] text-blue-700">Anda masuk dengan hak akses {role === 'super_admin' ? 'Super Admin' : 'Admin'}.</p>
+                <p className="text-xs font-bold text-white">Akses Panel Manajemen Administrator</p>
+                <p className="text-[11px] text-slate-300">Anda masuk dengan hak akses {role === 'super_admin' ? 'Super Admin' : 'Admin'}.</p>
               </div>
             </div>
             <Link
               href="/admin"
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold transition-all shadow-sm shadow-blue-600/30 shrink-0 text-center"
+              className="px-4 py-2 rounded-xl bg-[#0099FF] hover:bg-[#0084DE] text-white text-xs font-bold transition-all shadow-sm shadow-sky-500/20 shrink-0 text-center"
             >
               Buka Panel Admin &rarr;
             </Link>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
         {/* Welcome */}
         <div className="mb-8">
           <h1
-            className="text-2xl font-black text-blue-950"
+            className="text-2xl font-black text-[#0F172A]"
             style={{ letterSpacing: '-0.02em' }}
           >
             Selamat datang, {displayName}
@@ -233,7 +233,7 @@ export default function DashboardPage() {
               </p>
               <Link
                 href="/search"
-                className="bg-brand text-white text-sm font-medium rounded-full px-5 py-2.5 hover:bg-brand-dark transition-colors"
+                className="bg-[#0099FF] text-white text-sm font-bold rounded-full px-5 py-2.5 hover:bg-[#0084DE] transition-all shadow-sm shadow-sky-500/20"
               >
                 Start Planning
               </Link>

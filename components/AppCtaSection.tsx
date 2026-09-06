@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Apple, Play, Compass } from 'lucide-react'
+import { Compass, UserPlus, MessageSquare, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -12,22 +12,6 @@ const AppCtaSection: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState<'success' | 'error' | null>(null)
-  const [stats, setStats] = useState({ stars: '4.9★', reviews: '150K', downloads: '2M+' })
-
-  useEffect(() => {
-    fetch('/api/stats')
-      .then(r => r.json())
-      .then((data: { statKey: string; value: string }[]) => {
-        if (!Array.isArray(data)) return
-        const get = (key: string) => data.find(s => s.statKey === key)?.value
-        setStats({
-          stars: get('app_store_stars') ?? '4.9★',
-          reviews: get('app_reviews') ?? '150K',
-          downloads: get('app_downloads') ?? '2M+',
-        })
-      })
-      .catch(() => {})
-  }, [])
 
   const handleSubscribe = async () => {
     if (!email || !EMAIL_REGEX.test(email)) {
@@ -59,92 +43,120 @@ const AppCtaSection: React.FC = () => {
   }
 
   return (
-    <section className="bg-[#F8FAFC] px-4 sm:px-6 py-24 border-t border-slate-200/70">
+    <section className="bg-[#FAF9F6] px-4 sm:px-6 py-20 md:py-24 border-t border-stone-200/80">
       <div className="max-w-[88rem] mx-auto">
-        <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-sky-700 rounded-3xl overflow-hidden shadow-2xl shadow-blue-500/20 border border-blue-400/30">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+        <div className="bg-[#1C1917] rounded-3xl overflow-hidden shadow-2xl border border-stone-800">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
             
             {/* Left Content */}
-            <div className="p-8 sm:p-12 md:p-16 flex flex-col justify-between">
+            <div className="lg:col-span-7 p-8 sm:p-12 md:p-16 flex flex-col justify-between">
               <div>
-                <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-sky-300 bg-white/10 px-3 py-1 rounded-full border border-white/15 mb-4">
+                <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#C29B38] bg-white/10 px-3.5 py-1 rounded-full border border-white/10 mb-4">
                   <Compass className="w-3.5 h-3.5" />
-                  <span>Aplikasi Mobile NOVA</span>
+                  <span>Keanggotaan Eksklusif NOVA</span>
                 </div>
-                <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-6" style={{ letterSpacing: '-0.035em' }}>
-                  <span>Dunia Ada Dalam </span>
-                  <span className="font-serif-luxury italic font-normal text-sky-200 block mt-1">
-                    Genggaman Anda.
+                <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-6" style={{ letterSpacing: '-0.03em' }}>
+                  <span>Kemudahan Perjalanan </span>
+                  <span className="font-serif-luxury italic font-normal text-amber-200/95 block mt-1">
+                    Dalam Satu Akun.
                   </span>
                 </h2>
-                <p className="text-white/70 text-sm sm:text-base leading-relaxed mb-8 max-w-sm">
-                  Kelola tiket, jadwal rute harian offline, e-invoice resmi, dan akses live chat concierge 24 jam langsung dari ponsel Anda.
+                <p className="text-stone-300 text-sm sm:text-base leading-relaxed mb-8 max-w-lg font-normal">
+                  Daftarkan diri Anda untuk kemudahan mengelola tiket, jadwal rute harian terpadu, invoice resmi, dan akses langsung pendampingan concierge perjalanan.
                 </p>
+
+                {/* Real Functional Actions */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
-                    onClick={() => router.push('/login')}
-                    className="flex items-center gap-3 bg-white text-blue-950 px-5 py-3 rounded-2xl hover:bg-blue-50 transition-colors duration-200 font-extrabold shadow-sm"
+                    onClick={() => router.push('/register')}
+                    className="flex items-center justify-center gap-2.5 bg-[#FAF9F6] text-stone-950 px-6 py-3.5 rounded-2xl hover:bg-white transition-all duration-200 text-xs font-bold shadow-xs cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
                   >
-                    <Apple className="w-5 h-5 shrink-0" />
-                    <div className="text-left">
-                      <span className="text-[10px] text-slate-500 block leading-none mb-0.5">Download di</span>
-                      <span className="text-xs font-bold leading-none">App Store</span>
-                    </div>
+                    <UserPlus className="w-4 h-4 text-stone-900" />
+                    <span>Daftar Akun Member</span>
                   </button>
                   <button
-                    onClick={() => router.push('/login')}
-                    className="flex items-center gap-3 bg-white/10 border border-white/20 text-white px-5 py-3 rounded-2xl hover:bg-white/20 transition-colors duration-200 font-extrabold"
+                    onClick={() => router.push('/ai-planner')}
+                    className="flex items-center justify-center gap-2.5 bg-white/10 border border-white/20 text-white px-6 py-3.5 rounded-2xl hover:bg-white/15 transition-colors duration-200 text-xs font-semibold cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
                   >
-                    <Play className="w-4 h-4 shrink-0 fill-white" />
-                    <div className="text-left">
-                      <span className="text-[10px] text-white/50 block leading-none mb-0.5">Tersedia di</span>
-                      <span className="text-xs font-bold leading-none">Google Play</span>
-                    </div>
+                    <Compass className="w-4 h-4 text-[#C29B38]" />
+                    <span>Rancang Rute Liburan</span>
                   </button>
                 </div>
               </div>
 
-              {/* Newsletter early access */}
-              <div className="mt-10 pt-8 border-t border-white/10">
-                <p className="text-white/60 text-xs font-bold uppercase tracking-wider mb-3">
-                  Dapatkan info promo spesial & kupon rahasia
+              {/* Newsletter subscription */}
+              <div className="mt-12 pt-8 border-t border-white/10">
+                <p className="text-stone-300 text-xs font-semibold uppercase tracking-wider mb-3">
+                  Berlangganan kurasi destinasi &amp; info promo musiman
                 </p>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 max-w-md">
                   <input
                     type="email"
                     placeholder="nama@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSubscribe()}
-                    className="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/40 text-xs px-4 py-3 rounded-xl focus:outline-none focus:border-blue-400 transition-colors"
+                    className="flex-1 bg-white/5 border border-white/15 text-white placeholder-stone-400 text-xs px-4 py-3 rounded-xl focus:outline-none focus:border-[#C29B38] transition-colors"
                   />
                   <button
                     onClick={handleSubscribe}
                     disabled={loading}
-                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-5 py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shadow-sm shadow-blue-600/30"
+                    className="bg-[#C29B38] hover:bg-[#A8822B] text-white text-xs font-semibold px-5 py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shadow-xs cursor-pointer focus-visible:ring-2 focus-visible:ring-[#C29B38]"
                   >
                     {loading ? 'Mengirim...' : 'Langganan'}
                   </button>
                 </div>
                 {message && (
-                  <p className={`mt-2 text-xs ${messageType === 'success' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  <p className={`mt-2 text-xs font-medium ${messageType === 'success' ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {message}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Right Visual in Mediterranean Sky-Blue Gradient */}
-            <div className="relative hidden md:flex flex-col justify-end p-12 bg-gradient-to-br from-blue-700 via-sky-600 to-sky-500 min-h-[440px] overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(56,189,248,0.4),transparent_65%)]" />
-              <div className="relative z-10 flex flex-col gap-3 items-end">
-                <div className="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl px-6 py-4 text-right shadow-lg">
-                  <span className="text-white text-3xl font-black block tracking-tight">4.95★</span>
-                  <span className="text-white/75 text-xs font-medium">150K+ Ulasan Bintang 5</span>
+            {/* Right Visual Panel — 80% Photo with Sleek Overlays */}
+            <div className="lg:col-span-5 relative flex flex-col justify-center p-8 sm:p-12 border-t lg:border-t-0 lg:border-l border-stone-800 overflow-hidden min-h-[380px]">
+              {/* Background Photography */}
+              <img
+                src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=85"
+                alt="Luxury Resort Sanctuary"
+                className="absolute inset-0 w-full h-full object-cover img-smooth-zoom opacity-60"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#141312]/95 via-[#141312]/60 to-[#141312]/40" />
+
+              <div className="relative z-10 space-y-3.5">
+                <span className="inline-flex text-[10px] font-bold text-amber-200 uppercase tracking-widest bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
+                  Privilese Anggota
+                </span>
+
+                <div className="bg-black/50 backdrop-blur-md border border-white/15 rounded-2xl p-4 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-xs">Jaminan Slot &amp; Refund Jelas</h4>
+                    <p className="text-stone-300 text-[11px]">Prioritas keberangkatan &amp; proteksi dana 100%.</p>
+                  </div>
                 </div>
-                <div className="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl px-6 py-4 text-right shadow-lg">
-                  <span className="text-white text-3xl font-black block tracking-tight">50,000+</span>
-                  <span className="text-white/75 text-xs font-medium">Traveler Puas</span>
+
+                <div className="bg-black/50 backdrop-blur-md border border-white/15 rounded-2xl p-4 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#C29B38]/20 border border-[#C29B38]/30 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4 text-[#C29B38]" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-xs">Dashboard E-Ticket Terpadu</h4>
+                    <p className="text-stone-300 text-[11px]">Rute harian offline &amp; QR code resmi.</p>
+                  </div>
+                </div>
+
+                <div className="bg-black/50 backdrop-blur-md border border-white/15 rounded-2xl p-4 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-xs">Concierge WhatsApp 24 Jam</h4>
+                    <p className="text-stone-300 text-[11px]">Dukungan darurat langsung di destinasi.</p>
+                  </div>
                 </div>
               </div>
             </div>

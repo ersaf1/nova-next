@@ -41,31 +41,30 @@ const ExperiencesSection: React.FC = () => {
   const { ref: modesRef } = useStaggerReveal({ stagger: 0.1, duration: 0.65, distance: 50 })
 
   return (
-    <section id="experiences" className="bg-white px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-slate-200/70">
+    <section id="experiences" className="bg-[#F5F2EB] px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-stone-200/80">
       <div className="max-w-[88rem] mx-auto">
         
         {/* Section Header */}
-        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200/70">
+        <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-200/80">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-              <Compass className="w-3.5 h-3.5" />
-              <span>06 / Kategori Pengalaman</span>
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-stone-700 bg-stone-100 px-3.5 py-1.5 rounded-full border border-stone-200">
+              <Compass className="w-3.5 h-3.5 text-[#C29B38]" />
+              <span>Kategori Gaya Perjalanan</span>
             </div>
-            <h2 className="text-blue-950 text-3xl sm:text-5xl font-black leading-tight" style={{ letterSpacing: '-0.035em' }}>
-              <span>Gaya Liburan </span>
-              <span className="font-serif-luxury italic font-normal text-blue-600">Sesuai Pilihan Anda</span>
+            <h2 className="text-[#1C1917] text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+              Gaya Liburan <span className="font-serif-luxury italic font-normal text-stone-800">Sesuai Pilihan Anda</span>
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 max-w-xl font-normal">
+            <p className="text-xs sm:text-sm text-stone-500 max-w-xl leading-relaxed">
               Setiap wisatawan memiliki ritme tersendiri. Pilih mode liburan yang paling menggambarkan impian Anda.
             </p>
           </div>
 
           <Link
             href="/search"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-5 py-3 rounded-full transition-all shrink-0 shadow-sm shadow-blue-600/25 group"
+            className="inline-flex items-center gap-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold px-6 py-3.5 rounded-full transition-all shrink-0 shadow-xs hover:shadow-md"
           >
             <span>Eksplor Semua Mode</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -80,7 +79,7 @@ const ExperiencesSection: React.FC = () => {
                   key={mode.label}
                   onClick={() => setActive(i)}
                   className={`group relative flex-1 lg:flex-none overflow-hidden rounded-2xl cursor-pointer text-left border transition-all ${
-                    isActive ? 'ring-2 ring-blue-600 border-blue-600 shadow-md' : 'border-slate-200/80 hover:border-blue-300'
+                    isActive ? 'ring-2 ring-stone-900 border-stone-900 shadow-md' : 'border-stone-200/80 hover:border-stone-300'
                   }`}
                   style={{ minHeight: isActive ? '150px' : '105px', transition: 'min-height 0.4s ease' }}
                 >
@@ -105,8 +104,8 @@ const ExperiencesSection: React.FC = () => {
             })}
           </div>
 
-          {/* Preview panel */}
-          <div className="lg:col-span-3 relative rounded-3xl overflow-hidden shadow-xl border border-slate-200" style={{ minHeight: '480px' }}>
+          {/* Preview panel — 80% Photo Dominance */}
+          <div className="lg:col-span-3 relative rounded-3xl overflow-hidden shadow-2xl border border-stone-200/80 min-h-[520px] lg:min-h-[580px]">
             {modes.map((mode, i) => (
               <div
                 key={mode.label}
@@ -117,19 +116,19 @@ const ExperiencesSection: React.FC = () => {
                   src={mode.image}
                   alt={mode.label}
                   loading="lazy"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover img-smooth-zoom"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/95 via-[#0A192F]/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/90 via-[#1C1917]/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8 space-y-3">
-                  <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold tracking-widest uppercase bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-white border border-white/20">
+                  <div className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-white border border-white/20">
                     Kategori Terpilih
                   </div>
-                  <h3 className="text-white text-3xl sm:text-4xl font-black" style={{ letterSpacing: '-0.03em' }}>{mode.label}</h3>
-                  <p className="text-white/80 text-sm max-w-lg leading-relaxed">{mode.short}</p>
+                  <h3 className="text-white text-3xl sm:text-4xl font-black tracking-tight">{mode.label}</h3>
+                  <p className="text-white/85 text-xs sm:text-sm max-w-lg leading-relaxed">{mode.short}</p>
                   <div className="pt-2">
                     <Link
                       href={`/search?mode=${mode.label.toLowerCase()}`}
-                      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-5 py-3 rounded-full shadow-sm shadow-blue-600/30 transition-all group"
+                      className="inline-flex items-center gap-2 bg-stone-900 hover:bg-black text-white font-semibold text-xs px-5 py-3 rounded-full shadow-xs hover:shadow-md transition-all group"
                     >
                       <span>Temukan Paket {mode.label}</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />

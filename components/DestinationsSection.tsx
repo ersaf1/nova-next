@@ -23,10 +23,10 @@ interface Destination {
 }
 
 const tagColors: Record<string, string> = {
-  Popular: 'bg-blue-600 text-white',
-  Trending: 'bg-rose-500 text-white',
-  "Editor's Pick": 'bg-amber-500 text-white',
-  New: 'bg-emerald-600 text-white',
+  Popular: 'bg-stone-900 text-white',
+  Trending: 'bg-[#B45309] text-white',
+  "Editor's Pick": 'bg-[#C29B38] text-white',
+  New: 'bg-emerald-700 text-white',
 }
 
 const DEFAULT_IMAGES: Record<string, string> = {
@@ -120,21 +120,21 @@ const Lightbox: React.FC<LightboxProps> = ({ dest, onClose, onPrev, onNext, save
             </div>
 
             <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="p-3 bg-neutral-50 rounded-2xl border border-neutral-200/80">
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Durasi Ideal</p>
-                <p className="text-xs font-bold text-neutral-900 mt-0.5">{dest.duration}</p>
+              <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200">
+                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Durasi Ideal</p>
+                <p className="text-xs font-bold text-[#1C1917] mt-0.5">{dest.duration}</p>
               </div>
-              <div className="p-3 bg-neutral-50 rounded-2xl border border-neutral-200/80">
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Estimasi Harga</p>
-                <p className="text-xs font-bold text-brand-dark mt-0.5">{dest.price}</p>
+              <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200">
+                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Estimasi Harga</p>
+                <p className="text-xs font-bold text-[#1C1917] mt-0.5">{dest.price}</p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 pt-4 border-t border-neutral-100">
+          <div className="flex items-center gap-3 pt-4 border-t border-stone-200/80">
             <Link
               href={`/search?destination=${encodeURIComponent(dest.city)}`}
-              className="flex-1 bg-brand hover:bg-brand-dark text-white font-extrabold text-xs py-3.5 rounded-2xl transition-all shadow-md shadow-brand/30 flex items-center justify-center gap-2"
+              className="flex-1 bg-stone-900 hover:bg-black text-white font-semibold text-xs py-3.5 rounded-2xl transition-all shadow-xs hover:shadow-md flex items-center justify-center gap-2"
             >
               <span>Lihat Paket Wisata {dest.city}</span>
               <ArrowRight className="w-4 h-4" />
@@ -204,32 +204,31 @@ const DestinationsSection: React.FC = () => {
 
   return (
     <>
-      <section id="destinations" className="bg-[#F8FAFD] px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-slate-200/70">
-        <div className="max-w-[88rem] mx-auto space-y-12">
+      <section id="destinations" className="bg-[#FAF9F6] px-4 sm:px-6 md:px-8 py-20 md:py-28 border-b border-stone-200/80">
+        <div className="max-w-[88rem] mx-auto space-y-10">
           
           {/* Header */}
           <ScrollReveal animation="slide-up">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200/70">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-200/80">
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-neutral-600 bg-neutral-100 px-3.5 py-1.5 rounded-full border border-neutral-200/80">
-                  <Compass className="w-3.5 h-3.5 text-neutral-400" />
-                  <span>01 / Destinasi Pilihan Dunia</span>
+                <div className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-700 bg-stone-100 px-3.5 py-1.5 rounded-full border border-stone-200">
+                  <Compass className="w-3.5 h-3.5 text-[#C29B38]" />
+                  <span>01 / Curated Global Destinations</span>
                 </div>
-                <h2 className="text-3xl sm:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
-                  <span>Pilihan Favorit </span>
-                  <span className="font-serif-luxury italic font-normal text-neutral-900">Wisatawan Dunia</span>
+                <h2 className="text-3xl sm:text-5xl font-black text-[#1C1917] tracking-tight leading-tight">
+                  Destinasi Favorit <span className="font-serif-luxury italic font-normal text-stone-800">Wisatawan Dunia</span>
                 </h2>
-                <p className="text-xs sm:text-sm text-neutral-500 max-w-xl font-normal leading-relaxed">
+                <p className="text-xs sm:text-sm text-stone-500 max-w-xl leading-relaxed">
                   Koleksi destinasi impian dengan jaminan pengalaman terbaik, rute terlengkap, dan transparansi harga.
                 </p>
               </div>
 
               <Link
                 href="/destinations"
-                className="inline-flex items-center gap-2 bg-neutral-900 hover:bg-black text-white text-xs font-semibold px-5 py-3 rounded-full transition-all shrink-0 shadow-xs group"
+                className="inline-flex items-center gap-2 bg-stone-900 hover:bg-black text-white text-xs font-semibold px-6 py-3.5 rounded-full transition-all shrink-0 shadow-xs hover:shadow-md"
               >
                 <span>Lihat Semua Destinasi</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </ScrollReveal>
@@ -244,7 +243,7 @@ const DestinationsSection: React.FC = () => {
                 <div
                   key={dest.id || i}
                   onClick={() => setLightboxIndex(i)}
-                  className="group relative rounded-3xl overflow-hidden cursor-pointer bg-sky-900 h-80 sm:h-96 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/15 hover:-translate-y-1.5 border border-slate-200/60 hover:border-sky-300"
+                  className="group relative rounded-3xl overflow-hidden cursor-pointer bg-stone-900 h-96 sm:h-[440px] md:h-[460px] transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 border border-stone-200/80 hover:border-stone-300"
                 >
                   {/* Background Image */}
                   <img
@@ -255,13 +254,13 @@ const DestinationsSection: React.FC = () => {
                   />
 
                   {/* Gradient Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-sky-950/85 via-sky-900/20 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-sky-950/30 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
 
                   {/* Top Badges */}
                   <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
                     {dest.tag ? (
-                      <span className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs ${tagColors[dest.tag] || 'bg-blue-600 text-white'}`}>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs ${tagColors[dest.tag] || 'bg-stone-900 text-white'}`}>
                         {dest.tag}
                       </span>
                     ) : <span />}
@@ -278,26 +277,23 @@ const DestinationsSection: React.FC = () => {
                   {/* Card Bottom Info */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 z-10 space-y-3">
                     <div>
-                      <div className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-white/85 mb-0.5">
-                        <MapPin className="w-3 h-3 text-sky-300" />
+                      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-white/90 mb-0.5">
+                        <MapPin className="w-3 h-3 text-[#C29B38]" />
                         <span>{dest.country}</span>
                         {dest.weather && <span>• {dest.weather}</span>}
                       </div>
-                      <h3 className="text-2xl font-black text-white tracking-tight leading-tight">
+                      <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
                         {dest.city}
                       </h3>
-                      <p className="text-xs text-white/75 line-clamp-1 font-normal mt-0.5">
-                        {dest.tagline}
-                      </p>
                     </div>
 
                     <div className="pt-3 border-t border-white/15 flex items-center justify-between">
                       <div>
                         <p className="text-[9px] font-bold text-white/60 uppercase tracking-wider">Mulai Dari</p>
-                        <p className="text-sm font-extrabold text-white">{dest.price}</p>
+                        <p className="text-sm font-black text-white">{dest.price}</p>
                       </div>
 
-                      <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-white border border-white/20 group-hover:bg-blue-600 group-hover:border-blue-600 transition-colors flex items-center gap-1">
+                      <span className="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/25 group-hover:bg-white group-hover:text-stone-950 transition-all flex items-center gap-1">
                         <span>Lihat Paket</span>
                         <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                       </span>

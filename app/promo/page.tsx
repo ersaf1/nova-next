@@ -2,6 +2,7 @@ import { Tag, ShoppingBag, Sparkles, ShieldCheck, ArrowRight } from 'lucide-reac
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 import PromoCard from '@/components/PromoCard'
 
 export const revalidate = 60
@@ -54,31 +55,30 @@ export default async function PromoPage() {
   const displayCoupons = coupons && coupons.length > 0 ? coupons : fallbackCoupons
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-neutral-900">
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
       <Navbar />
 
       <div className="pt-28 pb-24 px-4 sm:px-6 md:px-8">
         <div className="max-w-[88rem] mx-auto space-y-12">
           
           {/* Header */}
-          <div className="pt-8 pb-6 border-b border-slate-200/80 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="pt-8 pb-6 border-b border-stone-200/80 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-3 max-w-2xl">
-              <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-extrabold uppercase tracking-widest px-3.5 py-1.5 rounded-full">
-                <Tag className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center gap-2 bg-stone-100 text-stone-700 border border-stone-200 text-[10px] font-extrabold uppercase tracking-widest px-3.5 py-1.5 rounded-full">
+                <Tag className="w-3.5 h-3.5 text-[#C29B38]" />
                 <span>Promo & Diskon Eksklusif</span>
               </div>
-              <h1 className="text-4xl sm:text-6xl font-black text-blue-950 tracking-tight leading-tight">
-                <span>Kupon & Penawaran </span>
-                <span className="font-serif-luxury italic font-normal text-blue-600">Spesial Liburan</span>
+              <h1 className="text-4xl sm:text-6xl font-black text-stone-900 tracking-tight leading-tight">
+                Kupon & <span className="font-serif-luxury italic font-normal text-stone-800">Penawaran Spesial</span> Liburan
               </h1>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Salin kode kupon di bawah ini dan masukkan pada formulir pemesanan saat checkout untuk menikmati potongan harga langsung.
+              <p className="text-xs sm:text-sm text-stone-500 leading-relaxed font-normal">
+                Salin kode kupon pilihan di bawah ini dan terapkan saat checkout untuk menikmati penawaran harga terbaik.
               </p>
             </div>
 
             <Link
               href="/packages"
-              className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-6 py-3.5 rounded-2xl transition-all shadow-md shadow-blue-600/30 flex items-center gap-2 shrink-0 self-start md:self-auto"
+              className="bg-stone-900 hover:bg-black text-white text-xs font-bold px-6 py-3.5 rounded-full transition-all shadow-xs flex items-center gap-2 shrink-0 self-start md:self-auto cursor-pointer"
             >
               <span>Eksplor Semua Paket</span>
               <ArrowRight className="w-4 h-4" />
@@ -93,32 +93,34 @@ export default async function PromoPage() {
           </div>
 
           {/* Instructions Box */}
-          <div className="bg-white border border-neutral-200/90 rounded-3xl p-8 sm:p-10 shadow-sm flex flex-col md:flex-row items-center gap-8 justify-between">
+          <div className="bg-white border border-stone-200/90 rounded-3xl p-8 sm:p-10 shadow-xs flex flex-col md:flex-row items-center gap-8 justify-between">
             <div className="space-y-2 max-w-xl text-center md:text-left">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto md:mx-0">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-[#C29B38] border border-amber-200/60 flex items-center justify-center mx-auto md:mx-0">
                 <ShoppingBag className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-extrabold text-neutral-950">
+              <h3 className="text-xl font-bold text-stone-950">
                 Cara Menggunakan Kode Promo
               </h3>
-              <p className="text-xs text-neutral-600 leading-relaxed">
+              <p className="text-xs text-stone-600 leading-relaxed">
                 1. Klik tombol <strong>Salin</strong> pada kupon pilihan Anda.<br />
                 2. Pilih paket wisata dan tentukan tanggal keberangkatan.<br />
-                3. Tempel kode pada kolom voucher di halaman pembayaran untuk mendapatkan potongan instan.
+                3. Tempel kode pada kolom voucher di formulir pemesanan untuk mendapatkan potongan instan.
               </p>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
-              <div className="p-4 bg-neutral-50 rounded-2xl border border-neutral-200 text-center">
+              <div className="p-4 bg-[#F5F2EB]/70 rounded-2xl border border-stone-200/80 text-center">
                 <ShieldCheck className="w-6 h-6 text-emerald-600 mx-auto mb-1" />
-                <p className="text-xs font-extrabold text-neutral-900">100% Terverifikasi</p>
-                <p className="text-[10px] text-neutral-400">Garansi Potongan Resmi</p>
+                <p className="text-xs font-bold text-stone-900">100% Terverifikasi</p>
+                <p className="text-[10px] text-stone-400">Garansi Potongan Resmi</p>
               </div>
             </div>
           </div>
 
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }

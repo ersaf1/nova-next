@@ -209,47 +209,46 @@ export default function PackagesPage() {
   const { formatPrice } = useCurrency()
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
       <Navbar />
 
       <div className="pt-28 pb-24 px-4 sm:px-6 md:px-8">
         <div className="max-w-[88rem] mx-auto space-y-10">
 
           {/* Editorial Header */}
-          <div className="pt-8 pb-6 border-b border-slate-200/80 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+          <div className="pt-8 pb-6 border-b border-stone-200/80 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div className="space-y-3 max-w-3xl">
-              <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-extrabold uppercase tracking-widest px-3.5 py-1.5 rounded-full">
-                <Compass className="w-3.5 h-3.5" />
-                <span>All-Inclusive Curated Holidays</span>
+              <div className="inline-flex items-center gap-2 bg-stone-100 text-stone-700 border border-stone-200 text-[10px] font-extrabold uppercase tracking-widest px-3.5 py-1.5 rounded-full">
+                <Compass className="w-3.5 h-3.5 text-[#C29B38]" />
+                <span>Kurasi Paket Wisata Resmi</span>
               </div>
-              <h1 className="text-4xl sm:text-6xl font-black text-blue-950 tracking-tight leading-tight">
-                <span>Paket Wisata </span>
-                <span className="font-serif-luxury italic font-normal text-blue-600">Eksklusif & Terkurasi</span>
+              <h1 className="text-4xl sm:text-6xl font-black text-stone-900 tracking-tight leading-tight">
+                Paket Wisata <span className="font-serif-luxury italic font-normal text-stone-800">Eksklusif & Terkurasi</span>
               </h1>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl font-normal">
-                Nikmati liburan tanpa repot. Tiket pesawat, resort bintang 5, transportasi privat, dan perlindungan refund 100% sudah siap untuk Anda.
+              <p className="text-xs sm:text-sm text-stone-500 leading-relaxed max-w-2xl font-normal">
+                Nikmati liburan tanpa repot. Tiket penerbangan, resor bintang lima pilihan, armada transportasi privat, dan perlindungan garansi 100% siap menemani perjalanan Anda.
               </p>
             </div>
 
             {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-3 shrink-0 lg:max-w-xs w-full">
-              <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex items-center gap-3">
+              <div className="p-3.5 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-extrabold text-blue-950">Garansi Refund</p>
-                  <p className="text-[10px] text-slate-400">100% Proteksi Dana</p>
+                  <p className="text-xs font-bold text-stone-900">Garansi Refund</p>
+                  <p className="text-[10px] text-stone-400">100% Proteksi Dana</p>
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
+              <div className="p-3.5 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-amber-50 text-[#C29B38] border border-amber-200/80">
                   <Zap className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-extrabold text-blue-950">Booking Instan</p>
-                  <p className="text-[10px] text-slate-400">E-Ticket 3 Menit</p>
+                  <p className="text-xs font-bold text-stone-900">Booking Instan</p>
+                  <p className="text-[10px] text-stone-400">E-Ticket 3 Menit</p>
                 </div>
               </div>
             </div>
@@ -260,18 +259,18 @@ export default function PackagesPage() {
             
             {/* Search Input */}
             <div className="relative w-full md:w-96">
-              <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Cari destinasi atau paket wisata..."
-                className="w-full bg-white border border-slate-200 rounded-2xl pl-10 pr-10 py-3 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 font-semibold shadow-2xs"
+                className="w-full bg-white border border-stone-200/80 rounded-2xl pl-10 pr-10 py-3 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 font-semibold shadow-xs"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -285,10 +284,10 @@ export default function PackagesPage() {
                   <button
                     key={f.id}
                     onClick={() => setActiveFilter(f.id)}
-                    className={`px-4 py-2.5 text-xs font-bold rounded-2xl shrink-0 transition-all duration-200 ${
+                    className={`px-4 py-2.5 text-xs font-bold rounded-2xl shrink-0 transition-all duration-200 cursor-pointer ${
                       activeFilter === f.id
-                        ? 'bg-blue-600 text-white shadow-xs'
-                        : 'bg-white text-slate-600 hover:text-blue-600 border border-slate-200 hover:border-blue-200'
+                        ? 'bg-stone-900 text-white shadow-xs'
+                        : 'bg-white text-stone-700 hover:text-stone-950 border border-stone-200/80 hover:border-stone-300'
                     }`}
                   >
                     {f.label}
@@ -301,10 +300,10 @@ export default function PackagesPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="bg-white border border-neutral-200/80 rounded-2xl px-4 py-2.5 text-xs font-bold text-neutral-800 focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer shadow-2xs"
+                  className="bg-white border border-stone-200/80 rounded-2xl px-4 py-2.5 text-xs font-bold text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-900 cursor-pointer shadow-xs"
                 >
-                  <option value="recommended">Rekomendasi</option>
-                  <option value="price-asc">Harga Termurah</option>
+                  <option value="recommended">Rekomendasi Terkurasi</option>
+                  <option value="price-asc">Harga Terendah</option>
                   <option value="price-desc">Harga Tertinggi</option>
                   <option value="rating">Rating Tertinggi</option>
                 </select>
@@ -314,21 +313,21 @@ export default function PackagesPage() {
           </div>
 
           {/* Results Count */}
-          <div className="flex items-center justify-between text-xs text-neutral-500 font-semibold">
+          <div className="flex items-center justify-between text-xs text-stone-500 font-medium">
             <span>
-              Menampilkan <strong className="text-neutral-950">{filtered.length}</strong> Paket Wisata Siap Berangkat
+              Menampilkan <strong className="text-stone-950 font-bold">{filtered.length}</strong> Paket Wisata Siap Berangkat
             </span>
           </div>
 
           {/* Packages Grid */}
           {filtered.length === 0 ? (
-            <div className="bg-white rounded-3xl p-16 text-center border border-neutral-200/80 space-y-3">
-              <Compass className="w-10 h-10 text-neutral-400 mx-auto" />
-              <h3 className="text-base font-extrabold text-neutral-900">Paket wisata tidak ditemukan</h3>
-              <p className="text-xs text-neutral-500">Coba ubah kata kunci pencarian atau pilih kategori lain.</p>
+            <div className="bg-white rounded-3xl p-16 text-center border border-stone-200/80 space-y-3">
+              <Compass className="w-10 h-10 text-stone-400 mx-auto" />
+              <h3 className="text-base font-bold text-stone-900">Paket wisata tidak ditemukan</h3>
+              <p className="text-xs text-stone-500">Coba ubah kata kunci pencarian atau pilih kategori lain.</p>
               <button
                 onClick={() => { setActiveFilter('All'); setSearchQuery('') }}
-                className="mt-2 text-xs font-bold bg-neutral-950 text-white px-5 py-2.5 rounded-full"
+                className="mt-2 text-xs font-bold bg-stone-900 hover:bg-black text-white px-5 py-2.5 rounded-full transition-all cursor-pointer"
               >
                 Reset Pencarian
               </button>
@@ -349,39 +348,39 @@ export default function PackagesPage() {
                   <Link
                     key={`${pkg.id}-${idx}`}
                     href={`/packages/${slug}`}
-                    className="group bg-white rounded-3xl border border-slate-200/80 overflow-hidden hover:border-blue-300 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
+                    className="group bg-white rounded-3xl border border-stone-200/80 overflow-hidden hover:border-stone-300 hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 shadow-xs"
                   >
                     {/* Header Image */}
-                    <div className="relative h-60 overflow-hidden bg-[#0A192F]">
+                    <div className="relative h-60 overflow-hidden bg-stone-900">
                       <img
                         src={pkg.image}
                         alt={pkg.title}
                         loading="lazy"
                         className="w-full h-full object-cover img-smooth-zoom"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F]/90 via-[#0A192F]/25 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/90 via-[#1C1917]/25 to-transparent" />
 
                       {/* Tag Badges */}
                       <div className="absolute top-4 left-4 flex items-center gap-2">
-                        <span className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs ${pkg.tagColor || 'bg-blue-600 text-white'}`}>
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs bg-stone-900/90 text-white backdrop-blur-xs">
                           {pkg.tag}
                         </span>
                       </div>
 
                       {/* Savings Pill */}
                       {savings > 0 && (
-                        <div className="absolute top-4 right-4 bg-white/95 text-blue-950 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+                        <div className="absolute top-4 right-4 bg-white/95 text-stone-900 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
                           Hemat {formatPrice(savings)}
                         </div>
                       )}
 
                       {/* Location & Title */}
                       <div className="absolute bottom-4 left-4 right-4 text-white">
-                        <p className="text-[11px] font-bold text-white/85 uppercase tracking-wider flex items-center gap-1 mb-0.5">
-                          <MapPin className="w-3 h-3 text-sky-300" />
+                        <p className="text-[11px] font-medium text-amber-200/90 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <MapPin className="w-3 h-3 text-[#C29B38]" />
                           <span>{pkg.subtitle}</span>
                         </p>
-                        <h3 className="text-xl font-black leading-tight tracking-tight text-white drop-shadow-sm">
+                        <h3 className="text-xl font-bold leading-tight tracking-tight text-white drop-shadow-xs">
                           {pkg.title}
                         </h3>
                       </div>
@@ -391,25 +390,25 @@ export default function PackagesPage() {
                     <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                       
                       {/* Meta Stats */}
-                      <div className="flex items-center justify-between text-xs text-slate-500 pb-3 border-b border-slate-100">
+                      <div className="flex items-center justify-between text-xs text-stone-500 pb-3 border-b border-stone-100">
                         <span className="flex items-center gap-1.5 font-medium">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <Clock className="w-3.5 h-3.5 text-stone-400" />
                           <span>{pkg.duration}</span>
                         </span>
                         <span className="flex items-center gap-1.5 font-medium">
-                          <Users className="w-3.5 h-3.5 text-slate-400" />
+                          <Users className="w-3.5 h-3.5 text-stone-400" />
                           <span>{pkg.groupSize}</span>
                         </span>
-                        <span className="flex items-center gap-1 font-extrabold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-md">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        <span className="flex items-center gap-1 font-bold text-amber-800 bg-amber-50/80 border border-amber-200/60 px-2 py-0.5 rounded-md">
+                          <Star className="w-3.5 h-3.5 fill-[#C29B38] text-[#C29B38]" />
                           <span>{pkg.rating} ({pkg.reviews})</span>
                         </span>
                       </div>
 
                       {/* Highlight */}
                       {pkg.highlight && (
-                        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 text-xs text-slate-700 font-medium flex items-start gap-2">
-                          <Compass className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                        <div className="p-3 rounded-2xl bg-[#F5F2EB]/60 border border-stone-200/70 text-xs text-stone-700 font-medium flex items-start gap-2">
+                          <Compass className="w-4 h-4 text-[#C29B38] shrink-0 mt-0.5" />
                           <span className="line-clamp-2">{pkg.highlight}</span>
                         </div>
                       )}
@@ -417,10 +416,10 @@ export default function PackagesPage() {
                       {/* Includes list */}
                       {includesList.length > 0 && (
                         <div className="space-y-1.5">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Termasuk:</span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Termasuk:</span>
                           <div className="flex flex-wrap gap-1.5">
                             {includesList.slice(0, 3).map((inc: string, i: number) => (
-                              <span key={i} className="text-[10px] font-semibold bg-slate-100 text-slate-800 px-2.5 py-1 rounded-lg flex items-center gap-1">
+                              <span key={i} className="text-[10px] font-medium bg-stone-100/80 text-stone-800 px-2.5 py-1 rounded-lg flex items-center gap-1">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
                                 <span>{inc}</span>
                               </span>
@@ -430,22 +429,22 @@ export default function PackagesPage() {
                       )}
 
                       {/* Price & Action Button */}
-                      <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+                      <div className="pt-4 border-t border-stone-100 flex items-center justify-between gap-4">
                         <div>
                           {pkg.originalPrice && pkg.originalPrice > pkg.price && (
-                            <p className="text-xs text-slate-400 line-through font-medium leading-none mb-1">
+                            <p className="text-xs text-stone-400 line-through font-medium leading-none mb-1">
                               {formatPrice(pkg.originalPrice)}
                             </p>
                           )}
-                          <p className="text-xl font-black text-blue-950 tracking-tight leading-none">
+                          <p className="text-xl font-bold text-stone-950 tracking-tight leading-none">
                             {formatPrice(pkg.price)}
-                            <span className="text-[11px] text-slate-400 font-normal ml-1">/ org</span>
+                            <span className="text-[11px] text-stone-400 font-normal ml-1">/ org</span>
                           </p>
                         </div>
 
-                        <span className="px-5 py-2.5 rounded-xl bg-blue-600 group-hover:bg-blue-700 text-white text-xs font-extrabold transition-colors flex items-center gap-1.5 shrink-0 shadow-sm shadow-blue-600/25">
+                        <span className="px-5 py-2.5 rounded-full bg-stone-900 group-hover:bg-black text-white text-xs font-semibold transition-all flex items-center gap-1.5 shrink-0 shadow-xs">
                           <span>Detail</span>
-                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                         </span>
                       </div>
 
@@ -457,21 +456,23 @@ export default function PackagesPage() {
           )}
 
           {/* AI Banner Footer */}
-          <div className="p-8 sm:p-10 bg-gradient-to-r from-neutral-950 via-[#072f35] to-neutral-950 text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="p-8 sm:p-10 bg-[#1C1917] border border-stone-800/80 text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div className="space-y-2 text-center md:text-left">
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-white/10 px-3 py-1 rounded-full">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C29B38] bg-white/5 border border-white/10 px-3 py-1 rounded-full">
                 AI CUSTOM PLANNER
               </span>
-              <h3 className="text-2xl font-black">Mau Jadwal Liburan yang Disesuaikan Sendiri?</h3>
-              <p className="text-xs text-white/70 max-w-xl">
+              <h3 className="text-2xl font-black text-white">
+                Mau Jadwal Liburan yang <span className="font-serif-luxury italic font-normal text-amber-200">Disesuaikan Sendiri?</span>
+              </h3>
+              <p className="text-xs text-stone-300 max-w-xl">
                 Gunakan AI Travel Planner kami untuk menyusun jadwal hari demi hari, rute destinasi, dan estimasi biaya secara otomatis.
               </p>
             </div>
             <Link
               href="/ai-planner"
-              className="px-6 py-3.5 rounded-2xl bg-white text-neutral-950 text-xs font-black hover:bg-neutral-100 transition-colors flex items-center gap-2 shrink-0 shadow-md"
+              className="px-6 py-3.5 rounded-full bg-white hover:bg-stone-100 text-stone-950 text-xs font-bold transition-all flex items-center gap-2 shrink-0 shadow-md"
             >
-              <Sparkles className="w-4 h-4 text-brand" />
+              <Sparkles className="w-4 h-4 text-[#C29B38]" />
               <span>Buka AI Planner</span>
             </Link>
           </div>
