@@ -27,9 +27,12 @@ export default function DashboardBookingsPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'active' | 'completed' | 'cancelled'>('all')
 
-  const fetchBookings = async (signal: AbortSignal) => {
+  const fetchBookings = async (signal: AbortSignal, email?: string, token?: string) => {
     try {
-      const res = await fetch('/api/bookings', { signal })
+      const headers: Record<string, string> = {}
+      if (token) headers['Authorization'] = `Bearer ${token}`
+      const url = email ? `/api/bookings?email=${encodeURIComponent(email)}` : '/api/bookings'
+      const res = await fetch(url, { headers, signal })
       if (!res.ok) throw new Error()
       const data = await res.json()
       setBookings(Array.isArray(data) ? data : [])
@@ -42,9 +45,9 @@ export default function DashboardBookingsPage() {
 
   useEffect(() => {
     const controller = new AbortController()
-    supabaseClient.auth.getUser().then(({ data }) => {
-      if (!data.user) { router.replace('/login?redirect=/dashboard/bookings'); return }
-      fetchBookings(controller.signal)
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.user) { router.replace('/login?redirect=/dashboard/bookings'); return }
+      fetchBookings(controller.signal, session.user.email, session.access_token)
     })
     return () => controller.abort()
     // fetchBookings and router are stable — omitted intentionally
@@ -53,8 +56,8 @@ export default function DashboardBookingsPage() {
 
   const filtered = bookings.filter(b => {
     const status = b.bookingStatus ?? b.status ?? ''
-    if (filter === 'active') return ['pending', 'pending_payment', 'confirmed'].includes(status)
-    if (filter === 'completed') return status === 'completed'
+    if (filter === 'active') return ['pending', 'pending_payment', 'confirmed', 'paid'].includes(status)
+    if (filter === 'completed') return ['completed', 'paid'].includes(status)
     if (filter === 'cancelled') return status === 'cancelled'
     return true
   })

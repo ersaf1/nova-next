@@ -38,7 +38,7 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
 const ADMIN_ACCOUNTS = [
   { email: 'admin@nova.com', password: 'Admin123456!', role: 'super_admin' },
   { email: 'testadmin_qa@example.com', password: 'TestAdmin123!', role: 'super_admin' },
-  { email: 'ersaf@gmail.com', password: '11111111', role: 'super_admin' },
+  { email: 'ersafrexx@gmail.com', password: 'Password123!', role: 'super_admin' },
 ];
 
 async function createAndPromote() {

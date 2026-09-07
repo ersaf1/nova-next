@@ -12,10 +12,13 @@ import CancelBookingModal from '@/components/CancelBookingModal'
 type Booking = {
   id: number
   packageName: string
-  country: string
-  travelDate: string
+  country?: string
+  travelDate?: string
+  departureStartDate?: string
   participants: number
   status: 'paid' | 'pending' | 'cancelled'
+  bookingStatus?: string
+  paymentStatus?: string
   email: string
 }
 
@@ -87,7 +90,14 @@ export default function DashboardPage() {
       // Fetch bookings filtered by this user's email
       if (session.user.email) {
         setBookingsLoading(true)
-        fetch(`/api/bookings?email=${encodeURIComponent(session.user.email)}`, { signal: controller.signal })
+        const headers: Record<string, string> = {}
+        if (session.access_token) {
+          headers['Authorization'] = `Bearer ${session.access_token}`
+        }
+        fetch(`/api/bookings?email=${encodeURIComponent(session.user.email)}`, {
+          headers,
+          signal: controller.signal
+        })
           .then((r) => r.json())
           .then((data) => {
             if (Array.isArray(data)) setBookings(data)
@@ -103,8 +113,11 @@ export default function DashboardPage() {
 
   const now = new Date()
   const totalBookings = bookings.length
-  const upcomingTrips = bookings.filter((b) => new Date(b.travelDate) > now).length
-  const completed = bookings.filter((b) => b.status === 'paid').length
+  const upcomingTrips = bookings.filter((b) => {
+    const d = b.departureStartDate || b.travelDate
+    return d ? new Date(d) > now : false
+  }).length
+  const completed = bookings.filter((b) => b.status === 'paid' || b.paymentStatus === 'paid').length
 
   const stats = [
     { label: 'Total Bookings', value: totalBookings, icon: Luggage },
@@ -114,9 +127,14 @@ export default function DashboardPage() {
 
   const handleCancelBooking = async () => {
     if (!modalBooking || !user?.email) return
+    const sessionRes = await supabaseClient.auth.getSession()
+    const token = sessionRes.data.session?.access_token
     const res = await fetch(`/api/bookings/${modalBooking.id}/status`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({ status: 'cancelled', user_email: user.email }),
     })
     if (!res.ok) {
@@ -255,26 +273,28 @@ export default function DashboardPage() {
                   {bookings.map((b) => (
                     <tr key={b.id} className="border-b border-neutral-50 last:border-0 hover:bg-neutral-50/60 transition-colors">
                       <td className="px-6 py-4 text-sm font-medium text-black">{b.packageName}</td>
-                      <td className="px-6 py-4 text-sm text-neutral-600">{b.country}</td>
+                      <td className="px-6 py-4 text-sm text-neutral-600">{b.country || '-'}</td>
                       <td className="px-6 py-4 text-sm text-neutral-600">
-                        {new Date(b.travelDate).toLocaleDateString('en-US', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                        })}
+                        {b.departureStartDate || b.travelDate
+                          ? new Date(b.departureStartDate || b.travelDate).toLocaleDateString('id-ID', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                            })
+                          : '-'}
                       </td>
                       <td className="px-6 py-4 text-sm text-neutral-600">{b.participants}</td>
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full capitalize ${
-                            STATUS_STYLES[b.status] ?? 'bg-neutral-100 text-neutral-600'
+                            STATUS_STYLES[b.status] ?? (b.paymentStatus === 'paid' ? STATUS_STYLES.paid : 'bg-neutral-100 text-neutral-600')
                           }`}
                         >
-                          {b.status}
+                          {b.status || (b.paymentStatus === 'paid' ? 'paid' : 'pending')}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        {b.status === 'paid' ? (
+                        {b.status === 'paid' || b.paymentStatus === 'paid' ? (
                           <Link
                             href={`/payment/confirmation/${b.id}`}
                             className="text-xs font-medium text-black underline underline-offset-2 hover:text-neutral-600 transition-colors"

@@ -1131,11 +1131,17 @@ function FinalBossAiPlannerInner() {
             itineraryTitle={`Rencana Perjalanan - ${itinerary.destination}`}
             destination={itinerary.destination}
             durationDays={itinerary.duration}
-            estimatedBudgetIDR={
-              itinerary.totalEstimatedCost
-                ? parseInt(itinerary.totalEstimatedCost.replace(/\D/g, ''), 10) || (itinerary.duration * 1500000)
-                : (itinerary.duration * 1500000)
-            }
+            estimatedBudgetIDR={(() => {
+              if (!itinerary.totalEstimatedCost) return itinerary.duration * 1500000
+              const match = itinerary.totalEstimatedCost.match(/[\d.,]+/g)
+              if (match && match.length > 0) {
+                const parsed = parseInt(match[0].replace(/[.,]/g, ''), 10)
+                if (!isNaN(parsed) && parsed >= 100000 && parsed <= 1000000000) {
+                  return parsed
+                }
+              }
+              return itinerary.duration * 1500000
+            })()}
             onClose={() => setShowBookingModal(false)}
           />
         )}

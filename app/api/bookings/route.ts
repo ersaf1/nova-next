@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { supabase } from '@/lib/supabase'
+import { getUserFromRequest, getUserRole } from '@/lib/auth-server'
 import { sendBookingConfirmation } from '@/lib/email'
 import { sendWhatsAppNotification } from '@/lib/whatsapp'
 
@@ -16,39 +17,66 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const refundFilter = searchParams.get('refund') // e.g. 'requested'
+    const emailParam = searchParams.get('email')
 
-    // Build a session-aware Supabase client from the incoming cookies
-    const cookieStore = await cookies()
-    const supabaseAuth = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      { cookies: { getAll: () => cookieStore.getAll() } }
-    )
+    // 1. Try Bearer token or cookies via getUserFromRequest
+    let user = await getUserFromRequest(request)
 
-    const { data: { user } } = await supabaseAuth.auth.getUser()
+    // 2. Fall back to createServerClient
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      try {
+        const cookieStore = await cookies()
+        const supabaseAuth = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          { cookies: { getAll: () => cookieStore.getAll() } }
+        )
+        const { data } = await supabaseAuth.auth.getUser()
+        user = data.user
+      } catch {}
     }
 
     // Admin refund queue: ?refund=requested returns all bookings with that refund_status
-    // (admin role check is handled by the admin layout; this is a best-effort server filter)
     if (refundFilter) {
       const { data, error } = await supabase
         .from('Booking')
         .select('*')
         .eq('refund_status', refundFilter)
-        .order('updatedAt', { ascending: false })
+        .order('created_at', { ascending: false })
 
       if (error) throw error
       return NextResponse.json(data ?? [])
     }
 
-    // Fetch bookings scoped to this user — check userId first, fall back to email
-    const { data, error } = await supabase
-      .from('Booking')
-      .select('*')
-      .or(`userId.eq.${user.id},email.eq.${user.email}`)
-      .order('createdAt', { ascending: false })
+    // If still no authenticated user, fall back to emailParam if passed by client
+    if (!user) {
+      if (emailParam) {
+        const { data, error } = await supabase
+          .from('Booking')
+          .select('*')
+          .eq('email', emailParam)
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        return NextResponse.json(data ?? [])
+      }
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const role = await getUserRole(user.id)
+    const isAdmin = role === 'admin' || role === 'super_admin'
+
+    let query = supabase.from('Booking').select('*')
+    // Non-admin users only see their own bookings (matching userId, user email, or emailParam)
+    if (!isAdmin) {
+      const emails = Array.from(new Set([user.email, emailParam].filter(Boolean))) as string[]
+      const orConditions = [`userId.eq.${user.id}`, ...emails.map((e) => `email.eq.${e}`)]
+      query = query.or(orConditions.join(','))
+    } else if (emailParam) {
+      query = query.eq('email', emailParam)
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false })
 
     if (error) throw error
     return NextResponse.json(data ?? [])
@@ -61,14 +89,20 @@ const SERVICE_FEE = 250000 // IDR, fixed per booking
 
 export async function POST(request: Request) {
   try {
-    // Auth: get session user from cookies
-    const cookieStore = await cookies()
-    const supabaseAuth = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      { cookies: { getAll: () => cookieStore.getAll() } }
-    )
-    const { data: { user } } = await supabaseAuth.auth.getUser()
+    // Auth: get session user from Bearer token or cookies
+    let user = await getUserFromRequest(request)
+    if (!user) {
+      try {
+        const cookieStore = await cookies()
+        const supabaseAuth = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          { cookies: { getAll: () => cookieStore.getAll() } }
+        )
+        const { data } = await supabaseAuth.auth.getUser()
+        user = data.user
+      } catch {}
+    }
     const userId = user?.id ?? null
 
     const body = await request.json()
@@ -96,18 +130,26 @@ export async function POST(request: Request) {
     }
 
     // Fetch package for snapshot
-    const { data: pkg, error: pkgError } = await supabase
+    let pkgTitle = body.packageName || ''
+    let unitPrice: number = Number(body.unitPrice) || 0
+
+    const { data: pkg } = await supabase
       .from('Package')
       .select('id, title, price')
       .eq('id', packageId)
-      .single()
+      .maybeSingle()
 
-    if (pkgError || !pkg) {
+    if (pkg) {
+      if (!pkgTitle) pkgTitle = pkg.title
+      if (!unitPrice) unitPrice = pkg.price
+    } else if (!pkgTitle) {
       return NextResponse.json({ error: 'Package not found' }, { status: 404 })
     }
 
-    // Fetch departure for price snapshot (if provided)
-    let unitPrice: number = pkg.price
+    if (!unitPrice || unitPrice <= 0) {
+      unitPrice = 1500000
+    }
+
     let departureStartDate: string | undefined
     let departureEndDate: string | undefined
 
@@ -181,7 +223,7 @@ export async function POST(request: Request) {
 
     const bookingData = {
       bookingCode,
-      packageName: pkg.title,
+      packageName: pkgTitle,
       departureId: departureId || null,
       departureStartDate: departureStartDate || null,
       departureEndDate: departureEndDate || null,
@@ -194,6 +236,7 @@ export async function POST(request: Request) {
       notes: finalNotes,
       bookingStatus: 'confirmed',
       paymentStatus: 'paid',
+      status: 'paid',
       userId: userId || null,
       // legacy fallback fields
       country: country || null,
@@ -217,7 +260,7 @@ export async function POST(request: Request) {
     sendBookingConfirmation({
       to: resolvedEmail,
       name: resolvedName,
-      packageName: pkg.title,
+      packageName: pkgTitle,
       bookingId: data.id,
       travelDate: travelDate || departureStartDate || '',
       participants: Number(participants),
@@ -232,7 +275,7 @@ export async function POST(request: Request) {
       data: {
         bookingId: data.id,
         bookingCode,
-        packageName: pkg.title,
+        packageName: pkgTitle,
         travelDate: travelDate || departureStartDate || '',
         participants: Number(participants),
         totalAmount

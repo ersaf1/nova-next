@@ -132,6 +132,18 @@ const BookingPageInner: React.FC = () => {
     })
   }, [form.participants])
 
+  // Pre-fill email from session
+  useEffect(() => {
+    supabaseClient.auth.getUser().then(({ data }) => {
+      if (data?.user?.email) {
+        setForm((prev) => ({
+          ...prev,
+          email: prev.email || data.user.email!,
+        }))
+      }
+    })
+  }, [])
+
   const handlePassengerChange = (index: number, field: keyof Passenger, value: string) => {
     setPassengers((prev) => {
       const updated = [...prev]
@@ -679,7 +691,9 @@ const BookingPageInner: React.FC = () => {
                   {/* Email & Phone */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">Email Aktif *</label>
+                      <label className="block text-xs font-jakarta font-bold text-neutral-900 mb-1.5">
+                        Email Aktif {form.email ? '(Otomatis dari Akun)' : '*'}
+                      </label>
                       <div className="relative">
                         <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                         <input
@@ -687,8 +701,11 @@ const BookingPageInner: React.FC = () => {
                           type="email"
                           value={form.email}
                           onChange={handleFormChange}
+                          readOnly={!!form.email}
                           placeholder="nama@email.com"
-                          className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 bg-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 ${
+                          className={`w-full border rounded-xl pl-10 pr-4 py-3 text-xs font-jakarta font-bold text-neutral-950 ${
+                            form.email ? 'bg-neutral-100 cursor-not-allowed' : 'bg-white'
+                          } placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-brand/25 ${
                             formErrors.email ? 'border-rose-500' : 'border-neutral-200'
                           }`}
                         />

@@ -22,7 +22,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     const { data: booking, error: fetchError } = await supabaseAdmin
       .from('Booking')
-      .select('id, email, status')
+      .select('id, email, userId, status')
       .eq('id', Number(id))
       .single()
 
@@ -30,15 +30,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
     }
 
-    if (booking.email !== user.email) {
+    const isOwner = booking.email === user.email || (booking.userId && booking.userId === user.id)
+    if (!isOwner) {
       const role = await getUserRole(user.id)
       if (!['booking_officer', 'admin', 'super_admin'].includes(role ?? '')) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
     }
 
-    if (booking.status !== 'pending') {
-      return NextResponse.json({ error: `Cannot cancel a booking with status '${booking.status}'` }, { status: 400 })
+    if (booking.status === 'cancelled') {
+      return NextResponse.json({ error: 'Booking is already cancelled' }, { status: 400 })
     }
 
     const { data, error } = await supabaseAdmin

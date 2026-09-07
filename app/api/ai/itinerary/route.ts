@@ -983,6 +983,13 @@ CRITICAL ACCURACY & DYNAMIC COPYWRITING INSTRUCTIONS:
 5. NO DISTANT TRAVEL DURATION OR "X JAM DARI BLABLA":
    - STRICTLY PROHIBITED: NEVER mention travel duration or distance estimates referencing other cities, airports, or stations (e.g. NEVER write "2,5 jam dari Semarang", "2 jam perjalanan dari bandara", "X jam dari Y").
    - Focus exclusively on the experience, atmosphere, and activities at the destination itself.
+6. REALISTIC PRICING IN INDONESIAN RUPIAH (IDR):
+   - Provide realistic total travel estimates per person for the entire ${duration} days:
+     * Budget / Hemat: Rp 400.000 - Rp 700.000 / hari (e.g. Total: Rp 1.500.000 - Rp 2.800.000 untuk 4 hari)
+     * Mid-range: Rp 800.000 - Rp 1.500.000 / hari (e.g. Total: Rp 3.200.000 - Rp 5.500.000 untuk 4 hari)
+     * Luxury: Rp 2.000.000 - Rp 4.500.000 / hari (e.g. Total: Rp 8.000.000 - Rp 15.000.000 untuk 4 hari)
+   - "totalEstimatedCost" MUST be formatted simply as a single realistic range (e.g. "Rp 2.500.000 - Rp 3.500.000").
+   - NEVER output exorbitant or absurd amounts like tens of millions for short domestic trips, and NEVER output multiple confusing brackets or sub-calculations.
 
 Return a JSON object with this exact structure:
 {
@@ -1042,6 +1049,29 @@ Return a JSON object with this exact structure:
     if (!itinerary) throw lastError ?? new Error('AI itinerary generation failed')
 
     itinerary = deduplicateItinerary(itinerary, destination, placeNames)
+
+    // Ensure totalEstimatedCost is realistic, clean, and never exorbitant
+    const dur = Number(duration) || 3
+    const perDay = budget === 'Luxury' ? 2500000 : budget === 'Budget' ? 500000 : 1000000
+    const fallbackCost = `Rp ${(dur * perDay).toLocaleString('id-ID')} - Rp ${(Math.round(dur * perDay * 1.35)).toLocaleString('id-ID')}`
+
+    if (typeof itinerary.totalEstimatedCost === 'string') {
+      const nums = (itinerary.totalEstimatedCost.match(/[\d.,]+/g) || [])
+        .map((s: string) => parseInt(s.replace(/[.,]/g, ''), 10))
+        .filter((n: number) => !isNaN(n) && n >= 100000 && n <= 100000000)
+
+      if (nums.length >= 2) {
+        const low = Math.min(nums[0], nums[1])
+        const high = Math.max(nums[0], nums[1])
+        itinerary.totalEstimatedCost = `Rp ${low.toLocaleString('id-ID')} - Rp ${high.toLocaleString('id-ID')}`
+      } else if (nums.length === 1) {
+        itinerary.totalEstimatedCost = `Rp ${nums[0].toLocaleString('id-ID')}`
+      } else {
+        itinerary.totalEstimatedCost = fallbackCost
+      }
+    } else {
+      itinerary.totalEstimatedCost = fallbackCost
+    }
 
     // Galeri attractions
     if (realPlaces.length > 0) {

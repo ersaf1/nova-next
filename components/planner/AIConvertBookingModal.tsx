@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { CalendarCheck, MapPin, X, CheckCircle2, ArrowRight } from 'lucide-react'
+import { supabaseClient } from '@/lib/supabase-client'
 
 interface AIConvertBookingModalProps {
   itineraryTitle: string
@@ -27,7 +28,28 @@ export default function AIConvertBookingModal({
   const [success, setSuccess] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
 
-  const subtotal = estimatedBudgetIDR * participants
+  useEffect(() => {
+    supabaseClient.auth.getUser().then(({ data }) => {
+      if (data?.user?.email) {
+        setEmail(data.user.email)
+      }
+      if (data?.user?.user_metadata?.full_name) {
+        setName((prev) => prev || data.user.user_metadata.full_name)
+      }
+    })
+  }, [])
+
+  // Normalization guard: pastikan biaya per pax realistis dan wajar (misal 500rb - 35jt)
+  const normalizedBudget = (() => {
+    if (!estimatedBudgetIDR || isNaN(estimatedBudgetIDR)) return (durationDays || 3) * 1200000
+    // Jika angka melonjak di atas 50 juta karena bug regex, normalkan ke standar wajar per hari
+    if (estimatedBudgetIDR > 50000000) {
+      return (durationDays || 3) * 1200000
+    }
+    return Math.max(500000, estimatedBudgetIDR)
+  })()
+
+  const subtotal = normalizedBudget * participants
   const serviceFee = 250000
   const totalAmount = subtotal + serviceFee
 
@@ -41,10 +63,15 @@ export default function AIConvertBookingModal({
       const pkgRes = await fetch('/api/packages')
       const pkgs = await pkgRes.json()
       const packageId = Array.isArray(pkgs) && pkgs.length > 0 ? pkgs[0].id : 1
+      const sessionRes = await supabaseClient.auth.getSession()
+      const token = sessionRes.data.session?.access_token
 
       const res = await fetch('/api/bookings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({
           packageId,
           packageName: `[AI Custom] ${itineraryTitle}`,
@@ -52,22 +79,27 @@ export default function AIConvertBookingModal({
           contactName: name,
           contactEmail: email,
           contactPhone: phone,
-          participants,
+          participants: Number(participants) || 1,
+          unitPrice: normalizedBudget,
+          totalAmount,
           travelDate: travelDate || new Date().toISOString().split('T')[0],
           notes: `Hasil AI Itinerary Custom (${durationDays} Hari di ${destination})`,
         })
       })
 
       if (res.ok) {
+        const data = await res.json()
         setSuccess(true)
         setTimeout(() => {
           onClose()
-        }, 2500)
+          window.location.href = data?.id ? `/payment/confirmation/${data.id}` : '/dashboard/bookings'
+        }, 1500)
       } else {
         const errData = await res.json()
         setErrorMsg(errData.error || 'Gagal memproses booking AI')
       }
-    } catch {
+    } catch (err: unknown) {
+      console.error('Booking AI error:', err)
       setErrorMsg('Terjadi kesalahan jaringan')
     } finally {
       setLoading(false)
@@ -102,7 +134,7 @@ export default function AIConvertBookingModal({
               Destinasi: {destination}
             </p>
             <p className="text-zinc-500 font-mono">
-              Estimasi Biaya: <strong className="text-zinc-900">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(estimatedBudgetIDR)} / pax</strong>
+              Estimasi Biaya: <strong className="text-zinc-900">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(normalizedBudget)} / pax</strong>
             </p>
           </div>
 
@@ -134,14 +166,19 @@ export default function AIConvertBookingModal({
                 </div>
 
                 <div>
-                  <label className="font-semibold text-zinc-700 block mb-1">Email</label>
+                  <label className="font-semibold text-zinc-700 block mb-1">
+                    Email {email ? '(Otomatis dari Akun)' : ''}
+                  </label>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="email@example.com"
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 text-zinc-900 focus:outline-none"
+                    readOnly={!!email}
+                    className={`w-full border border-zinc-200 rounded-xl px-3 py-2 text-zinc-900 focus:outline-none ${
+                      email ? 'bg-zinc-100/80 cursor-not-allowed font-medium' : 'bg-zinc-50'
+                    }`}
                   />
                 </div>
               </div>
