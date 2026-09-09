@@ -16,6 +16,7 @@
     "test:e2e": "node scripts/run-e2e-tests.mjs",
     "test:puppeteer": "node tests/puppeteer/full-test.js",
     "test:puppeteer:user": "node tests/puppeteer/user-test.js",
+    "test:flagship": "node tests/puppeteer/test-flagship-flows.js",
     "test:admin:create": "node scripts/create-admin-test.js"
   },
   "dependencies": {

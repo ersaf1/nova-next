@@ -34,11 +34,11 @@ function renderMarkers(
     const isRef = marker.type === 'reference'
     
     el.className = isRef
-      ? 'w-8 h-8 bg-[#0099FF] rounded-full border-2 border-white shadow-xl flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-125 z-20'
-      : 'w-7 h-7 bg-rose-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-125 z-20'
+      ? 'w-8 h-8 bg-stone-900 rounded-full border-2 border-white shadow-xl flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-125 z-20'
+      : 'w-7 h-7 bg-[#C29B38] rounded-full border-2 border-white shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-125 z-20'
     
     el.innerHTML = isRef 
-      ? '<span style="color:white;font-size:11px;font-weight:800;">📍</span>'
+      ? '<span style="color:#C29B38;font-size:11px;font-weight:800;">📍</span>'
       : `<span style="color:white;font-size:11px;font-weight:800;font-family:sans-serif;">${index + 1}</span>`
 
     const popupHtml = `
@@ -105,9 +105,9 @@ function updateRouteLine(map: any, marks: MapMarker[]) {
         'line-cap': 'round',
       },
       paint: {
-        'line-color': '#3b82f6',
+        'line-color': '#C29B38',
         'line-width': 6,
-        'line-opacity': 0.3,
+        'line-opacity': 0.35,
       },
     })
 
@@ -121,7 +121,7 @@ function updateRouteLine(map: any, marks: MapMarker[]) {
         'line-cap': 'round',
       },
       paint: {
-        'line-color': '#2563eb',
+        'line-color': '#C29B38',
         'line-width': 3.5,
         'line-dasharray': [2, 1.5],
       },
@@ -265,7 +265,7 @@ export default function MapPanel({ markers, center, onMarkerClick }: Props) {
           onClick={() => setSelectedDayFilter('all')}
           className={`px-2.5 py-1 rounded-lg text-[11px] font-jakarta font-bold transition-all cursor-pointer ${
             selectedDayFilter === 'all'
-              ? 'bg-[#0099FF] text-white shadow-xs'
+              ? 'bg-[#C29B38] text-white shadow-xs'
               : 'text-neutral-300 hover:text-white hover:bg-white/10'
           }`}
         >
@@ -277,7 +277,7 @@ export default function MapPanel({ markers, center, onMarkerClick }: Props) {
             onClick={() => setSelectedDayFilter(d)}
             className={`px-2.5 py-1 rounded-lg text-[11px] font-jakarta font-bold transition-all cursor-pointer ${
               selectedDayFilter === d
-                ? 'bg-[#0099FF] text-white shadow-xs'
+                ? 'bg-[#C29B38] text-white shadow-xs'
                 : 'text-neutral-300 hover:text-white hover:bg-white/10'
             }`}
           >

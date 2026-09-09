@@ -35,12 +35,18 @@ import {
   MessageSquare,
   MessageCircle,
   RotateCcw,
-  X,
   Sparkles,
+  Bookmark,
+  BookmarkCheck,
+  Map as MapIcon,
+  ListFilter,
 } from 'lucide-react'
 import { supabaseClient } from '@/lib/supabase-client'
 import AIConvertBookingModal from '@/components/planner/AIConvertBookingModal'
 import CustomSelect from '@/components/ui/CustomSelect'
+import LocationSearch from '@/components/planner/LocationSearch'
+import MapPanel, { type MapMarker } from '@/components/planner/MapPanel'
+import { useCurrency } from '@/context/CurrencyContext'
 import gsap from 'gsap'
 
 interface Activity {
@@ -345,10 +351,22 @@ function FinalBossAiPlannerInner() {
   const [showBookingModal, setShowBookingModal] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
 
+  // Flagship features: Map View, Save to Account, Multi-currency
+  const [viewMode, setViewMode] = useState<'split' | 'list' | 'map'>('split')
+  const [mapMarkers, setMapMarkers] = useState<MapMarker[]>([])
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lon: number } | undefined>(undefined)
+  const [savingItinerary, setSavingItinerary] = useState(false)
+  const [savedSuccess, setSavedSuccess] = useState(false)
+  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false)
+
+  const { formatPrice, currentConfig } = useCurrency()
+
   const resultsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    supabaseClient.auth.getSession().catch(() => {})
+    supabaseClient.auth.getUser().then(({ data }) => {
+      setUserLoggedIn(Boolean(data?.user))
+    }).catch(() => {})
 
     const query = searchParams.get('q') || searchParams.get('prompt') || searchParams.get('destination')
     if (query) {
@@ -469,6 +487,52 @@ function FinalBossAiPlannerInner() {
         }
 
         setItinerary(enrichedData)
+
+        // Asynchronously resolve coordinates for markers
+        try {
+          const geoRes = await fetch('/api/geo/geocode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: enrichedData.destination }),
+          })
+          if (geoRes.ok) {
+            const geo = await geoRes.json()
+            if (geo?.lat && geo?.lon) {
+              setMapCenter({ lat: geo.lat, lon: geo.lon })
+
+              // Build day markers with sequential jitter around destination center if exact place geocode is unavailable
+              const markers: MapMarker[] = []
+              let spotIdx = 0
+
+              enrichedData.days.forEach((day) => {
+                day.activities.forEach((act) => {
+                  spotIdx++
+                  // Radius dispersion (~0.01 to 0.05 degrees ~ 1-5km)
+                  const angle = (spotIdx * 137.5 * Math.PI) / 180
+                  const radius = 0.008 + (spotIdx % 5) * 0.007
+                  const markerLat = geo.lat + Math.sin(angle) * radius
+                  const markerLon = geo.lon + Math.cos(angle) * radius
+
+                  markers.push({
+                    lat: markerLat,
+                    lon: markerLon,
+                    name: act.location || act.activity,
+                    type: 'place',
+                    day: day.day,
+                    time: act.time,
+                    cost: act.cost,
+                    popup: act.tips,
+                  })
+                })
+              })
+
+              setMapMarkers(markers)
+            }
+          }
+        } catch {
+          // Geocode fallback silently ignored
+        }
+
         setTimeout(() => {
           resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }, 100)
@@ -479,6 +543,65 @@ function FinalBossAiPlannerInner() {
       setError('Terjadi kendala koneksi. Silakan coba sesaat lagi.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleSaveItinerary = async () => {
+    if (!itinerary) return
+    setSavingItinerary(true)
+
+    try {
+      const sessionRes = await supabaseClient.auth.getSession()
+      const token = sessionRes.data.session?.access_token
+
+      if (!token) {
+        // Simpan sementara di localStorage agar user tidak kehilangan rencana
+        try {
+          const existingSaved = JSON.parse(localStorage.getItem('nova_guest_itineraries') || '[]')
+          existingSaved.unshift({
+            id: 'local-' + Date.now(),
+            destination: itinerary.destination,
+            duration: itinerary.duration,
+            travelers,
+            totalCost: itinerary.totalEstimatedCost,
+            createdAt: new Date().toISOString(),
+          })
+          localStorage.setItem('nova_guest_itineraries', JSON.stringify(existingSaved.slice(0, 10)))
+        } catch {}
+
+        // Arahkan user untuk login agar tersimpan permanen
+        const redirectUrl = encodeURIComponent(window.location.href)
+        router.push(`/login?redirect=${redirectUrl}`)
+        return
+      }
+
+      const res = await fetch('/api/itineraries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: `Rencana Liburan ke ${itinerary.destination}`,
+          destination: itinerary.destination,
+          duration: itinerary.duration,
+          travelers,
+          budget: selectedBudget,
+          preferences: [selectedVibe],
+          generatedContent: itinerary,
+        }),
+      })
+
+      if (res.ok) {
+        setSavedSuccess(true)
+        setTimeout(() => setSavedSuccess(false), 3500)
+      } else {
+        setError('Gagal menyimpan ke dashboard. Silakan coba lagi.')
+      }
+    } catch {
+      setError('Terjadi kendala saat menyimpan rencana perjalanan.')
+    } finally {
+      setSavingItinerary(false)
     }
   }
 
@@ -562,33 +685,21 @@ function FinalBossAiPlannerInner() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="relative flex-1">
-                    <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C29B38]" />
-                    <input
-                      id="search-destination-input"
-                      type="text"
-                      value={destination}
-                      onChange={(e) => setDestination(e.target.value)}
-                      placeholder="Ketik destinasi (misal: Jepara, Bali, Denpasar, Tokyo...)"
-                      className="w-full pl-11 pr-10 py-3.5 bg-stone-50/80 border border-stone-200 rounded-2xl text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 focus:bg-white transition-all font-medium"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && destination.trim()) {
-                          handleGenerate()
-                        }
-                      }}
-                    />
-                    {destination && (
-                      <button
-                        type="button"
-                        onClick={() => setDestination('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-200/60 transition-colors cursor-pointer"
-                        title="Hapus teks"
-                        aria-label="Hapus teks"
-                      >
-                        <X size={14} />
-                      </button>
-                    )}
-                  </div>
+                  <LocationSearch
+                    value={destination}
+                    onChange={(val) => setDestination(val)}
+                    onSelect={(s) => {
+                      const selectedDest = s.text || s.formatted
+                      setDestination(selectedDest)
+                      handleGenerate(selectedDest)
+                    }}
+                    onEnterPress={() => {
+                      if (destination.trim()) {
+                        handleGenerate()
+                      }
+                    }}
+                    placeholder="Ketik destinasi (misal: Jepara, Bali, Denpasar, Tokyo...)"
+                  />
 
                   {/* Inline Submit Button right beside the input box */}
                   <button
@@ -755,6 +866,31 @@ function FinalBossAiPlannerInner() {
                     <span>Pesan Rute Ini</span>
                   </button>
 
+                  {/* Primary Action: Save to Dashboard */}
+                  <button
+                    type="button"
+                    onClick={handleSaveItinerary}
+                    disabled={savingItinerary}
+                    className={`text-xs font-bold px-4 py-3 rounded-full border transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+                      savedSuccess
+                        ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                        : 'bg-white hover:bg-stone-50 border-stone-200/90 text-stone-800'
+                    }`}
+                    title="Simpan rencana perjalanan ini ke akun profil"
+                  >
+                    {savedSuccess ? (
+                      <>
+                        <BookmarkCheck size={14} className="text-emerald-600" />
+                        <span>Tersimpan di Profil!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Bookmark size={14} className="text-[#C29B38]" />
+                        <span>{savingItinerary ? 'Menyimpan...' : 'Simpan ke Profil'}</span>
+                      </>
+                    )}
+                  </button>
+
                   {/* Primary Action: WhatsApp Concierge */}
                   <a
                     href={`https://wa.me/6281234567890?text=${encodeURIComponent(
@@ -805,6 +941,53 @@ function FinalBossAiPlannerInner() {
                 </div>
               </div>
 
+              {/* View Mode Toggle Strip: List vs Map Split */}
+              <div className="flex items-center justify-between border-b border-stone-100 pb-4">
+                <div className="flex items-center gap-1.5 bg-[#FAF9F6] border border-stone-200/80 p-1 rounded-2xl">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('split')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      viewMode === 'split'
+                        ? 'bg-stone-900 text-white shadow-xs'
+                        : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    <Compass size={13} />
+                    <span>Split View (List + Peta)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('list')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      viewMode === 'list'
+                        ? 'bg-stone-900 text-white shadow-xs'
+                        : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    <ListFilter size={13} />
+                    <span>Hanya Daftar Rute</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('map')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      viewMode === 'map'
+                        ? 'bg-stone-900 text-white shadow-xs'
+                        : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    <MapIcon size={13} />
+                    <span>Peta Rute Luas</span>
+                  </button>
+                </div>
+
+                <div className="text-[11px] text-stone-400 font-medium hidden sm:flex items-center gap-1.5">
+                  <Sparkles size={12} className="text-[#C29B38]" />
+                  <span>{mapMarkers.length} spot kunjungan terpetakan</span>
+                </div>
+              </div>
+
               {/* Clean Metadata Strip */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-jakarta">
                 <div className="p-3 bg-[#F5F2EB]/50 border border-stone-200/60 rounded-xl">
@@ -826,7 +1009,7 @@ function FinalBossAiPlannerInner() {
               </div>
             </div>
 
-            {/* Day-by-day Itinerary Accordion */}
+            {/* Day-by-day Itinerary & Live Interactive Map Area */}
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
                 <div>
@@ -878,16 +1061,41 @@ function FinalBossAiPlannerInner() {
                 })}
               </div>
 
-              <div className="space-y-3">
-                {itinerary.days.map((day, idx) => (
-                  <DayAccordionItem
-                    key={day.day}
-                    day={day}
-                    isActive={activeDayTab === idx}
-                    onSelect={() => setActiveDayTab(activeDayTab === idx ? -1 : idx)}
-                    destinationContext={itinerary.destination}
-                  />
-                ))}
+              {/* Main Interactive Content: Responsive Grid with Map */}
+              <div className={viewMode === 'split' ? 'grid grid-cols-1 lg:grid-cols-12 gap-6 items-start' : 'space-y-4'}>
+                
+                {/* List View Column */}
+                {viewMode !== 'map' && (
+                  <div className={viewMode === 'split' ? 'lg:col-span-7 space-y-3' : 'space-y-3'}>
+                    {itinerary.days.map((day, idx) => (
+                      <DayAccordionItem
+                        key={day.day}
+                        day={day}
+                        isActive={activeDayTab === idx}
+                        onSelect={() => setActiveDayTab(activeDayTab === idx ? -1 : idx)}
+                        destinationContext={itinerary.destination}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Live Interactive Map Column */}
+                {viewMode !== 'list' && (
+                  <div
+                    className={
+                      viewMode === 'split'
+                        ? 'lg:col-span-5 lg:sticky lg:top-24 h-[420px] lg:h-[650px]'
+                        : 'w-full h-[520px]'
+                    }
+                  >
+                    <MapPanel
+                      markers={mapMarkers}
+                      center={mapCenter}
+                      activeDay={activeDayTab >= 0 ? activeDayTab + 1 : undefined}
+                    />
+                  </div>
+                )}
+
               </div>
             </div>
 
@@ -1102,6 +1310,30 @@ function FinalBossAiPlannerInner() {
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleSaveItinerary}
+                  disabled={savingItinerary}
+                  className={`px-3 py-2 rounded-xl text-xs font-jakarta font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    savedSuccess
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-stone-800 hover:bg-stone-700 text-stone-200'
+                  }`}
+                  title="Simpan rencana ke profil"
+                >
+                  {savedSuccess ? (
+                    <>
+                      <BookmarkCheck size={14} className="text-emerald-300" />
+                      <span className="hidden sm:inline">Tersimpan</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark size={14} className="text-[#C29B38]" />
+                      <span className="hidden sm:inline">{savingItinerary ? 'Menyimpan...' : 'Simpan'}</span>
+                    </>
+                  )}
+                </button>
+
                 <a
                   href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Concierge NOVA, saya tertarik dengan rute AI ke ${itinerary.destination} (${itinerary.duration} Hari). Mohon info reservasi.`)}`}
                   target="_blank"
@@ -1150,20 +1382,125 @@ function FinalBossAiPlannerInner() {
   )
 }
 
-export default function AiPlannerClient() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return <div className="min-h-screen bg-[#FAF9F6]" />
+class PlannerErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props)
+    this.state = { hasError: false, error: null }
   }
 
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Planner runtime error caught by boundary:', error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-[70vh] bg-[#FAF9F6] flex items-center justify-center px-4 py-16">
+          <div className="max-w-md w-full bg-white rounded-3xl border border-stone-200/80 p-8 text-center space-y-5 shadow-xs">
+            <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-700 flex items-center justify-center mx-auto">
+              <Sparkles size={22} className="text-[#C29B38]" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-xl font-bold font-jakarta text-stone-900">
+                Memuat Smart Route Planner
+              </h2>
+              <p className="text-xs text-stone-500 leading-relaxed font-normal">
+                Sistem sedang menyelaraskan antarmuka perencana rute. Klik tombol di bawah untuk memuat ulang dengan segar.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                this.setState({ hasError: false, error: null })
+                if (typeof window !== 'undefined') window.location.reload()
+              }}
+              className="w-full bg-stone-900 hover:bg-black text-[#FAF9F6] font-bold py-3.5 px-4 rounded-xl text-xs transition-colors cursor-pointer"
+            >
+              Muat Ulang Halaman
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
+function PlannerSkeleton() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#FAF9F6]" />}>
-      <FinalBossAiPlannerInner />
-    </Suspense>
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 font-sans selection:bg-[#EAE5D9]">
+      <div className="pt-24 pb-28 px-4 sm:px-6 max-w-5xl mx-auto space-y-16">
+        {/* Hero Header Skeleton */}
+        <section className="text-center space-y-4 max-w-3xl mx-auto pt-4">
+          <div className="inline-flex items-center gap-2 bg-stone-100 border border-stone-200 text-stone-700 text-xs font-jakarta font-bold tracking-wide px-4 py-1.5 rounded-full">
+            <Navigation size={13} className="text-[#C29B38]" />
+            <span>Smart Route Concierge</span>
+          </div>
+
+          <h1 className="font-jakarta font-black text-3xl sm:text-4xl lg:text-5xl text-stone-900 tracking-tight leading-tight">
+            Rancang Rencana Perjalanan <span className="font-serif-luxury italic font-normal text-stone-800">Presisi & Cerdas</span>
+          </h1>
+
+          <p className="font-jakarta text-sm sm:text-base text-stone-500 max-w-xl mx-auto leading-relaxed font-normal">
+            Penyusun jadwal perjalanan dengan rute harian efisien, estimasi biaya transparan, dan kurasi spot terverifikasi.
+          </p>
+
+          {/* Quick Destination Chips */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+            <span className="text-xs font-jakarta text-stone-400 mr-1">Populer:</span>
+            {['Jepara', 'Bali', 'Denpasar', 'Labuan Bajo', 'Tokyo'].map((dest) => (
+              <span
+                key={dest}
+                className="px-3 py-1 rounded-full text-xs font-jakarta font-semibold bg-white border border-stone-200 text-stone-600 shadow-2xs"
+              >
+                {dest}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* Input Card Skeleton */}
+        <div className="bg-white rounded-3xl border border-stone-200/80 p-6 sm:p-8 max-w-3xl mx-auto shadow-2xs space-y-6">
+          <div className="space-y-2">
+            <div className="h-4 w-32 bg-stone-100 rounded-md animate-pulse" />
+            <div className="h-12 w-full bg-stone-50 border border-stone-200/60 rounded-2xl animate-pulse" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div className="h-4 w-28 bg-stone-100 rounded-md animate-pulse" />
+              <div className="h-11 w-full bg-stone-50 border border-stone-200/60 rounded-xl animate-pulse" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-28 bg-stone-100 rounded-md animate-pulse" />
+              <div className="h-11 w-full bg-stone-50 border border-stone-200/60 rounded-xl animate-pulse" />
+            </div>
+          </div>
+
+          <div className="h-13 w-full bg-stone-900 rounded-2xl flex items-center justify-center text-white text-xs font-bold gap-2">
+            <Sparkles size={15} className="text-[#C29B38] animate-spin" />
+            <span>Memuat Sistem Perencana Rute...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function AiPlannerClient() {
+  return (
+    <PlannerErrorBoundary>
+      <Suspense fallback={<PlannerSkeleton />}>
+        <FinalBossAiPlannerInner />
+      </Suspense>
+    </PlannerErrorBoundary>
   )
 }

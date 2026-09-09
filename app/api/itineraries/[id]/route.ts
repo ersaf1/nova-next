@@ -52,7 +52,7 @@ export async function PATCH(
   // Verify ownership
   const { data: existing } = await supabase
     .from('SavedItinerary')
-    .select('userId')
+    .select('userId, shareToken')
     .eq('id', id)
     .single()
 
@@ -62,7 +62,9 @@ export async function PATCH(
   if (title !== undefined) updates.title = title
   if (visibility !== undefined) {
     updates.visibility = visibility
-    if (visibility === 'shared' && !existing) updates.shareToken = randomUUID()
+    if (visibility === 'shared' && !existing.shareToken) {
+      updates.shareToken = randomUUID()
+    }
   }
 
   const { data, error } = await supabase

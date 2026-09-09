@@ -3,6 +3,8 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { supabase } from '@/lib/supabase'
 
+import { randomUUID } from 'crypto'
+
 async function getUser() {
   const cookieStore = await cookies()
   const supabaseAuth = createServerClient(
@@ -51,8 +53,9 @@ export async function POST(request: Request) {
       travelers: Number(travelers ?? 1),
       budget: budget ?? null,
       preferences: JSON.stringify(preferences ?? []),
-      generatedContent: generatedContent ?? null,
+      generatedContent: generatedContent ? (typeof generatedContent === 'string' ? generatedContent : JSON.stringify(generatedContent)) : null,
       visibility: 'private',
+      shareToken: randomUUID(),
     })
     .select()
     .single()
