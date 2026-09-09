@@ -49,3 +49,7 @@ next-env.d.ts
 .claude/
 venv/
 *.log
+
+# root pptx scratch/working files
+/*.pptx
+!/public/docs/*.pptx

@@ -17,6 +17,7 @@ const Footer: React.FC = () => {
       { label: 'Ulasan Traveler', href: '/reviews' },
       { label: 'Pusat Bantuan & FAQ', href: '/faq' },
       { label: 'Panduan Pemesanan', href: '/how-it-works' },
+      { label: '📖 User Guide & Showcase', href: '/docs' },
     ],
     'Bantuan & Kebijakan': [
       { label: 'Kebijakan Refund', href: '/faq' },

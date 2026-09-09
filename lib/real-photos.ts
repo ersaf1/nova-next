@@ -13,7 +13,7 @@ const photoCache = new Map<string, ResolvedPhoto | null>()
 
 const USER_AGENT = 'NovaTravelApp/1.0 (https://novatravel.id; contact@novatravel.id)'
 
-const CURATED_EXACT_LANDMARKS: Record<string, string> = {
+export const CURATED_EXACT_LANDMARKS: Record<string, string> = {
   // Bali
   'bali': 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1600&q=90',
   'tanah lot': 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1200&q=85',

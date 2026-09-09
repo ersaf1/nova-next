@@ -66,8 +66,13 @@ export default function ReviewList({ entityType, entityId, refreshKey = 0 }: Rev
       ) : (
         <div className="space-y-4">
           {reviews.map((review) => {
-            const initials = review.user_name.slice(0, 2).toUpperCase()
-            const date = new Date(review.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+            const displayName = review.user_name || (review as any).name || 'Traveler'
+            const initials = displayName.slice(0, 2).toUpperCase()
+            const date = review.created_at
+              ? new Date(review.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+              : 'Baru saja'
+            const reviewText = review.body || (review as any).content || (review as any).text || ''
+
             return (
               <div key={review.id} className="bg-[#FAFBFB] border border-black/[0.04] rounded-xl p-5">
                 <div className="flex items-start justify-between mb-3">
@@ -76,14 +81,14 @@ export default function ReviewList({ entityType, entityId, refreshKey = 0 }: Rev
                       {initials}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-neutral-900">{review.user_name}</p>
+                      <p className="text-sm font-medium text-neutral-900">{displayName}</p>
                       <p className="text-xs text-neutral-400">{date}</p>
                     </div>
                   </div>
-                  <StarRating value={review.rating} readonly size="sm" />
+                  <StarRating value={review.rating || 5} readonly size="sm" />
                 </div>
                 {review.title && <p className="text-sm font-semibold text-neutral-900 mb-1">{review.title}</p>}
-                <p className="text-sm text-neutral-600 leading-relaxed font-light">{review.body}</p>
+                <p className="text-sm text-neutral-600 leading-relaxed font-light">{reviewText}</p>
               </div>
             )
           })}

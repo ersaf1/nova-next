@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import { getAttractionsForDestination } from '@/lib/attractions'
+import { CURATED_EXACT_LANDMARKS } from '@/lib/real-photos'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ReviewSection from '@/components/ReviewSection'
@@ -56,6 +57,13 @@ export default async function DestinationDetailPage({ params }: { params: Promis
   const dest = destination as Destination
   const attractions = getAttractionsForDestination(dest.city)
 
+  const cityKey = dest.city?.toLowerCase()?.trim() || ''
+  const heroImage =
+    dest.image && dest.image.trim() !== ''
+      ? dest.image
+      : (cityKey && CURATED_EXACT_LANDMARKS[cityKey]) ||
+        'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1600&q=90'
+
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-stone-900 selection:bg-[#EAE5D9] selection:text-stone-900">
       <Navbar />
@@ -63,12 +71,13 @@ export default async function DestinationDetailPage({ params }: { params: Promis
       {/* Hero Section */}
       <div className="relative h-[60vh] min-h-[460px] w-full overflow-hidden flex items-end">
         <Image
-          src={dest.image || ''}
+          src={heroImage}
           alt={dest.city}
           fill
           sizes="100vw"
           className="object-cover transition-transform duration-[10000ms] ease-out hover:scale-105"
           priority
+          unoptimized
         />
         {/* Modern clean light-overlay that ensures the picture remains 100% visible and only slightly darkens the text area */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent z-[1]" />
