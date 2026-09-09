@@ -183,6 +183,12 @@ export async function POST(request: Request) {
     const subtotal = unitPrice * participants
     let discountAmount = 0
 
+    // Add-on fees
+    const insurancePerPerson = 175000
+    const vipConciergeFee = 350000
+    const insuranceTotal = body.insuranceIncluded ? insurancePerPerson * participants : 0
+    const conciergeTotal = body.vipConciergeIncluded ? vipConciergeFee : 0
+
     // Validate voucher server-side if provided
     if (voucherCode) {
       const { data: coupon } = await supabase
@@ -214,12 +220,19 @@ export async function POST(request: Request) {
     }
 
     // Total calculation
-    const totalAmount = Math.max(0, subtotal - discountAmount + SERVICE_FEE)
+    const totalAmount = Math.max(0, subtotal - discountAmount + SERVICE_FEE + insuranceTotal + conciergeTotal)
     const bookingCode = generateBookingCode()
 
-    const finalNotes = passengers && Array.isArray(passengers) && passengers.length > 0
-      ? JSON.stringify({ userNotes: notes || '', passengers })
-      : (notes || null)
+    const finalNotes = JSON.stringify({
+      userNotes: notes || '',
+      passengers: Array.isArray(passengers) ? passengers : [],
+      addons: {
+        insuranceIncluded: !!body.insuranceIncluded,
+        insuranceTotal,
+        vipConciergeIncluded: !!body.vipConciergeIncluded,
+        conciergeTotal,
+      }
+    })
 
     const bookingData = {
       bookingCode,
@@ -234,9 +247,9 @@ export async function POST(request: Request) {
       serviceFee: SERVICE_FEE,
       totalAmount,
       notes: finalNotes,
-      bookingStatus: 'confirmed',
-      paymentStatus: 'paid',
-      status: 'paid',
+      bookingStatus: 'pending_payment',
+      paymentStatus: 'pending',
+      status: 'pending',
       userId: userId || null,
       // legacy fallback fields
       country: country || null,

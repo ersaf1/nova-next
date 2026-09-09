@@ -11,8 +11,10 @@ interface Booking {
   id: number
   packageName: string
   country: string
-  name: string
-  email: string
+  name?: string
+  contactName?: string
+  email?: string
+  contactEmail?: string
   travelDate: string
   participants: number
   paymentStatus: string
@@ -20,6 +22,7 @@ interface Booking {
   price?: number
   totalAmount?: number
   bookingCode?: string
+  passengers?: Array<{ title: string; name: string; idType?: string; idNumber?: string }>
 }
 
 const PAYMENT_METHODS = [
@@ -168,7 +171,7 @@ export default function PaymentPage() {
             <div className="space-y-2 text-xs">
               <div className="flex justify-between text-stone-600">
                 <span>Nama Pemesan</span>
-                <span className="font-bold text-stone-900">{booking.name}</span>
+                <span className="font-bold text-stone-900">{booking.name || booking.contactName || '-'}</span>
               </div>
               <div className="flex justify-between text-stone-600">
                 <span>Jumlah Peserta</span>
@@ -240,6 +243,68 @@ export default function PaymentPage() {
             </div>
           </div>
 
+          {/* Interactive Payment Channel Guide & Virtual Account Box */}
+          <div className="bg-white rounded-3xl border border-stone-200/90 p-5 space-y-3 shadow-2xs">
+            <div className="flex items-center justify-between text-xs font-bold text-stone-900">
+              <span className="flex items-center gap-1.5">
+                <Building2 size={15} className="text-[#C29B38]" />
+                <span>
+                  {selectedMethod === 'bank_transfer'
+                    ? 'Nomor Virtual Account BCA / Mandiri'
+                    : selectedMethod === 'credit_card'
+                    ? 'Otorisasi Kartu Kredit / Debit'
+                    : 'Kode QRIS Pembayaran Nasional'}
+                </span>
+              </span>
+              <span className="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md font-bold">
+                Online 24 Jam
+              </span>
+            </div>
+
+            {selectedMethod === 'bank_transfer' && (
+              <div className="p-4 rounded-2xl bg-[#FAF9F6] border border-stone-200/80 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Nomor Rekening Virtual Account</p>
+                  <p className="font-mono text-base font-bold text-stone-950 tracking-wider">
+                    88012 {String(booking.id).padStart(6, '0')} 992
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`88012${String(booking.id).padStart(6, '0')}992`)
+                    alert('Nomor Virtual Account berhasil disalin!')
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-white border border-stone-200 text-stone-800 text-xs font-bold hover:bg-stone-50 cursor-pointer shadow-2xs shrink-0"
+                >
+                  Salin No. VA
+                </button>
+              </div>
+            )}
+
+            {selectedMethod === 'ewallet' && (
+              <div className="p-4 rounded-2xl bg-[#FAF9F6] border border-stone-200/80 text-center space-y-2">
+                <div className="inline-block p-3 bg-white border border-stone-200 rounded-xl shadow-2xs">
+                  <div className="w-24 h-24 bg-stone-900 rounded-lg flex items-center justify-center text-white text-[10px] font-mono font-bold">
+                    [QRIS NOVA]
+                  </div>
+                </div>
+                <p className="text-[11px] text-stone-500">
+                  Dapat dipindai menggunakan GoPay, OVO, Dana, BCA Mobile, atau Livin Mandiri.
+                </p>
+              </div>
+            )}
+
+            {selectedMethod === 'credit_card' && (
+              <div className="p-3.5 rounded-2xl bg-[#FAF9F6] border border-stone-200/80 text-xs text-stone-600 space-y-1">
+                <p className="font-bold text-stone-900">Enkripsi 3D-Secure 2.0</p>
+                <p className="text-[11px] text-stone-400">
+                  Mendukung cicilan 0% hingga 12 bulan untuk kartu kredit bank mitra.
+                </p>
+              </div>
+            )}
+          </div>
+
           {/* Instant Submit Button */}
           <div className="space-y-2.5 pt-2">
             <button
@@ -254,7 +319,7 @@ export default function PaymentPage() {
                 </>
               ) : (
                 <>
-                  <span>Bayar Sekarang (Auto-Lunas)</span>
+                  <span>Konfirmasi Pembayaran (Auto-Lunas)</span>
                   <ArrowRight size={16} />
                 </>
               )}
@@ -262,7 +327,7 @@ export default function PaymentPage() {
 
             <div className="flex items-center justify-center gap-1.5 text-[11px] text-stone-400 font-medium text-center">
               <Lock size={12} className="text-emerald-600" />
-              <span>Tanpa menunggu admin. Status otomatis terkonfirmasi lunas seketika.</span>
+              <span>Verifikasi instan tanpa antre. E-ticket resmi terbit seketika.</span>
             </div>
           </div>
         </div>

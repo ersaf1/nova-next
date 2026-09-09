@@ -48,17 +48,21 @@ const Footer: React.FC = () => {
               </div>
             </div>
             
-            <p className="text-stone-400 text-sm leading-relaxed max-w-sm font-normal">
-              Platform perjalanan kurasi modern terpercaya di Indonesia. Paket wisata all-inclusive bintang 5, tur privat, dan perencanaan rute cerdas.
+            <p className="text-stone-400 text-xs sm:text-sm leading-relaxed max-w-sm font-normal">
+              Biro Perjalanan Wisata Terkurasi Resmi di Indonesia. Melayani paket perjalanan bintang 5 all-inclusive, private charter ekspedisi, serta kurasi rute cerdas.
             </p>
 
-            <div className="space-y-2 text-sm text-stone-400 pt-1">
+            <div className="space-y-2 text-xs text-stone-400 pt-1">
               <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-[#C29B38]" />
-                <span>SCBD, Jakarta Selatan</span>
+                <MapPin className="w-4 h-4 text-[#C29B38] shrink-0" />
+                <span>Menara NOVA Lt. 18, SCBD Kav. 52-53, Jakarta Selatan 12190</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-[#C29B38]" />
+                <Phone className="w-4 h-4 text-[#C29B38] shrink-0" />
+                <span>Hotline 24/7 Concierge: +62 21 5088 9000 / WA +62 812 3456 7890</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-[#C29B38] shrink-0" />
                 <span>concierge@nova.travel</span>
               </div>
             </div>
@@ -87,33 +91,44 @@ const Footer: React.FC = () => {
             ))}
           </div>
 
-          {/* Security Column */}
+          {/* Security & Agency Certification Column */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-[10px] font-bold tracking-widest uppercase text-stone-400">
-              Jaminan Keamanan
+              Legalitas & Keamanan Biro
             </h4>
             
             <div className="p-4 bg-white/5 border border-white/10 rounded-2xl space-y-3">
               <div className="flex items-center gap-2.5">
                 <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-white">Garansi 100% Refund</p>
-                  <p className="text-[11px] text-stone-400">Proteksi pembatalan resmi</p>
+                  <p className="text-xs font-semibold text-white">Izin Resmi TDUP & Kemenparekraf</p>
+                  <p className="text-[10px] text-stone-400">No. NIB: 0220301140921 &middot; Biro Wisata</p>
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
-                <Lock className="w-5 h-5 text-[#C29B38] shrink-0" />
+                <Award className="w-5 h-5 text-[#C29B38] shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-white">Pembayaran Terenkripsi</p>
-                  <p className="text-[11px] text-stone-400">256-Bit SSL Security</p>
+                  <p className="text-xs font-semibold text-white">Anggota Resmi ASITA & IATA</p>
+                  <p className="text-[10px] text-stone-400">Terakreditasi Asosiasi Pariwisata</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Lock className="w-5 h-5 text-sky-400 shrink-0" />
+                <div>
+                  <p className="text-xs font-semibold text-white">Pembayaran Terenkripsi 256-Bit</p>
+                  <p className="text-[10px] text-stone-400">Garansi 100% Refund Sesuai Polis</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 flex-wrap text-[10px] text-stone-400 pt-1">
-              {['BCA', 'Mandiri', 'BNI', 'QRIS', 'Visa', 'Mastercard'].map(bank => (
-                <span key={bank} className="bg-white/8 border border-white/10 px-2.5 py-1 rounded-lg text-stone-300 font-medium">{bank}</span>
-              ))}
+            {/* Payment Partners */}
+            <div className="space-y-1.5 pt-1">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-stone-500">Metode Pembayaran Resmi</p>
+              <div className="flex items-center gap-1.5 flex-wrap text-[10px] text-stone-400">
+                {['BCA', 'Mandiri', 'BNI', 'BRI', 'QRIS', 'Visa', 'Mastercard'].map(bank => (
+                  <span key={bank} className="bg-white/8 border border-white/10 px-2 py-0.5 rounded text-stone-300 font-medium">{bank}</span>
+                ))}
+              </div>
             </div>
           </div>
 

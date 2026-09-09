@@ -39,6 +39,7 @@ export interface TravelPackage {
   gallery?: string[]         // additional images
   excluded?: string[]        // what's NOT included
   status?: 'draft' | 'published' | 'archived'
+  itinerary?: ItineraryDay[] // day-by-day itinerary schedule
 
   // Legacy / existing fields kept for compat
   tag: string
@@ -58,6 +59,21 @@ export interface TravelPackage {
   category?: string          // destination/category grouping
   createdAt?: string
   updatedAt?: string
+}
+
+export interface ItineraryDay {
+  day: number
+  title: string
+  subtitle?: string
+  description: string
+  activities: string[]
+  meals?: {
+    breakfast?: boolean
+    lunch?: boolean
+    dinner?: boolean
+  }
+  hotel?: string
+  highlights?: string[]
 }
 
 // ─── Traveler ───────────────────────────────────────────────

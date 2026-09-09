@@ -22,6 +22,7 @@ import path from 'path'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PackageDetailClient from '@/components/PackageDetailClient'
+import ItineraryTimeline from '@/components/ItineraryTimeline'
 import type { TravelPackage, PackageDeparture } from '@/lib/types'
 import { formatIDR } from '@/lib/types'
 
@@ -237,6 +238,13 @@ export default async function PackageSlugPage({
               </div>
             )}
 
+            {/* Day-by-Day Itinerary Rundown */}
+            <ItineraryTimeline
+              daysCount={pkg.durationDays || (pkg.duration ? parseInt(pkg.duration) : 5)}
+              destinationTitle={displayTitle}
+              existingItinerary={pkg.itinerary}
+            />
+
             {/* Inclusions & Exclusions Side-by-Side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
@@ -352,6 +360,7 @@ export default async function PackageSlugPage({
                 packageId={Number(pkg.id)}
                 departures={departures}
                 basePrice={displayPrice}
+                packageTitle={displayTitle}
               />
 
             </div>

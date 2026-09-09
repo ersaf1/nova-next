@@ -11,14 +11,24 @@ type Props = {
   packageId: number
   departures: PackageDeparture[]
   basePrice: number
+  packageTitle?: string
 }
 
-export default function PackageDetailClient({ packageId, departures, basePrice }: Props) {
+export default function PackageDetailClient({ packageId, departures, basePrice, packageTitle = 'Paket Wisata' }: Props) {
   const { formatPrice } = useCurrency()
   const [selectedId, setSelectedId] = useState<number | null>(
     departures.length > 0 ? (departures.find(d => d.status !== 'sold_out')?.id ?? null) : null
   )
   const [copied, setCopied] = useState(false)
+
+  const handleConsultWhatsApp = () => {
+    if (typeof window === 'undefined') return
+    const url = window.location.href
+    const text = encodeURIComponent(
+      `Halo Tim Concierge NOVA Travel, saya tertarik dengan paket "${packageTitle}". Saya ingin konsultasi ketersediaan jadwal, penyesuaian private trip, atau request khusus. Link paket: ${url}`
+    )
+    window.open(`https://wa.me/6281234567890?text=${text}`, '_blank')
+  }
 
   const handleShareWhatsApp = () => {
     if (typeof window === 'undefined') return
@@ -141,19 +151,31 @@ export default function PackageDetailClient({ packageId, departures, basePrice }
         </div>
       </div>
 
-      {/* Primary Booking Button */}
-      <Link
-        href={bookingHref}
-        className="w-full bg-stone-900 hover:bg-black active:scale-[0.98] text-[#FAF9F6] font-bold py-4 rounded-2xl transition-all shadow-md shadow-stone-900/10 text-xs flex items-center justify-center gap-2 group text-center block cursor-pointer"
-      >
-        <span>Lanjut ke Pemesanan</span>
-        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-      </Link>
+      {/* Booking & Concierge Actions */}
+      <div className="space-y-2.5">
+        <Link
+          href={bookingHref}
+          className="w-full bg-stone-900 hover:bg-black active:scale-[0.98] text-[#FAF9F6] font-bold py-4 rounded-2xl transition-all shadow-md shadow-stone-900/10 text-xs flex items-center justify-center gap-2 group text-center block cursor-pointer"
+        >
+          <span>Pesan Paket Ini Sekarang</span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </Link>
+
+        {/* WhatsApp Travel Specialist Consultation */}
+        <button
+          type="button"
+          onClick={handleConsultWhatsApp}
+          className="w-full bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] border border-[#25D366]/30 font-bold py-3 px-4 rounded-2xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <MessageCircle className="w-4 h-4 text-[#25D366]" />
+          <span>Tanya Tim Travel Consultant via WhatsApp</span>
+        </button>
+      </div>
 
       {/* Trust guarantees */}
       <div className="flex items-center justify-center gap-1.5 text-[11px] text-stone-400 font-medium text-center pt-1">
         <ShieldCheck className="w-3.5 h-3.5 text-[#C29B38] shrink-0" />
-        <span>Garansi 100% Refund & Keamanan Enkripsi SSL</span>
+        <span>Garansi 100% Refund & Keamanan Transaksi Resmi</span>
       </div>
 
       {/* Share Actions (WhatsApp & Copy Link) */}
@@ -163,8 +185,8 @@ export default function PackageDetailClient({ packageId, departures, basePrice }
           onClick={handleShareWhatsApp}
           className="flex-1 bg-white hover:bg-stone-50 text-stone-800 border border-stone-200/80 rounded-xl py-2.5 px-3 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
         >
-          <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Bagikan ke WA</span>
+          <Share2 className="w-3.5 h-3.5 text-stone-500" />
+          <span>Bagikan Paket</span>
         </button>
 
         <button
@@ -172,8 +194,8 @@ export default function PackageDetailClient({ packageId, departures, basePrice }
           onClick={handleCopyLink}
           className="flex-1 bg-white hover:bg-stone-50 text-stone-800 border border-stone-200/80 rounded-xl py-2.5 px-3 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
         >
-          {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5 text-stone-500" />}
-          <span>{copied ? 'Tersalin!' : 'Salin Link'}</span>
+          {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <CheckCircle2 className="w-3.5 h-3.5 text-stone-400" />}
+          <span>{copied ? 'Tersalin!' : 'Salin Tautan'}</span>
         </button>
       </div>
 

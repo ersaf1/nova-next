@@ -86,7 +86,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 pb-10">
           <Link href="/destinations" className="inline-flex items-center gap-2 text-white hover:text-stone-200 text-xs font-semibold uppercase tracking-wider mb-6 transition-colors duration-200 group bg-stone-950/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <ArrowLeft className="w-3.5 h-3.5 transform group-hover:-translate-x-1 transition-transform" /> 
-            Back to Destinations
+            Kembali ke Semua Destinasi
           </Link>
 
           <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -107,11 +107,11 @@ export default async function DestinationDetailPage({ params }: { params: Promis
             <div className="flex items-center gap-1.5 bg-stone-950/30 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-sm">
               <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
               <span className="text-white font-bold">{dest.rating}</span>
-              <span className="text-white/60 text-xs font-normal ml-0.5">(Excellent review)</span>
+              <span className="text-white/60 text-xs font-normal ml-0.5">(Ulasan Istimewa)</span>
             </div>
             <div className="flex items-center gap-1.5 bg-stone-950/30 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-sm">
               <Clock className="w-4 h-4 text-[#C29B38]" />
-              <span>Recommend: {dest.duration}</span>
+              <span>Saran Durasi: {dest.duration}</span>
             </div>
           </div>
         </div>
@@ -198,25 +198,25 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                   <div className="w-8 h-8 rounded-full bg-[#F5F2EB] flex items-center justify-center border border-stone-200/80 text-[#C29B38]">
                     <Clock className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{dest.duration} Travel Duration</span>
+                  <span className="font-medium">Durasi Perjalanan: {dest.duration}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#F5F2EB] flex items-center justify-center border border-stone-200/80 text-[#C29B38]">
                     <MapPin className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{dest.country} Location</span>
+                  <span className="font-medium">Lokasi: {dest.country}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#F5F2EB] flex items-center justify-center border border-stone-200/80 text-[#C29B38]">
                     <Calendar className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">Daily departures available</span>
+                  <span className="font-medium">Jadwal keberangkatan fleksibel harian</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#F5F2EB] flex items-center justify-center border border-stone-200/80 text-[#C29B38]">
                     <ShieldCheck className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">Instant confirmation & Secure payment</span>
+                  <span className="font-medium">Konfirmasi instan & transaksi aman resmi</span>
                 </div>
               </div>
 
@@ -225,14 +225,14 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                   href={`/booking?destination=${encodeURIComponent(dest.city)}`}
                   className="block w-full text-center bg-stone-900 hover:bg-black text-[#FAF9F6] font-bold py-3.5 rounded-2xl transition-all shadow-md shadow-stone-900/10 text-xs cursor-pointer"
                 >
-                  Book This Destination
+                  Pesan Liburan ke Destinasi Ini
                 </Link>
                 
                 <Link
                   href="/destinations"
                   className="block w-full text-center bg-[#F5F2EB] hover:bg-stone-200/60 text-stone-800 font-semibold py-3 rounded-2xl border border-stone-200/80 transition-all text-xs cursor-pointer"
                 >
-                  View All Destinations
+                  Jelajahi Destinasi Lainnya
                 </Link>
               </div>
             </div>
