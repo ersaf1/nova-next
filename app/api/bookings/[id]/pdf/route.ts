@@ -53,7 +53,8 @@ export async function GET(
       passengers,
     }
 
-    const buffer = await renderToBuffer(React.createElement(EticketPDF, { booking: eticketData }))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const buffer = await renderToBuffer(React.createElement(EticketPDF, { booking: eticketData }) as any)
 
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,

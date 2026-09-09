@@ -269,6 +269,8 @@ export default function BookingDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingId])
 
+  const { status: realtimeStatus, refundStatus: realtimeRefundStatus, lastUpdate } = useBookingRealtime(booking?.id ?? null)
+
   const formatDate = (d?: string) => d ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'
 
   if (loading) return (
@@ -288,8 +290,6 @@ export default function BookingDetailPage() {
       </div>
     </div>
   )
-
-  const { status: realtimeStatus, refundStatus: realtimeRefundStatus, lastUpdate } = useBookingRealtime(booking?.id ?? null)
 
   const bookingStatus = ((realtimeStatus ?? booking.bookingStatus ?? booking.status ?? 'pending')) as Booking['bookingStatus']
   const paymentStatus = ((realtimeRefundStatus ?? booking.paymentStatus ?? 'unpaid')) as Booking['paymentStatus']

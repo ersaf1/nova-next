@@ -276,7 +276,7 @@ export default function DashboardPage() {
                       <td className="px-6 py-4 text-sm text-neutral-600">{b.country || '-'}</td>
                       <td className="px-6 py-4 text-sm text-neutral-600">
                         {b.departureStartDate || b.travelDate
-                          ? new Date(b.departureStartDate || b.travelDate).toLocaleDateString('id-ID', {
+                          ? new Date((b.departureStartDate || b.travelDate) as string).toLocaleDateString('id-ID', {
                               day: 'numeric',
                               month: 'short',
                               year: 'numeric',
