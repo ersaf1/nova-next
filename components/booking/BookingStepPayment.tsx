@@ -19,24 +19,22 @@ export default function BookingStepPayment({ bookingId, bookingCode, totalAmount
     setLoading(true)
     setError(null)
     try {
-      await fetch('/api/payment/notification', {
+      const res = await fetch('/api/payment/simulate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          order_id: `NOVA-${bookingId}-mock`,
-          status_code: '200',
-          gross_amount: String(totalAmount),
-          signature_key: 'mock',
-          transaction_status: 'settlement',
-          fraud_status: 'accept',
-          payment_type: 'mock',
-          transaction_id: `mock-${Date.now()}`,
-          transaction_time: new Date().toISOString(),
+          bookingId,
+          method: 'bank_transfer',
         }),
       })
-      window.location.href = `/payment/confirmation/${bookingId}`
+      if (res.ok) {
+        window.location.href = `/payment/confirmation/${bookingId}`
+      } else {
+        setError('Gagal memproses pembayaran. Silakan coba lagi.')
+        setLoading(false)
+      }
     } catch {
-      setError('Terjadi kesalahan. Silakan coba lagi.')
+      setError('Terjadi kesalahan jaringan. Silakan coba lagi.')
       setLoading(false)
     }
   }
@@ -46,8 +44,11 @@ export default function BookingStepPayment({ bookingId, bookingCode, totalAmount
       <BookingProgress currentStep={3} />
 
       <div className="bg-white rounded-2xl border border-black/[0.06] p-6 space-y-4 text-center">
-        <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mx-auto">
-          <span className="text-2xl">💳</span>
+        <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto text-amber-600">
+          <span className="text-2xl">⚡</span>
+        </div>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-[11px] font-bold border border-amber-200">
+          <span>Mode Simulasi 1-Klik Aktif</span>
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1">Kode Booking</p>
@@ -69,9 +70,9 @@ export default function BookingStepPayment({ bookingId, bookingCode, totalAmount
         <button
           onClick={handlePay}
           disabled={loading}
-          className="w-full bg-black hover:bg-brand-dark text-white font-semibold py-3.5 rounded-xl transition-colors text-sm disabled:opacity-50"
+          className="w-full bg-black hover:bg-neutral-800 text-white font-semibold py-3.5 rounded-xl transition-colors text-sm disabled:opacity-50 cursor-pointer shadow-xs flex items-center justify-center gap-2"
         >
-          {loading ? 'Memproses…' : 'Bayar Sekarang'}
+          {loading ? 'Memproses Simulasi…' : '⚡ Bayar Sekarang (Simulasi 1-Klik Selesai)'}
         </button>
 
         <button

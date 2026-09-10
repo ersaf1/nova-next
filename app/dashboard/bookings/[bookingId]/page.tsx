@@ -249,6 +249,7 @@ export default function BookingDetailPage() {
   const [refundSuccess, setRefundSuccess] = useState(false)
   const [showReviewModal, setShowReviewModal] = useState(false)
   const [reviewSuccess, setReviewSuccess] = useState(false)
+  const [instantPaying, setInstantPaying] = useState(false)
 
   const fetchBooking = async () => {
     try {
@@ -419,9 +420,37 @@ export default function BookingDetailPage() {
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
               {needsPayment ? (
-                <Link href={`/payment/${booking.id}`} className="bg-brand text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-brand-dark transition-colors">
-                  Lanjutkan Pembayaran
-                </Link>
+                <>
+                  <button
+                    onClick={async () => {
+                      if (!booking || instantPaying) return
+                      setInstantPaying(true)
+                      try {
+                        const res = await fetch('/api/payment/simulate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ bookingId: booking.id }),
+                        })
+                        if (res.ok) {
+                          router.push(`/payment/confirmation/${booking.id}`)
+                        } else {
+                          alert('Gagal memproses pembayaran simulasi')
+                          setInstantPaying(false)
+                        }
+                      } catch {
+                        alert('Terjadi kesalahan jaringan')
+                        setInstantPaying(false)
+                      }
+                    }}
+                    disabled={instantPaying}
+                    className="bg-neutral-900 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-black transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    <span>{instantPaying ? 'Memproses Simulasi...' : '⚡ Bayar Sekarang (Simulasi 1-Klik)'}</span>
+                  </button>
+                  <Link href={`/payment/${booking.id}`} className="border border-neutral-200 text-neutral-700 text-sm font-semibold px-5 py-3 rounded-xl hover:bg-neutral-50 transition-colors">
+                    Pilih Saluran Pembayaran
+                  </Link>
+                </>
               ) : (
                 <Link href={`/payment/confirmation/${booking.id}`} className="bg-neutral-900 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-black transition-colors">
                   Lihat E-Tiket Resmi & QR

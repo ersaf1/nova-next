@@ -135,16 +135,36 @@ export default function PaymentPage() {
         <div className="max-w-xl mx-auto space-y-6">
           {/* Header Title */}
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-stone-100 border border-stone-200 text-stone-800 text-[11px] font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-900 text-[11px] font-bold uppercase tracking-wider">
               <ShieldCheck size={14} className="text-[#C29B38]" />
-              <span>Pembayaran Instan & Aman</span>
+              <span>Simulasi Pembayaran 1-Klik</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight">
               Selesaikan <span className="font-serif-luxury italic font-normal text-stone-800">Pembayaran</span>
             </h1>
             <p className="text-xs text-stone-500 max-w-md mx-auto">
-              Pilih saluran pembayaran dan konfirmasi tiket e-voucher Anda secara otomatis dalam hitungan menit.
+              Mode simulasi aktif. Cukup 1 klik untuk menyelesaikan pembayaran dan langsung mendapatkan E-Tiket resmi.
             </p>
+          </div>
+
+          {/* Quick Simulation Banner */}
+          <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-stone-900 text-amber-400 flex items-center justify-center shrink-0 text-sm font-bold">
+                ⚡
+              </div>
+              <div>
+                <p className="text-xs font-bold text-stone-900">Simulasi Instan 1-Klik Aktif</p>
+                <p className="text-[11px] text-stone-600">Bypass pembayaran nyata — langsung lunas & E-Tiket terbit seketika.</p>
+              </div>
+            </div>
+            <button
+              onClick={handleInstantPay}
+              disabled={paying}
+              className="px-3.5 py-2 bg-stone-900 hover:bg-black text-white text-xs font-bold rounded-xl shrink-0 cursor-pointer disabled:opacity-50 transition-colors"
+            >
+              {paying ? 'Memproses...' : 'Bayar Sekarang ⚡'}
+            </button>
           </div>
 
           {/* Booking Summary Box */}
@@ -310,16 +330,16 @@ export default function PaymentPage() {
             <button
               onClick={handleInstantPay}
               disabled={paying}
-              className="w-full bg-stone-900 hover:bg-black text-white font-bold py-4 rounded-full transition-all text-sm shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full bg-stone-900 hover:bg-black text-white font-bold py-4 rounded-full transition-all text-sm shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {paying ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  <span>Memverifikasi & Menerbitkan Tiket...</span>
+                  <span>Memproses Simulasi & Menerbitkan Tiket...</span>
                 </>
               ) : (
                 <>
-                  <span>Konfirmasi Pembayaran (Auto-Lunas)</span>
+                  <span>⚡ Konfirmasi Pembayaran (Simulasi 1-Klik Selesai)</span>
                   <ArrowRight size={16} />
                 </>
               )}
@@ -327,7 +347,7 @@ export default function PaymentPage() {
 
             <div className="flex items-center justify-center gap-1.5 text-[11px] text-stone-400 font-medium text-center">
               <Lock size={12} className="text-emerald-600" />
-              <span>Verifikasi instan tanpa antre. E-ticket resmi terbit seketika.</span>
+              <span>Simulasi instan 1-klik aktif. E-ticket resmi langsung terbit seketika.</span>
             </div>
           </div>
         </div>

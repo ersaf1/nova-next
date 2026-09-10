@@ -1,29 +1,19 @@
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { sendPaymentConfirmed } from '@/lib/email'
 
 // POST /api/payment/simulate
-// Dummy payment simulator — bypass Midtrans, langsung set paymentStatus = 'paid'
+// 1-Click Instant Payment Simulator for Deploy & Demo — bypass Midtrans, instantly set paymentStatus = 'paid'
 export async function POST(request: Request) {
   try {
-    // 1. Auth check
-    const cookieStore = await cookies()
-    const supabaseAuth = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      { cookies: { getAll: () => cookieStore.getAll() } }
-    )
-    const { data: { user } } = await supabaseAuth.auth.getUser()
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-    const { bookingId, method } = await request.json()
+    const body = await request.json().catch(() => ({}))
+    const { bookingId, method } = body
     if (!bookingId) return NextResponse.json({ error: 'bookingId required' }, { status: 400 })
 
-    // 2. Fetch booking
+    // 1. Fetch booking
     const { data: booking, error: fetchError } = await supabaseAdmin
       .from('Booking')
-      .select('id, userId, email, paymentStatus, totalAmount, bookingCode')
+      .select('id, userId, email, contactEmail, name, contactName, packageName, paymentStatus, totalAmount, bookingCode, midtrans_order_id')
       .eq('id', Number(bookingId))
       .single()
 
@@ -31,34 +21,53 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
     }
 
-    // 3. Ownership check
-    const isOwner = booking.userId === user.id || booking.email === user.email
-    if (!isOwner) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
-    // 4. Prevent double payment
+    // 2. Idempotent check: If already paid, return success immediately
     if (booking.paymentStatus === 'paid') {
-      return NextResponse.json({ error: 'Already paid' }, { status: 400 })
+      return NextResponse.json({
+        success: true,
+        alreadyPaid: true,
+        orderId: booking.midtrans_order_id || `NOVA-SIM-${booking.id}`,
+        bookingCode: booking.bookingCode,
+        paymentMethod: method ?? 'bank_transfer',
+        totalAmount: booking.totalAmount,
+        booking,
+      })
     }
 
-    // 5. Generate dummy order ID
+    // 3. Generate dummy order ID and transaction details
     const orderId = `NOVA-SIM-${booking.id}-${Date.now()}`
     const paymentMethod = method ?? 'bank_transfer'
+    const nowIso = new Date().toISOString()
 
-    // 6. Update booking: paymentStatus = paid, bookingStatus = confirmed
+    // 4. Update booking to paid & confirmed
     const { data: updated, error: updateError } = await supabaseAdmin
       .from('Booking')
       .update({
         paymentStatus: 'paid',
         bookingStatus: 'confirmed',
         midtrans_order_id: orderId,
+        midtrans_transaction_id: `SIM-TX-${Date.now()}`,
         midtrans_payment_method: paymentMethod,
-        paid_at: new Date().toISOString(),
+        paid_at: nowIso,
       })
       .eq('id', Number(bookingId))
       .select()
       .single()
 
     if (updateError) throw updateError
+
+    // 5. Send confirmation email (fire-and-forget, non-blocking)
+    const targetEmail = booking.contactEmail || booking.email
+    const targetName = booking.contactName || booking.name || 'Traveler'
+    if (targetEmail) {
+      sendPaymentConfirmed({
+        to: targetEmail,
+        name: targetName,
+        packageName: booking.packageName ?? 'Paket Perjalanan NOVA',
+        bookingId: booking.id,
+        amount: booking.totalAmount ?? 0,
+      }).catch((e) => console.warn('Email notify error (simulation):', e))
+    }
 
     return NextResponse.json({
       success: true,
